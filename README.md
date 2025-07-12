@@ -12,6 +12,13 @@ The MCP (Model Context Protocol) configuration lives in [`.mcp.json`](./.mcp.jso
 - [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools
 - [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools
 
+## Configuration
+
+The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
+- Model selection (currently using Opus 4)
+- Environment variables for optimal Claude Code behavior
+- Settings for disabling telemetry and non-essential features
+
 ## Commands
 
 Custom Claude Code commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
