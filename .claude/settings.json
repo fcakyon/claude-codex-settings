@@ -1,0 +1,11 @@
+{
+  "model": "claude-opus-4-20250514",
+  "includeCoAuthoredBy": false,
+  "env": {
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "DISABLE_BUG_COMMAND": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+  }
+}
