@@ -21,22 +21,30 @@ Automated commit creation with conventional commit messages.
    - **Stops if 0 files staged** - guides user to stage files first
    - Never stage already staged files
 
-3. **README Context & Validation**:
-   - Reads README.md to understand project context
-   - Uses project description to generate more accurate commit messages
-   - Always check if README needs updates when adding new features
-   - When adding new MCP servers or commands, suggest README updates
-   - Propose documentation updates as separate commits after main changes
+3. **Documentation Impact Analysis** ⚠️ **MANDATORY**:
+   - **ALWAYS check if staged changes require documentation updates**
+   - Analyze changes for documentation needs:
+     - New configuration files → Document configuration options
+     - New features/tools → Document usage and examples
+     - API changes → Document endpoints and parameters
+   - **Only suggest README updates when genuinely needed**
+   - Skip documentation if changes are internal-only or self-contained
 
-4. **Diff Analysis**:
-   - Performs `git diff --cached` on staged changes
-   - Analyzes for logical separation opportunities
-   - Suggests commit splits if multiple concerns detected
-   - Incorporates README context for better commit descriptions
+4. **README Context**:
+   - Read README.md to understand project structure
+   - Use project context for accurate commit messages
+   - Apply findings from documentation analysis
 
-5. **Commit Creation**:
-   - Generates conventional commit message(s)
-   - Executes commit(s) based on analysis
+5. **Diff Analysis**:
+   - Perform `git diff --cached` on staged changes
+   - Identify logical separation opportunities
+   - Suggest commit splits if multiple concerns detected
+   - Incorporate README context for better descriptions
+
+6. **Commit Creation**:
+   - Generate conventional commit message(s)
+   - Execute commit(s) based on analysis
+   - **If documentation needed**: Suggest specific README updates as a follow-up commit
 
 ## Conventional Commit Types
 
