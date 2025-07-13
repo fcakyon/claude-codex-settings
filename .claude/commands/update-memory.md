@@ -1,0 +1,1 @@
+Can you update CLAUDE.md and memory bank files.
