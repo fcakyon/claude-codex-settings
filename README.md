@@ -4,7 +4,7 @@ My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](h
 
 ## MCP Servers
 
-The MCP (Model Context Protocol) configuration lives in [`.mcp.json`](./.mcp.json). These are some solid MCP server repos worth checking out:
+The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:
 
 - [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools
 - [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools
@@ -23,8 +23,9 @@ The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/s
 
 Custom Claude Code commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
 
-- [`commit.md`](./.claude/commands/commit.md) - Automated commit creation with conventional commit messages
-- [`pr-summary.md`](./.claude/commands/pr-summary.md) - Generate PR summaries from git history and changes
+- [`commit-staged-changes.md`](./.claude/commands/commit-staged-changes.md) - Automated commit creation with conventional commit messages
+- [`update-pr-summary.md`](./.claude/commands/update-pr-summary.md) - Generate PR summaries from git history and changes
+- [`apply-thinking-to.md`](./.claude/commands/apply-thinking-to.md) - Prompt enhancement using advanced thinking patterns (inspired by [centminmod's version](https://github.com/centminmod/my-claude-code-setup/blob/master/.claude/commands/anthropic/apply-thinking-to.md))
 
 ## Extra Resources
 
