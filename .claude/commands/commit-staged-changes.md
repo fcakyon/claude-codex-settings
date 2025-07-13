@@ -64,6 +64,35 @@ Automated commit creation with conventional commit messages.
 - First line ≤ 72 characters
 - No emojis
 
+## Commit Message Body Guidelines
+
+When changes are complex, include a body with:
+- **Maximum 4 bullet points** summarizing key changes
+- Each bullet should be concise (1 line, ~80 chars)
+- Focus on WHAT changed and WHY, not implementation details
+- Group related changes into single bullets
+
+### Good Body Example:
+refactor: extract azure utilities and centralize configuration
+
+- Move Azure blob storage functions to dedicated azure_utils.py module
+- Centralize constants and user-configurable settings in init.py
+- Extract general utilities (env loading, audio preprocessing) to utils.py
+- Remove unused examples/init.py module
+
+### Bad Body Example (too detailed):
+refactor: extract azure utilities and centralize configuration
+
+- Move parse_sas_url, create_azure_container, upload_to_azure_blob functions
+from transcribe.py to new azure_utils.py module for better separation
+- Add cleanup_temp_folder utility for managing temporary directories
+- Centralize configuration in init.py with constants for Azure API version,
+container name, Whisper model URL, and temp folder path
+- Implement user-configurable settings with environment variable override support
+for Whisper model search, polling intervals, and TTL settings
+- Move load_env_file, preprocess_audio_for_transcription, get_user_config
+to utils.py for better code organization
+
 ## Split Criteria
 
 Commits are split when detecting:
