@@ -18,14 +18,16 @@ The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/s
 - Model selection (currently using Opus 4)
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
-
 ## Commands
 
 Custom Claude Code commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
 
-- [`commit-staged-changes.md`](./.claude/commands/commit-staged-changes.md) - Automated commit creation with conventional commit messages
-- [`update-pr-summary.md`](./.claude/commands/update-pr-summary.md) - Generate PR summaries from git history and changes
 - [`apply-thinking-to.md`](./.claude/commands/apply-thinking-to.md) - Prompt enhancement using advanced thinking patterns (inspired by [centminmod's version](https://github.com/centminmod/my-claude-code-setup/blob/master/.claude/commands/anthropic/apply-thinking-to.md))
+- [`cleanup-context.md`](./.claude/commands/cleanup-context.md) - Clean up and optimize Claude's context memory
+- [`commit-staged-changes.md`](./.claude/commands/commit-staged-changes.md) - Automated commit creation with conventional commit messages
+- [`explain-architecture-pattern.md`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
+- [`update-memory.md`](./.claude/commands/update-memory.md) - Update Claude's memory bank with new information
+- [`update-pr-summary.md`](./.claude/commands/update-pr-summary.md) - Generate PR summaries with advanced analytical frameworks
 
 ## Extra Resources
 
