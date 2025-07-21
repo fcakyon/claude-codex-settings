@@ -50,6 +50,15 @@
             "command": "./.claude/hooks/tavily_advanced.py"
           }
         ]
+      },
+      {
+        "matcher": "mcp__tavily__tavily-search",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/tavily_search_redirect.py"
+          }
+        ]
       }
     ]
   }

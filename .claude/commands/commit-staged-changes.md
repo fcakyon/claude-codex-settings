@@ -45,6 +45,7 @@ Assess change complexity:
 - What unexpected patterns or relationships exist in the staged files?
 - Are there alternative ways to group these changes that tell a clearer story?
 - What assumptions am I making about how these changes should be organized?
+- Which changes will be required in the README or other documentation?
 
 **Layer 2 - Systematic Framework Application:**
 ```bash
@@ -57,6 +58,7 @@ git diff --cached             # Deep content analysis
 - Cross-reference with README.md and project documentation
 - Identify which audiences care about which changes
 - Map changes to project goals and roadmap
+- Consider if any changes will be required with the staged changes
 
 ### 3. Enhanced Documentation Impact Analysis
 
@@ -217,10 +219,12 @@ Optimal: "fix(api): prevent crash when validating users with missing email"
    - Suggest commit splits if multiple concerns detected
    - Incorporate README context for better descriptions
 
-6. **Commit Creation**:
+6. **README Update Check**:
+   - Add README update check to your todo list. At this step you will decide if README contains any outdated info in the light of recent changes and requires an update.
+
+7. **Commit Creation**:
    - Generate conventional commit message(s)
    - Execute commit(s) based on analysis
-   - **If documentation needed**: Suggest specific README updates as a follow-up commit
 
 ### Conventional Commit Types
 - `feat`: New feature (api endpoints, gradio demos, integrations)
