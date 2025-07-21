@@ -16,9 +16,31 @@ The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json)
 ## Configuration
 
 The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
-- Model selection (currently using Opus 4)
+- Model selection (currently using Sonnet 4)
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
+- Custom hooks for enhancing tool functionality
+
+## Hooks
+
+Custom hooks that enhance tool usage, configured in [`.claude/settings.json`](./.claude/settings.json):
+
+### Setup
+
+Make hook scripts executable after cloning:
+```bash
+chmod +x ./.claude/hooks/*.py
+```
+
+### Web Content Enhancement Hooks
+
+- **[tavily_extract.py](./.claude/hooks/tavily_extract.py)**: Intercepts WebFetch calls and redirects them to use Tavily's advanced extraction
+- **[tavily_advanced.py](./.claude/hooks/tavily_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
+
+These hooks provide better handling of complex web elements and improved content extraction quality.
+
+For more details, see the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks).
+
 ## Commands
 
 Custom Claude Code commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):

@@ -15,10 +15,6 @@
             "args": [
                 "-y",
                 "@upstash/context7-mcp"
-            ],
-            "alwaysAllow": [
-                "resolve-library-id",
-                "get-library-docs"
             ]
         },
         "github": {
@@ -62,10 +58,7 @@
             ],
             "env": {
                 "TAVILY_API_KEY": "tvly-..."
-            },
-            "alwaysAllow": [
-                "tavily-extract"
-            ]
+            }
         }
     }
 }
