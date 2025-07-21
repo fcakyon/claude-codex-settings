@@ -1,5 +1,26 @@
 {
     "mcpServers": {
+        "azure": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@azure/mcp@latest",
+                "server",
+                "start"
+            ]
+        },
+        "context7": {
+            "type": "stdio",
+            "command": "npx",
+            "args": [
+                "-y",
+                "@upstash/context7-mcp"
+            ],
+            "alwaysAllow": [
+                "resolve-library-id",
+                "get-library-docs"
+            ]
+        },
         "github": {
             "command": "docker",
             "args": [
@@ -14,6 +35,12 @@
                 "GITHUB_PERSONAL_ACCESS_TOKEN": "..."
             }
         },
+        "playwright": {
+            "command": "npx",
+            "args": [
+                "@playwright/mcp@latest"
+            ]
+        },
         "slack": {
             "command": "npx",
             "args": [
@@ -27,29 +54,18 @@
                 "SLACK_USER_TOKEN": "xoxp-..."
             }
         },
-        "azure": {
+        "tavily": {
             "command": "npx",
             "args": [
                 "-y",
-                "@azure/mcp@latest",
-                "server",
-                "start"
-            ]
-        },
-        "playwright": {
-            "command": "npx",
-            "args": [
-                "@playwright/mcp@latest"
-            ]
-        },
-        "context7": {
-            "type": "stdio",
-            "command": "npx",
-            "args": [
-                "-y",
-                "@upstash/context7-mcp"
+                "tavily-mcp@0.2.9"
             ],
-            "env": {}
+            "env": {
+                "TAVILY_API_KEY": "tvly-..."
+            },
+            "alwaysAllow": [
+                "tavily-extract"
+            ]
         }
     }
 }

@@ -6,11 +6,12 @@ My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](h
 
 The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:
 
-- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools
-- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools
-- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries
 - [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools
+- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries
+- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools
 - [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools
+- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools
+- [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool.
 
 ## Configuration
 
