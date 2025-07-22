@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/tavily_extract.py"
+            "command": ".claude/hooks/tavily_extract.py"
           }
         ]
       },
@@ -47,7 +47,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/tavily_advanced.py"
+            "command": ".claude/hooks/tavily_advanced.py"
           }
         ]
       },
@@ -56,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/tavily_search_redirect.py"
+            "command": ".claude/hooks/tavily_search_redirect.py"
           }
         ]
       }
