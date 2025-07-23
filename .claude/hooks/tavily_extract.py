@@ -30,4 +30,4 @@ print(result)
 print(json.dumps({
     "decision": "block",
     "reason": "Handled via tavily-extract with extract_depth=advanced"
-}))
+}, separators=(',', ':')))

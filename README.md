@@ -2,6 +2,30 @@
 
 My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) setup with battle-tested commands and MCP servers that I use daily.
 
+## Setup
+
+- Install nvm and Node.js (v22+ recommended)
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+\. "$HOME/.nvm/nvm.sh"
+nvm install 22
+node -v # Should print "v22.17.1".
+nvm current # Should print "v22.17.1".
+```
+
+- Install Claude Code:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+- Convert to local setup instead of global:
+
+```bash
+claude migrate-installer
+```
+
 ## MCP Servers
 
 The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:

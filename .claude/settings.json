@@ -27,6 +27,7 @@
       "WebFetch(domain:anthropic.com)",
       "WebFetch(domain:github.com)",
       "mcp__tavily__tavily-extract",
+      "mcp__tavily__tavily-search",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs"
     ]

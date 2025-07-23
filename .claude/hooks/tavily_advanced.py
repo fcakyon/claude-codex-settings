@@ -15,9 +15,9 @@ try:
 
     # Output the modified tool input and allow the call to proceed
     print(json.dumps({
-        "decision": "allow",
-        "modified_tool_input": tool_input
-    }))
+        "decision": "approve",
+        "reason": "Enhanced with extract_depth=advanced"
+    }, separators=(',', ':')))
 
 except (KeyError, json.JSONDecodeError) as err:
     print(f"hook-error: {err}", file=sys.stderr)

@@ -29,11 +29,11 @@ try:
     print(json.dumps({
         "decision": "block",
         "reason": "Handled via Claude Code WebSearch"
-    }))
+    }, separators=(',', ':')))
     
 except subprocess.CalledProcessError as e:
     print(f"hook-error: WebSearch failed: {e}", file=sys.stderr)
     print(json.dumps({
-        "decision": "allow",
+        "decision": "approve",
         "reason": "WebSearch failed, allowing Tavily fallback"
-    }))
+    }, separators=(',', ':')))
