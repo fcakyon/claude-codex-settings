@@ -97,7 +97,7 @@ Apply these filters sequentially:
 - Complexity bias: Am I over-complicating simple changes?
 - Familiarity bias: Am I assuming context that others won't have?
 
-### 5. Intelligent Commit Splitting with Verification
+### 5. Intelligent Commit Splitting with Multi-Commit Execution
 
 **Progressive Split Analysis:**
 
@@ -134,6 +134,15 @@ If total score > 15: Split recommended
 If total score 10-15: Split optional
 If total score < 10: Keep together
 ```
+
+**Layer 4 - Multi-Commit Execution Strategy**:
+When splitting is decided:
+1. **Plan the sequence**: Define each commit's files and message
+2. **Reset staging**: `git reset HEAD` to unstage all files
+3. **Execute sequentially**: For each planned commit:
+   - `git add [specific files for this commit]`
+   - `git commit -m "[commit message]"`
+4. **Verify completion**: Ensure all originally staged files are committed
 
 ### 6. Commit Message Quality Assurance
 
@@ -213,18 +222,18 @@ Optimal: "fix(api): prevent crash when validating users with missing email"
    - Use project context for accurate commit messages
    - Apply findings from documentation analysis
 
-5. **Diff Analysis**:
+5. **Diff Analysis & Multi-Commit Planning**:
    - Perform `git diff --cached` on staged changes
    - Identify logical separation opportunities
-   - Suggest commit splits if multiple concerns detected
+   - **If multiple commits needed**: Plan commit strategy with file groupings and messages
    - Incorporate README context for better descriptions
 
 6. **README Update Check**:
    - Add README update check to your todo list. At this step you will decide if README contains any outdated info in the light of recent changes and requires an update.
 
-7. **Commit Creation**:
-   - Generate conventional commit message(s)
-   - Execute commit(s) based on analysis
+7. **Multi-Commit Execution**:
+   - **Single commit**: Generate conventional commit message and execute
+   - **Multiple commits**: Execute commit sequence using git reset + selective git add + git commit for each logical group
 
 ### Conventional Commit Types
 - `feat`: New feature (api endpoints, gradio demos, integrations)
@@ -304,24 +313,37 @@ mlops: add pre-commit hooks for code quality
 fix: prevent memory leak in gradio interface callbacks
 ```
 
-#### Split Commits
+#### Multi-Commit Execution Examples
 ```
-# Original: Large API refactoring with deployment updates
-# Becomes:
-feat: implement async model serving with connection pooling
-perf: reduce inference latency by 40% with caching
-fix: handle oom errors in concurrent requests
-docs: add api rate limiting documentation
-test: add load testing for 1000 concurrent users
-mlops: update dockerfile for multi-stage builds
+# Example 1: Large API refactoring with deployment updates
+# Execution sequence:
+git reset HEAD  # Unstage all files
+git add src/api/ src/models/  # First logical group
+git commit -m "feat: implement async model serving with connection pooling"
+git add src/cache.py src/performance/  # Second logical group  
+git commit -m "perf: reduce inference latency by 40% with caching"
+git add src/error_handling.py  # Third logical group
+git commit -m "fix: handle oom errors in concurrent requests"
+git add docs/api.md docs/rate-limiting.md  # Documentation group
+git commit -m "docs: add api rate limiting documentation"
+git add tests/load/ tests/benchmarks/  # Test group
+git commit -m "test: add load testing for 1000 concurrent users"
+git add Dockerfile docker-compose.yml  # Build group
+git commit -m "mlops: update dockerfile for multi-stage builds"
 
-# Original: Package publishing and ci improvements
-# Becomes:
-mlops: add pypi publishing workflow
-test: add integration tests for all api endpoints
-docs: update readme with installation instructions
-fix: resolve import errors in __init__.py
-refactor: restructure package for cleaner imports
+# Example 2: Package publishing and ci improvements
+# Execution sequence:
+git reset HEAD  # Unstage all files
+git add .github/workflows/publish.yml  # CI group
+git commit -m "mlops: add pypi publishing workflow"
+git add tests/integration/  # Test group
+git commit -m "test: add integration tests for all api endpoints"
+git add README.md docs/installation.md  # Documentation group
+git commit -m "docs: update readme with installation instructions"
+git add src/__init__.py  # Fix group
+git commit -m "fix: resolve import errors in __init__.py"
+git add src/ --update  # Refactor group (only existing files)
+git commit -m "refactor: restructure package for cleaner imports"
 ```
 
 ### Options

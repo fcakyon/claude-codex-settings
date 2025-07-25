@@ -6,8 +6,7 @@
     "DISABLE_BUG_COMMAND": "1",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1",
-    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
-    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "60000"
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
   },
   "permissions": {
     "allow": [
@@ -58,6 +57,17 @@
           {
             "type": "command",
             "command": ".claude/hooks/tavily_search_redirect.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$file_path\" == *.py ]]; then if [[ \"$OSTYPE\" == \"darwin\"* ]]; then sed -i '' 's/^[[:space:]]*$//' \"$file_path\"; else sed -i 's/^[[:space:]]*$//' \"$file_path\"; fi; fi"
           }
         ]
       }

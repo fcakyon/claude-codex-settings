@@ -62,7 +62,11 @@ chmod +x ./.claude/hooks/*.py
 - **[tavily_advanced.py](./.claude/hooks/tavily_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
 - **[tavily_search_redirect.py](./.claude/hooks/tavily_search_redirect.py)**: Redirects Tavily searches to Claude Code's WebSearch tool
 
-These hooks provide better handling of complex web elements and improved content extraction quality.
+### Code Quality Hooks
+
+- **Python Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python files after any Edit, MultiEdit, or Write operation. Works cross-platform (macOS and Linux).
+
+These hooks provide better handling of complex web elements, improved content extraction quality, and automatic code formatting.
 
 For more details, see the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks).
 
