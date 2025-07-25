@@ -20,6 +20,25 @@ nvm current # Should print "v22.17.1".
 npm install -g @anthropic-ai/claude-code
 ```
 
+- Install jq (required for hooks):
+
+**macOS:**
+```bash
+brew install jq
+```
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install jq
+```
+
+**Other Linux distributions:**
+```bash
+# Check your package manager, e.g.:
+# sudo yum install jq (RHEL/CentOS)
+# sudo pacman -S jq (Arch)
+```
+
 - Convert to local setup instead of global:
 
 ```bash
