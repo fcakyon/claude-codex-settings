@@ -64,7 +64,7 @@ chmod +x ./.claude/hooks/*.py
 
 ### Code Quality Hooks
 
-- **Python Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python files after any Edit, MultiEdit, or Write operation. Works cross-platform (macOS and Linux).
+- **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, or Write operation. Works cross-platform (macOS and Linux).
 
 These hooks provide better handling of complex web elements, improved content extraction quality, and automatic code formatting.
 
