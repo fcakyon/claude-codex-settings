@@ -24,6 +24,7 @@
       "WebFetch(domain:docs.litellm.ai)",
       "WebFetch(domain:openai.com)",
       "WebFetch(domain:anthropic.com)",
+      "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:github.com)",
       "mcp__tavily__tavily-extract",
       "mcp__tavily__tavily-search",
@@ -38,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/tavily_extract.py"
+            "command": ".claude/hooks/hook_webfetch_to_tavily_extract.py"
           }
         ]
       },
@@ -47,16 +48,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/tavily_advanced.py"
+            "command": ".claude/hooks/hook_tavily_extract_to_advanced.py"
           }
         ]
       },
       {
-        "matcher": "mcp__tavily__tavily-search",
+        "matcher": "WebSearch",
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/tavily_search_redirect.py"
+            "command": ".claude/hooks/hook_websearch_to_tavily_search.py"
           }
         ]
       }

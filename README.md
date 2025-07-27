@@ -77,9 +77,9 @@ chmod +x ./.claude/hooks/*.py
 
 ### Web Content Enhancement Hooks
 
-- **[tavily_extract.py](./.claude/hooks/tavily_extract.py)**: Intercepts WebFetch calls and redirects them to use Tavily's advanced extraction
-- **[tavily_advanced.py](./.claude/hooks/tavily_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
-- **[tavily_search_redirect.py](./.claude/hooks/tavily_search_redirect.py)**: Redirects Tavily searches to Claude Code's WebSearch tool
+- **[hook_webfetch_to_tavily_extract.py](./.claude/hooks/hook_webfetch_to_tavily_extract.py)**: Blocks WebFetch and suggests using Tavily extract with advanced depth
+- **[hook_tavily_extract_to_advanced.py](./.claude/hooks/hook_tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
+- **[hook_websearch_to_tavily_search.py](./.claude/hooks/hook_websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
 
 ### Code Quality Hooks
 
