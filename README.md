@@ -49,12 +49,12 @@ claude migrate-installer
 
 The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:
 
-- [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools
-- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries
-- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools
-- [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools
-- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools
-- [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool.
+- [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools (100% free)
+- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
+- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free)
+- [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools (100% free)
+- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools (100% free)
+- [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool (free tier: 1000 monthly requests)
 
 ## Configuration
 
