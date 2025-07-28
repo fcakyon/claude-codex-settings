@@ -64,6 +64,14 @@ The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/s
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
 
+## Agents
+
+Specialized agents that run automatically to enhance code quality, stored in [`.claude/agents/`](./.claude/agents/):
+
+- [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Automatically analyzes and optimizes code for simplicity after todo list creation and task completion. Eliminates redundancy, ensures pattern adherence, and maintains existing functionality.
+
+For more details, see the [Claude Code sub-agents documentation](https://docs.anthropic.com/en/docs/claude-code/sub-agents).
+
 ## Hooks
 
 Custom hooks that enhance tool usage, configured in [`.claude/settings.json`](./.claude/settings.json):
