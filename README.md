@@ -77,6 +77,8 @@ chmod +x ./.claude/hooks/*.py
 
 ### Web Content Enhancement Hooks
 
+These hooks redirect native Claude Code web tools to faster and more reliable Tavily alternatives. Native WebSearch/WebFetch tools take 20-30 seconds while Tavily equivalents complete in 1-2 seconds. Additionally, native WebFetch often fails on bot-protected websites while Tavily can bypass these protections.
+
 - **[hook_webfetch_to_tavily_extract.py](./.claude/hooks/hook_webfetch_to_tavily_extract.py)**: Blocks WebFetch and suggests using Tavily extract with advanced depth
 - **[hook_tavily_extract_to_advanced.py](./.claude/hooks/hook_tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
 - **[hook_websearch_to_tavily_search.py](./.claude/hooks/hook_websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
