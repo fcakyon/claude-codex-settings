@@ -96,6 +96,7 @@ These hooks redirect native Claude Code web tools to faster and more reliable Ta
 ### Code Quality Hooks
 
 - **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, or Write operation. Works cross-platform (macOS and Linux).
+- **Ripgrep Enforcement** ([hook_enforce_rg_over_grep.py](./.claude/hooks/hook_enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features. Prevents slower traditional search commands.
 
 These hooks provide better handling of complex web elements, improved content extraction quality, and automatic code formatting.
 

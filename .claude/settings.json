@@ -60,6 +60,15 @@
             "command": ".claude/hooks/hook_websearch_to_tavily_search.py"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_enforce_rg_over_grep.py"
+          }
+        ]
       }
     ],
     "PostToolUse": [
