@@ -68,7 +68,9 @@ The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/s
 
 Specialized agents that run automatically to enhance code quality, stored in [`.claude/agents/`](./.claude/agents/):
 
-- [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Automatically analyzes and optimizes code for simplicity after todo list creation and task completion. Eliminates redundancy, ensures pattern adherence, and maintains existing functionality.
+- [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Contextual pattern analyzer that ensures new code follows existing project conventions (imports, naming, function signatures, class patterns). Auto-triggers after TodoWrite to maintain codebase consistency.
+
+- [`commit-orchestrator.md`](./.claude/agents/commit-orchestrator.md) - Git commit expert that analyzes staged changes, creates optimal commit strategies, and executes commits with meaningful messages. Handles documentation updates and multi-commit scenarios.
 
 For more details, see the [Claude Code sub-agents documentation](https://docs.anthropic.com/en/docs/claude-code/sub-agents).
 
