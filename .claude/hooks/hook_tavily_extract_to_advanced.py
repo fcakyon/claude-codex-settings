@@ -9,15 +9,18 @@ try:
     data = json.load(sys.stdin)
     tool_input = data["tool_input"]
 
-    # Add extract_depth="advanced" if not already set
-    if "extract_depth" not in tool_input or tool_input["extract_depth"] != "advanced":
-        tool_input["extract_depth"] = "advanced"
+    # Always ensure extract_depth="advanced"
+    tool_input["extract_depth"] = "advanced"
 
-    # Output the modified tool input and allow the call to proceed
+    # Allow the call to proceed
     print(json.dumps({
-        "decision": "approve",
-        "reason": "Enhanced with extract_depth=advanced"
+        "hookSpecificOutput": {
+            "hookEventName": "PreToolUse",
+            "permissionDecision": "allow",
+            "permissionDecisionReason": "Automatically upgrading Tavily extract to advanced mode for better content extraction"
+        }
     }, separators=(',', ':')))
+    sys.exit(0)
 
 except (KeyError, json.JSONDecodeError) as err:
     print(f"hook-error: {err}", file=sys.stderr)

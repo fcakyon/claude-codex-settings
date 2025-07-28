@@ -19,3 +19,4 @@ print(json.dumps({
         "permissionDecisionReason": f"Please use mcp__tavily__tavily-extract with urls: ['{url}'] and extract_depth: 'advanced'"
     }
 }, separators=(',', ':')))
+sys.exit(0)

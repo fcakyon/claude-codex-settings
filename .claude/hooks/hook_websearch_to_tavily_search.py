@@ -20,3 +20,4 @@ print(json.dumps({
         "permissionDecisionReason": f"Please use mcp__tavily__tavily-search with query: '{query}'"
     }
 }, separators=(',', ':')))
+sys.exit(0)
