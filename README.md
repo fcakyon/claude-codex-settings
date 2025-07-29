@@ -118,3 +118,7 @@ Custom Claude Code commands that make life easier, stored in [`.claude/commands/
 - [Claude MCP Server Setup](https://docs.anthropic.com/en/docs/claude-code/mcp#project-scope)
 
 - [Claude Code Commands Setup](https://docs.anthropic.com/en/docs/claude-code/slash-commands#command-types)
+
+## Thank you for the support!
+
+[![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-settings&Date)
