@@ -77,7 +77,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "file_path=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file_path\" == *.py || \"$file_path\" == *.js || \"$file_path\" == *.jsx || \"$file_path\" == *.ts || \"$file_path\" == *.tsx ]]; then if [[ \"$OSTYPE\" == \"darwin\"* ]]; then sed -i '' 's/^[[:space:]]*$//' \"$file_path\"; else sed -i 's/^[[:space:]]*$//' \"$file_path\"; fi; fi"
+            "command": "file_path=$(jq -r '.tool_input.file_path // empty'); if [[ \"$file_path\" == *.py || \"$file_path\" == *.js || \"$file_path\" == *.jsx || \"$file_path\" == *.ts || \"$file_path\" == *.tsx ]]; then if [[ \"$OSTYPE\" == \"darwin\"* ]]; then sed -i '' '/^[[:space:]]*$/d' \"$file_path\"; else sed -i '/^[[:space:]]*$/d' \"$file_path\"; fi; fi"
           }
         ]
       }
