@@ -29,7 +29,11 @@
       "mcp__tavily__tavily-extract",
       "mcp__tavily__tavily-search",
       "mcp__context7__resolve-library-id",
-      "mcp__context7__get-library-docs"
+      "mcp__context7__get-library-docs",
+      "mcp__github__get_pull_request",
+      "mcp__github__get_pull_request_diff",
+      "mcp__github__list_commits",
+      "mcp__github__get_pull_request_files"
     ]
   },
   "hooks": {
