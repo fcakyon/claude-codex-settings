@@ -28,14 +28,14 @@ When activated, follow this precise workflow:
 
 3. **Commit Message Generation**:
    - Create concise, descriptive commit messages following this format:
-     - First line: `(task-type) brief description of the big picture change`
-     - Task types: (feat), (fix), (refactor), (docs), (style), (test), (chore)
+     - First line: `{task-type}: brief description of the big picture change`
+     - Task types: feat, fix, refactor, docs, style, test, build
      - Focus on the 'why' and 'what' rather than implementation details
      - For complex commits, add bullet points after a blank line explaining key changes
    - Examples of good messages:
-     - `(feat) implement user authentication system`
-     - `(fix) resolve memory leak in data processing pipeline`
-     - `(refactor) restructure API handlers to align with project architecture`
+     - `feat: implement user authentication system`
+     - `fix: resolve memory leak in data processing pipeline`
+     - `refactor: restructure API handlers to align with project architecture`
 
 4. **Execution**:
    - Execute commits in the planned sequence using git commands
