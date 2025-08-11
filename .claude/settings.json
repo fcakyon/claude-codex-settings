@@ -79,7 +79,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|MultiEdit|Write",
+        "matcher": "Edit|MultiEdit|Write|Task",
         "hooks": [
           {
             "type": "command",
