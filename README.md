@@ -39,6 +39,12 @@ sudo apt-get install jq
 # sudo pacman -S jq (Arch)
 ```
 
+- Install Python code quality tools (optional, for automatic Python formatting):
+
+```bash
+pip install ruff docformatter
+```
+
 - Convert to local setup instead of global:
 
 ```bash
@@ -97,6 +103,7 @@ These hooks redirect native Claude Code web tools to faster and more reliable Ta
 
 - **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, Write, or Task operation. Works cross-platform (macOS and Linux).
 - **Ripgrep Enforcement** ([hook_enforce_rg_over_grep.py](./.claude/hooks/hook_enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features. Prevents slower traditional search commands.
+- **Python Code Quality** ([hook_python_code_quality.py](./.claude/hooks/hook_python_code_quality.py)): Automatically formats and lints Python files using ruff and docformatter after Edit/Write/MultiEdit operations. Inspired by [onuralpszr's pre-commit hook](https://github.com/onuralpszr/onuralpszr/blob/main/configs/git-hooks/pre-commit-line-120). Gracefully degrades when tools aren't available, never disrupting Claude Code operations.
 
 These hooks provide better handling of complex web elements, improved content extraction quality, and automatic code formatting.
 
