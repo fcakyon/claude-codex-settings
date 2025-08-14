@@ -8,20 +8,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 * For maximum efficiency, whenever you need to perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially.
 * Before you finish, please verify your solution
 * Do what has been asked; nothing more, nothing less.
-* NEVER create files unless they're absolutely necessary for achieving your goal.
+* NEVER create new files unless they're absolutely necessary for achieving your goal.
 * ALWAYS prefer editing an existing file to creating a new one.
 * NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-* When you update or modify core context files, also update markdown documentation and memory bank
-* When asked to commit changes, exclude CLAUDE.md and CLAUDE-*.md referenced memory bank system files from any commits.
+* When asked to commit changes, exclude CLAUDE.md from any commits.
+* Reuse existing code wherever possible and minimize unnecessary arguments.
+* Look for opportunities to simplify the code or remove unnecessary parts.
+* Focus on targeted modifications rather than large-scale changes.
 
-## Memory Bank System
+## Python Coding
 
-This project uses a structured memory bank system with specialized context files. Always check these files for relevant information before starting work:
+* Always provide docstrings in this format:
 
-### Core Context Files
+    - Single line docstrings, signature typehints (for ide linting) and docstring typehints (for mkdocs)
 
-* **CLAUDE-activeContext.md** - Current session state, goals, and progress (if exists)
+    ```python
+    def example_function(arg1: int, arg2: int = 4) -> bool:
+        """
+        Example function demonstrating Google-style docstrings.
 
-**Important:** Always reference the active context file first to understand what's currently being worked on and maintain session continuity.
+        Args:
+            arg1 (int): The first argument.
+            arg2 (int): The second argument.
+
+        Returns:
+            True if arguments are equal, False otherwise.
+
+        Examples:
+            >>> example_function(1, 1)  # True
+        """
+        return arg1 == arg2
+    ```
+
+- Always use pathlib instead of os.path
+- Super important to integrate new code changes seamlessly within the existing code rather than simply adding more code to current files.
+- Always review any proposed code updates to correctness and conciseness.
 
 ## Project Overview
