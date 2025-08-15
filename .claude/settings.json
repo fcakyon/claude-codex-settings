@@ -88,6 +88,18 @@
           {
             "type": "command",
             "command": ".claude/hooks/hook_python_code_quality.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_prettier_formatting.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_markdown_formatting.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_bash_formatting.py"
           }
         ]
       }

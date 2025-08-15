@@ -39,10 +39,14 @@ sudo apt-get install jq
 # sudo pacman -S jq (Arch)
 ```
 
-- Install Python code quality tools (optional, for automatic Python formatting):
+- Install code quality tools:
 
 ```bash
+# Python formatting (required for Python hook)
 pip install ruff docformatter
+
+# Prettier for JS/TS/CSS/JSON/YAML/HTML/Markdown/Shell formatting (required for prettier hooks)
+npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
 - Convert to local setup instead of global:
@@ -101,11 +105,36 @@ These hooks redirect native Claude Code web tools to faster and more reliable Ta
 
 ### Code Quality Hooks
 
-- **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, Write, or Task operation. Works cross-platform (macOS and Linux).
-- **Ripgrep Enforcement** ([hook_enforce_rg_over_grep.py](./.claude/hooks/hook_enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features. Prevents slower traditional search commands.
-- **Python Code Quality** ([hook_python_code_quality.py](./.claude/hooks/hook_python_code_quality.py)): Automatically formats and lints Python files using ruff and docformatter after Edit/Write/MultiEdit operations. Inspired by [onuralpszr's pre-commit hook](https://github.com/onuralpszr/onuralpszr/blob/main/configs/git-hooks/pre-commit-line-120). Gracefully degrades when tools aren't available, never disrupting Claude Code operations.
+Comprehensive auto-formatting system that covers all major file types, designed to eliminate formatting inconsistencies and reduce CI formatting noise.
 
-These hooks provide better handling of complex web elements, improved content extraction quality, and automatic code formatting.
+- **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, Write, or Task operation. Works cross-platform (macOS and Linux).
+
+- **Python Code Quality** ([hook_python_code_quality.py](./.claude/hooks/hook_python_code_quality.py)): Automatically formats and lints Python files using ruff and docformatter after Edit/Write/MultiEdit operations. Matches [Ultralytics Actions](https://github.com/ultralytics/actions) pipeline exactly:
+  - `ruff format --line-length 120`
+  - `ruff check --fix --unsafe-fixes --extend-select I,D,UP --target-version py38`
+  - `docformatter --wrap-summaries 120 --wrap-descriptions 120`
+  
+- **Prettier Formatting** ([hook_prettier_formatting.py](./.claude/hooks/hook_prettier_formatting.py)): Auto-formats JavaScript, TypeScript, CSS, JSON, YAML, HTML, Vue, and Svelte files using prettier. Skips lock files and model.json to prevent conflicts.
+
+- **Markdown Formatting** ([hook_markdown_formatting.py](./.claude/hooks/hook_markdown_formatting.py)): Formats Markdown files with prettier, applying special tab-width 4 handling for documentation directories (matches [Ultralytics Actions](https://github.com/ultralytics/actions) docs formatting).
+
+- **Bash/Shell Formatting** ([hook_bash_formatting.py](./.claude/hooks/hook_bash_formatting.py)): Formats shell scripts (`.sh`, `.bash`) using prettier-plugin-sh for consistent bash scripting style.
+
+- **Ripgrep Enforcement** ([hook_enforce_rg_over_grep.py](./.claude/hooks/hook_enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features.
+
+#### Zero CI Formatting
+
+This comprehensive formatting setup is designed to achieve **zero auto-formatting** from CI workflows like [Ultralytics Actions](https://github.com/ultralytics/actions). The hooks cover 95% of typical formatting needs:
+- ✅ Python (ruff + docformatter)
+- ✅ JavaScript/TypeScript (prettier)
+- ✅ CSS/SCSS/Less (prettier)
+- ✅ JSON/YAML (prettier)
+- ✅ HTML/Vue/Svelte (prettier)
+- ✅ Markdown (prettier with docs handling)
+- ✅ Shell scripts (prettier-plugin-sh)
+- ✅ Whitespace cleanup
+
+All hooks gracefully degrade when tools aren't available, never disrupting Claude Code operations. Python formatting configuration inspired by [onuralpszr's setup](https://github.com/onuralpszr/onuralpszr/blob/main/configs/git-hooks/pre-commit-line-120).
 
 For more details, see the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks).
 
