@@ -23,16 +23,19 @@ npm install -g @anthropic-ai/claude-code
 - Install jq (required for hooks):
 
 **macOS:**
+
 ```bash
 brew install jq
 ```
 
 **Ubuntu/Debian:**
+
 ```bash
 sudo apt-get install jq
 ```
 
 **Other Linux distributions:**
+
 ```bash
 # Check your package manager, e.g.:
 # sudo yum install jq (RHEL/CentOS)
@@ -69,6 +72,7 @@ The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json)
 ## Configuration
 
 The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
+
 - Model selection (currently using Sonnet 4)
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
@@ -91,6 +95,7 @@ Custom hooks that enhance tool usage, configured in [`.claude/settings.json`](./
 ### Setup
 
 Make hook scripts executable after cloning:
+
 ```bash
 chmod +x ./.claude/hooks/*.py
 ```
@@ -113,7 +118,6 @@ Comprehensive auto-formatting system that covers all major file types, designed 
   - `ruff format --line-length 120`
   - `ruff check --fix --unsafe-fixes --extend-select I,D,UP --target-version py38`
   - `docformatter --wrap-summaries 120 --wrap-descriptions 120`
-  
 - **Prettier Formatting** ([hook_prettier_formatting.py](./.claude/hooks/hook_prettier_formatting.py)): Auto-formats JavaScript, TypeScript, CSS, JSON, YAML, HTML, Vue, and Svelte files using prettier. Skips lock files and model.json to prevent conflicts.
 
 - **Markdown Formatting** ([hook_markdown_formatting.py](./.claude/hooks/hook_markdown_formatting.py)): Formats Markdown files with prettier, applying special tab-width 4 handling for documentation directories (matches [Ultralytics Actions](https://github.com/ultralytics/actions) docs formatting).
@@ -125,6 +129,7 @@ Comprehensive auto-formatting system that covers all major file types, designed 
 #### Zero CI Formatting
 
 This comprehensive formatting setup is designed to achieve **zero auto-formatting** from CI workflows like [Ultralytics Actions](https://github.com/ultralytics/actions). The hooks cover 95% of typical formatting needs:
+
 - ✅ Python (ruff + docformatter)
 - ✅ JavaScript/TypeScript (prettier)
 - ✅ CSS/SCSS/Less (prettier)
@@ -143,10 +148,8 @@ For more details, see the [Claude Code hooks documentation](https://docs.anthrop
 Custom Claude Code commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
 
 - [`apply-thinking-to.md`](./.claude/commands/apply-thinking-to.md) - Prompt enhancement using advanced thinking patterns (inspired by [centminmod's version](https://github.com/centminmod/my-claude-code-setup/blob/master/.claude/commands/anthropic/apply-thinking-to.md))
-- [`cleanup-context.md`](./.claude/commands/cleanup-context.md) - Clean up and optimize Claude's context memory
 - [`commit-staged-changes.md`](./.claude/commands/commit-staged-changes.md) - Automated commit creation with conventional commit messages
 - [`explain-architecture-pattern.md`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
-- [`update-memory.md`](./.claude/commands/update-memory.md) - Update Claude's memory bank with new information
 - [`update-pr-summary.md`](./.claude/commands/update-pr-summary.md) - Generate PR summaries with advanced analytical frameworks
 
 ## Extra Resources
