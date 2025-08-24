@@ -35,7 +35,12 @@
       "mcp__github__list_commits",
       "mcp__github__get_pull_request_files",
       "mcp__github__get_workflow_run",
-      "mcp__github__get_job_logs"
+      "mcp__github__get_job_logs",
+      "mcp__github__get_issue_comments",
+      "mcp__mongodb__list_databases",
+      "mcp__mongodb__list_collections",
+      "mcp__mongodb__get_collection_schema",
+      "mcp__mongodb__collection-indexes"
     ]
   },
   "hooks": {

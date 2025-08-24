@@ -59,6 +59,16 @@
             "env": {
                 "TAVILY_API_KEY": "tvly-..."
             }
+        },
+        "mongodb": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "mongodb-mcp-server",
+                "--connectionString",
+                "mongodb://localhost:27017/myDatabase",
+                "--readOnly"
+            ]
         }
     }
 }
