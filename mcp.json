@@ -1,74 +1,62 @@
 {
-    "mcpServers": {
-        "azure": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@azure/mcp@latest",
-                "server",
-                "start"
-            ]
-        },
-        "context7": {
-            "type": "stdio",
-            "command": "npx",
-            "args": [
-                "-y",
-                "@upstash/context7-mcp"
-            ]
-        },
-        "github": {
-            "command": "docker",
-            "args": [
-                "run",
-                "-i",
-                "--rm",
-                "-e",
-                "GITHUB_PERSONAL_ACCESS_TOKEN",
-                "ghcr.io/github/github-mcp-server"
-            ],
-            "env": {
-                "GITHUB_PERSONAL_ACCESS_TOKEN": "..."
-            }
-        },
-        "playwright": {
-            "command": "npx",
-            "args": [
-                "@playwright/mcp@latest"
-            ]
-        },
-        "slack": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "@ubie-oss/slack-mcp-server@0.1.3"
-            ],
-            "env": {
-                "NPM_CONFIG_//npm.pkg.github.com/:_authToken": "...",
-                "NPM_CONFIG_@ubie-oss:registry": "https://npm.pkg.github.com/",
-                "SLACK_BOT_TOKEN": "xoxb-...",
-                "SLACK_USER_TOKEN": "xoxp-..."
-            }
-        },
-        "tavily": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "tavily-mcp@0.2.9"
-            ],
-            "env": {
-                "TAVILY_API_KEY": "tvly-..."
-            }
-        },
-        "mongodb": {
-            "command": "npx",
-            "args": [
-                "-y",
-                "mongodb-mcp-server",
-                "--connectionString",
-                "mongodb://localhost:27017/myDatabase",
-                "--readOnly"
-            ]
-        }
+  "mcpServers": {
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@azure/mcp@latest", "server", "start"]
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "..."
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@ubie-oss/slack-mcp-server@0.1.3"],
+      "env": {
+        "NPM_CONFIG_//npm.pkg.github.com/:_authToken": "...",
+        "NPM_CONFIG_@ubie-oss:registry": "https://npm.pkg.github.com/",
+        "SLACK_BOT_TOKEN": "xoxb-...",
+        "SLACK_USER_TOKEN": "xoxp-..."
+      }
+    },
+    "tavily": {
+      "command": "npx",
+      "args": ["-y", "tavily-mcp@0.2.9"],
+      "env": {
+        "TAVILY_API_KEY": "tvly-..."
+      }
+    },
+    "mongodb": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mongodb-mcp-server",
+        "--connectionString",
+        "mongodb://localhost:27017/myDatabase",
+        "--readOnly"
+      ]
+    },
+    "paper-search": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/paper-search"]
     }
+  }
 }
