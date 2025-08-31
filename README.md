@@ -75,7 +75,7 @@ The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json)
 
 The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
 
-- Model selection (currently using Sonnet 4)
+- Model selection (currently using OpusPlan - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality

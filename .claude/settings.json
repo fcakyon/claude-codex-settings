@@ -1,12 +1,13 @@
 {
-  "model": "sonnet",
+  "model": "opusplan",
   "includeCoAuthoredBy": false,
   "env": {
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
     "DISABLE_BUG_COMMAND": "1",
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1",
-    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1"
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-1-20250805",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-20250514"
   },
   "permissions": {
     "allow": [
@@ -37,6 +38,9 @@
       "mcp__github__get_workflow_run",
       "mcp__github__get_job_logs",
       "mcp__github__get_issue_comments",
+      "mcp__github__get_pull_request_status",
+      "mcp__github__list_workflows",
+      "mcp__github__list_workflow_runs",
       "mcp__mongodb__list_databases",
       "mcp__mongodb__list_collections",
       "mcp__mongodb__get_collection_schema",
