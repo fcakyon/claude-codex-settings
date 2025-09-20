@@ -80,6 +80,25 @@ The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/s
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
 
+
+## Statusline
+
+The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
+
+- **Real-time usage tracking**: Monitor token consumption and API costs as you work
+- **Offline support**: Cached data ensures statusline works without internet connectivity  
+- **Customizable refresh**: Updates every 2 seconds for responsive feedback
+- **Turkish localization**: Displays costs and dates in Turkish format (configurable)
+
+### Configuration
+
+The statusline is configured through two files:
+
+- **[`.claude/settings.json`](./.claude/settings.json)**: Contains the statusline command configuration
+- **[`.claude/ccusage.json`](./.claude/ccusage.json)**: ccusage-specific settings for locale, timezone, and refresh behavior
+
+For detailed setup instructions and customization options, see the [ccusage statusline guide](https://ccusage.com/guide/statusline).
+
 ## Agents
 
 Specialized agents that run automatically to enhance code quality, stored in [`.claude/agents/`](./.claude/agents/):

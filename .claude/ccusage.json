@@ -1,0 +1,24 @@
+{
+	"$schema": "https://ccusage.com/config-schema.json",
+    "defaults": {
+        "timezone": "Turkey/Istanbul", 
+        "breakdown": false,
+        "locale": "tr-TR"
+    },
+    "commands": {
+        "daily": {"breakdown": true},
+        "weekly": {
+            "startOfWeek": "monday",
+            "breakdown": true
+        },
+        "blocks": {
+            "active": true,
+            "tokenLimit": "max"
+        },
+        "statusline": {
+            "offline": true,
+            "cache": true,
+            "refreshInterval": 2
+        }
+    }
+}
