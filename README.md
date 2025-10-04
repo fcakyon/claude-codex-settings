@@ -76,18 +76,17 @@ The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json)
 
 The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
 
-- Model selection (currently using OpusPlan - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
+- Model selection (currently using OpusPlan with claude-opus-4-1-20250805 and Sonnet with claude-sonnet-4-5-20250929 - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
-
 
 ## Statusline
 
 The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
 
 - **Real-time usage tracking**: Monitor token consumption and API costs as you work
-- **Offline support**: Cached data ensures statusline works without internet connectivity  
+- **Offline support**: Cached data ensures statusline works without internet connectivity
 - **Customizable refresh**: Updates every 2 seconds for responsive feedback
 - **Turkish localization**: Displays costs and dates in Turkish format (configurable)
 
