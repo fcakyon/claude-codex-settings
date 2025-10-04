@@ -1,0 +1,50 @@
+model = "gpt-5-codex"
+model_reasoning_effort = "high"
+model_provider = "azure"
+# Streamable HTTP requires the experimental rmcp client
+experimental_use_rmcp_client = true
+
+[model_providers.azure]
+name = "Azure OpenAI"
+base_url = "https://YOUR-AZURE-OPENAI.openai.azure.com/openai/v1"
+env_key = "..."
+wire_api = "responses"
+
+[mcp_servers.azure]
+command = "npx"
+args = ["-y", "@azure/mcp@latest", "server", "start"]
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+[mcp_servers.github]
+command = "docker"
+args = ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"]
+env = {"GITHUB_PERSONAL_ACCESS_TOKEN" = "ghp_..."}
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
+
+[mcp_servers.slack]
+command = "npx"
+args = ["-y", "@ubie-oss/slack-mcp-server@0.1.3"]
+env = {"NPM_CONFIG_//npm.pkg.github.com/:_authToken" = "...", "NPM_CONFIG_@ubie-oss:registry" = "https://npm.pkg.github.com/", "SLACK_BOT_TOKEN" = "xoxb-...", "SLACK_USER_TOKEN" = "xoxp-..."}
+
+[mcp_servers.tavily]
+command = "npx"
+args = ["-y", "tavily-mcp@latest"]
+env = {"TAVILY_API_KEY" = "tvly-..."}
+
+[mcp_servers.mongodb]
+command = "npx"
+args = ["-y", "mongodb-mcp-server", "--connectionString", "mongodb://localhost:27017/myDatabase", "--readOnly"]
+
+[mcp_servers.supabase]
+command = "npx"
+args = ["-y", "mcp-remote", "https://mcp.supabase.com/mcp?project_ref=YOUR-PROJECT-ID&read_only=true&features=database"]
+
+[mcp_servers."paper-search"]
+command = "docker"
+args = ["run", "-i", "--rm", "mcp/paper-search"]
