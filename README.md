@@ -1,6 +1,6 @@
-# claude-settings
+# claude-codex-settings
 
-My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) setup with battle-tested commands and MCP servers that I use daily.
+My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with battle-tested commands and MCP servers that I use daily.
 
 ## Setup
 
@@ -14,11 +14,17 @@ node -v # Should print "v22.17.1".
 nvm current # Should print "v22.17.1".
 ```
 
-- Install Claude Code:
+- Install Claude Code and/or OpenAI Codex:
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
+
+```bash
+npm install -g @openai/codex
+```
+
+- Optionally install [Claude Code VSCode extension](https://docs.claude.com/en/docs/claude-code/vs-code) and/or [Codex VSCode extension](https://developers.openai.com/codex/ide) for 100% IDE integration.
 
 - Install jq (required for hooks):
 
@@ -52,11 +58,13 @@ pip install ruff docformatter
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
-- Convert to local setup instead of global:
+- Create a shared guidance symlink for other agents ([agents.md](https://agents.md/)):
 
 ```bash
-claude migrate-installer
+ln -s CLAUDE.md AGENTS.md
 ```
+
+This lets tools like Claude Code, Codex, Gemini CLI, Cursor, and Copilot reuse the same instructions.
 
 ## MCP Servers
 
@@ -66,20 +74,26 @@ The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json)
 - [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
 - [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free)
 - [MongoDB MCP](https://github.com/mongodb-js/mongodb-mcp-server) - Tools for interacting with MongoDB (100% free)
-- [Supabase MCP](https://github.com/supabase-community/supabase-mcp) - Database tools for interacting with Supabase (100% free) - [Configuration guide](https://supabase.com/docs/guides/getting-started/mcp#step-2-configure-your-ai-tool)
 - [Paper Search MCP](https://github.com/openags/paper-search-mcp) - Search papers across arXiv, PubMed, bioRxiv, Google Scholar, and more (100% free)
 - [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools (100% free)
 - [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools (100% free)
+- [Supabase MCP](https://github.com/supabase-community/supabase-mcp) - Database tools for interacting with Supabase (100% free) - [Configuration guide](https://supabase.com/docs/guides/getting-started/mcp#step-2-configure-your-ai-tool)
 - [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool (free tier: 1000 monthly requests)
+
+OpenAI Codex compatible version of MCP server configurations can be found in [`~/.codex/config.toml`](./config.toml).
 
 ## Configuration
 
-The Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
+Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
 
 - Model selection (currently using OpusPlan with claude-opus-4-1-20250805 and Sonnet with claude-sonnet-4-5-20250929 - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
+
+OpenAI Codex configuration is stored in [`~/.codex/config.toml`](./config.toml) and includes:
+- Default `gpt-5-codex` model with `model_reasoning_effort` set to "high" and served through the Azure `responses` API surface
+- Azure provider metadata (`model_providers.azure`) with the project-specific base URL and `env_key` secret for authentication
 
 ## Statusline
 
