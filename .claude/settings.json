@@ -7,7 +7,7 @@
     "DISABLE_ERROR_REPORTING": "1",
     "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-1-20250805",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-20250514"
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-5-20250929"
   },
   "permissions": {
     "allow": [
