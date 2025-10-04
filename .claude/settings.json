@@ -44,7 +44,8 @@
       "mcp__mongodb__list_databases",
       "mcp__mongodb__list_collections",
       "mcp__mongodb__get_collection_schema",
-      "mcp__mongodb__collection-indexes"
+      "mcp__mongodb__collection-indexes",
+      "mcp__supabase__list_tables"
     ]
   },
   "hooks": {

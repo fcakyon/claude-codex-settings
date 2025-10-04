@@ -47,6 +47,14 @@
         "--readOnly"
       ]
     },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_ID&read_only=true&features=database"
+      ]
+    },
     "paper-search": {
       "command": "docker",
       "args": ["run", "-i", "--rm", "mcp/paper-search"]
