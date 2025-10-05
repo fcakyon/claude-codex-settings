@@ -3,6 +3,7 @@ model_reasoning_effort = "high"
 model_provider = "azure"
 # Streamable HTTP requires the experimental rmcp client
 experimental_use_rmcp_client = true
+approval_policy = "untrusted"
 
 [model_providers.azure]
 name = "Azure OpenAI"
