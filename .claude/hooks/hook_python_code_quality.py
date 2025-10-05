@@ -42,10 +42,9 @@ def main():
         subprocess.run([
             'ruff', 'check',
             '--fix',
-            '--unsafe-fixes',
             '--extend-select', 'I,D,UP',
             '--target-version', 'py38',
-            '--ignore', 'D100,D104,D203,D205,D212,D213,D401,D406,D407,D413',
+            '--ignore', 'D100,D101,D103,D104,D203,D205,D212,D213,D401,D406,D407,D413,F821,F841',
             str(py_file)
         ], capture_output=True, check=False, cwd=work_dir)
 
@@ -57,6 +56,7 @@ def main():
             '--pre-summary-newline',
             '--close-quotes-on-newline',
             '--in-place',
+            "--recursive",
             str(py_file)
         ], capture_output=True, check=False, cwd=work_dir)
 
