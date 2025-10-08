@@ -16,6 +16,24 @@
           "Authorization": "Bearer YOUR_GITHUB_PAT_HERE"
       }
     },
+    "linear": {
+      "type": "sse",
+      "url": "https://mcp.linear.app/sse"
+    },
+    "mongodb": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mongodb-mcp-server",
+        "--connectionString",
+        "mongodb://localhost:27017/myDatabase",
+        "--readOnly"
+      ]
+    },
+    "paper-search": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "mcp/paper-search"]
+    },
     "playwright": {
       "command": "npx",
       "args": ["@playwright/mcp@latest"]
@@ -37,16 +55,6 @@
         "TAVILY_API_KEY": "tvly-..."
       }
     },
-    "mongodb": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mongodb-mcp-server",
-        "--connectionString",
-        "mongodb://localhost:27017/myDatabase",
-        "--readOnly"
-      ]
-    },
     "supabase": {
       "command": "npx",
       "args": [
@@ -54,10 +62,6 @@
         "mcp-remote",
         "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_ID&read_only=true&features=database"
       ]
-    },
-    "paper-search": {
-      "command": "docker",
-      "args": ["run", "-i", "--rm", "mcp/paper-search"]
     }
   }
 }
