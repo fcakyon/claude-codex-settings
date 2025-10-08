@@ -41,6 +41,7 @@
       "mcp__github__get_pull_request_status",
       "mcp__github__list_workflows",
       "mcp__github__list_workflow_runs",
+      "mcp__github__list_workflow_jobs",
       "mcp__mongodb__list_databases",
       "mcp__mongodb__list_collections",
       "mcp__mongodb__get_collection_schema",

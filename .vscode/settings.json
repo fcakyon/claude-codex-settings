@@ -1,0 +1,91 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "Use conventional commit message format."
+        },
+        {
+            "text": "First line: {task-type}: brief description of the big picture change"
+        },
+        {
+            "text": "Task types: feat, fix, refactor, docs, style, test, build"
+        },
+        {
+            "text": "Focus on the 'why' and 'what' rather than implementation details"
+        },
+        {
+            "text": "For complex commits, add bullet points after a blank line explaining key changes"
+        },
+        {
+            "text": "Examples of good messages:"
+        },
+        {
+            "text": "feat: add transformers support to image classification pipeline"
+        },
+        {
+            "text": "fix: incorrect handling of empty input in model naming"
+        },
+        {
+            "text": "refactor: restructure API handlers to align with project architecture"
+        }
+    ],
+    "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
+        {
+            "text": "Keep PR message concise and focused on the 'why' and 'what' with short bullets."
+        },
+        {
+            "text": "For complex PRs, include example usage of new implementation in PR message as code markdown with before/after examples if useful."
+        },
+        {
+            "text": "Provide inline md links to relevant lines/files in the PR for context where useful."
+        }
+    ],
+    "github.copilot.enable": {
+        "markdown": true,
+        "plaintext": true,
+        "scminput": true
+    },
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "github.copilot.editor.enableCodeActions": false,
+    "github.copilot.chat.copilotDebugCommand.enabled": false,
+    "github.copilot.chat.reviewAgent.enabled": false,
+    "github.copilot.chat.reviewSelection.enabled": false,
+    "github.copilot.chat.startDebugging.enabled": false,
+    "github.copilot.chat.newWorkspaceCreation.enabled": false,
+    "github.copilot.chat.setupTests.enabled": false,
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "telemetry.telemetryLevel": "off",
+    "git.autofetch": true,
+    "files.autoSave": "afterDelay",
+    "editor.formatOnSave": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.minimap.enabled": false,
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "terminal.integrated.enableImages": true,
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "/bin/bash"
+        },
+        "sh": {
+            "path": "/bin/sh"
+        }
+    },
+    "terminal.integrated.profiles.osx": {
+        "zsh": {
+            "path": "/bin/zsh"
+        },
+        "bash": {
+            "path": "/bin/bash"
+        }
+    },
+    
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "GitHub Dark",
+}
