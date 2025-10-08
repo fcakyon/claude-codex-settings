@@ -95,6 +95,11 @@ OpenAI Codex configuration is stored in [`~/.codex/config.toml`](./config.toml) 
 - Default `gpt-5-codex` model with `model_reasoning_effort` set to "high" and served through the Azure `responses` API surface
 - Azure provider metadata (`model_providers.azure`) with the project-specific base URL and `env_key` secret for authentication
 
+VSCode settings are stored in [`.vscode/settings.json`](./.vscode/settings.json) and include:
+- **GitHub Copilot instructions**: Custom AI instructions for automated commit message and PR description generation
+- Python formatting with Ruff, auto-save, and format-on-save enabled
+- Terminal configurations for cross-platform compatibility
+
 ## Statusline
 
 The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
