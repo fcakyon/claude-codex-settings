@@ -62,5 +62,6 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
      ```
    - 2. Use List() Read() tools to explore the package and understand the function/class you want to use or read function docstrings
    - 3. Then properly set the parameters and use the function/class
+- When running Python commands, run `source .venv/bin/activate` to activate the virtual environment before running any scripts or run with uv `uv run python -c "import example"`
 
 ## Project Overview
