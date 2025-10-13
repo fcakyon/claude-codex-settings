@@ -58,13 +58,13 @@ pip install ruff docformatter
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
-- Create a shared guidance symlink for other agents ([agents.md](https://agents.md/)):
+- Create a shared guidance symlink for other agents ([AGENTS.md](https://agents.md/)):
 
 ```bash
 ln -s CLAUDE.md AGENTS.md
 ```
 
-This lets tools like Claude Code, Codex, Gemini CLI, Cursor, and Copilot reuse the same instructions.
+This lets tools like [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.
 
 ## MCP Servers
 
