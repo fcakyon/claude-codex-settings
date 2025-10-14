@@ -16,6 +16,11 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 * Look for opportunities to simplify the code or remove unnecessary parts.
 * Focus on targeted modifications rather than large-scale changes.
 
+## MCP Tools
+
+- **Web content extraction**: Use `mcp__tavily__tavily-extract` for web scraping. For GitHub URLs, use `mcp__github__*` tools instead for more robust data retrieval.
+- **Web search**: Use `mcp__tavily__tavily-search` for searching the web.
+
 ## Python Coding
 
 - Use Google-style docstrings with comprehensive specifications
