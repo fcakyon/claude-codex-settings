@@ -125,7 +125,9 @@ Specialized agents that run automatically to enhance code quality, stored in [`.
 
 - [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Contextual pattern analyzer that ensures new code follows existing project conventions (imports, naming, function signatures, class patterns). Auto-triggers after TodoWrite to maintain codebase consistency.
 
-- [`commit-orchestrator.md`](./.claude/agents/commit-orchestrator.md) - Git commit expert that analyzes staged changes, creates optimal commit strategies, and executes commits with meaningful messages. Handles documentation updates and multi-commit scenarios.
+- [`commit-manager.md`](./.claude/agents/commit-manager.md) - Git commit expert that analyzes staged changes, creates optimal commit strategies, and executes commits with meaningful messages. Handles documentation updates and multi-commit scenarios.
+
+- [`pr-manager.md`](./.claude/agents/pr-manager.md) - Git and GitHub PR workflow automation that handles branch creation, commits via commit-manager agent, documentation updates, and PR submission with proper formatting.
 
 For more details, see the [Claude Code sub-agents documentation](https://docs.anthropic.com/en/docs/claude-code/sub-agents).
 
