@@ -69,4 +69,47 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
    - 3. Then properly set the parameters and use the function/class
 - When running Python commands, run `source .venv/bin/activate` to activate the virtual environment before running any scripts or run with uv `uv run python -c "import example"`
 
+## Creating a Pull Request
+
+   - Run `/pr-manager` agent if possible or follow the steps below.
+   - Never commit to main branch, always create feature branches.
+   - PR should contain few words summary and few bullet points of changes made (you may give inline md links to related code lines)
+   - Get current user info using `mcp__github__get_me` and add as `assignees` when creating any PR. Decide `reviewers` based on the previous PR reviewers.
+   - When updating key information or config parameters, confirm it with web search and link to source of truth inline in the PR message:
+      ```
+      Update Claude Haiku to version 4.5
+
+         - Update model ID: claude-3-haiku-20240307 → claude-haiku-4-5-20251015 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+         - Update pricing: $0.80/$4.00 → $1.00/$5.00 per MTok ([source](https://docs.anthropic.com/en/docs/about-claude/pricing))
+         - Update max output tokens: 4,096 → 64,000 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+      ```
+   - For complex PRs, include example usage of new implementation in PR message as code markdown with before/after examples if useful.
+   - Read README.md and check for missing or obsolete information based on the staged changes:
+     - New features, configuration that should be documented
+     - Outdated descriptions that no longer match the current implementation
+     - Missing setup instructions for new dependencies or tools
+   - Don't add test plans in PR or commit messages.
+
+## Committing Changes
+
+   - Run `/commit-manager` agent if possible or follow the steps below.
+   - **ONLY analyze staged files** - completely ignore unstaged changes and files
+   - Check all currently staged files using `git diff --cached --name-only`
+   - Read the actual code diffs using `git diff --cached` to understand the nature and scope of changes
+   - Verify staging area with `git status --porcelain` before each commit
+   - Create concise, descriptive commit messages following this format:
+     - First line: `{task-type}: brief description of the big picture change`
+     - Task types: feat, fix, refactor, docs, style, test, build
+     - Focus on the 'why' and 'what' rather than implementation details
+     - For complex commits, add bullet points after a blank line explaining key changes
+   - Examples of good messages:
+     - `feat: implement user authentication system`
+     - `fix: resolve memory leak in data processing pipeline`
+     - `refactor: restructure API handlers to align with project architecture`
+   - Read README.md and check for missing or obsolete information based on the staged changes:
+     - New features, configuration that should be documented
+     - Outdated descriptions that no longer match the current implementation
+     - Missing setup instructions for new dependencies or tools
+   - Don't add test plans in PR or commit messages.
+
 ## Project Overview
