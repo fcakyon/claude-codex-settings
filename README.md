@@ -87,7 +87,7 @@ OpenAI Codex compatible version of MCP server configurations can be found in [`~
 
 Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
 
-- Model selection (currently using OpusPlan with claude-opus-4-1-20250805 and Sonnet with claude-sonnet-4-5-20250929 - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
+- Model selection (currently using OpusPlan with claude-sonnet-4-5-20250929 - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
@@ -142,6 +142,12 @@ Make hook scripts executable after cloning:
 ```bash
 chmod +x ./.claude/hooks/*.py
 ```
+
+### Context Management Hooks
+
+These hooks ensure Claude always has access to project-specific instructions by automatically loading them on each prompt.
+
+- **[hook_load_claude_md.py](./.claude/hooks/hook_load_claude_md.py)**: Auto-loads CLAUDE.md or AGENTS.md from the project directory on every user prompt. Prevents AI from forgetting main instructions by re-injecting them at every prompt submission.
 
 ### Web Content Enhancement Hooks
 

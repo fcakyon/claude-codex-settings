@@ -206,5 +206,5 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# claude-memory
-CLAUDE-*
+# other
+.DS_Store
