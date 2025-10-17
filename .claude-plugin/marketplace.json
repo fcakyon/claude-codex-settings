@@ -1,0 +1,143 @@
+{
+  "name": "fcakyon-claude-plugins",
+  "owner": {
+    "name": "Fatih Akyon",
+    "email": "[email protected]"
+  },
+  "metadata": {
+    "description": "Battle-tested Claude Code plugin collection: auto-formatting, Git workflow agents, pattern analysis, productivity commands, and 100+ MCP tools.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "code-quality-hooks",
+      "source": "./",
+      "description": "Auto-formatting system for Python, JavaScript, TypeScript, CSS, JSON, YAML, HTML, Markdown, and Shell scripts. Eliminates formatting debates and reduces CI failures.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#code-quality-hooks",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "MIT",
+      "keywords": [
+        "formatting",
+        "linting",
+        "python-ruff",
+        "prettier",
+        "markdown",
+        "code-style",
+        "auto-fix",
+        "pre-commit"
+      ],
+      "category": "productivity",
+      "tags": ["formatting", "automation", "quality"],
+      "hooks": "./.claude/hooks/hooks.json"
+    },
+    {
+      "name": "git-workflow-agents",
+      "source": "./",
+      "description": "Intelligent Git automation agents: commit-manager analyzes staged changes across multiple commits, pr-manager creates PRs with README sync and proper formatting.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#agents",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "MIT",
+      "keywords": [
+        "git",
+        "commit",
+        "pull-request",
+        "pr",
+        "github",
+        "workflow",
+        "changelog",
+        "semantic-versioning"
+      ],
+      "category": "development",
+      "tags": ["git", "automation", "workflow"],
+      "agents": [
+        "./.claude/agents/commit-manager.md",
+        "./.claude/agents/pr-manager.md"
+      ]
+    },
+    {
+      "name": "code-simplifier-agent",
+      "source": "./",
+      "description": "Auto-triggers after TodoWrite to ensure new code follows existing project patterns for imports, naming, function signatures, and base classes. Maintains codebase consistency.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#agents",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "MIT",
+      "keywords": [
+        "code-patterns",
+        "consistency",
+        "refactoring",
+        "imports",
+        "naming-conventions",
+        "best-practices",
+        "code-review"
+      ],
+      "category": "development",
+      "tags": ["analysis", "patterns", "quality"],
+      "agents": ["./.claude/agents/code-simplifier.md"]
+    },
+    {
+      "name": "productivity-commands",
+      "source": "./",
+      "description": "Custom slash commands: /pr-summary for changelog generation, /commit for automated commits, /arch for pattern explanations, /think for enhanced reasoning.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#commands",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "MIT",
+      "keywords": [
+        "commands",
+        "shortcuts",
+        "slash-commands",
+        "productivity",
+        "cli",
+        "automation",
+        "templates"
+      ],
+      "category": "productivity",
+      "tags": ["commands", "productivity", "shortcuts"],
+      "commands": ["./.claude/commands/"]
+    },
+    {
+      "name": "mcp-server-configs",
+      "source": "./",
+      "description": "Pre-configured MCP servers: Azure (100+ tools), Context7 (20K+ library docs), GitHub, Linear, MongoDB, Playwright, Slack, Supabase, Tavily (web search).",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#mcp-servers",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "MIT",
+      "keywords": [
+        "mcp",
+        "servers",
+        "integration",
+        "azure",
+        "github",
+        "mongodb",
+        "playwright",
+        "slack",
+        "supabase",
+        "tavily",
+        "context7",
+        "linear"
+      ],
+      "category": "tools",
+      "tags": ["mcp", "integration", "tools"],
+      "mcpServers": "./mcp.json"
+    }
+  ]
+}
