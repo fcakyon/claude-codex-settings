@@ -2,108 +2,9 @@
 
 My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with battle-tested commands and MCP servers that I use daily.
 
-## Setup
+## Installation
 
-- Install nvm and Node.js (v22+ recommended)
-
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-\. "$HOME/.nvm/nvm.sh"
-nvm install 22
-node -v     # Should print "v22.17.1".
-nvm current # Should print "v22.17.1".
-```
-
-- Install Claude Code and/or OpenAI Codex:
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-```bash
-npm install -g @openai/codex
-```
-
-- Optionally install [Claude Code VSCode extension](https://docs.claude.com/en/docs/claude-code/vs-code) and/or [Codex VSCode extension](https://developers.openai.com/codex/ide) for 100% IDE integration.
-
-- Install jq (required for hooks):
-
-**macOS:**
-
-```bash
-brew install jq
-```
-
-**Ubuntu/Debian:**
-
-```bash
-sudo apt-get install jq
-```
-
-**Other Linux distributions:**
-
-```bash
-# Check your package manager, e.g.:
-# sudo yum install jq (RHEL/CentOS)
-# sudo pacman -S jq (Arch)
-```
-
-- Install GitHub CLI (required for pr-manager agent):
-
-**macOS:**
-
-```bash
-brew install gh
-```
-
-**Ubuntu/Debian:**
-
-```bash
-sudo apt-get install gh
-```
-
-**Other Linux distributions:**
-
-```bash
-# Check your package manager, e.g.:
-# sudo yum install gh (RHEL/CentOS)
-# sudo pacman -S github-cli (Arch)
-```
-
-- Install code quality tools:
-
-```bash
-# Python formatting (required for Python hook)
-pip install ruff docformatter
-
-# Prettier for JS/TS/CSS/JSON/YAML/HTML/Markdown/Shell formatting (required for prettier hooks)
-npm install -g prettier@3.6.2 prettier-plugin-sh
-```
-
-- Create a shared guidance symlink for other agents ([AGENTS.md](https://agents.md/)):
-
-```bash
-ln -s CLAUDE.md AGENTS.md
-```
-
-This lets tools like [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.
-
-## MCP Servers
-
-The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:
-
-- [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools (100% free)
-- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
-- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free)
-- [Linear MCP](https://linear.app/docs/mcp) - Project management tools for Linear (100% free)
-- [MongoDB MCP](https://github.com/mongodb-js/mongodb-mcp-server) - Tools for interacting with MongoDB (100% free)
-- [Paper Search MCP](https://github.com/openags/paper-search-mcp) - Search papers across arXiv, PubMed, bioRxiv, Google Scholar, and more (100% free)
-- [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools (100% free)
-- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools (100% free)
-- [Supabase MCP](https://github.com/supabase-community/supabase-mcp) - Database tools for interacting with Supabase (100% free) - [Configuration guide](https://supabase.com/docs/guides/getting-started/mcp#step-2-configure-your-ai-tool)
-- [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool (free tier: 1000 monthly requests)
-
-OpenAI Codex compatible version of MCP server configurations can be found in [`~/.codex/config.toml`](./config.toml).
+For complete installation instructions, see [INSTALL.md](INSTALL.md).
 
 ## Configuration
 
@@ -125,23 +26,22 @@ VSCode settings are stored in [`.vscode/settings.json`](./.vscode/settings.json)
 - Python formatting with Ruff, auto-save, and format-on-save enabled
 - Terminal configurations for cross-platform compatibility
 
-## Statusline
+## MCP Servers
 
-The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
+The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:
 
-- **Real-time usage tracking**: Monitor token consumption and API costs as you work
-- **Offline support**: Cached data ensures statusline works without internet connectivity
-- **Customizable refresh**: Updates every 2 seconds for responsive feedback
-- **Turkish localization**: Displays costs and dates in Turkish format (configurable)
+- [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools (100% free)
+- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
+- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free)
+- [Linear MCP](https://linear.app/docs/mcp) - Project management tools for Linear (100% free)
+- [MongoDB MCP](https://github.com/mongodb-js/mongodb-mcp-server) - Tools for interacting with MongoDB (100% free)
+- [Paper Search MCP](https://github.com/openags/paper-search-mcp) - Search papers across arXiv, PubMed, bioRxiv, Google Scholar, and more (100% free)
+- [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools (100% free)
+- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools (100% free)
+- [Supabase MCP](https://github.com/supabase-community/supabase-mcp) - Database tools for interacting with Supabase (100% free) - [Configuration guide](https://supabase.com/docs/guides/getting-started/mcp#step-2-configure-your-ai-tool)
+- [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool (free tier: 1000 monthly requests)
 
-### Configuration
-
-The statusline is configured through two files:
-
-- **[`.claude/settings.json`](./.claude/settings.json)**: Contains the statusline command configuration
-- **[`.claude/ccusage.json`](./.claude/ccusage.json)**: ccusage-specific settings for locale, timezone, and refresh behavior
-
-For detailed setup instructions and customization options, see the [ccusage statusline guide](https://ccusage.com/guide/statusline).
+OpenAI Codex compatible version of MCP server configurations can be found in [`~/.codex/config.toml`](./config.toml).
 
 ## Agents
 
@@ -224,6 +124,24 @@ Custom Claude Code slash commands that make life easier, stored in [`.claude/com
 - [`/create-pr`](./.claude/commands/create-pr.md) - Create pull request using the pr-manager agent with optional context
 - [`/explain-architecture-pattern`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
 - [`/update-pr-summary`](./.claude/commands/update-pr-summary.md) - Generate PR summaries with advanced analytical frameworks
+
+## Statusline
+
+The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
+
+- **Real-time usage tracking**: Monitor token consumption and API costs as you work
+- **Offline support**: Cached data ensures statusline works without internet connectivity
+- **Customizable refresh**: Updates every 2 seconds for responsive feedback
+- **Turkish localization**: Displays costs and dates in Turkish format (configurable)
+
+### Configuration
+
+The statusline is configured through two files:
+
+- **[`.claude/settings.json`](./.claude/settings.json)**: Contains the statusline command configuration
+- **[`.claude/ccusage.json`](./.claude/ccusage.json)**: ccusage-specific settings for locale, timezone, and refresh behavior
+
+For detailed setup instructions and customization options, see the [ccusage statusline guide](https://ccusage.com/guide/statusline).
 
 ## Extra Resources
 
