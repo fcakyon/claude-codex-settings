@@ -15,6 +15,9 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 * Reuse existing code wherever possible and minimize unnecessary arguments.
 * Look for opportunities to simplify the code or remove unnecessary parts.
 * Focus on targeted modifications rather than large-scale changes.
+* This year is 2025. Definitely not 2024.
+* Never use words like "modernize", "streamline", "delve", "establish" in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that.
+* Prefer `rg` over `grep` for better performance.
 
 ## MCP Tools
 
@@ -72,23 +75,23 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 ## Creating a Pull Request
 
    - Run `/pr-manager` agent if possible or follow the steps below.
-   - Never commit to main branch, always create feature branches.
-   - PR should contain few words summary and few bullet points of changes made (you may give inline md links to related code lines)
-   - Get current user info using `mcp__github__get_me` and add as `assignees` when creating any PR. Decide `reviewers` based on the previous PR reviewers.
-   - When updating key information or config parameters, confirm it with web search and link to source of truth inline in the PR message:
+   - Verify staged changes exist with `git diff --cached --name-only`
+   - If on main/master, create feature branch: `feature/brief-description` or `fix/brief-description`
+   - Use `/commit-manager` to handle staged changes
+   - Update README.md or docs if needed based on the changes
+   - For config/API changes, use `mcp__tavily__tavily-search` to verify information and include source links inline
+   - Create PR with `gh pr create` using `-t` (title), `-b` (summary + bullet points), `-a @me` (self-assign), `-r <reviewer>` (from recent PRs)
+   - PR should contain brief summary (few words or 1 sentence) and few bullet points of changes (with inline md links to sources when relevant)
+   - Example with inline source links:
       ```
       Update Claude Haiku to version 4.5
 
-         - Update model ID: claude-3-haiku-20240307 → claude-haiku-4-5-20251015 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
-         - Update pricing: $0.80/$4.00 → $1.00/$5.00 per MTok ([source](https://docs.anthropic.com/en/docs/about-claude/pricing))
-         - Update max output tokens: 4,096 → 64,000 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+      - Model ID: claude-3-haiku-20240307 → claude-haiku-4-5-20251001 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+      - Pricing: $0.80/$4.00 → $1.00/$5.00 per MTok ([source](https://docs.anthropic.com/en/docs/about-claude/pricing))
+      - Max output: 4,096 → 64,000 tokens ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
       ```
-   - For complex PRs, include example usage of new implementation in PR message as code markdown with before/after examples if useful.
-   - Read README.md and check for missing or obsolete information based on the staged changes:
-     - New features, configuration that should be documented
-     - Outdated descriptions that no longer match the current implementation
-     - Missing setup instructions for new dependencies or tools
    - Don't add test plans in PR or commit messages.
+
 
 ## Committing Changes
 

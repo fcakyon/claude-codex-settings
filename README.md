@@ -48,6 +48,28 @@ sudo apt-get install jq
 # sudo pacman -S jq (Arch)
 ```
 
+- Install GitHub CLI (required for pr-manager agent):
+
+**macOS:**
+
+```bash
+brew install gh
+```
+
+**Ubuntu/Debian:**
+
+```bash
+sudo apt-get install gh
+```
+
+**Other Linux distributions:**
+
+```bash
+# Check your package manager, e.g.:
+# sudo yum install gh (RHEL/CentOS)
+# sudo pacman -S github-cli (Arch)
+```
+
 - Install code quality tools:
 
 ```bash
