@@ -13,6 +13,7 @@ except (KeyError, json.JSONDecodeError) as err:
     sys.exit(1)
 
 print(json.dumps({
+    "systemMessage": "WebFetch detected. AI is directed to use Tavily extract instead.",
     "hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",

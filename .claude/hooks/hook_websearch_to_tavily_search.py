@@ -14,6 +14,7 @@ except (KeyError, json.JSONDecodeError) as err:
     sys.exit(1)
 
 print(json.dumps({
+    "systemMessage": "WebSearch detected. AI is directed to use Tavily search instead.",
     "hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",
