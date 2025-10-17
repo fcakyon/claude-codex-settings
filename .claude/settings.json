@@ -155,7 +155,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccusage statusline",
+    "command": "npx -y ccusage@latest statusline",
     "padding": 0
   }
 }
