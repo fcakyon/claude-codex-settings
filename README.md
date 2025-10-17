@@ -10,7 +10,7 @@ My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](h
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 \. "$HOME/.nvm/nvm.sh"
 nvm install 22
-node -v # Should print "v22.17.1".
+node -v     # Should print "v22.17.1".
 nvm current # Should print "v22.17.1".
 ```
 
@@ -46,6 +46,28 @@ sudo apt-get install jq
 # Check your package manager, e.g.:
 # sudo yum install jq (RHEL/CentOS)
 # sudo pacman -S jq (Arch)
+```
+
+- Install GitHub CLI (required for pr-manager agent):
+
+**macOS:**
+
+```bash
+brew install gh
+```
+
+**Ubuntu/Debian:**
+
+```bash
+sudo apt-get install gh
+```
+
+**Other Linux distributions:**
+
+```bash
+# Check your package manager, e.g.:
+# sudo yum install gh (RHEL/CentOS)
+# sudo pacman -S github-cli (Arch)
 ```
 
 - Install code quality tools:
@@ -93,10 +115,12 @@ Claude Code configuration is stored in [`.claude/settings.json`](./.claude/setti
 - Custom hooks for enhancing tool functionality
 
 OpenAI Codex configuration is stored in [`~/.codex/config.toml`](./config.toml) and includes:
+
 - Default `gpt-5-codex` model with `model_reasoning_effort` set to "high" and served through the Azure `responses` API surface
 - Azure provider metadata (`model_providers.azure`) with the project-specific base URL and `env_key` secret for authentication
 
 VSCode settings are stored in [`.vscode/settings.json`](./.vscode/settings.json) and include:
+
 - **GitHub Copilot instructions**: Custom AI instructions for automated commit message and PR description generation
 - Python formatting with Ruff, auto-save, and format-on-save enabled
 - Terminal configurations for cross-platform compatibility
@@ -194,12 +218,12 @@ For more details, see the [Claude Code hooks documentation](https://docs.anthrop
 
 ## Commands
 
-Custom Claude Code commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
+Custom Claude Code slash commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
 
-- [`apply-thinking-to.md`](./.claude/commands/apply-thinking-to.md) - Prompt enhancement using advanced thinking patterns (inspired by [centminmod's version](https://github.com/centminmod/my-claude-code-setup/blob/master/.claude/commands/anthropic/apply-thinking-to.md))
-- [`commit-staged-changes.md`](./.claude/commands/commit-staged-changes.md) - Automated commit creation with conventional commit messages
-- [`explain-architecture-pattern.md`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
-- [`update-pr-summary.md`](./.claude/commands/update-pr-summary.md) - Generate PR summaries with advanced analytical frameworks
+- [`/commit-staged`](./.claude/commands/commit-staged.md) - Commit staged changes using the commit-manager agent with optional context
+- [`/create-pr`](./.claude/commands/create-pr.md) - Create pull request using the pr-manager agent with optional context
+- [`/explain-architecture-pattern`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
+- [`/update-pr-summary`](./.claude/commands/update-pr-summary.md) - Generate PR summaries with advanced analytical frameworks
 
 ## Extra Resources
 
