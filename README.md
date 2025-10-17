@@ -6,7 +6,91 @@ My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](h
 
 ## Installation
 
-For complete installation instructions, see [INSTALL.md](INSTALL.md).
+### 1. Prerequisites (Required)
+
+Install Claude Code and dependencies:
+
+```bash
+# Install Node.js
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+nvm install 22
+
+# Install Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# Install required tools
+brew install jq gh # macOS
+# OR apt-get install jq gh  # Ubuntu
+
+# Install code quality tools (required for hooks to work)
+pip install ruff docformatter
+npm install -g prettier@3.6.2 prettier-plugin-sh
+```
+
+See [INSTALL.md](INSTALL.md#prerequisites) for detailed prerequisite setup.
+
+---
+
+### 2. Install Configuration
+
+**Option A: Plugin Marketplace**
+
+Install agents, commands, hooks, and MCP servers via plugin system:
+
+```bash
+# Add marketplace
+/plugin marketplace add fcakyon/claude-codex-settings
+
+# Install plugins
+/plugin install code-quality-hooks@fcakyon-claude-plugins
+/plugin install git-workflow-agents@fcakyon-claude-plugins
+/plugin install code-simplifier-agent@fcakyon-claude-plugins
+/plugin install productivity-commands@fcakyon-claude-plugins
+/plugin install mcp-server-configs@fcakyon-claude-plugins
+```
+
+Then create symlink for cross-tool compatibility:
+
+```bash
+ln -s ~/.claude/CLAUDE.md ~/.claude/AGENTS.md
+```
+
+Restart Claude Code to activate.
+
+**Option B: Manual Clone**
+
+<details>
+<summary>Click to expand manual installation</summary>
+
+```bash
+# Clone repository
+git clone https://github.com/fcakyon/claude-settings.git ~/.claude-settings
+
+# Copy configuration files
+cp -r ~/.claude-settings/.claude/* ~/.claude/
+
+# Create symlink
+ln -s ~/.claude/CLAUDE.md ~/.claude/AGENTS.md
+
+# Make hooks executable
+chmod +x ~/.claude/hooks/*.py
+```
+
+See [INSTALL.md](INSTALL.md) for complete manual setup guide.
+
+</details>
+
+## Available Plugins
+
+| Plugin                    | Description                        | Installation                                                   |
+| ------------------------- | ---------------------------------- | -------------------------------------------------------------- |
+| **code-quality-hooks**    | Auto-formatting for 8+ languages   | `/plugin install code-quality-hooks@fcakyon-claude-plugins`    |
+| **git-workflow-agents**   | commit-manager + pr-manager agents | `/plugin install git-workflow-agents@fcakyon-claude-plugins`   |
+| **code-simplifier-agent** | Pattern consistency enforcer       | `/plugin install code-simplifier-agent@fcakyon-claude-plugins` |
+| **productivity-commands** | Custom slash commands              | `/plugin install productivity-commands@fcakyon-claude-plugins` |
+| **mcp-server-configs**    | 9 pre-configured MCP servers       | `/plugin install mcp-server-configs@fcakyon-claude-plugins`    |
+
+---
 
 ## Configuration
 
@@ -30,7 +114,28 @@ VSCode settings are stored in [`.vscode/settings.json`](./.vscode/settings.json)
 
 ## MCP Servers
 
-The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json). These are some solid MCP server repos worth checking out:
+The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json).
+
+### Installation
+
+**Plugin-based:**
+
+```bash
+/plugin install mcp-server-configs@fcakyon-claude-plugins
+```
+
+<details>
+<summary><b>Manual Installation</b></summary>
+
+Copy [`mcp.json`](./mcp.json) to your project root named as `.mcp.json` and adjust MCP servers.
+
+</details>
+
+---
+
+### Available MCP Servers
+
+These are some solid MCP server repos worth checking out:
 
 - [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools (100% free)
 - [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
@@ -49,6 +154,24 @@ OpenAI Codex compatible version of MCP server configurations can be found in [`~
 
 Specialized agents that run automatically to enhance code quality, stored in [`.claude/agents/`](./.claude/agents/):
 
+### Installation
+
+**Plugin-based:**
+
+```bash
+/plugin install git-workflow-agents@fcakyon-claude-plugins
+/plugin install code-simplifier-agent@fcakyon-claude-plugins
+```
+
+<details>
+<summary><b>Manual Installation</b></summary>
+
+Copy agents from [`.claude/agents/`](./.claude/agents/) to your project's `.claude/agents/` directory.
+
+</details>
+
+---
+
 - [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Contextual pattern analyzer that ensures new code follows existing project conventions (imports, naming, function signatures, class patterns). Auto-triggers after TodoWrite to maintain codebase consistency.
 
 - [`commit-manager.md`](./.claude/agents/commit-manager.md) - Git commit expert that analyzes staged changes, creates optimal commit strategies, and executes commits with meaningful messages. Handles documentation updates and multi-commit scenarios.
@@ -60,6 +183,28 @@ For more details, see the [Claude Code sub-agents documentation](https://docs.an
 ## Hooks
 
 Custom hooks that enhance tool usage, configured in [`.claude/settings.json`](./.claude/settings.json):
+
+### Installation
+
+**Plugin-based:**
+
+```bash
+/plugin install code-quality-hooks@fcakyon-claude-plugins
+```
+
+<details>
+<summary><b>Manual Installation</b></summary>
+
+1. Copy hooks from [`.claude/hooks/`](./.claude/hooks/) to your project
+2. Copy hook configuration from [`.claude/settings.json`](./.claude/settings.json)
+3. Make scripts executable:
+   ```bash
+   chmod +x ./.claude/hooks/*.py
+   ```
+
+</details>
+
+---
 
 ### Setup
 
@@ -121,6 +266,23 @@ For more details, see the [Claude Code hooks documentation](https://docs.anthrop
 ## Commands
 
 Custom Claude Code slash commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
+
+### Installation
+
+**Plugin-based:**
+
+```bash
+/plugin install productivity-commands@fcakyon-claude-plugins
+```
+
+<details>
+<summary><b>Manual Installation</b></summary>
+
+Copy commands from [`.claude/commands/`](./.claude/commands/) to your project's `.claude/commands/` directory.
+
+</details>
+
+---
 
 - [`/commit-staged`](./.claude/commands/commit-staged.md) - Commit staged changes using the commit-manager agent with optional context
 - [`/create-pr`](./.claude/commands/create-pr.md) - Create pull request using the pr-manager agent with optional context
