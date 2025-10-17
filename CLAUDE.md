@@ -110,19 +110,15 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
   def authenticate(token):
       session = create_session(token)
       return session
-  ````
+   ```
 
   After:
-
   ```python
   async def authenticate(token):
       async with create_session(token) as session:
           return session
   ```
-
-  ```
-
-  ```
+  ````
 
 - Don't add test plans in PR or commit messages.
 
