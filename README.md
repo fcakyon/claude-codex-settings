@@ -2,6 +2,8 @@
 
 My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with battle-tested commands and MCP servers that I use daily.
 
+[Installation](INSTALL.md) • [Configuration](#configuration) • [MCP Servers](#mcp-servers) • [Agents](#agents) • [Hooks](#hooks) • [Commands](#commands) • [Statusline](#statusline)
+
 ## Installation
 
 For complete installation instructions, see [INSTALL.md](INSTALL.md).
