@@ -1,5 +1,9 @@
 # claude-codex-settings
 
+[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](#available-plugins)
+[![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
+[![llms.txt](https://img.shields.io/badge/llms.txt-✓-brightgreen)](https://context7.com/fcakyon/claude-codex-settings/llms.txt)
+
 My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with battle-tested commands and MCP servers that I use daily.
 
 [Installation](INSTALL.md) • [Configuration](#configuration) • [MCP Servers](#mcp-servers) • [Agents](#agents) • [Hooks](#hooks) • [Commands](#commands) • [Statusline](#statusline)
