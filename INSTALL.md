@@ -1,6 +1,8 @@
 # Installation Guide
 
-Complete setup instructions for Claude Code, OpenAI Codex, and all dependencies.
+Complete installation guide for Claude Code, dependencies, and this configuration.
+
+> **Prefer easier setup?** Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and create the AGENTS.md symlink.
 
 ## Prerequisites
 
