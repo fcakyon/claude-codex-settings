@@ -19,13 +19,14 @@ try:
     if github_urls:
         # Block and suggest GitHub MCP tools
         print(json.dumps({
+            "systemMessage": "GitHub URL detected in Tavily extract tool. AI is directed to use GitHub MCP tools instead.",
             "hookSpecificOutput": {
                 "hookEventName": "PreToolUse",
                 "permissionDecision": "deny",
                 "permissionDecisionReason": "GitHub URL detected. Please use GitHub MCP tools (mcp__github__*) for more robust data retrieval."
-            }
+            },
         }, separators=(',', ':')))
-        sys.exit(0)
+        sys.exit(2)
 
     # Always ensure extract_depth="advanced" for non-GitHub URLs
     tool_input["extract_depth"] = "advanced"
