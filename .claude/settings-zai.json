@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "opusplan",
+  "includeCoAuthoredBy": false,
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "your_zai_api_key",
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "DISABLE_BUG_COMMAND": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "GLM-4.6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "GLM-4.6",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "GLM-4.5-Air",
+    "MAX_MCP_OUTPUT_TOKENS": "40000"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(echo:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(sed:*)",
+      "Bash(source:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh api user:*)",
+      "Bash(git branch --show-current:*)",
+      "Bash(git diff:*)",
+      "Bash(git status:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git push:*)",
+      "Bash(git log:*)",
+      "Bash(git -C :* branch --show-current:*)",
+      "Bash(git -C :* diff:*)",
+      "Bash(git -C :* status:*)",
+      "Bash(git -C :* rev-parse:*)",
+      "Bash(git -C :* push:*)",
+      "Bash(git -C :* log:*)",
+      "Bash(ruff:*)",
+      "Bash(uv run ruff:*)",
+      "Bash(docformatter:*)",
+      "Bash(uv run docformatter:*)",
+      "Bash(python --version:*)",
+      "WebFetch(domain:docs.litellm.ai)",
+      "WebFetch(domain:openai.com)",
+      "WebFetch(domain:anthropic.com)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:github.com)",
+      "mcp__tavily__tavily-extract",
+      "mcp__tavily__tavily-search",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "mcp__github__get_me",
+      "mcp__github__get_pull_request",
+      "mcp__github__get_pull_request_diff",
+      "mcp__github__get_pull_request_status",
+      "mcp__github__get_pull_request_files",
+      "mcp__github__get_file_contents",
+      "mcp__github__get_workflow_run",
+      "mcp__github__get_job_logs",
+      "mcp__github__get_issue",
+      "mcp__github__get_issue_comments",
+      "mcp__github__list_pull_requests",
+      "mcp__github__list_commits",
+      "mcp__github__list_workflows",
+      "mcp__github__list_workflow_runs",
+      "mcp__github__list_workflow_jobs",
+      "mcp__github__search_pull_requests",
+      "mcp__github__search_issues",
+      "mcp__github__search_code",
+      "mcp__mongodb__list_databases",
+      "mcp__mongodb__list_collections",
+      "mcp__mongodb__get_collection_schema",
+      "mcp__mongodb__collection-indexes",
+      "mcp__supabase__list_tables"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_webfetch_to_tavily_extract.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__tavily__tavily-extract",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_tavily_extract_to_advanced.py"
+          }
+        ]
+      },
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_websearch_to_tavily_search.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_enforce_rg_over_grep.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file_path=$(jq -r '.tool_input.file_path // empty' 2>/dev/null); if [[ -n \"$file_path\" && -f \"$file_path\" ]]; then case \"$file_path\" in *.py|*.js|*.jsx|*.ts|*.tsx) if [[ \"$OSTYPE\" == \"darwin\"* ]]; then sed -i '' 's/^[[:space:]]*$//g' \"$file_path\" 2>/dev/null || true; else sed -i 's/^[[:space:]]*$//g' \"$file_path\" 2>/dev/null || true; fi ;; esac; fi"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_python_code_quality.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_prettier_formatting.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_markdown_formatting.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_bash_formatting.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_load_claude_md.py"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "npx -y ccusage@latest statusline",
+    "padding": 0
+  }
+}
