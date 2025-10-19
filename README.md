@@ -105,6 +105,15 @@ Claude Code configuration is stored in [`.claude/settings.json`](./.claude/setti
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
 
+**Alternative API Providers:**
+
+For cost-effective alternatives, you can use Z.ai's GLM models via Anthropic-compatible API:
+
+- [`.claude/settings-zai.json`](./.claude/settings-zai.json) - Configuration for [Z.ai GLM-4.6/GLM-4.5-Air models](https://docs.z.ai/scenario-example/develop-tools/claude) (85% cheaper than Claude 4.5 - [source](https://z.ai/blog/glm-4.6))
+  - Main model: GLM-4.6 (dialogue, planning, coding, complex reasoning)
+  - Fast model: GLM-4.5-Air (file search, syntax checking)
+  - Requires Z.ai API key from [z.ai/model-api](https://z.ai/model-api)
+
 OpenAI Codex configuration is stored in [`~/.codex/config.toml`](./config.toml) and includes:
 
 - Default `gpt-5-codex` model with `model_reasoning_effort` set to "high" and served through the Azure `responses` API surface
