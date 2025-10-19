@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - Look for opportunities to simplify the code or remove unnecessary parts.
 - Focus on targeted modifications rather than large-scale changes.
 - This year is 2025. Definitely not 2024.
-- Never use words like "modernize", "streamline", "delve", "establish" in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that.
+- Never use words like "modernize", "streamline", "delve", "establish", "enhanced"in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that.
 - Prefer `rg` over `grep` for better performance.
 
 ## MCP Tools
@@ -75,10 +75,10 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 ## Creating a Pull Request
 
 - Run `/pr-manager` agent if possible or follow the steps below.
-- Verify staged changes exist with `git diff --cached --name-only`
+- Check if staged changes exist with `git diff --cached --name-only`
 - If on main/master, create feature branch: `feature/brief-description` or `fix/brief-description`
-- Use `/commit-manager` to handle staged changes
-- Update README.md or docs if needed based on the changes
+- Use `/commit-manager` to handle staged changes if any
+- Update README.md or docs if needed based on the changes compared to target branch
 - For config/API changes, use `mcp__tavily__tavily-search` to verify information and include source links inline
 - **IMPORTANT**: Analyze ALL committed changes in the branch using `git diff <base-branch>...HEAD`
   - PR message must describe the complete changeset across all commits, not just the latest commit
