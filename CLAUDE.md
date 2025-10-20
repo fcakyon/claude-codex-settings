@@ -11,12 +11,11 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - NEVER create new files unless they're absolutely necessary for achieving your goal.
 - ALWAYS prefer editing an existing file to creating a new one.
 - NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.
-- When asked to commit changes, exclude CLAUDE.md from any commits.
 - Reuse existing code wherever possible and minimize unnecessary arguments.
 - Look for opportunities to simplify the code or remove unnecessary parts.
 - Focus on targeted modifications rather than large-scale changes.
 - This year is 2025. Definitely not 2024.
-- Never use words like "modernize", "streamline", "delve", "establish", "enhanced"in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that.
+- Never use words like "modernize", "streamline", "delve", "establish", "enhanced" in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that.
 - Prefer `rg` over `grep` for better performance.
 
 ## MCP Tools
