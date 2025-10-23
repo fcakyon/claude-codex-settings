@@ -233,6 +233,14 @@ These hooks ensure Claude always has access to project-specific instructions by 
 
 - **[hook_load_claude_md.py](./.claude/hooks/hook_load_claude_md.py)**: Auto-loads CLAUDE.md or AGENTS.md from the project directory on every user prompt. Prevents AI from forgetting main instructions by re-injecting them at every prompt submission.
 
+### Git Workflow Confirmation Hooks
+
+These hooks provide user confirmation dialogs before executing critical git operations, showing previews of what will be committed or created.
+
+- **[hook_git_commit_confirm.py](./.claude/hooks/hook_git_commit_confirm.py)**: Shows confirmation dialog before creating git commits. Displays commit message, staged files list, and diff statistics. Supports both regular commits and amend operations.
+- **[hook_gh_pr_create_confirm.py](./.claude/hooks/hook_gh_pr_create_confirm.py)**: Shows confirmation dialog before creating GitHub pull requests via `gh pr create`. Displays PR title, body preview, assignee (resolves @me to actual username), and reviewer.
+
+
 ### Web Content Enhancement Hooks
 
 These hooks redirect native Claude Code web tools to faster and more reliable Tavily alternatives. Native WebSearch/WebFetch tools take 20-30 seconds while Tavily equivalents complete in 1-2 seconds. Additionally, native WebFetch often fails on bot-protected websites while Tavily can bypass these protections.
