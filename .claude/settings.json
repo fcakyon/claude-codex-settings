@@ -111,6 +111,14 @@
           {
             "type": "command",
             "command": ".claude/hooks/hook_enforce_rg_over_grep.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_git_commit_confirm.py"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/hook_gh_pr_create_confirm.py"
           }
         ]
       }
