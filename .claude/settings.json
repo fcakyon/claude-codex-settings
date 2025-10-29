@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "opusplan",
+  "model": "haiku",
   "includeCoAuthoredBy": false,
   "env": {
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
@@ -9,6 +9,7 @@
     "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-sonnet-4-5-20250929",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-5-20250929",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5-20251001",
     "MAX_MCP_OUTPUT_TOKENS": "40000"
   },
   "permissions": {

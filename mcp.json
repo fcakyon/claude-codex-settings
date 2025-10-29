@@ -10,10 +10,17 @@
       "args": ["-y", "@upstash/context7-mcp"]
     },
     "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp",
-      "headers": {
-          "Authorization": "Bearer YOUR_GITHUB_PAT_HERE"
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "GITHUB_PERSONAL_ACCESS_TOKEN",
+        "ghcr.io/github/github-mcp-server"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_..."
       }
     },
     "linear": {
@@ -40,7 +47,7 @@
     },
     "slack": {
       "command": "npx",
-      "args": ["-y", "@ubie-oss/slack-mcp-server@0.1.3"],
+      "args": ["-y", "@ubie-oss/slack-mcp-server@0.1.4"],
       "env": {
         "NPM_CONFIG_//npm.pkg.github.com/:_authToken": "...",
         "NPM_CONFIG_@ubie-oss:registry": "https://npm.pkg.github.com/",
@@ -50,7 +57,7 @@
     },
     "tavily": {
       "command": "npx",
-      "args": ["-y", "tavily-mcp@0.2.9"],
+      "args": ["-y", "tavily-mcp@latest"],
       "env": {
         "TAVILY_API_KEY": "tvly-..."
       }
