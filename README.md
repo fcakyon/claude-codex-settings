@@ -100,7 +100,7 @@ See [INSTALL.md](INSTALL.md) for complete manual setup guide.
 
 Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
 
-- Model selection (currently using OpusPlan with claude-sonnet-4-5-20250929 - see [model configuration docs](https://docs.anthropic.com/en/docs/claude-code/model-config#opusplan-model-setting))
+- Model selection (SonnetPlan mode: plan with Sonnet 4.5, execute with Haiku 4.5 - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61))
 - Environment variables for optimal Claude Code behavior
 - Settings for disabling telemetry and non-essential features
 - Custom hooks for enhancing tool functionality
@@ -239,7 +239,6 @@ These hooks provide user confirmation dialogs before executing critical git oper
 
 - **[hook_git_commit_confirm.py](./.claude/hooks/hook_git_commit_confirm.py)**: Shows confirmation dialog before creating git commits. Displays commit message, staged files list, and diff statistics. Supports both regular commits and amend operations.
 - **[hook_gh_pr_create_confirm.py](./.claude/hooks/hook_gh_pr_create_confirm.py)**: Shows confirmation dialog before creating GitHub pull requests via `gh pr create`. Displays PR title, body preview, assignee (resolves @me to actual username), and reviewer.
-
 
 ### Web Content Enhancement Hooks
 
