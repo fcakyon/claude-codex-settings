@@ -6,25 +6,44 @@ Complete installation guide for Claude Code, dependencies, and this configuratio
 
 ## Prerequisites
 
-### Node.js and nvm
+### Claude Code
 
-Install nvm and Node.js (v22+ recommended):
+Install Claude Code using the native installer (no Node.js required):
 
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-\. "$HOME/.nvm/nvm.sh"
-nvm install 22
-node -v     # Should print "v22.17.1".
-nvm current # Should print "v22.17.1".
-```
-
-### Claude Code and OpenAI Codex
-
-Install Claude Code:
+**macOS/Linux/WSL:**
 
 ```bash
-npm install -g @anthropic-ai/claude-code
+# Install via native installer
+curl -fsSL https://claude.ai/install.sh | bash
+
+# Or via Homebrew
+brew install --cask claude-code
+
+# Verify installation
+claude --version
 ```
+
+**Windows PowerShell:**
+
+```powershell
+# Install via native installer
+irm https://claude.ai/install.ps1 | iex
+
+# Verify installation
+claude --version
+```
+
+**Migrate from legacy npm installation:**
+
+```bash
+claude install
+```
+
+Optionally install IDE extension:
+
+- [Claude Code VSCode extension](https://docs.claude.com/en/docs/claude-code/vs-code) for IDE integration
+
+### OpenAI Codex
 
 Install OpenAI Codex:
 
@@ -32,10 +51,9 @@ Install OpenAI Codex:
 npm install -g @openai/codex
 ```
 
-Optionally install IDE extensions:
+Optionally install IDE extension:
 
-- [Claude Code VSCode extension](https://docs.claude.com/en/docs/claude-code/vs-code) for 100% IDE integration
-- [Codex VSCode extension](https://developers.openai.com/codex/ide) for 100% IDE integration
+- [Codex VSCode extension](https://developers.openai.com/codex/ide) for IDE integration
 
 ### Required Tools
 
@@ -90,6 +108,7 @@ sudo apt-get install gh
 pip install ruff docformatter
 
 # Prettier for JS/TS/CSS/JSON/YAML/HTML/Markdown/Shell formatting (required for prettier hooks)
+# Note: npm is required for prettier even though Claude Code no longer needs it
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
