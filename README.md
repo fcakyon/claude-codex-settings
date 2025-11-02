@@ -12,26 +12,46 @@ My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](h
 
 ### 1. Prerequisites (Required)
 
-Install Claude Code and dependencies:
+Install Claude Code using the native installer:
+
+**macOS/Linux/WSL:**
 
 ```bash
-# Install Node.js
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-nvm install 22
+# Install Claude Code (no Node.js required)
+curl -fsSL https://claude.ai/install.sh | bash
 
-# Install Claude Code
-npm install -g @anthropic-ai/claude-code
+# Or via Homebrew
+brew install --cask claude-code
+```
 
-# Install required tools
+**Windows PowerShell:**
+
+```powershell
+# Install Claude Code (no Node.js required)
+irm https://claude.ai/install.ps1 | iex
+```
+
+**Migrate from legacy npm installation:**
+
+```bash
+claude install
+```
+
+**Install required tools:**
+
+```bash
 brew install jq gh # macOS
 # OR apt-get install jq gh  # Ubuntu
+```
 
-# Install code quality tools (required for hooks to work)
+**Install code quality tools (required for hooks to work):**
+
+```bash
 pip install ruff docformatter
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
-See [INSTALL.md](INSTALL.md#prerequisites) for detailed prerequisite setup.
+See [INSTALL.md](INSTALL.md#prerequisites) for detailed setup (note: may contain outdated npm instructions).
 
 ---
 
@@ -74,7 +94,7 @@ git clone https://github.com/fcakyon/claude-settings.git ~/.claude-settings
 cp -r ~/.claude-settings/.claude/* ~/.claude/
 
 # Create symlink
-ln -s ~/.claude/CLAUDE.md ~/.claude/AGENTS.md
+ln -s CLAUDE.md AGENTS.md
 
 # Make hooks executable
 chmod +x ~/.claude/hooks/*.py
