@@ -21,6 +21,23 @@ BASH_BLOCK_PATTERN = r"^( *)```(?:bash|sh|shell)\n(.*?)\n\1```"
 LANGUAGE_TAGS = {"python": ["python", "py", "{ .py .annotate }"], "bash": ["bash", "sh", "shell"]}
 
 
+def check_prettier_version() -> bool:
+    """Check if prettier is installed and warn if version differs from 3.6.2."""
+    if not shutil.which("npx"):
+        return False
+    try:
+        result = subprocess.run(["npx", "prettier", "--version"],
+                                capture_output=True, text=True, check=False, timeout=5)
+        if result.returncode == 0:
+            version = result.stdout.strip()
+            if "3.6.2" not in version:
+                print(f"⚠️  Prettier version mismatch: expected 3.6.2, found {version}")
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def extract_code_blocks(markdown_content: str) -> dict[str, list[tuple[str, str]]]:
     """Extract code blocks from markdown content.
 
@@ -69,7 +86,7 @@ def add_indentation(code_block: str, num_spaces: int) -> str:
 
 
 def format_code_with_ruff(temp_dir: Path) -> None:
-    """Format Python files in a temporary directory with Ruff and docformatter.
+    """Format Python files in a temporary directory with Ruff.
 
     Args:
         temp_dir (Path): Directory containing extracted Python blocks.
@@ -97,24 +114,6 @@ def format_code_with_ruff(temp_dir: Path) -> None:
         print("Completed ruff check ✅")
     except Exception as exc:  # noqa: BLE001
         print(f"ERROR running ruff check ❌ {exc}")
-
-    try:
-        subprocess.run(
-            [
-                "docformatter",
-                "--wrap-summaries=120",
-                "--wrap-descriptions=120",
-                "--pre-summary-newline",
-                "--close-quotes-on-newline",
-                "--in-place",
-                "--recursive",
-                str(temp_dir),
-            ],
-            check=True,
-        )
-        print("Completed docformatter ✅")
-    except Exception as exc:  # noqa: BLE001
-        print(f"ERROR running docformatter ❌ {exc}")
 
 
 def format_bash_with_prettier(temp_dir: Path) -> None:
@@ -245,12 +244,12 @@ def run_prettier(markdown_file: Path) -> None:
         markdown_file (Path): Markdown file to format.
     """
 
-    if not shutil.which("npx"):
+    if not check_prettier_version():
         return
     is_docs = "docs" in markdown_file.parts and "reference" not in markdown_file.parts
-    command = ["npx", "prettier", "--write", str(markdown_file)]
+    command = ["npx", "prettier", "--write", "--list-different", str(markdown_file)]
     if is_docs:
-        command = ["npx", "prettier", "--tab-width", "4", "--write", str(markdown_file)]
+        command = ["npx", "prettier", "--tab-width", "4", "--write", "--list-different", str(markdown_file)]
     subprocess.run(command, capture_output=True, check=False, cwd=markdown_file.parent)
 
 
