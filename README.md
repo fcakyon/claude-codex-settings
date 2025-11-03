@@ -172,7 +172,7 @@ These are some solid MCP server repos worth checking out:
 
 - [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools (100% free)
 - [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
-- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free)
+- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free) - See configuration below
 - [Linear MCP](https://linear.app/docs/mcp) - Project management tools for Linear (100% free)
 - [MongoDB MCP](https://github.com/mongodb-js/mongodb-mcp-server) - Tools for interacting with MongoDB (100% free)
 - [Paper Search MCP](https://github.com/openags/paper-search-mcp) - Search papers across arXiv, PubMed, bioRxiv, Google Scholar, and more (100% free)
@@ -180,6 +180,39 @@ These are some solid MCP server repos worth checking out:
 - [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools (100% free)
 - [Supabase MCP](https://github.com/supabase-community/supabase-mcp) - Database tools for interacting with Supabase (100% free) - [Configuration guide](https://supabase.com/docs/guides/getting-started/mcp#step-2-configure-your-ai-tool)
 - [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool (free tier: 1000 monthly requests)
+
+#### GitHub MCP Configuration
+
+**Claude Code (HTTP Remote - Recommended):**
+
+```json
+"github": {
+  "type": "http",
+  "url": "https://api.githubcopilot.com/mcp",
+  "headers": {
+    "Authorization": "Bearer ghp_..."
+  }
+}
+```
+
+**Claude Desktop (Docker - More Stable):**
+
+```json
+"github": {
+  "command": "docker",
+  "args": [
+    "run",
+    "-i",
+    "--rm",
+    "-e",
+    "GITHUB_PERSONAL_ACCESS_TOKEN",
+    "ghcr.io/github/github-mcp-server"
+  ],
+  "env": {
+    "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_..."
+  }
+}
+```
 
 OpenAI Codex compatible version of MCP server configurations can be found in [`~/.codex/config.toml`](./config.toml).
 
