@@ -1,8 +1,7 @@
 {
   "name": "fcakyon-claude-plugins",
   "owner": {
-    "name": "Fatih Akyon",
-    "email": "[email protected]"
+    "name": "Fatih Akyon"
   },
   "metadata": {
     "description": "Battle-tested Claude Code plugin collection: auto-formatting, Git workflow agents, pattern analysis, productivity commands, and 100+ MCP tools.",

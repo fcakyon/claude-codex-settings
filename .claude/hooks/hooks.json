@@ -5,7 +5,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_webfetch_to_tavily_extract.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/webfetch_to_tavily_extract.py"
         }
       ]
     },
@@ -14,7 +14,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_tavily_extract_to_advanced.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/tavily_extract_to_advanced.py"
         }
       ]
     },
@@ -23,7 +23,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_websearch_to_tavily_search.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/websearch_to_tavily_search.py"
         }
       ]
     },
@@ -32,7 +32,7 @@
       "hooks": [
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_enforce_rg_over_grep.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/enforce_rg_over_grep.py"
         }
       ]
     }
@@ -47,19 +47,19 @@
         },
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_python_code_quality.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/python_code_quality.py"
         },
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_prettier_formatting.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/prettier_formatting.py"
         },
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_markdown_formatting.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/markdown_formatting.py"
         },
         {
           "type": "command",
-          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hook_bash_formatting.py"
+          "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/bash_formatting.py"
         }
       ]
     }

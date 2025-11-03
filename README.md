@@ -47,7 +47,7 @@ brew install jq gh # macOS
 **Install code quality tools (required for hooks to work):**
 
 ```bash
-pip install ruff docformatter
+pip install ruff
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
@@ -284,22 +284,22 @@ chmod +x ./.claude/hooks/*.py
 
 These hooks ensure Claude always has access to project-specific instructions by automatically loading them on each prompt.
 
-- **[hook_load_claude_md.py](./.claude/hooks/hook_load_claude_md.py)**: Auto-loads CLAUDE.md or AGENTS.md from the project directory on every user prompt. Prevents AI from forgetting main instructions by re-injecting them at every prompt submission.
+- **[load_claude_md.py](./.claude/hooks/load_claude_md.py)**: Auto-loads CLAUDE.md or AGENTS.md from the project directory on every user prompt. Prevents AI from forgetting main instructions by re-injecting them at every prompt submission.
 
 ### Git Workflow Confirmation Hooks
 
 These hooks provide user confirmation dialogs before executing critical git operations, showing previews of what will be committed or created.
 
-- **[hook_git_commit_confirm.py](./.claude/hooks/hook_git_commit_confirm.py)**: Shows confirmation dialog before creating git commits. Displays commit message, staged files list, and diff statistics. Supports both regular commits and amend operations.
-- **[hook_gh_pr_create_confirm.py](./.claude/hooks/hook_gh_pr_create_confirm.py)**: Shows confirmation dialog before creating GitHub pull requests via `gh pr create`. Displays PR title, body preview, assignee (resolves @me to actual username), and reviewer.
+- **[git_commit_confirm.py](./.claude/hooks/git_commit_confirm.py)**: Shows confirmation dialog before creating git commits. Displays commit message, staged files list, and diff statistics. Supports both regular commits and amend operations.
+- **[gh_pr_create_confirm.py](./.claude/hooks/gh_pr_create_confirm.py)**: Shows confirmation dialog before creating GitHub pull requests via `gh pr create`. Displays PR title, body preview, assignee (resolves @me to actual username), and reviewer.
 
 ### Web Content Enhancement Hooks
 
 These hooks redirect native Claude Code web tools to faster and more reliable Tavily alternatives. Native WebSearch/WebFetch tools take 20-30 seconds while Tavily equivalents complete in 1-2 seconds. Additionally, native WebFetch often fails on bot-protected websites while Tavily can bypass these protections.
 
-- **[hook_webfetch_to_tavily_extract.py](./.claude/hooks/hook_webfetch_to_tavily_extract.py)**: Blocks WebFetch and suggests using Tavily extract with advanced depth
-- **[hook_tavily_extract_to_advanced.py](./.claude/hooks/hook_tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
-- **[hook_websearch_to_tavily_search.py](./.claude/hooks/hook_websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
+- **[webfetch_to_tavily_extract.py](./.claude/hooks/webfetch_to_tavily_extract.py)**: Blocks WebFetch and suggests using Tavily extract with advanced depth
+- **[tavily_extract_to_advanced.py](./.claude/hooks/tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
+- **[websearch_to_tavily_search.py](./.claude/hooks/websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
 
 ### Code Quality Hooks
 
@@ -307,23 +307,23 @@ Comprehensive auto-formatting system that covers all major file types, designed 
 
 - **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, Write, or Task operation. Works cross-platform (macOS and Linux).
 
-- **Python Code Quality** ([hook_python_code_quality.py](./.claude/hooks/hook_python_code_quality.py)): Automatically formats and lints Python files using ruff and docformatter after Edit/Write/MultiEdit operations. Matches [Ultralytics Actions](https://github.com/ultralytics/actions) pipeline exactly:
+- **Python Code Quality** ([python_code_quality.py](./.claude/hooks/python_code_quality.py)): Automatically formats and lints Python files using ruff after Edit/Write/MultiEdit operations. Uses custom Google-style docstring formatter ([format_python_docstrings.py](./.claude/hooks/format_python_docstrings.py)) inspired by [Ultralytics Actions](https://github.com/ultralytics/actions):
   - `ruff format --line-length 120`
-  - `ruff check --fix --unsafe-fixes --extend-select I,D,UP --target-version py38`
-  - `docformatter --wrap-summaries 120 --wrap-descriptions 120`
-- **Prettier Formatting** ([hook_prettier_formatting.py](./.claude/hooks/hook_prettier_formatting.py)): Auto-formats JavaScript, TypeScript, CSS, JSON, YAML, HTML, Vue, and Svelte files using prettier. Skips lock files and model.json to prevent conflicts.
+  - `ruff check --fix --extend-select I,D,UP --target-version py39`
+  - Custom docstring formatter for Google-style compliance
+- **Prettier Formatting** ([prettier_formatting.py](./.claude/hooks/prettier_formatting.py)): Auto-formats JavaScript, TypeScript, CSS, JSON, YAML, HTML, Vue, and Svelte files using prettier. Skips lock files and model.json to prevent conflicts.
 
-- **Markdown Formatting** ([hook_markdown_formatting.py](./.claude/hooks/hook_markdown_formatting.py)): Formats Markdown files with prettier, applying special tab-width 4 handling for documentation directories (matches [Ultralytics Actions](https://github.com/ultralytics/actions) docs formatting).
+- **Markdown Formatting** ([markdown_formatting.py](./.claude/hooks/markdown_formatting.py)): Formats Markdown files with prettier, applying special tab-width 4 handling for documentation directories (matches [Ultralytics Actions](https://github.com/ultralytics/actions) docs formatting).
 
-- **Bash/Shell Formatting** ([hook_bash_formatting.py](./.claude/hooks/hook_bash_formatting.py)): Formats shell scripts (`.sh`, `.bash`) using prettier-plugin-sh for consistent bash scripting style.
+- **Bash/Shell Formatting** ([bash_formatting.py](./.claude/hooks/bash_formatting.py)): Formats shell scripts (`.sh`, `.bash`) using prettier-plugin-sh for consistent bash scripting style.
 
-- **Ripgrep Enforcement** ([hook_enforce_rg_over_grep.py](./.claude/hooks/hook_enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features.
+- **Ripgrep Enforcement** ([enforce_rg_over_grep.py](./.claude/hooks/enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features.
 
 #### Zero CI Formatting
 
 This comprehensive formatting setup is designed to achieve **zero auto-formatting** from CI workflows like [Ultralytics Actions](https://github.com/ultralytics/actions). The hooks cover 95% of typical formatting needs:
 
-- ✅ Python (ruff + docformatter)
+- ✅ Python (ruff + custom docstring formatter)
 - ✅ JavaScript/TypeScript (prettier)
 - ✅ CSS/SCSS/Less (prettier)
 - ✅ JSON/YAML (prettier)

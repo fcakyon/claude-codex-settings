@@ -53,15 +53,11 @@
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "mcp__github__get_me",
-      "mcp__github__get_pull_request",
-      "mcp__github__get_pull_request_diff",
-      "mcp__github__get_pull_request_status",
-      "mcp__github__get_pull_request_files",
+      "mcp__github__pull_request_read",
       "mcp__github__get_file_contents",
       "mcp__github__get_workflow_run",
       "mcp__github__get_job_logs",
-      "mcp__github__get_issue",
-      "mcp__github__get_issue_comments",
+      "mcp__github__issue_read",
       "mcp__github__list_pull_requests",
       "mcp__github__list_commits",
       "mcp__github__list_workflows",
@@ -84,7 +80,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/hook_webfetch_to_tavily_extract.py"
+            "command": ".claude/hooks/webfetch_to_tavily_extract.py"
           }
         ]
       },
@@ -93,7 +89,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/hook_tavily_extract_to_advanced.py"
+            "command": ".claude/hooks/tavily_extract_to_advanced.py"
           }
         ]
       },
@@ -102,7 +98,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/hook_websearch_to_tavily_search.py"
+            "command": ".claude/hooks/websearch_to_tavily_search.py"
           }
         ]
       },
@@ -111,15 +107,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/hook_enforce_rg_over_grep.py"
+            "command": ".claude/hooks/enforce_rg_over_grep.py"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/hook_git_commit_confirm.py"
+            "command": ".claude/hooks/git_commit_confirm.py"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/hook_gh_pr_create_confirm.py"
+            "command": ".claude/hooks/gh_pr_create_confirm.py"
           }
         ]
       }
@@ -134,19 +130,19 @@
           },
           {
             "type": "command",
-            "command": ".claude/hooks/hook_python_code_quality.py"
+            "command": ".claude/hooks/python_code_quality.py"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/hook_prettier_formatting.py"
+            "command": ".claude/hooks/prettier_formatting.py"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/hook_markdown_formatting.py"
+            "command": ".claude/hooks/markdown_formatting.py"
           },
           {
             "type": "command",
-            "command": ".claude/hooks/hook_bash_formatting.py"
+            "command": ".claude/hooks/bash_formatting.py"
           }
         ]
       }
@@ -156,7 +152,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/hook_load_claude_md.py"
+            "command": ".claude/hooks/load_claude_md.py"
           }
         ]
       }
