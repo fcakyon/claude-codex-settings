@@ -44,7 +44,6 @@ When activated, follow this precise workflow:
      - Create a temporary list of all staged files using `git diff --cached --name-only`
      - For each commit, use `git reset HEAD <file>` to unstage specific files not meant for current commit
      - Use `git add <file>` to stage only the files intended for the current commit
-     - Verify staging area with `git status --porcelain` before each commit
      - After each commit, re-stage remaining files for subsequent commits
    - **CRITICAL**: Always verify the exact files in staging area before each `git commit` command
    - After committing, push changes to the remote repository
