@@ -2,7 +2,7 @@
 
 Complete installation guide for Claude Code, dependencies, and this configuration.
 
-> **Prefer easier setup?** Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and create the AGENTS.md symlink.
+> Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and create the AGENTS.md symlink.
 
 ## Prerequisites
 
@@ -105,7 +105,7 @@ sudo apt-get install gh
 
 ```bash
 # Python formatting (required for Python hook)
-pip install ruff docformatter
+pip install ruff
 
 # Prettier for JS/TS/CSS/JSON/YAML/HTML/Markdown/Shell formatting (required for prettier hooks)
 # Note: npm is required for prettier even though Claude Code no longer needs it
@@ -123,11 +123,3 @@ ln -s CLAUDE.md AGENTS.md
 ```
 
 This lets tools like [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.
-
-### Make Hooks Executable
-
-After cloning the repository:
-
-```bash
-chmod +x ./.claude/hooks/*.py
-```

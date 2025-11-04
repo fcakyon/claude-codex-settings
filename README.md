@@ -6,60 +6,13 @@
 
 My personal Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with battle-tested commands and MCP servers that I use daily.
 
-[Installation](INSTALL.md) • [Configuration](#configuration) • [MCP Servers](#mcp-servers) • [Agents](#agents) • [Hooks](#hooks) • [Commands](#commands) • [Statusline](#statusline)
+[Installation](#installation) • [Configuration](#configuration) • [MCP Servers](#mcp-servers) • [Agents](#agents) • [Hooks](#hooks) • [Commands](#commands) • [Statusline](#statusline)
 
 ## Installation
 
-### 1. Prerequisites (Required)
+> **Prerequisites:** Before installing, ensure you have Claude Code and required tools installed. See [INSTALL.md](INSTALL.md) for complete prerequisites.
 
-Install Claude Code using the native installer:
-
-**macOS/Linux/WSL:**
-
-```bash
-# Install Claude Code (no Node.js required)
-curl -fsSL https://claude.ai/install.sh | bash
-
-# Or via Homebrew
-brew install --cask claude-code
-```
-
-**Windows PowerShell:**
-
-```powershell
-# Install Claude Code (no Node.js required)
-irm https://claude.ai/install.ps1 | iex
-```
-
-**Migrate from legacy npm installation:**
-
-```bash
-claude install
-```
-
-**Install required tools:**
-
-```bash
-brew install jq gh # macOS
-# OR apt-get install jq gh  # Ubuntu
-```
-
-**Install code quality tools (required for hooks to work):**
-
-```bash
-pip install ruff
-npm install -g prettier@3.6.2 prettier-plugin-sh
-```
-
-See [INSTALL.md](INSTALL.md#prerequisites) for detailed setup (note: may contain outdated npm instructions).
-
----
-
-### 2. Install Configuration
-
-**Option A: Plugin Marketplace**
-
-Install agents, commands, hooks, and MCP servers via plugin system:
+Install agents, commands, hooks, and MCP servers via [Claude Code Plugins](https://docs.claude.com/en/docs/claude-code/plugins) system:
 
 ```bash
 # Add marketplace
@@ -76,35 +29,12 @@ Install agents, commands, hooks, and MCP servers via plugin system:
 Then create symlink for cross-tool compatibility:
 
 ```bash
-ln -s ~/.claude/CLAUDE.md ~/.claude/AGENTS.md
+ln -s CLAUDE.md AGENTS.md
 ```
 
 Restart Claude Code to activate.
 
-**Option B: Manual Clone**
-
-<details>
-<summary>Click to expand manual installation</summary>
-
-```bash
-# Clone repository
-git clone https://github.com/fcakyon/claude-settings.git ~/.claude-settings
-
-# Copy configuration files
-cp -r ~/.claude-settings/.claude/* ~/.claude/
-
-# Create symlink
-ln -s CLAUDE.md AGENTS.md
-
-# Make hooks executable
-chmod +x ~/.claude/hooks/*.py
-```
-
-See [INSTALL.md](INSTALL.md) for complete manual setup guide.
-
-</details>
-
-## Available Plugins
+## Full Compatibility with Claude Code Plugins System
 
 | Plugin                    | Description                        | Installation                                                   |
 | ------------------------- | ---------------------------------- | -------------------------------------------------------------- |
@@ -121,9 +51,10 @@ See [INSTALL.md](INSTALL.md) for complete manual setup guide.
 Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
 
 - Model selection (SonnetPlan mode: plan with Sonnet 4.5, execute with Haiku 4.5 - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61))
-- Environment variables for optimal Claude Code behavior
-- Settings for disabling telemetry and non-essential features
-- Custom hooks for enhancing tool functionality
+- Environment variables (bash working directory, telemetry disabled, MCP output limits)
+- Safe tools permissions (allowed bash commands, git operations, MCP tools)
+- Custom statusline powered by [ccusage](https://ccusage.com/)
+- Enabled plugins configuration
 
 **Alternative API Providers:**
 
@@ -151,18 +82,9 @@ The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json)
 
 ### Installation
 
-**Plugin-based:**
-
 ```bash
 /plugin install mcp-server-configs@fcakyon-claude-plugins
 ```
-
-<details>
-<summary><b>Manual Installation</b></summary>
-
-Copy [`mcp.json`](./mcp.json) to your project root named as `.mcp.json` and adjust MCP servers.
-
-</details>
 
 ---
 
@@ -229,13 +151,6 @@ Specialized agents that run automatically to enhance code quality, stored in [`.
 /plugin install code-simplifier-agent@fcakyon-claude-plugins
 ```
 
-<details>
-<summary><b>Manual Installation</b></summary>
-
-Copy agents from [`.claude/agents/`](./.claude/agents/) to your project's `.claude/agents/` directory.
-
-</details>
-
 ---
 
 - [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Contextual pattern analyzer that ensures new code follows existing project conventions (imports, naming, function signatures, class patterns). Auto-triggers after TodoWrite to maintain codebase consistency.
@@ -252,33 +167,11 @@ Custom hooks that enhance tool usage, configured in [`.claude/settings.json`](./
 
 ### Installation
 
-**Plugin-based:**
-
 ```bash
 /plugin install code-quality-hooks@fcakyon-claude-plugins
 ```
 
-<details>
-<summary><b>Manual Installation</b></summary>
-
-1. Copy hooks from [`.claude/hooks/`](./.claude/hooks/) to your project
-2. Copy hook configuration from [`.claude/settings.json`](./.claude/settings.json)
-3. Make scripts executable:
-   ```bash
-   chmod +x ./.claude/hooks/*.py
-   ```
-
-</details>
-
 ---
-
-### Setup
-
-Make hook scripts executable after cloning:
-
-```bash
-chmod +x ./.claude/hooks/*.py
-```
 
 ### Context Management Hooks
 
@@ -342,18 +235,9 @@ Custom Claude Code slash commands that make life easier, stored in [`.claude/com
 
 ### Installation
 
-**Plugin-based:**
-
 ```bash
 /plugin install productivity-commands@fcakyon-claude-plugins
 ```
-
-<details>
-<summary><b>Manual Installation</b></summary>
-
-Copy commands from [`.claude/commands/`](./.claude/commands/) to your project's `.claude/commands/` directory.
-
-</details>
 
 ---
 
