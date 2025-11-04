@@ -38,6 +38,8 @@
       "Bash(git -C :* rev-parse:*)",
       "Bash(git -C :* push:*)",
       "Bash(git -C :* log:*)",
+      "Bash(git fetch --prune:*)",
+      "Bash(git worktree list:*)",
       "Bash(ruff:*)",
       "Bash(uv run ruff:*)",
       "Bash(docformatter:*)",
@@ -79,9 +81,17 @@
     "padding": 0
   },
   "enabledPlugins": {
-    "code-quality-hooks@fcakyon-claude-plugins": true,
     "git-workflow-agents@fcakyon-claude-plugins": true,
     "code-simplifier-agent@fcakyon-claude-plugins": true,
-    "productivity-commands@fcakyon-claude-plugins": true
+    "productivity-commands@fcakyon-claude-plugins": true,
+    "code-quality-hooks@fcakyon-claude-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "fcakyon-claude-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "fcakyon/claude-codex-settings"
+      }
+    }
   },
 }

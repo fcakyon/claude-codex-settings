@@ -125,7 +125,7 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 
 ## Committing Changes
 
-- Run `/commit-manager` agent if possible or follow the steps below.
+- Run `commit-manager` subagent if possible or follow the steps below.
 - **ONLY analyze staged files** - completely ignore unstaged changes and files
 - Check all currently staged files using `git diff --cached --name-only`
 - Read the actual code diffs using `git diff --cached` to understand the nature and scope of changes

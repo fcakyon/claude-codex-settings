@@ -21,7 +21,7 @@ You are a Git and GitHub PR workflow automation specialist. Your role is to orch
    - Never commit directly to main
 
 3. **Commit Staged Changes**:
-   - Use `/commit-manager` slash command to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
+   - Use `commit-manager` subagent to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
    - Ensure commits follow project conventions
 
 4. **Documentation Updates**:
