@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """
-UserPromptSubmit hook: Read CLAUDE.md or AGENTS.md from project directory and inject as context at each prompt.
+UserPromptSubmit hook: Read CLAUDE.md from home directory and CLAUDE.md/AGENTS.md from project directory.
 """
 import json
 import sys
 import os
 from pathlib import Path
 
-def find_claude_md(project_dir):
+def find_home_claude_md():
+    """Find CLAUDE.md in home directory."""
+    home_claude_md = Path.home() / ".claude" / "CLAUDE.md"
+    return home_claude_md if home_claude_md.exists() else None
+
+def find_project_claude_md(project_dir):
     """Find CLAUDE.md or AGENTS.md in the project directory."""
     claude_md = Path(project_dir) / "CLAUDE.md"
     agents_md = Path(project_dir) / "AGENTS.md"
@@ -22,29 +27,39 @@ try:
     input_data = json.load(sys.stdin)
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", input_data.get("cwd", ""))
 
-    if not project_dir:
+    # Load home CLAUDE.md
+    home_path = find_home_claude_md()
+    home_content = ""
+    if home_path:
+        try:
+            with open(home_path, 'r', encoding='utf-8') as f:
+                home_content = f.read().strip()
+        except Exception as e:
+            print(f"Error reading {home_path}: {e}", file=sys.stderr)
+
+    # Load project CLAUDE.md/AGENTS.md
+    project_content = ""
+    if project_dir:
+        project_path = find_project_claude_md(project_dir)
+        if project_path:
+            try:
+                with open(project_path, 'r', encoding='utf-8') as f:
+                    project_content = f.read().strip()
+            except Exception as e:
+                print(f"Error reading {project_path}: {e}", file=sys.stderr)
+
+    # Combine content
+    output_parts = []
+    if home_content:
+        output_parts.append(f"Global instructions from ~/.claude/CLAUDE.md:\n\n{home_content}")
+    if project_content:
+        output_parts.append(f"Project instructions from {project_path.name}:\n\n{project_content}")
+
+    if output_parts:
+        print("\n\n---\n\n".join(output_parts))
         sys.exit(0)
-
-    claude_md_path = find_claude_md(project_dir)
-
-    if not claude_md_path:
+    else:
         sys.exit(0)
-
-    # Read CLAUDE.md content
-    try:
-        with open(claude_md_path, 'r', encoding='utf-8') as f:
-            content = f.read().strip()
-
-        if not content:
-            sys.exit(0)
-
-        # Output the content to be added as context
-        print(f"Project instructions from {claude_md_path.name}:\n\n{content}")
-        sys.exit(0)
-
-    except Exception as e:
-        print(f"Error reading {claude_md_path}: {e}", file=sys.stderr)
-        sys.exit(1)
 
 except Exception as e:
     print(f"hook-error: {e}", file=sys.stderr)
