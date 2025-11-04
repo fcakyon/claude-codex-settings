@@ -129,7 +129,6 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - **ONLY analyze staged files** - completely ignore unstaged changes and files
 - Check all currently staged files using `git diff --cached --name-only`
 - Read the actual code diffs using `git diff --cached` to understand the nature and scope of changes
-- Verify staging area with `git status --porcelain` before each commit
 - Create concise, descriptive commit messages following this format:
   - First line: `{task-type}: brief description of the big picture change`
   - Task types: feat, fix, refactor, docs, style, test, build
