@@ -11,12 +11,12 @@
     {
       "name": "code-quality-hooks",
       "source": "./",
-      "description": "Auto-formatting system for Python, JavaScript, TypeScript, CSS, JSON, YAML, HTML, Markdown, and Shell scripts. Eliminates formatting debates and reduces CI failures.",
+      "description": "Auto-formatting system covering 95% of formatting needs across 8+ languages: Python, JavaScript, TypeScript, CSS, JSON, YAML, HTML, Markdown, and Shell scripts. Achieves zero CI auto-formatting to prevent formatting noise.",
       "version": "1.1.0",
       "author": {
         "name": "Fatih Akyon"
       },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#code-quality-hooks",
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#hooks",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
       "keywords": [
@@ -36,7 +36,7 @@
     {
       "name": "git-workflow-agents",
       "source": "./",
-      "description": "Intelligent Git automation agents: commit-manager analyzes staged changes across multiple commits, pr-manager creates PRs with README sync and proper formatting.",
+      "description": "Git automation agents for complete workflows: commit-manager analyzes staged changes for multi-commit strategies, pr-manager handles branch creation, README sync, and PR submission with proper formatting.",
       "version": "1.1.0",
       "author": {
         "name": "Fatih Akyon"
@@ -88,7 +88,7 @@
     {
       "name": "productivity-commands",
       "source": "./",
-      "description": "Custom slash commands: /pr-summary for changelog generation, /commit for automated commits, /arch for pattern explanations, /think for enhanced reasoning.",
+      "description": "Custom slash commands: /clean-gone-branches for cleaning deleted remote branches, /commit-staged for automated commits, /create-pr for PR creation, /explain-architecture-pattern for design pattern analysis, /update-pr-summary for changelog generation.",
       "version": "1.1.0",
       "author": {
         "name": "Fatih Akyon"
@@ -112,7 +112,7 @@
     {
       "name": "mcp-server-configs",
       "source": "./",
-      "description": "Pre-configured MCP servers: Azure (100+ tools), Context7 (20K+ library docs), GitHub, Linear, MongoDB, Playwright, Slack, Supabase, Tavily (web search).",
+      "description": "9 pre-configured MCP servers with 100+ tools: Azure (40+ tools), Context7 (20K+ library docs), GitHub (50+ tools), Linear, MongoDB, Playwright (30+ tools), Slack (10+ tools), Supabase, Tavily (web search).",
       "version": "1.1.0",
       "author": {
         "name": "Fatih Akyon"
