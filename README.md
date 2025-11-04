@@ -241,10 +241,11 @@ Custom Claude Code slash commands that make life easier, stored in [`.claude/com
 
 ---
 
+- [`/clean-gone-branches`](./.claude/commands/clean-gone-branches.md) - Clean up local branches deleted from remote
 - [`/commit-staged`](./.claude/commands/commit-staged.md) - Commit staged changes using the commit-manager agent with optional context
 - [`/create-pr`](./.claude/commands/create-pr.md) - Create pull request using the pr-manager agent with optional context
 - [`/explain-architecture-pattern`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
-- [`/update-pr-summary`](./.claude/commands/update-pr-summary.md) - Generate PR summaries with advanced analytical frameworks
+- [`/update-pr-summary`](./.claude/commands/update-pr-summary.md) - Update PR description with automatically generated summary based on complete changeset
 
 ## Statusline
 
