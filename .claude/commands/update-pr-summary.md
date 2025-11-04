@@ -1,257 +1,113 @@
-# Claude Command: PR Summary
+# Claude Command: Update PR Summary
 
-Update PR message with automatically generated summary using advanced analytical frameworks and progressive reasoning.
-
-## Progressive Reasoning Framework
-
-<thinking>
-Before applying standard PR analysis patterns, let me think broadly about what makes this PR unique. What unconventional changes might be present? What hidden dependencies or architectural impacts could exist beyond the obvious file changes? What narrative is this PR trying to tell?
-</thinking>
+Update PR description with automatically generated summary based on complete changeset.
 
 ## Usage
 
 ```bash
-/pr-summary <pr_number>    # Generate summary for PR
-/pr-summary 131            # Example: analyze PR #131
+/update-pr-summary <pr_number>    # Update PR description
+/update-pr-summary 131            # Example: update PR #131
 ```
 
-## Advanced PR Analysis Methodology
+## Workflow Steps
 
-### Phase 1: Initial Exploration & Context Building
+1. **Fetch PR Information**:
+   - Get PR details using `gh pr view <pr_number>` or `mcp__github__pull_request_read`
+   - Identify base branch and head branch from PR metadata
 
-**Open-Ended Analysis** (Allocate extended thinking for novel patterns):
-1. What is the overarching narrative of this PR?
-2. What problem space does it operate in?
-3. Are there unconventional patterns or approaches that standard analysis might miss?
-4. What implicit assumptions or context might be important?
+2. **Analyze Complete Changeset**:
+   - **IMPORTANT**: Analyze ALL committed changes in the branch using `git diff <base-branch>...HEAD`
+   - PR description must describe the complete changeset across all commits, not just the latest commit
+   - Focus on what changed from the perspective of someone reviewing the entire branch
+   - Ignore unstaged changes
 
-### Phase 2: Sequential Analytical Framework Application
+3. **Generate PR Description**:
+   - Create brief summary (1 sentence or few words)
+   - Add few bullet points of key changes
+   - For significant changes, include before/after code examples in PR body
+   - Include inline markdown links to relevant code lines when helpful (format: `[src/auth.py:42](src/auth.py#L42)`)
+   - For config/API changes, use `mcp__tavily__tavily-search` to verify information and include source links inline
+   - Never include test plans in PR descriptions
 
-Apply these frameworks progressively to build comprehensive understanding:
+4. **Update PR Title** (if needed):
+   - Title should start with capital letter and verb
+   - Should NOT start with conventional commit prefixes (e.g. "fix:", "feat:")
 
-#### Framework 1: Change Impact Analysis
-**Progression**: Surface changes → Deep dependencies → Architectural implications
-- **File-Level Analysis**: What files changed and their relationships
-- **Function-Level Analysis**: Specific method/function modifications
-- **Cross-Cutting Analysis**: Changes affecting multiple components
-- **Ripple Effect Assessment**: Potential downstream impacts
+5. **Update PR**:
+   - Use `gh pr edit <pr_number>` with `--body` (and optionally `--title`) to update the PR
+   - Use HEREDOC for proper formatting:
+   ```bash
+   gh pr edit <pr_number> --body "$(cat <<'EOF'
+   [PR description here]
+   EOF
+   )"
+   ```
 
-#### Framework 2: Change Category Classification
-**Apply multiple categorization lenses**:
-1. **Technical Categories**: Feature/Bug/Refactor/Performance/Security
-2. **Business Impact**: User-facing/Internal/Infrastructure/Technical Debt
-3. **Risk Assessment**: Breaking/Non-breaking/Experimental
-4. **Architectural Pattern**: New pattern/Pattern enhancement/Pattern removal
+## PR Description Format
 
-#### Framework 3: Code Quality & Best Practices Assessment
-**Progressive evaluation**:
-1. **Consistency Analysis**: Does it follow existing patterns?
-2. **Best Practice Alignment**: Industry standards adherence
-3. **Technical Debt Impact**: Adding/Reducing/Neutral
-4. **Future Maintainability**: Complexity changes
-
-### Phase 3: Systematic Verification & Validation
-
-#### Test Case Validation for Each Finding
-For each significant change identified:
-1. **Positive Test**: Verify the file and line numbers exist
-2. **Negative Test**: Check if description accurately reflects the change
-3. **Edge Case Test**: Consider partial implementations or WIP changes
-4. **Context Test**: Validate against PR title and description
-
-#### Steel Man Reasoning
-Before summarizing, argue FOR the current implementation:
-- What valid reasons exist for the approach taken?
-- Are there constraints that justify seemingly suboptimal choices?
-- What context might reviewers be missing?
-
-### Phase 4: Constraint Optimization
-
-**Balance competing requirements**:
-1. **Conciseness vs Completeness**: Essential information without overwhelming detail
-2. **Technical Accuracy vs Accessibility**: Clear to both experts and newcomers
-3. **Change Focus vs Context**: Individual changes vs overall narrative
-4. **Priority vs Comprehensiveness**: Most important vs all changes
-
-**Optimization Strategy**:
-- High-impact changes: Detailed with code references
-- Medium-impact changes: Grouped summaries
-- Low-impact changes: Aggregate mentions or omit
-
-### Phase 5: Advanced Summary Generation
-
-#### Progressive Summary Structure
-1. **Executive Summary** (1-2 sentences): Overall PR impact
-2. **Primary Changes** (3-5 bullets): Most significant modifications
-3. **Secondary Changes** (optional): Important but supporting changes
-4. **Technical Notes** (if needed): Implementation details or caveats
-
-#### Summary Enhancement Patterns
 ```markdown
-## Summary
+[Brief summary in 1 sentence or few words]
 
-<thinking>
-Analyzing PR complexity: [High/Medium/Low]
-Novel patterns detected: [Yes/No]
-Cross-cutting concerns: [List]
-Thinking budget allocation: [Extended/Standard]
-</thinking>
+- [Key change 1 with inline code reference if helpful]
+- [Key change 2 with source link if config/API change]
+- [Key change 3]
 
-**Overview**: [1-2 sentence executive summary capturing the PR's essence]
-
-### Primary Changes
-- **[Category] [Change Title]** - [Specific impact description] in `file.ext:L##-##`
-  - Verification: ✓ File exists, ✓ Line numbers accurate, ✓ Description matches diff
-- **[Category] [Change Title]** - [Why this matters] via `file.ext:function_name()`
-  - Trade-off: Chose [approach A] over [approach B] for [specific reason]
-
-### Technical Considerations
-- **Performance Impact**: [Measured or estimated impact]
-- **Breaking Changes**: [None/List with migration notes]
-- **Dependencies**: [New/Updated/Removed]
-
-### Context & Rationale
-[Brief explanation of why these changes were made and how they fit the larger picture]
+[Optional: Before/after code examples for significant changes]
 ```
 
-### Phase 6: Self-Correction & Bias Mitigation
+## Examples
 
-#### Cognitive Bias Checks
-1. **Confirmation Bias**: Am I overemphasizing changes that fit common patterns?
-2. **Recency Bias**: Am I giving too much weight to the last files reviewed?
-3. **Complexity Bias**: Am I focusing too much on complex changes vs important simple ones?
-4. **Framework Bias**: Am I forcing changes into framework categories?
+### Example 1: Config/API Change with Source Links
 
-#### Alternative Perspective Simulation
-- **Security Reviewer**: What vulnerabilities or security improvements?
-- **Performance Engineer**: What optimization opportunities or regressions?
-- **New Team Member**: What context is needed to understand these changes?
-- **End User**: What user-visible impacts exist?
+```markdown
+Update Claude Haiku to version 4.5
 
-### Phase 7: Thinking Budget Management
-
-#### Complexity Assessment
-**High Complexity Indicators** (Allocate extended thinking):
-- Cross-repository changes
-- Architectural modifications
-- Security-sensitive code
-- Performance-critical paths
-- Novel patterns or approaches
-
-**Medium Complexity Indicators** (Standard thinking):
-- Standard feature additions
-- Routine bug fixes
-- Well-understood refactoring
-- Isolated component changes
-
-**Low Complexity Indicators** (Minimal thinking):
-- Documentation updates
-- Formatting changes
-- Dependency updates
-- Configuration adjustments
-
-#### Budget Allocation Strategy
-```
-PR Size:     Thinking Budget:
-< 100 lines  → 2-3 minutes standard thinking
-100-500      → 5-10 minutes with complexity-based extension
-500-2000     → 10-20 minutes with framework progression
-> 2000       → 20+ minutes with full methodology application
+- Model ID: claude-3-haiku-20240307 → claude-haiku-4-5-20251001 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+- Pricing: $0.80/$4.00 → $1.00/$5.00 per MTok ([source](https://docs.anthropic.com/en/docs/about-claude/pricing))
+- Max output: 4,096 → 64,000 tokens ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
 ```
 
-## Workflow Implementation
+### Example 2: Code Changes with File Links
 
-1. **Initial Assessment Phase**:
-   - Fetch PR metadata and diff
-   - Assess complexity and allocate thinking budget
-   - Perform open-ended exploration
+````markdown
+Refactor authentication to use async context manager
 
-2. **Framework Application Phase**:
-   - Apply change impact analysis
-   - Categorize changes using multiple lenses
-   - Assess code quality implications
-   - Verify findings with test cases
+- Replace synchronous auth flow with async/await pattern in [src/auth.py:15-42](src/auth.py#L15-L42)
+- Add context manager support for automatic cleanup
 
-3. **Summary Generation Phase**:
-   - Apply constraint optimization
-   - Generate progressive summary structure
-   - Include verification checkmarks
-   - Add context and rationale
+Before:
+```python
+def authenticate(token):
+    session = create_session(token)
+    return session
+```
 
-4. **Quality Assurance Phase**:
-   - Run bias detection checks
-   - Simulate alternative perspectives
-   - Validate against steel man reasoning
-   - Ensure accuracy of all code references
+After:
+```python
+async def authenticate(token):
+    async with create_session(token) as session:
+        return session
+```
+````
 
-5. **Update/Edit Phase**:
-   - Always edit the PR description with generated summary
-   - Use `mcp__github__update_pull_request` or `gh pr edit`
-   - Never skip the update step
+### Example 3: Simple Feature Addition
 
-## Error Handling & Verification
+```markdown
+Add user profile export functionality
+
+- Export user data to JSON format in [src/export.py:45-78](src/export.py#L45-L78)
+- Add CLI command `/export-profile` in [src/cli.py:123](src/cli.py#L123)
+- Include email, preferences, and activity history in export
+```
+
+## Error Handling
 
 **Pre-Analysis Verification**:
 - Verify PR exists and is accessible
 - Check tool availability (GitHub MCP or gh CLI)
 - Confirm authentication status
 
-**Post-Analysis Verification**:
-- All file references exist in the PR
-- Line numbers accurately reflect changes
-- Descriptions match actual diff content
-- Summary length appropriate for PR size
-
-**Common Issues & Solutions**:
-- Invalid PR number → Show available PRs with context
-- Missing tools → Provide setup instructions with verification
-- Auth issues → Guide through authentication with test commands
-- Large PRs → Apply progressive summarization with thinking budget management
-
-## Examples with Enhanced Analysis
-
-### Command Usage
-```bash
-/pr-summary 131    # Analyzes PR #131 with full methodology
-```
-
-### Enhanced Summary Example
-```markdown
-## Summary
-
-**Overview**: Implements async processing pipeline with 40% performance improvement while maintaining backwards compatibility through careful API design.
-
-### Primary Changes
-- **Performance: Add async model inference** - Enables concurrent request processing via `asyncio.gather()` pattern in `inference.py:L45-52`
-  - Trade-off: Added complexity for 3x throughput improvement
-  - Verification: ✓ Benchmarked, ✓ Error handling preserved
-  
-- **Bug Fix: Resolve worker pool deadlock** - Fixes race condition using context managers in `workers.py:L156-168`  
-  - Root cause: Competing lock acquisition in cleanup path
-  - Verification: ✓ Stress tested, ✓ No regression in normal flow
-
-- **Optimization: Vectorize batch processing** - Reduces memory by 40% using numpy operations in `processing.py:L78-85`
-  - Impact: 500MB → 300MB for standard workloads
-  - Verification: ✓ Memory profiled, ✓ Output identical
-
-### Secondary Changes
-- **Refactor: Extract validation logic** - Consolidates from 3 locations to `utils/validation.py:validate_input()`
-- **Docs: Update API examples** - Reflects new async patterns in `docs/api.md`
-
-### Technical Considerations
-- **Breaking Changes**: None - async methods addition only
-- **Performance**: 3x throughput, 40% memory reduction
-- **Dependencies**: Added `aiofiles==0.8.0` for async file operations
-
-### Context & Rationale
-This PR addresses production bottlenecks identified in Q4 performance review. The async implementation maintains compatibility while enabling horizontal scaling for high-traffic deployments.
-```
-
-## Continuous Improvement
-
-After each PR analysis:
-1. Assess if new patterns emerged requiring framework updates
-2. Evaluate thinking budget allocation effectiveness
-3. Collect feedback on summary accuracy and usefulness
-4. Refine categorization frameworks based on domain patterns
-5. Update bias detection based on observed tendencies
+**Common Issues**:
+- Invalid PR number → List available PRs
+- Missing tools → Provide setup instructions
+- Auth issues → Guide through authentication
