@@ -84,6 +84,7 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
   - PR message must describe the complete changeset across all commits, not just the latest commit
   - Focus on what changed from the perspective of someone reviewing the entire branch
 - Create PR with `gh pr create` using `-t` (title), `-b` (summary + bullet points), `-a @me` (self-assign), `-r <reviewer>` (from recent PRs)
+- Title should start with capital letter and verb and should not start with conventional commit prefixes (e.g. "fix:", "feat:")
 - PR should contain brief summary (few words or 1 sentence) and few bullet points of changes (with inline md links to sources when relevant)
 - For significant changes, include before/after code examples in PR body
 - Include inline markdown links to relevant code lines when helpful (format: `[src/auth.py:42](src/auth.py#L42)`)
