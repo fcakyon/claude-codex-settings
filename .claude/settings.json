@@ -42,8 +42,6 @@
       "Bash(git worktree list:*)",
       "Bash(ruff:*)",
       "Bash(uv run ruff:*)",
-      "Bash(docformatter:*)",
-      "Bash(uv run docformatter:*)",
       "Bash(python --version:*)",
       "WebFetch(domain:docs.litellm.ai)",
       "WebFetch(domain:openai.com)",
