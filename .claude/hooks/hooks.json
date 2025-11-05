@@ -1,5 +1,16 @@
 {
   "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/load_claude_md.py"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "WebFetch",
@@ -34,6 +45,14 @@
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/enforce_rg_over_grep.py"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/git_commit_confirm.py"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/gh_pr_create_confirm.py"
           }
         ]
       }
@@ -45,6 +64,10 @@
           {
             "type": "command",
             "command": "file_path=$(jq -r '.tool_input.file_path // empty' 2>/dev/null); if [[ -n \"$file_path\" && -f \"$file_path\" ]]; then case \"$file_path\" in *.py|*.js|*.jsx|*.ts|*.tsx) if [[ \"$OSTYPE\" == \"darwin\"* ]]; then sed -i '' 's/^[[:space:]]*$//g' \"$file_path\" 2>/dev/null || true; else sed -i 's/^[[:space:]]*$//g' \"$file_path\" 2>/dev/null || true; fi ;; esac; fi"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/.claude/hooks/format_python_docstrings.py"
           },
           {
             "type": "command",
