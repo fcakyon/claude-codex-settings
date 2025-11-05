@@ -31,13 +31,6 @@ def main():
 
         work_dir = py_file.parent
 
-        # Run ruff format
-        subprocess.run([
-            'ruff', 'format',
-            '--line-length', '120',
-            str(py_file)
-        ], capture_output=True, check=False, cwd=work_dir)
-
         # Run ruff check with fixes
         subprocess.run([
             'ruff', 'check',
@@ -48,15 +41,10 @@ def main():
             str(py_file)
         ], capture_output=True, check=False, cwd=work_dir)
 
-        # Run docformatter
+        # Run ruff format
         subprocess.run([
-            'docformatter',
-            '--wrap-summaries', '120',
-            '--wrap-descriptions', '120',
-            '--pre-summary-newline',
-            '--close-quotes-on-newline',
-            '--in-place',
-            "--recursive",
+            'ruff', 'format',
+            '--line-length', '120',
             str(py_file)
         ], capture_output=True, check=False, cwd=work_dir)
 
