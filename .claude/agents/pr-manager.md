@@ -41,7 +41,11 @@ You are a Git and GitHub PR workflow automation specialist. Your role is to orch
      - `-t` or `--title`: Concise title (max 72 chars)
      - `-b` or `--body`: Description with brief summary (few words or 1 sentence) + few bullet points of changes
      - `-a @me`: Self-assign (confirmation hook will show actual username)
-     - `-r <reviewer>`: Add reviewer (find from recent merged PRs of the assignee/self)
+     - `-r <reviewer>`: Add reviewer by finding most probable reviewer from recent PRs:
+       - Get current repo: `gh repo view --json nameWithOwner -q .nameWithOwner`
+       - First try: `gh pr list --repo <owner>/<repo> --author @me --limit 5` to find PRs by current author
+       - If no PRs by author, fallback: `gh pr list --repo <owner>/<repo> --limit 5` to get any recent PRs
+       - Extract reviewer username from the PR list
    - Title should start with capital letter and verb and should not start with conventional commit prefixes (e.g. "fix:", "feat:")
    - Never include test plans in PR messages
    - For significant changes, include before/after code examples in PR body
