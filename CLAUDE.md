@@ -23,6 +23,7 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - **Web content extraction**: Use `mcp__tavily__tavily-extract` for web scraping. For GitHub URLs, use `mcp__github__*` tools instead for more robust data retrieval.
 - **Web search**: Use `mcp__tavily__tavily-search` for searching the web.
 - **Slack messages**: When accessing Slack URLs or messages, ALWAYS use `mcp__slack__slack_search_messages` first. Only use `mcp__slack__slack_get_channel_history` if explicitly asked for channel history.
+- **Github Action Logs**: Use `mcp__github__get_workflow_run` and `mcp__github__get_job_logs` for accessing GitHub Actions logs.
 
 ## Python Coding
 
