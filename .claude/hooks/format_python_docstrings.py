@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Format Python docstrings in Google style without external dependencies."""
 
 import ast
