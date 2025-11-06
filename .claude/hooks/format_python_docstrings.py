@@ -2,7 +2,9 @@
 """Format Python docstrings in Google style without external dependencies."""
 
 import ast
+import json
 import re
+import sys
 import textwrap
 from pathlib import Path
 
@@ -214,29 +216,39 @@ def format_python_file(content: str) -> str:
     return '\n'.join(lines)
 
 
-def main(paths: list[str] | None = None) -> None:
+def read_python_path() -> Path | None:
+    """Read the Python path from stdin payload.
+
+    Returns:
+        (Path | None): Python file path when present and valid.
+    """
+    try:
+        data = json.load(sys.stdin)
+    except Exception:
+        return None
+    file_path = data.get("tool_input", {}).get("file_path", "")
+    path = Path(file_path) if file_path else None
+    if not path or path.suffix != ".py" or not path.exists():
+        return None
+    if any(p in path.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__']):
+        return None
+    return path
+
+
+def main() -> None:
     """Format Python docstrings in files."""
-    if not paths:
-        paths = ['.']
-
-    for path_str in paths:
-        path = Path(path_str)
-        if path.is_file() and path.suffix == '.py':
-            files = [path]
-        else:
-            files = sorted(path.rglob('*.py')) if path.is_dir() else []
-
-        for file in files:
-            try:
-                content = file.read_text()
-                formatted = format_python_file(content)
-                if formatted != content:
-                    file.write_text(formatted)
-                    print(f"Formatted: {file}")
-            except Exception as e:
-                print(f"Error processing {file}: {e}")
+    python_file = read_python_path()
+    if python_file:
+        try:
+            content = python_file.read_text()
+            formatted = format_python_file(content)
+            if formatted != content:
+                python_file.write_text(formatted)
+                print(f"Formatted: {python_file}")
+        except Exception as e:
+            print(f"Error processing {python_file}: {e}")
+    sys.exit(0)
 
 
 if __name__ == '__main__':
-    import sys
-    main(sys.argv[1:] if len(sys.argv) > 1 else ['.'])
+    main()
