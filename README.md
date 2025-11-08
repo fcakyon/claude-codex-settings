@@ -194,6 +194,13 @@ These hooks redirect native Claude Code web tools to faster and more reliable Ta
 - **[tavily_extract_to_advanced.py](./.claude/hooks/tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
 - **[websearch_to_tavily_search.py](./.claude/hooks/websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
 
+
+### Notification Hooks
+
+These hooks provide desktop notifications when Claude Code completes tasks, making it easier to track progress when working on long-running operations or when switching between tasks.
+
+- **[notify.sh](./.claude/hooks/notify.sh)**: Sends OS notifications when Claude Code emits notification events. Supports macOS (via osascript) and Linux (via notify-send). Also triggers terminal bell for VS Code visual indicators.
+
 ### Code Quality Hooks
 
 Comprehensive auto-formatting system that covers all major file types, designed to eliminate formatting inconsistencies and reduce CI formatting noise.
