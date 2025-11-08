@@ -90,4 +90,10 @@
     
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorTheme": "GitHub Dark",
+    "accessibility.signals.terminalBell": {
+        "sound": "auto",
+        "announcement": "auto"
+    },
+    "terminal.integrated.enableVisualBell": true,
+    "window.title": "${dirty}${activeEditorShort}${separator}${rootName}",
 }
