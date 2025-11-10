@@ -17,6 +17,8 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - This year is 2025. Definitely not 2024.
 - Never use words like "consolidate", "modernize", "streamline", "flexible", "delve", "establish", "enhanced", "comprehensive", "optimize" in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that.
 - Prefer `rg` over `grep` for better performance.
+- Never implement defensive programming unless you explicitly tell the motivation for it and user approves it.
+- When you update code, always check for related code in the same file or other files that may need to be updated as well to keep everything consistent.
 
 ## MCP Tools
 
