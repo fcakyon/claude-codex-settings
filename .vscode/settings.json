@@ -68,6 +68,8 @@
     },
     "telemetry.telemetryLevel": "off",
     "git.autofetch": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.renderSideBySide": false,
     "files.autoSave": "afterDelay",
     "editor.formatOnSave": true,
     "python.analysis.typeCheckingMode": "basic",
@@ -93,7 +95,12 @@
             "path": "/bin/bash"
         }
     },
-    
+    "debug.console.fontSize": 10,
+    "terminal.integrated.fontSize": 11,
+    "editor.fontSize": 11,
+    "workbench.editor.autoLockGroups": {
+        "workbench.editor.chatSession": false
+    },
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorTheme": "GitHub Dark",
     "accessibility.signals.terminalBell": {
