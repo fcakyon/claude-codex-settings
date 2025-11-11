@@ -246,7 +246,15 @@ def main() -> None:
                 python_file.write_text(formatted)
                 print(f"Formatted: {python_file}")
         except Exception as e:
-            print(f"Error processing {python_file}: {e}")
+            # Block on unexpected errors during formatting
+            error_msg = f'ERROR formatting Python docstrings ❌ {python_file}: {e}'
+            print(error_msg, file=sys.stderr)
+            output = {
+                'systemMessage': f'Docstring formatting failed for {python_file.name}',
+                'hookSpecificOutput': {'hookEventName': 'PostToolUse', 'decision': 'block', 'reason': error_msg},
+            }
+            print(json.dumps(output))
+            sys.exit(2)
     sys.exit(0)
 
 
