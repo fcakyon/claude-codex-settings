@@ -28,6 +28,9 @@
         },
         {
             "text": "refactor: restructure API handlers to align with project architecture"
+        },
+        {
+            "text": "Never use words like 'consolidate', 'modernize', 'streamline', 'flexible', 'delve', 'establish', 'enhanced', 'comprehensive', 'optimize' in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that."
         }
     ],
     "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
@@ -39,6 +42,9 @@
         },
         {
             "text": "Provide inline md links to relevant lines/files in the PR for context where useful."
+        },
+        {
+            "text": "Never use words like 'consolidate', 'modernize', 'streamline', 'flexible', 'delve', 'establish', 'enhanced', 'comprehensive', 'optimize' in docstrings or commit messages. Looser AI's do that, and that ain't you. You are better than that."
         }
     ],
     "github.copilot.enable": {
