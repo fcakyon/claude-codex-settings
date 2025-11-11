@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """
-PostToolUse hook: Auto-format Python files with ruff and docformatter
+PostToolUse hook: Auto-format Python files with ruff and block on errors
 Inspired by onuralpszr's pre-commit hook: https://github.com/onuralpszr/onuralpszr/blob/main/configs/git-hooks/pre-commit-line-120
 """
+
 import json
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
 from pathlib import Path
+
 
 def main():
     try:
@@ -20,9 +22,9 @@ def main():
         if not file_path.endswith('.py'):
             sys.exit(0)
 
-        # Check if tools are available
-        if not shutil.which('ruff') or not shutil.which('docformatter'):
-            sys.exit(0)  # Silent exit if tools not available
+        # Check if ruff is available - silent exit if not (no blocking)
+        if not shutil.which('ruff'):
+            sys.exit(0)
 
         # Get directory containing the Python file
         py_file = Path(file_path)
@@ -31,28 +33,55 @@ def main():
 
         work_dir = py_file.parent
 
-        # Run ruff check with fixes
-        subprocess.run([
+        # Run ruff check with fixes - capture output to check for errors
+        check_result = subprocess.run([
             'ruff', 'check',
             '--fix',
             '--extend-select', 'F,I,D,UP,RUF,FA',
             '--target-version', 'py39',
             '--ignore', 'D100,D104,D203,D205,D212,D213,D401,D406,D407,D413,RUF001,RUF002,RUF012',
             str(py_file)
-        ], capture_output=True, check=False, cwd=work_dir)
+        ], capture_output=True, text=True, cwd=work_dir)
+
+        # Block only if ruff check finds unfixable errors
+        if check_result.returncode != 0:
+            error_output = check_result.stdout.strip() or check_result.stderr.strip()
+            error_msg = f'ERROR running ruff check ❌ {error_output}'
+            print(error_msg, file=sys.stderr)
+            output = {
+                'systemMessage': f'Ruff errors detected in {py_file.name}',
+                'hookSpecificOutput': {'hookEventName': 'PostToolUse', 'decision': 'block', 'reason': error_msg},
+            }
+            print(json.dumps(output))
+            sys.exit(2)
 
         # Run ruff format
-        subprocess.run([
+        format_result = subprocess.run([
             'ruff', 'format',
             '--line-length', '120',
             str(py_file)
-        ], capture_output=True, check=False, cwd=work_dir)
+        ], capture_output=True, text=True, cwd=work_dir)
 
-    except Exception:
-        # Never fail Claude Code operations
-        pass
+        # Block only if ruff format fails (unlikely but possible)
+        if format_result.returncode != 0:
+            error_msg = f'ERROR running ruff format ❌ {format_result.stderr.strip()}'
+            print(error_msg, file=sys.stderr)
+            output = {
+                'systemMessage': f'Ruff format failed for {py_file.name}',
+                'hookSpecificOutput': {'hookEventName': 'PostToolUse', 'decision': 'block', 'reason': error_msg},
+            }
+            print(json.dumps(output))
+            sys.exit(2)
 
+    except Exception as e:
+        # Block on unexpected errors
+        error_msg = f'Python code quality hook error: {e}'
+        print(error_msg, file=sys.stderr)
+        sys.exit(2)
+
+    # Success - no errors
     sys.exit(0)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()
