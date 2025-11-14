@@ -30,6 +30,7 @@
       "Bash(gh pr diff:*)",
       "Bash(gh api user:*)",
       "Bash(gh repo view:*)",
+      "Bash(gh issue view:*)",
       "Bash(git branch --show-current:*)",
       "Bash(git diff:*)",
       "Bash(git status:*)",
