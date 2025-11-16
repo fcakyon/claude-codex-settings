@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/cc5b163c-f234-4d2f-9344-06640d4cb8e6" width="800" alt="Moderators Logo">
+  <img src="https://github.com/user-attachments/assets/dc8edd60-f4de-41cc-9e33-9d5978c843f0" width="800" alt="Moderators Logo">
 
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](#available-plugins)
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
