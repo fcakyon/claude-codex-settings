@@ -48,7 +48,7 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
     - Optionally include a minimal 'Examples:' section, and improve existing Examples if applicable.
     - Do not include default values in argument descriptions, and erase any default values you see in existing arg descriptions.
   - **Omissions**: Omit "Returns:" if nothing returned, omit "Args:" if no arguments, avoid "Raises:" unless critical
-
+- Separation of concerns: If-else checks in main should be avoided. Relevant functions should handle inputs checks themselves.
 - Super important to integrate new code changes seamlessly within the existing code rather than simply adding more code to current files. Always review any proposed code updates for correctness and conciseness. Focus on writing things in minimal number of lines while avoiding redundant trivial extra lines and comments. For instance don't do:
   ```python
   # Generate comment report only if requested
