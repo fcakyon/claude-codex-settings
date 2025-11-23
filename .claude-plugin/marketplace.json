@@ -137,6 +137,31 @@
       "category": "tools",
       "tags": ["mcp", "integration", "tools"],
       "mcpServers": "./mcp.json"
+    },
+    {
+      "name": "plugin-dev",
+      "description": "Comprehensive toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "source": "./plugins/plugin-dev",
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugin-dev",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "MIT",
+      "keywords": [
+        "plugin",
+        "development",
+        "claude",
+        "skills",
+        "hooks",
+        "mcp",
+        "commands",
+        "agents",
+        "best-practices"
+      ],
+      "category": "development",
+      "tags": ["plugin", "development", "claude"]
     }
   ]
 }
