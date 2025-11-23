@@ -27,6 +27,7 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin install websearch-tools@fcakyon-claude-plugins # Tavily hooks + web search MCP
 /plugin install general-dev@fcakyon-claude-plugins     # Code simplifier + utilities
 /plugin install plugin-dev@fcakyon-claude-plugins      # Plugin development toolkit
+/plugin install claude-tools@fcakyon-claude-plugins    # Sync CLAUDE.md + allowlist
 ```
 
 Then create symlink for cross-tool compatibility:
@@ -115,9 +116,8 @@ Code quality agent, architecture pattern command, and general utility hooks.
 
 - [`/explain-architecture-pattern`](./plugins/general-dev/commands/explain-architecture-pattern.md) - Identify design patterns
 
-**Hooks:**
+**Hook:**
 
-- [`load_claude_md.py`](./.claude/hooks/load_claude_md.py) - Auto-load CLAUDE.md
 - [`enforce_rg_over_grep.py`](./.claude/hooks/enforce_rg_over_grep.py) - Suggest ripgrep
 
 </details>
@@ -146,6 +146,19 @@ Complete toolkit for building Claude Code plugins with skills, agents, and valid
 **Command:**
 
 - [`/plugin-dev:create-plugin`](./plugins/plugin-dev/commands/create-plugin.md) - 8-phase guided plugin workflow
+
+</details>
+
+<details>
+<summary><strong>claude-tools</strong> - Sync CLAUDE.md + allowlist + context refresh</summary>
+
+Commands for syncing CLAUDE.md and permissions allowlist from repository, plus context refresh for long conversations.
+
+**Commands:**
+
+- [`/load-claude-md`](./plugins/claude-tools/commands/load-claude-md.md) - Refresh context with CLAUDE.md instructions
+- [`/sync-claude-md`](./plugins/claude-tools/commands/sync-claude-md.md) - Sync CLAUDE.md from GitHub
+- [`/sync-allowlist`](./plugins/claude-tools/commands/sync-allowlist.md) - Sync permissions allowlist
 
 </details>
 
@@ -179,6 +192,27 @@ Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) usin
 </details>
 
 <details>
+<summary><strong>Kimi K2</strong></summary>
+
+Run Claude Code with [Kimi K2](https://moonshotai.github.io/Kimi-K2/) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
+
+- **Thinking model**: `kimi-k2-thinking-turbo` - High-speed thinking, 256K context
+- **Fast model**: `kimi-k2-turbo-preview` - Without extended thinking
+- **API key**: Get from [platform.moonshot.ai](https://platform.moonshot.ai)
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic/"
+export ANTHROPIC_API_KEY="your-moonshot-api-key"
+export ANTHROPIC_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_DEFAULT_OPUS_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_DEFAULT_SONNET_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=kimi-k2-thinking-turbo
+export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2-thinking-turbo
+```
+
+</details>
+
+<details>
 <summary><strong>OpenAI Codex</strong></summary>
 
 Configuration in [`~/.codex/config.toml`](./config.toml):
@@ -201,6 +235,8 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 </details>
 
 ## Statusline
+
+<img src="https://github.com/user-attachments/assets/6677e1bd-7803-4dab-8f42-ecf7454c7d26" width="400">
 
 The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
 
@@ -225,4 +261,4 @@ For detailed setup instructions and customization options, see the [ccusage stat
 
 ## Thank you for the support!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-settings&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-codex-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-codex-settings&Date)

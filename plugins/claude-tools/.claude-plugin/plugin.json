@@ -1,0 +1,11 @@
+{
+  "name": "claude-tools",
+  "version": "1.2.0",
+  "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

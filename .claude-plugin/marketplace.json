@@ -5,150 +5,110 @@
   },
   "metadata": {
     "description": "Battle-tested Claude Code plugin collection: auto-formatting, Git workflow agents, pattern analysis, productivity commands, and 100+ MCP tools.",
-    "version": "1.1.1"
+    "version": "1.2.0"
   },
   "plugins": [
     {
-      "name": "code-quality-hooks",
-      "source": "./",
-      "description": "Auto-formatting system covering 95% of formatting needs across 8+ languages: Python, JavaScript, TypeScript, CSS, JSON, YAML, HTML, Markdown, and Shell scripts. Achieves zero CI auto-formatting to prevent formatting noise.",
-      "version": "1.1.1",
+      "name": "ultralytics-dev",
+      "source": "./plugins/ultralytics-dev",
+      "description": "Ultralytics-specific development tools: Python/JavaScript/Markdown/Bash formatting hooks, Slack/MongoDB/Linear MCP integration, plus skills for optimal MCP usage.",
+      "version": "1.2.0",
       "author": {
         "name": "Fatih Akyon"
       },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#hooks",
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
+        "ultralytics",
         "formatting",
-        "linting",
-        "python-ruff",
-        "prettier",
-        "markdown",
-        "code-style",
-        "auto-fix",
-        "pre-commit"
+        "hooks",
+        "slack",
+        "mongodb",
+        "linear",
+        "python",
+        "code-quality"
       ],
       "category": "productivity",
-      "tags": ["formatting", "automation", "quality"],
-      "hooks": "./.claude/hooks/hooks.json"
+      "tags": ["formatting", "mcp", "development"]
     },
     {
-      "name": "git-workflow-agents",
-      "source": "./",
-      "description": "Git automation agents for complete workflows: commit-manager analyzes staged changes for multi-commit strategies, pr-manager handles branch creation, README sync, and PR submission with proper formatting.",
-      "version": "1.1.1",
+      "name": "github-dev",
+      "source": "./plugins/github-dev",
+      "description": "GitHub and Git workflow tools: commit-manager and pr-manager agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
+      "version": "1.2.0",
       "author": {
         "name": "Fatih Akyon"
       },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#agents",
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "git",
         "commit",
         "pull-request",
-        "pr",
         "github",
         "workflow",
-        "changelog",
-        "semantic-versioning"
+        "agents",
+        "commands"
       ],
       "category": "development",
-      "tags": ["git", "automation", "workflow"],
-      "agents": [
-        "./.claude/agents/commit-manager.md",
-        "./.claude/agents/pr-manager.md"
-      ]
+      "tags": ["git", "workflow", "automation"]
     },
     {
-      "name": "code-simplifier-agent",
-      "source": "./",
-      "description": "Auto-triggers after TodoWrite to ensure new code follows existing project patterns for imports, naming, function signatures, and base classes. Maintains codebase consistency.",
-      "version": "1.1.0",
+      "name": "websearch-tools",
+      "source": "./plugins/websearch-tools",
+      "description": "Web search and content extraction: Tavily search/extract hooks, context7 library docs MCP, plus skills for optimal tool selection.",
+      "version": "1.2.0",
       "author": {
         "name": "Fatih Akyon"
       },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#agents",
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
-        "code-patterns",
-        "consistency",
-        "refactoring",
-        "imports",
-        "naming-conventions",
-        "best-practices",
-        "code-review"
-      ],
-      "category": "development",
-      "tags": ["analysis", "patterns", "quality"],
-      "agents": ["./.claude/agents/code-simplifier.md"]
-    },
-    {
-      "name": "productivity-commands",
-      "source": "./",
-      "description": "Custom slash commands: /clean-gone-branches for cleaning deleted remote branches, /commit-staged for automated commits, /create-pr for PR creation, /explain-architecture-pattern for design pattern analysis, /update-pr-summary for changelog generation.",
-      "version": "1.1.0",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#commands",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
-      "keywords": [
-        "commands",
-        "shortcuts",
-        "slash-commands",
-        "productivity",
-        "cli",
-        "automation",
-        "templates"
-      ],
-      "category": "productivity",
-      "tags": ["commands", "productivity", "shortcuts"],
-      "commands": ["./.claude/commands/"]
-    },
-    {
-      "name": "mcp-server-configs",
-      "source": "./",
-      "description": "9 pre-configured MCP servers with 100+ tools: Azure (40+ tools), Context7 (20K+ library docs), GitHub (50+ tools), Linear, MongoDB, Playwright (30+ tools), Slack (10+ tools), Supabase, Tavily (web search).",
-      "version": "1.1.0",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#mcp-servers",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
-      "keywords": [
-        "mcp",
-        "servers",
-        "integration",
-        "azure",
-        "github",
-        "mongodb",
-        "playwright",
-        "slack",
-        "supabase",
+        "web-search",
         "tavily",
         "context7",
-        "linear"
+        "search",
+        "content-extraction",
+        "mcp"
       ],
       "category": "tools",
-      "tags": ["mcp", "integration", "tools"],
-      "mcpServers": "./mcp.json"
+      "tags": ["search", "mcp", "integration"]
+    },
+    {
+      "name": "general-dev",
+      "source": "./plugins/general-dev",
+      "description": "General development tools: code-simplifier agent for pattern analysis, architecture pattern command, code quality hooks for rg preference and context loading.",
+      "version": "1.2.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "code-patterns",
+        "simplification",
+        "architecture",
+        "analysis",
+        "code-quality"
+      ],
+      "category": "development",
+      "tags": ["analysis", "patterns", "quality"]
     },
     {
       "name": "plugin-dev",
       "description": "Comprehensive toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
-      "version": "1.0.0",
+      "version": "1.2.0",
       "author": {
         "name": "Fatih Akyon"
       },
       "source": "./plugins/plugin-dev",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugin-dev",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "plugin",
         "development",
@@ -162,6 +122,28 @@
       ],
       "category": "development",
       "tags": ["plugin", "development", "claude"]
+    },
+    {
+      "name": "claude-tools",
+      "source": "./plugins/claude-tools",
+      "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
+      "version": "1.2.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "claude",
+        "settings",
+        "sync",
+        "config",
+        "allowlist",
+        "context"
+      ],
+      "category": "productivity",
+      "tags": ["settings", "sync", "config"]
     }
   ]
 }

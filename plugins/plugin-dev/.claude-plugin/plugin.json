@@ -1,0 +1,11 @@
+{
+  "name": "plugin-dev",
+  "version": "1.2.0",
+  "description": "Toolkit for developing Claude Code plugins with skills for hooks, MCP integration, commands, agents, and best practices.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}
