@@ -3,9 +3,9 @@
 PostToolUse hook: Auto-format Bash/Shell scripts with prettier-plugin-sh
 """
 import json
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 
@@ -45,11 +45,11 @@ def main():
         # Try prettier with prettier-plugin-sh, handle any failure gracefully
         try:
             subprocess.run([
-                'npx', 'prettier', '--write', '--list-different',
+                'npx', 'prettier', '--write', '--list-different', '--print-width', '120',
                 '--plugin=$(npm root -g)/prettier-plugin-sh/lib/index.cjs',
                 str(sh_file)
             ], shell=True, capture_output=True, check=False, cwd=sh_file.parent, timeout=10)
-        except Exception:  # noqa: BLE001
+        except Exception:
             pass  # Silently handle any failure (missing plugin, timeout, etc.)
 
     except Exception:

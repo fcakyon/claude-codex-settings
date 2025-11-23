@@ -15,7 +15,6 @@ import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-
 PYTHON_BLOCK_PATTERN = r"^( *)```(?:python|py|\{[ ]*\.py[ ]*\.annotate[ ]*\})\n(.*?)\n\1```"
 BASH_BLOCK_PATTERN = r"^( *)```(?:bash|sh|shell)\n(.*?)\n\1```"
 LANGUAGE_TAGS = {"python": ["python", "py", "{ .py .annotate }"], "bash": ["bash", "sh", "shell"]}
@@ -47,7 +46,6 @@ def extract_code_blocks(markdown_content: str) -> dict[str, list[tuple[str, str]
     Returns:
         (dict): Mapping of language names to lists of (indentation, block) pairs.
     """
-
     python_blocks = re.compile(PYTHON_BLOCK_PATTERN, re.DOTALL | re.MULTILINE).findall(markdown_content)
     bash_blocks = re.compile(BASH_BLOCK_PATTERN, re.DOTALL | re.MULTILINE).findall(markdown_content)
     return {"python": python_blocks, "bash": bash_blocks}
@@ -63,7 +61,6 @@ def remove_indentation(code_block: str, num_spaces: int) -> str:
     Returns:
         (str): Code with indentation removed.
     """
-
     lines = code_block.split("\n")
     stripped_lines = [line[num_spaces:] if len(line) >= num_spaces else line for line in lines]
     return "\n".join(stripped_lines)
@@ -79,7 +76,6 @@ def add_indentation(code_block: str, num_spaces: int) -> str:
     Returns:
         (str): Code with indentation restored.
     """
-
     indent = " " * num_spaces
     lines = code_block.split("\n")
     return "\n".join([indent + line if line.strip() else line for line in lines])
@@ -91,11 +87,10 @@ def format_code_with_ruff(temp_dir: Path) -> None:
     Args:
         temp_dir (Path): Directory containing extracted Python blocks.
     """
-
     try:
         subprocess.run(["ruff", "format", "--line-length=120", str(temp_dir)], check=True)
         print("Completed ruff format ✅")
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"ERROR running ruff format ❌ {exc}")
 
     try:
@@ -104,15 +99,15 @@ def format_code_with_ruff(temp_dir: Path) -> None:
                 "ruff",
                 "check",
                 "--fix",
-                "--extend-select=I,D,UP",
+                "--extend-select=F,I,D,UP,RUF,FA",
                 "--target-version=py39",
-                "--ignore=D100,D101,D103,D104,D203,D205,D212,D213,D401,D406,D407,D413,F821,F841",
+                "--ignore=D100,D101,D103,D104,D203,D205,D212,D213,D401,D406,D407,D413,F821,F841,RUF001,RUF002,RUF012",
                 str(temp_dir),
             ],
             check=True,
         )
         print("Completed ruff check ✅")
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"ERROR running ruff check ❌ {exc}")
 
 
@@ -122,10 +117,9 @@ def format_bash_with_prettier(temp_dir: Path) -> None:
     Args:
         temp_dir (Path): Directory containing extracted Bash blocks.
     """
-
     try:
         result = subprocess.run(
-            "npx prettier --write --plugin=$(npm root -g)/prettier-plugin-sh/lib/index.cjs ./**/*.sh",
+            "npx prettier --write --print-width 120 --plugin=$(npm root -g)/prettier-plugin-sh/lib/index.cjs ./**/*.sh",
             shell=True,
             capture_output=True,
             text=True,
@@ -135,7 +129,7 @@ def format_bash_with_prettier(temp_dir: Path) -> None:
             print(f"ERROR running prettier-plugin-sh ❌ {result.stderr}")
         else:
             print("Completed bash formatting ✅")
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"ERROR running prettier-plugin-sh ❌ {exc}")
 
 
@@ -150,7 +144,6 @@ def generate_temp_filename(file_path: Path, index: int, code_type: str) -> str:
     Returns:
         (str): Safe filename for the temporary code file.
     """
-
     stem = file_path.stem
     code_letter = code_type[0]
     path_part = str(file_path.parent).replace("/", "_").replace("\\", "_").replace(" ", "-")
@@ -178,10 +171,9 @@ def process_markdown_file(
         markdown_content (str): Original markdown content.
         temp_files (list): Extracted block metadata.
     """
-
     try:
         markdown_content = file_path.read_text()
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"Error reading file {file_path}: {exc}")
         return "", []
 
@@ -200,7 +192,7 @@ def process_markdown_file(
             temp_file_path = temp_dir / generate_temp_filename(file_path, i + offset, code_type)
             try:
                 temp_file_path.write_text(code_without_indentation)
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 print(f"Error writing temp file {temp_file_path}: {exc}")
                 continue
             temp_files.append((num_spaces, code_block, temp_file_path, code_type))
@@ -216,11 +208,10 @@ def update_markdown_file(file_path: Path, markdown_content: str, temp_files: lis
         markdown_content (str): Original content.
         temp_files (list): Metadata for formatted code blocks.
     """
-
     for num_spaces, original_code_block, temp_file_path, code_type in temp_files:
         try:
             formatted_code = temp_file_path.read_text().rstrip("\n")
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"Error reading temp file {temp_file_path}: {exc}")
             continue
         formatted_code_with_indentation = add_indentation(formatted_code, num_spaces)
@@ -233,7 +224,7 @@ def update_markdown_file(file_path: Path, markdown_content: str, temp_files: lis
 
     try:
         file_path.write_text(markdown_content)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"Error writing file {file_path}: {exc}")
 
 
@@ -243,7 +234,6 @@ def run_prettier(markdown_file: Path) -> None:
     Args:
         markdown_file (Path): Markdown file to format.
     """
-
     if not check_prettier_version():
         return
     is_docs = "docs" in markdown_file.parts and "reference" not in markdown_file.parts
@@ -259,7 +249,6 @@ def format_markdown_file(markdown_file: Path) -> None:
     Args:
         markdown_file (Path): Markdown file to process.
     """
-
     with TemporaryDirectory() as tmp_dir_name:
         temp_dir = Path(tmp_dir_name)
         markdown_content, temp_files = process_markdown_file(markdown_file, temp_dir)
@@ -284,10 +273,9 @@ def read_markdown_path() -> Path | None:
     Returns:
         markdown_path (Path | None): Markdown path when present and valid.
     """
-
     try:
         data = json.load(sys.stdin)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return None
     file_path = data.get("tool_input", {}).get("file_path", "")
     path = Path(file_path) if file_path else None
@@ -298,7 +286,6 @@ def read_markdown_path() -> Path | None:
 
 def main() -> None:
     """Run markdown formatting hook."""
-
     markdown_file = read_markdown_path()
     if markdown_file:
         format_markdown_file(markdown_file)
