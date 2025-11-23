@@ -46,6 +46,7 @@ Restart Claude Code to activate.
 | **code-simplifier-agent** | Pattern consistency enforcer       | `/plugin install code-simplifier-agent@fcakyon-claude-plugins` |
 | **productivity-commands** | Custom slash commands              | `/plugin install productivity-commands@fcakyon-claude-plugins` |
 | **mcp-server-configs**    | 9 pre-configured MCP servers       | `/plugin install mcp-server-configs@fcakyon-claude-plugins`    |
+| **plugin-dev**            | Plugin development toolkit         | `/plugin install plugin-dev@fcakyon-claude-plugins`            |
 
 ---
 
@@ -196,7 +197,6 @@ These hooks redirect native Claude Code web tools to faster and more reliable Ta
 - **[webfetch_to_tavily_extract.py](./.claude/hooks/webfetch_to_tavily_extract.py)**: Blocks WebFetch and suggests using Tavily extract with advanced depth
 - **[tavily_extract_to_advanced.py](./.claude/hooks/tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
 - **[websearch_to_tavily_search.py](./.claude/hooks/websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
-
 
 ### Notification Hooks
 
