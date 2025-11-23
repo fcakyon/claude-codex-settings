@@ -257,6 +257,40 @@ Custom Claude Code slash commands that make life easier, stored in [`.claude/com
 - [`/explain-architecture-pattern`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
 - [`/update-pr-summary`](./.claude/commands/update-pr-summary.md) - Update PR description with automatically generated summary based on complete changeset
 
+## Plugin Development Toolkit
+
+Development toolkit for creating Claude Code plugins with 7 specialized skills, 3 expert agents, and guided workflows.
+
+### Installation
+
+```bash
+/plugin install plugin-dev@fcakyon-claude-plugins
+```
+
+---
+
+### Skills
+
+| Skill                   | Description                                                    |
+| ----------------------- | -------------------------------------------------------------- |
+| **hook-development**    | Create PreToolUse/PostToolUse/Stop hooks with prompt-based API |
+| **mcp-integration**     | Configure MCP servers (stdio/SSE/HTTP) in plugins              |
+| **plugin-structure**    | Plugin directory layout, manifest, and auto-discovery          |
+| **plugin-settings**     | Store per-project config with .local.md files                  |
+| **command-development** | Slash commands with frontmatter, arguments, and bash execution |
+| **agent-development**   | Agents with system prompts and triggering examples             |
+| **skill-development**   | Skills with progressive disclosure and bundled resources       |
+
+### Agents
+
+- **agent-creator** - Generate agent configurations with AI assistance
+- **plugin-validator** - Validate plugin structure, manifest, and components
+- **skill-reviewer** - Review and improve skill quality and descriptions
+
+### Command
+
+- `/plugin-dev:create-plugin` - 8-phase guided workflow for end-to-end plugin creation with component design, implementation, and validation
+
 ## Statusline
 
 The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
