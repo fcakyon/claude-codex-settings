@@ -148,8 +148,6 @@ Specialized agents that run automatically to enhance code quality, stored in [`.
 
 ### Installation
 
-**Plugin-based:**
-
 ```bash
 /plugin install git-workflow-agents@fcakyon-claude-plugins
 /plugin install code-simplifier-agent@fcakyon-claude-plugins
