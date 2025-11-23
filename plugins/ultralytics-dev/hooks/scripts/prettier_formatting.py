@@ -4,9 +4,9 @@ PostToolUse hook: Auto-format JS/TS/CSS/JSON/YAML/HTML/Vue/Svelte files with pre
 """
 import json
 import re
-import sys
-import subprocess
 import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 # File extensions that prettier handles
@@ -54,7 +54,7 @@ def main():
 
         # Run prettier
         subprocess.run([
-            'npx', 'prettier', '--write', '--list-different', str(py_file)
+            'npx', 'prettier', '--write', '--list-different', '--print-width', '120', str(py_file)
         ], capture_output=True, check=False, cwd=py_file.parent)
 
     except Exception:
