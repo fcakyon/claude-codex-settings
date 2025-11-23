@@ -88,12 +88,6 @@
     "command": "npx -y ccusage@latest statusline",
     "padding": 0
   },
-  "enabledPlugins": {
-    "git-workflow-agents@fcakyon-claude-plugins": true,
-    "code-simplifier-agent@fcakyon-claude-plugins": true,
-    "productivity-commands@fcakyon-claude-plugins": true,
-    "code-quality-hooks@fcakyon-claude-plugins": true
-  },
   "extraKnownMarketplaces": {
     "fcakyon-claude-plugins": {
       "source": {
