@@ -124,9 +124,9 @@
       "tags": ["plugin", "development", "claude"]
     },
     {
-      "name": "claude-settings",
-      "source": "./plugins/claude-settings",
-      "description": "Sync CLAUDE.md and permissions allowlist from fcakyon/claude-codex-settings repository.",
+      "name": "claude-tools",
+      "source": "./plugins/claude-tools",
+      "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
       "version": "1.2.0",
       "author": {
         "name": "Fatih Akyon"
@@ -134,7 +134,14 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["claude", "settings", "sync", "config", "allowlist"],
+      "keywords": [
+        "claude",
+        "settings",
+        "sync",
+        "config",
+        "allowlist",
+        "context"
+      ],
       "category": "productivity",
       "tags": ["settings", "sync", "config"]
     }

@@ -215,6 +215,8 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 ## Statusline
 
+<img src="https://github.com/user-attachments/assets/6677e1bd-7803-4dab-8f42-ecf7454c7d26" width="400">
+
 The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
 
 - **Real-time usage tracking**: Monitor token consumption and API costs as you work
