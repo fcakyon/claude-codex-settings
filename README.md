@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/a978cb0a-785d-4a7d-aff2-7e962edd3120" width="10000" alt="Moderators Logo">
+  <img src="https://github.com/user-attachments/assets/a978cb0a-785d-4a7d-aff2-7e962edd3120" width="10000" alt="Claude Codex Settings Logo">
 
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](#available-plugins)
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
@@ -7,7 +7,7 @@
 
 My daily battle-tested Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with commands, hooks, subagents and MCP servers.
 
-[Installation](#installation) • [Configuration](#configuration) • [MCP Servers](#mcp-servers) • [Agents](#agents) • [Hooks](#hooks) • [Commands](#commands) • [Statusline](#statusline)
+[Installation](#installation) • [Plugins](#plugins) • [Configuration](#configuration) • [Statusline](#statusline) • [References](#references)
 
 </div>
 
@@ -15,18 +15,18 @@ My daily battle-tested Claude [Code](https://github.com/anthropics/claude-code)/
 
 > **Prerequisites:** Before installing, ensure you have Claude Code and required tools installed. See [INSTALL.md](INSTALL.md) for complete prerequisites.
 
-Install agents, commands, hooks, and MCP servers via [Claude Code Plugins](https://docs.claude.com/en/docs/claude-code/plugins) system:
+Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugins](https://docs.claude.com/en/docs/claude-code/plugins) system:
 
 ```bash
 # Add marketplace
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install plugins
-/plugin install code-quality-hooks@fcakyon-claude-plugins
-/plugin install git-workflow-agents@fcakyon-claude-plugins
-/plugin install code-simplifier-agent@fcakyon-claude-plugins
-/plugin install productivity-commands@fcakyon-claude-plugins
-/plugin install mcp-server-configs@fcakyon-claude-plugins
+/plugin install ultralytics-dev@fcakyon-claude-plugins # Formatting hooks + Slack/MongoDB MCPs
+/plugin install github-dev@fcakyon-claude-plugins      # Git workflow agents + commands
+/plugin install websearch-tools@fcakyon-claude-plugins # Tavily hooks + web search MCP
+/plugin install general-dev@fcakyon-claude-plugins     # Code simplifier + utilities
+/plugin install plugin-dev@fcakyon-claude-plugins      # Plugin development toolkit
 ```
 
 Then create symlink for cross-tool compatibility:
@@ -37,257 +37,168 @@ ln -s CLAUDE.md AGENTS.md
 
 Restart Claude Code to activate.
 
-## Full Compatibility with Claude Code Plugins System
+## Plugins
 
-| Plugin                    | Description                        | Installation                                                   |
-| ------------------------- | ---------------------------------- | -------------------------------------------------------------- |
-| **code-quality-hooks**    | Auto-formatting for 8+ languages   | `/plugin install code-quality-hooks@fcakyon-claude-plugins`    |
-| **git-workflow-agents**   | commit-manager + pr-manager agents | `/plugin install git-workflow-agents@fcakyon-claude-plugins`   |
-| **code-simplifier-agent** | Pattern consistency enforcer       | `/plugin install code-simplifier-agent@fcakyon-claude-plugins` |
-| **productivity-commands** | Custom slash commands              | `/plugin install productivity-commands@fcakyon-claude-plugins` |
-| **mcp-server-configs**    | 9 pre-configured MCP servers       | `/plugin install mcp-server-configs@fcakyon-claude-plugins`    |
-| **plugin-dev**            | Plugin development toolkit         | `/plugin install plugin-dev@fcakyon-claude-plugins`            |
+<details>
+<summary><strong>ultralytics-dev</strong> - Auto-formatting + Slack/MongoDB/Linear MCPs</summary>
+
+Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP servers for Slack, MongoDB, and Linear with usage skills.
+
+**Hooks:**
+
+- [`format_python_docstrings.py`](./.claude/hooks/format_python_docstrings.py) - Google-style docstring formatter
+- [`python_code_quality.py`](./.claude/hooks/python_code_quality.py) - Python code quality with ruff
+- [`prettier_formatting.py`](./.claude/hooks/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
+- [`markdown_formatting.py`](./.claude/hooks/markdown_formatting.py) - Markdown formatting
+- [`bash_formatting.py`](./.claude/hooks/bash_formatting.py) - Bash script formatting
+
+**MCPs:** Slack, MongoDB, Linear
+
+**Skills:**
+
+- **slack-usage** - Search Slack messages and view channel history
+- **mongodb-usage** - Query MongoDB collections and schemas
+</details>
+
+<details>
+<summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
+
+Git and GitHub automation with commit-manager and pr-manager agents plus workflow skills.
+
+**Agents:**
+
+- [`code-simplifier`](./plugins/general-dev/agents/code-simplifier.md) - Ensures code follows project conventions
+- [`commit-manager`](./plugins/github-dev/agents/commit-manager.md) - Git commit expert
+- [`pr-manager`](./plugins/github-dev/agents/pr-manager.md) - GitHub PR workflow automation
+
+**Commands:**
+
+- [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean up deleted remote branches
+- [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit changes with context
+- [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request with context
+
+**Skills:**
+
+- **pr-workflow** - Complete PR creation workflow
+- **commit-workflow** - Commit best practices and automation
+
+</details>
+
+<details>
+<summary><strong>websearch-tools</strong> - Tavily web search + hooks</summary>
+
+Tavily MCP server for web search and content extraction with Tavily hooks and usage skill.
+
+**Hooks:**
+
+- [`webfetch_to_tavily_extract.py`](./.claude/hooks/webfetch_to_tavily_extract.py) - Redirect WebFetch
+- [`websearch_to_tavily_search.py`](./.claude/hooks/websearch_to_tavily_search.py) - Redirect WebSearch
+- [`tavily_extract_to_advanced.py`](./.claude/hooks/tavily_extract_to_advanced.py) - Auto-enable advanced extraction
+
+**MCPs:** Tavily, Context7
+
+**Skills:**
+
+- **tavily-usage** - Web search and content extraction workflows
+</details>
+
+<details>
+<summary><strong>general-dev</strong> - Code simplifier + utilities</summary>
+
+Code quality agent, architecture pattern command, and general utility hooks.
+
+**Agent:**
+
+- [`code-simplifier`](./plugins/general-dev/agents/code-simplifier.md) - Ensures code follows conventions
+
+**Command:**
+
+- [`/explain-architecture-pattern`](./plugins/general-dev/commands/explain-architecture-pattern.md) - Identify design patterns
+
+**Hooks:**
+
+- [`load_claude_md.py`](./.claude/hooks/load_claude_md.py) - Auto-load CLAUDE.md
+- [`enforce_rg_over_grep.py`](./.claude/hooks/enforce_rg_over_grep.py) - Suggest ripgrep
+
+</details>
+
+<details>
+<summary><strong>plugin-dev</strong> - Plugin development toolkit</summary>
+
+Complete toolkit for building Claude Code plugins with skills, agents, and validation.
+
+**Skills:**
+
+- [`hook-development`](./plugins/plugin-dev/skills/hook-development/SKILL.md) - Create hooks with prompt-based API
+- [`mcp-integration`](./plugins/plugin-dev/skills/mcp-integration/SKILL.md) - Configure MCP servers
+- [`plugin-structure`](./plugins/plugin-dev/skills/plugin-structure/SKILL.md) - Plugin layout and auto-discovery
+- [`plugin-settings`](./plugins/plugin-dev/skills/plugin-settings/SKILL.md) - Per-project configuration
+- [`command-development`](./plugins/plugin-dev/skills/command-development/SKILL.md) - Create custom commands
+- [`agent-development`](./plugins/plugin-dev/skills/agent-development/SKILL.md) - Build autonomous agents
+- [`skill-development`](./plugins/plugin-dev/skills/skill-development/SKILL.md) - Create reusable skills with progressive disclosure
+
+**Agents:**
+
+- [`agent-creator`](./plugins/plugin-dev/agents/agent-creator.md) - AI-assisted agent generation
+- [`plugin-validator`](./plugins/plugin-dev/agents/plugin-validator.md) - Validate plugin structure
+- [`skill-reviewer`](./plugins/plugin-dev/agents/skill-reviewer.md) - Improve skill quality
+
+**Command:**
+
+- [`/plugin-dev:create-plugin`](./plugins/plugin-dev/commands/create-plugin.md) - 8-phase guided plugin workflow
+
+</details>
 
 ---
 
 ## Configuration
 
-Claude Code configuration is stored in [`.claude/settings.json`](./.claude/settings.json) and includes:
+<details>
+<summary><strong>Claude Code</strong></summary>
 
-- Model selection (SonnetPlan mode: plan with Sonnet 4.5, execute with Haiku 4.5 - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61))
-- Environment variables (bash working directory, telemetry disabled, MCP output limits)
-- Safe tools permissions (allowed bash commands, git operations, MCP tools)
-- Custom statusline powered by [ccusage](https://ccusage.com/)
-- Enabled plugins configuration
+Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-**Alternative API Providers:**
+- **Model**: SonnetPlan mode (plan: Claude Sonnet 4.5, execute: Haiku 4.5) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
+- **Environment**: bash working directory, telemetry disabled, MCP output limits
+- **Permissions**: bash commands, git operations, MCP tools
+- **Statusline**: Custom usage tracking powered by [ccusage](https://ccusage.com/)
+- **Plugins**: All plugins enabled
 
-For cost-effective alternatives, you can use Z.ai's GLM models via Anthropic-compatible API:
+</details>
 
-- [`.claude/settings-zai.json`](./.claude/settings-zai.json) - Configuration for [Z.ai GLM-4.6/GLM-4.5-Air models](https://docs.z.ai/scenario-example/develop-tools/claude) (85% cheaper than Claude 4.5 - [source](https://z.ai/blog/glm-4.6))
-  - Main model: GLM-4.6 (dialogue, planning, coding, complex reasoning)
-  - Fast model: GLM-4.5-Air (file search, syntax checking)
-  - Requires Z.ai API key from [z.ai/model-api](https://z.ai/model-api)
+<details>
+<summary><strong>Z.ai (85% cheaper)</strong></summary>
 
-OpenAI Codex configuration is stored in [`~/.codex/config.toml`](./config.toml) and includes:
+Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/scenario-example/develop-tools/claude):
 
-- Default `gpt-5-codex` model with `model_reasoning_effort` set to "high" and served through the Azure `responses` API surface
-- Azure provider metadata (`model_providers.azure`) with the project-specific base URL and `env_key` secret for authentication
+- **Main model**: GLM-4.6 (dialogue, planning, coding, complex reasoning)
+- **Fast model**: GLM-4.5-Air (file search, syntax checking)
+- **Cost savings**: 85% cheaper than Claude 4.5 - [source](https://z.ai/blog/glm-4.6)
+- **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
-VSCode settings are stored in [`.vscode/settings.json`](./.vscode/settings.json) and include:
+</details>
 
-- **GitHub Copilot instructions**: Custom AI instructions for automated commit message and PR description generation
-- Python formatting with Ruff, auto-save, and format-on-save enabled
-- Terminal configurations for cross-platform compatibility
+<details>
+<summary><strong>OpenAI Codex</strong></summary>
 
-## MCP Servers
+Configuration in [`~/.codex/config.toml`](./config.toml):
 
-The MCP (Model Context Protocol) configuration lives in [`mcp.json`](./mcp.json).
+- **Model**: `gpt-5-codex` with `model_reasoning_effort` set to "high"
+- **Provider**: Azure via `responses` API surface
+- **Auth**: Project-specific base URL with `env_key` authentication
 
-### Installation
+</details>
 
-```bash
-/plugin install mcp-server-configs@fcakyon-claude-plugins
-```
+<details>
+<summary><strong>VSCode</strong></summary>
 
----
+Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
-### Available MCP Servers
+- **GitHub Copilot**: Custom instructions for automated commit messages and PR descriptions
+- **Python**: Ruff formatting with auto-save and format-on-save enabled
+- **Terminal**: Cross-platform compatibility configurations
 
-These are some solid MCP server repos worth checking out:
-
-- [Azure MCP](https://github.com/Azure/azure-mcp) - 40+ Azure tools (100% free)
-- [Context7](https://github.com/upstash/context7) - Up-to-date documentation context for 20K+ libraries (100% free)
-- [GitHub MCP Server](https://github.com/github/github-mcp-server) - 50+ GitHub tools (100% free) - See configuration below
-- [Linear MCP](https://linear.app/docs/mcp) - Project management tools for Linear (100% free)
-- [MongoDB MCP](https://github.com/mongodb-js/mongodb-mcp-server) - Tools for interacting with MongoDB (100% free)
-- [Paper Search MCP](https://github.com/openags/paper-search-mcp) - Search papers across arXiv, PubMed, bioRxiv, Google Scholar, and more (100% free)
-- [Playwright MCP](https://github.com/microsoft/playwright-mcp) - 30+ browser/web testing tools (100% free)
-- [Slack MCP Server](https://github.com/ubie-oss/slack-mcp-server) - 10+ Slack tools (100% free)
-- [Supabase MCP](https://github.com/supabase-community/supabase-mcp) - Database tools for interacting with Supabase (100% free) - [Configuration guide](https://supabase.com/docs/guides/getting-started/mcp#step-2-configure-your-ai-tool)
-- [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) - 4 tools for web search and scraping. Better than Claude Code's built-in WebFetch tool (free tier: 1000 monthly requests)
-
-#### GitHub MCP Configuration
-
-**Claude Code (HTTP Remote - Recommended):**
-
-```json
-"github": {
-  "type": "http",
-  "url": "https://api.githubcopilot.com/mcp",
-  "headers": {
-    "Authorization": "Bearer ghp_..."
-  }
-}
-```
-
-**Claude Desktop (Docker - More Stable):**
-
-```json
-"github": {
-  "command": "docker",
-  "args": [
-    "run",
-    "-i",
-    "--rm",
-    "-e",
-    "GITHUB_PERSONAL_ACCESS_TOKEN",
-    "ghcr.io/github/github-mcp-server"
-  ],
-  "env": {
-    "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_..."
-  }
-}
-```
-
-OpenAI Codex compatible version of MCP server configurations can be found in [`~/.codex/config.toml`](./config.toml).
-
-## Agents
-
-Specialized agents that run automatically to enhance code quality, stored in [`.claude/agents/`](./.claude/agents/):
-
-### Installation
-
-```bash
-/plugin install git-workflow-agents@fcakyon-claude-plugins
-/plugin install code-simplifier-agent@fcakyon-claude-plugins
-```
-
----
-
-- [`code-simplifier.md`](./.claude/agents/code-simplifier.md) - Contextual pattern analyzer that ensures new code follows existing project conventions (imports, naming, function signatures, class patterns). Auto-triggers after TodoWrite to maintain codebase consistency.
-
-- [`commit-manager.md`](./.claude/agents/commit-manager.md) - Git commit expert that analyzes staged changes, creates optimal commit strategies, and executes commits with meaningful messages. Handles documentation updates and multi-commit scenarios.
-
-- [`pr-manager.md`](./.claude/agents/pr-manager.md) - Git and GitHub PR workflow automation that handles branch creation, commits via commit-manager agent, documentation updates, and PR submission with proper formatting.
-
-For more details, see the [Claude Code sub-agents documentation](https://docs.anthropic.com/en/docs/claude-code/sub-agents).
-
-## Hooks
-
-Custom hooks that enhance tool usage, configured in [`.claude/settings.json`](./.claude/settings.json):
-
-### Installation
-
-```bash
-/plugin install code-quality-hooks@fcakyon-claude-plugins
-```
-
----
-
-### Context Management Hooks
-
-These hooks ensure Claude always has access to project-specific instructions by automatically loading them on each prompt.
-
-- **[load_claude_md.py](./.claude/hooks/load_claude_md.py)**: Auto-loads CLAUDE.md or AGENTS.md from the project directory on every user prompt. Prevents AI from forgetting main instructions by re-injecting them at every prompt submission.
-
-### Git Workflow Confirmation Hooks
-
-These hooks provide user confirmation dialogs before executing critical git operations, showing previews of what will be committed or created.
-
-- **[git_commit_confirm.py](./.claude/hooks/git_commit_confirm.py)**: Shows confirmation dialog before creating git commits. Displays commit message, staged files list, and diff statistics. Supports both regular commits and amend operations.
-- **[gh_pr_create_confirm.py](./.claude/hooks/gh_pr_create_confirm.py)**: Shows confirmation dialog before creating GitHub pull requests via `gh pr create`. Displays PR title, body preview, assignee (resolves @me to actual username), and reviewer.
-
-### Web Content Enhancement Hooks
-
-These hooks redirect native Claude Code web tools to faster and more reliable Tavily alternatives. Native WebSearch/WebFetch tools take 20-30 seconds while Tavily equivalents complete in 1-2 seconds. Additionally, native WebFetch often fails on bot-protected websites while Tavily can bypass these protections.
-
-- **[webfetch_to_tavily_extract.py](./.claude/hooks/webfetch_to_tavily_extract.py)**: Blocks WebFetch and suggests using Tavily extract with advanced depth
-- **[tavily_extract_to_advanced.py](./.claude/hooks/tavily_extract_to_advanced.py)**: Enhances tavily-extract calls with advanced extraction depth for better content parsing
-- **[websearch_to_tavily_search.py](./.claude/hooks/websearch_to_tavily_search.py)**: Blocks WebSearch and suggests using Tavily search instead
-
-### Notification Hooks
-
-These hooks provide desktop notifications when Claude Code completes tasks, making it easier to track progress when working on long-running operations or when switching between tasks.
-
-- **[notify.sh](./.claude/hooks/notify.sh)**: Sends OS notifications when Claude Code emits notification events. Supports macOS (via osascript) and Linux (via notify-send). Also triggers terminal bell for VS Code visual indicators.
-
-### Code Quality Hooks
-
-Comprehensive auto-formatting system that covers all major file types, designed to eliminate formatting inconsistencies and reduce CI formatting noise.
-
-- **Whitespace Cleanup** ([settings.json#L64-L74](./.claude/settings.json#L64-L74)): Automatically removes whitespace from empty lines in Python, JavaScript, and TypeScript files (`.py`, `.js`, `.jsx`, `.ts`, `.tsx`) after any Edit, MultiEdit, Write, or Task operation. Works cross-platform (macOS and Linux).
-
-- **Python Code Quality** ([python_code_quality.py](./.claude/hooks/python_code_quality.py)): Automatically formats and lints Python files using ruff after Edit/Write/MultiEdit operations. Uses custom Google-style docstring formatter ([format_python_docstrings.py](./.claude/hooks/format_python_docstrings.py)) inspired by [Ultralytics Actions](https://github.com/ultralytics/actions):
-  - `ruff format --line-length 120`
-  - `ruff check --fix --extend-select I,D,UP --target-version py39`
-  - Custom docstring formatter for Google-style compliance
-- **Prettier Formatting** ([prettier_formatting.py](./.claude/hooks/prettier_formatting.py)): Auto-formats JavaScript, TypeScript, CSS, JSON, YAML, HTML, Vue, and Svelte files using prettier. Skips lock files and model.json to prevent conflicts.
-
-- **Markdown Formatting** ([markdown_formatting.py](./.claude/hooks/markdown_formatting.py)): Formats Markdown files with prettier, applying special tab-width 4 handling for documentation directories (matches [Ultralytics Actions](https://github.com/ultralytics/actions) docs formatting).
-
-- **Bash/Shell Formatting** ([bash_formatting.py](./.claude/hooks/bash_formatting.py)): Formats shell scripts (`.sh`, `.bash`) using prettier-plugin-sh for consistent bash scripting style.
-
-- **Ripgrep Enforcement** ([enforce_rg_over_grep.py](./.claude/hooks/enforce_rg_over_grep.py)): Blocks grep and find commands in Bash tool calls, suggesting rg (ripgrep) alternatives for better performance and more features.
-
-#### Zero CI Formatting
-
-This comprehensive formatting setup is designed to achieve **zero auto-formatting** from CI workflows like [Ultralytics Actions](https://github.com/ultralytics/actions). The hooks cover 95% of typical formatting needs:
-
-- ✅ Python (ruff + custom docstring formatter)
-- ✅ JavaScript/TypeScript (prettier)
-- ✅ CSS/SCSS/Less (prettier)
-- ✅ JSON/YAML (prettier)
-- ✅ HTML/Vue/Svelte (prettier)
-- ✅ Markdown (prettier with docs handling)
-- ✅ Shell scripts (prettier-plugin-sh)
-- ✅ Whitespace cleanup
-
-All hooks gracefully degrade when tools aren't available, never disrupting Claude Code operations. Python formatting configuration inspired by [onuralpszr's setup](https://github.com/onuralpszr/onuralpszr/blob/main/configs/git-hooks/pre-commit-line-120).
-
-For more details, see the [Claude Code hooks documentation](https://docs.anthropic.com/en/docs/claude-code/hooks).
-
-## Commands
-
-Custom Claude Code slash commands that make life easier, stored in [`.claude/commands/`](./.claude/commands/):
-
-### Installation
-
-```bash
-/plugin install productivity-commands@fcakyon-claude-plugins
-```
-
----
-
-- [`/clean-gone-branches`](./.claude/commands/clean-gone-branches.md) - Clean up local branches deleted from remote
-- [`/commit-staged`](./.claude/commands/commit-staged.md) - Commit staged changes using the commit-manager agent with optional context
-- [`/create-pr`](./.claude/commands/create-pr.md) - Create pull request using the pr-manager agent with optional context
-- [`/explain-architecture-pattern`](./.claude/commands/explain-architecture-pattern.md) - Identify and explain architectural patterns and design decisions
-- [`/update-pr-summary`](./.claude/commands/update-pr-summary.md) - Update PR description with automatically generated summary based on complete changeset
-
-## Plugin Development Toolkit
-
-Development toolkit for creating Claude Code plugins with 7 specialized skills, 3 expert agents, and guided workflows.
-
-### Installation
-
-```bash
-/plugin install plugin-dev@fcakyon-claude-plugins
-```
-
----
-
-### Skills
-
-| Skill                   | Description                                                    |
-| ----------------------- | -------------------------------------------------------------- |
-| **hook-development**    | Create PreToolUse/PostToolUse/Stop hooks with prompt-based API |
-| **mcp-integration**     | Configure MCP servers (stdio/SSE/HTTP) in plugins              |
-| **plugin-structure**    | Plugin directory layout, manifest, and auto-discovery          |
-| **plugin-settings**     | Store per-project config with .local.md files                  |
-| **command-development** | Slash commands with frontmatter, arguments, and bash execution |
-| **agent-development**   | Agents with system prompts and triggering examples             |
-| **skill-development**   | Skills with progressive disclosure and bundled resources       |
-
-### Agents
-
-- **agent-creator** - Generate agent configurations with AI assistance
-- **plugin-validator** - Validate plugin structure, manifest, and components
-- **skill-reviewer** - Review and improve skill quality and descriptions
-
-### Command
-
-- `/plugin-dev:create-plugin` - 8-phase guided workflow for end-to-end plugin creation with component design, implementation, and validation
+</details>
 
 ## Statusline
 
@@ -307,11 +218,10 @@ The statusline is configured through two files:
 
 For detailed setup instructions and customization options, see the [ccusage statusline guide](https://ccusage.com/guide/statusline).
 
-## Extra Resources
+## References
 
-- [Claude MCP Server Setup](https://docs.anthropic.com/en/docs/claude-code/mcp#project-scope)
-
-- [Claude Code Commands Setup](https://docs.anthropic.com/en/docs/claude-code/slash-commands#command-types)
+- [Claude Code](https://github.com/anthropics/claude-code) - Official CLI for Claude
+- [Anthropic Skills](https://github.com/anthropics/skills) - Official skill examples
 
 ## Thank you for the support!
 
