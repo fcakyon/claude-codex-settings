@@ -1,6 +1,6 @@
 {
   "name": "websearch-tools",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Smart web tool routing via hooks that redirect WebFetch/WebSearch to Tavily. Includes context7 MCP for library docs and a skill for tool selection.",
   "author": {
     "name": "Fatih Akyon"

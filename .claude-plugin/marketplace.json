@@ -18,7 +18,7 @@
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "ultralytics",
         "formatting",
@@ -42,7 +42,7 @@
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "git",
         "commit",
@@ -65,7 +65,7 @@
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "web-search",
         "tavily",
@@ -87,7 +87,7 @@
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "code-patterns",
         "simplification",
@@ -108,7 +108,7 @@
       "source": "./plugins/plugin-dev",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugin-dev",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "MIT",
+      "license": "Apache-2.0",
       "keywords": [
         "plugin",
         "development",
@@ -122,6 +122,21 @@
       ],
       "category": "development",
       "tags": ["plugin", "development", "claude"]
+    },
+    {
+      "name": "claude-settings",
+      "source": "./plugins/claude-settings",
+      "description": "Sync CLAUDE.md and permissions allowlist from fcakyon/claude-codex-settings repository.",
+      "version": "1.2.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["claude", "settings", "sync", "config", "allowlist"],
+      "category": "productivity",
+      "tags": ["settings", "sync", "config"]
     }
   ]
 }

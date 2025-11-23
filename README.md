@@ -27,6 +27,7 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin install websearch-tools@fcakyon-claude-plugins # Tavily hooks + web search MCP
 /plugin install general-dev@fcakyon-claude-plugins     # Code simplifier + utilities
 /plugin install plugin-dev@fcakyon-claude-plugins      # Plugin development toolkit
+/plugin install claude-tools@fcakyon-claude-plugins    # Sync CLAUDE.md + allowlist
 ```
 
 Then create symlink for cross-tool compatibility:
@@ -115,9 +116,8 @@ Code quality agent, architecture pattern command, and general utility hooks.
 
 - [`/explain-architecture-pattern`](./plugins/general-dev/commands/explain-architecture-pattern.md) - Identify design patterns
 
-**Hooks:**
+**Hook:**
 
-- [`load_claude_md.py`](./.claude/hooks/load_claude_md.py) - Auto-load CLAUDE.md
 - [`enforce_rg_over_grep.py`](./.claude/hooks/enforce_rg_over_grep.py) - Suggest ripgrep
 
 </details>
@@ -146,6 +146,19 @@ Complete toolkit for building Claude Code plugins with skills, agents, and valid
 **Command:**
 
 - [`/plugin-dev:create-plugin`](./plugins/plugin-dev/commands/create-plugin.md) - 8-phase guided plugin workflow
+
+</details>
+
+<details>
+<summary><strong>claude-tools</strong> - Sync CLAUDE.md + allowlist + context refresh</summary>
+
+Commands for syncing CLAUDE.md and permissions allowlist from repository, plus context refresh for long conversations.
+
+**Commands:**
+
+- [`/load-claude-md`](./plugins/claude-tools/commands/load-claude-md.md) - Refresh context with CLAUDE.md instructions
+- [`/sync-claude-md`](./plugins/claude-tools/commands/sync-claude-md.md) - Sync CLAUDE.md from GitHub
+- [`/sync-allowlist`](./plugins/claude-tools/commands/sync-allowlist.md) - Sync permissions allowlist
 
 </details>
 
@@ -225,4 +238,4 @@ For detailed setup instructions and customization options, see the [ccusage stat
 
 ## Thank you for the support!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-settings&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-codex-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-codex-settings&Date)

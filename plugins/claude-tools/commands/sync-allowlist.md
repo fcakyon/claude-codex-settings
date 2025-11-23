@@ -4,7 +4,7 @@ description: Sync allowlist from GitHub repository to user settings
 
 # Sync Allowlist
 
-Fetch the latest permissions allowlist from fcakyon/claude-settings GitHub repository and update ~/.claude/settings.json.
+Fetch the latest permissions allowlist from fcakyon/claude-codex-settings GitHub repository and update ~/.claude/settings.json.
 
 Steps:
 
