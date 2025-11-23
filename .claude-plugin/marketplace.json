@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Battle-tested Claude Code plugin collection: auto-formatting, Git workflow agents, pattern analysis, productivity commands, and 100+ MCP tools.",
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "plugins": [
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Ultralytics-specific development tools: Python/JavaScript/Markdown/Bash formatting hooks, Slack/MongoDB/Linear MCP integration, plus skills for optimal MCP usage.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
