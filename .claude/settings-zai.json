@@ -1,7 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "haiku",
+  "model": "opusplan",
   "includeCoAuthoredBy": false,
+  "spinnerTipsEnabled": false,
+  "alwaysThinkingEnabled": true,
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "your_zai_api_key",
     "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
@@ -75,7 +77,13 @@
       "mcp__mongodb__list_collections",
       "mcp__mongodb__get_collection_schema",
       "mcp__mongodb__collection-indexes",
-      "mcp__supabase__list_tables"
+      "mcp__supabase__list_tables",
+      "Skill(plugin-dev:skill-development)",
+      "Skill(plugin-dev:command-development)",
+      "Skill(plugin-dev:agent-development)",
+      "Skill(plugin-dev:hook-development)",
+      "Skill(plugin-dev:plugin-structure)",
+      "Skill(plugin-dev:mcp-integration)"
     ]
   },
   "statusLine": {

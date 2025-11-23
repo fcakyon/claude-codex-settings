@@ -1,0 +1,20 @@
+{
+  "description": "Git workflow confirmation hooks for GitHub operations",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/git_commit_confirm.py"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/gh_pr_create_confirm.py"
+          }
+        ]
+      }
+    ]
+  }
+}

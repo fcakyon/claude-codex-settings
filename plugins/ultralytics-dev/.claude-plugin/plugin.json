@@ -1,0 +1,11 @@
+{
+  "name": "ultralytics-dev",
+  "version": "1.0.0",
+  "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP servers for Slack message search, MongoDB queries, and Linear tracking, with usage skills.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}
