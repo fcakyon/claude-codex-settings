@@ -1,0 +1,11 @@
+{
+  "name": "general-dev",
+  "version": "1.2.0",
+  "description": "Code quality tools: code-simplifier agent for pattern analysis, architecture explanation command, and hooks for rg enforcement.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

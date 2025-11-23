@@ -1,0 +1,11 @@
+{
+  "name": "github-dev",
+  "version": "1.2.0",
+  "description": "Git workflow automation with commit-manager and pr-manager agents. 5 slash commands for commits/PRs/branch cleanup, confirmation hooks, GitHub MCP, and workflow skills.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

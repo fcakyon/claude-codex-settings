@@ -79,9 +79,9 @@ Skills use a three-level loading system to manage context efficiently:
 
 1. **Metadata (name + description)** - Always in context (~100 words)
 2. **SKILL.md body** - When skill triggers (<5k words)
-3. **Bundled resources** - As needed by Claude (Unlimited*)
+3. **Bundled resources** - As needed by Claude (Unlimited\*)
 
-*Unlimited because scripts can be executed without reading into context window.
+\*Unlimited because scripts can be executed without reading into context window.
 
 ## Skill Creation Process
 
@@ -127,6 +127,7 @@ Example: When building a `big-query` skill to handle queries like "How many user
 2. A `references/schema.md` file documenting the table schemas would be helpful to store in the skill
 
 **For Claude Code plugins:** When building a hooks skill, the analysis shows:
+
 1. Developers repeatedly need to validate hooks.json and test hook scripts
 2. `scripts/validate-hook-schema.sh` and `scripts/test-hook.sh` utilities would be helpful
 3. `references/patterns.md` for detailed hook patterns to avoid bloating SKILL.md
@@ -158,22 +159,24 @@ Also, delete any example files and directories not needed for the skill. Create 
 
 **Writing Style:** Write the entire skill using **imperative/infinitive form** (verb-first instructions), not second person. Use objective, instructional language (e.g., "To accomplish X, do Y" rather than "You should do X" or "If you need to do X"). This maintains consistency and clarity for AI consumption.
 
-**Description (Frontmatter):** Use third-person format with specific trigger phrases:
+**Description (Frontmatter):** Use third-person format with specific trigger phrases. Max 300 characters:
 
 ```yaml
 ---
-name: Skill Name
+name: skill-name
 description: This skill should be used when the user asks to "specific phrase 1", "specific phrase 2", "specific phrase 3". Include exact phrases users would say that should trigger this skill. Be concrete and specific.
 version: 0.1.0
 ---
 ```
 
 **Good description examples:**
+
 ```yaml
 description: This skill should be used when the user asks to "create a hook", "add a PreToolUse hook", "validate tool use", "implement prompt-based hooks", or mentions hook events (PreToolUse, PostToolUse, Stop).
 ```
 
 **Bad description examples:**
+
 ```yaml
 description: Use this skill when working with hooks.  # Wrong person, vague
 description: Load when user needs hook help.  # Not third person
@@ -187,24 +190,28 @@ To complete SKILL.md body, answer the following questions:
 3. In practice, how should Claude use the skill? All reusable skill contents developed above should be referenced so that Claude knows how to use them.
 
 **Keep SKILL.md lean:** Target 1,500-2,000 words for the body. Move detailed content to references/:
+
 - Detailed patterns → `references/patterns.md`
 - Advanced techniques → `references/advanced.md`
 - Migration guides → `references/migration.md`
 - API references → `references/api-reference.md`
 
 **Reference resources in SKILL.md:**
+
 ```markdown
 ## Additional Resources
 
 ### Reference Files
 
 For detailed patterns and techniques, consult:
+
 - **`references/patterns.md`** - Common patterns
 - **`references/advanced.md`** - Advanced use cases
 
 ### Example Files
 
 Working examples in `examples/`:
+
 - **`example-script.sh`** - Working example
 ```
 
@@ -222,6 +229,7 @@ Working examples in `examples/`:
 8. **Test scripts**: Scripts are executable and work correctly
 
 **Use the skill-reviewer agent:**
+
 ```
 Ask: "Review my skill and check if it follows best practices"
 ```
@@ -233,12 +241,14 @@ The skill-reviewer agent will check description quality, content organization, a
 After testing the skill, users may request improvements. Often this happens right after using the skill, with fresh context of how the skill performed.
 
 **Iteration workflow:**
+
 1. Use the skill on real tasks
 2. Notice struggles or inefficiencies
 3. Identify how SKILL.md or bundled resources should be updated
 4. Implement changes and test again
 
 **Common improvements:**
+
 - Strengthen trigger phrases in description
 - Move long sections from SKILL.md to references/
 - Add missing examples or scripts
@@ -268,6 +278,7 @@ my-plugin/
 ### Auto-Discovery
 
 Claude Code automatically discovers skills:
+
 - Scans `skills/` directory
 - Finds subdirectories containing `SKILL.md`
 - Loads skill metadata (name + description) always
@@ -295,6 +306,7 @@ cc --plugin-dir /path/to/plugin
 Study the skills in this plugin as examples of best practices:
 
 **hook-development skill:**
+
 - Excellent trigger phrases: "create a hook", "add a PreToolUse hook", etc.
 - Lean SKILL.md (1,651 words)
 - 3 references/ files for detailed content
@@ -302,12 +314,14 @@ Study the skills in this plugin as examples of best practices:
 - 3 scripts/ utilities
 
 **agent-development skill:**
+
 - Strong triggers: "create an agent", "agent frontmatter", etc.
 - Focused SKILL.md (1,438 words)
 - References include the AI generation prompt from Claude Code
 - Complete agent examples
 
 **plugin-settings skill:**
+
 - Specific triggers: "plugin settings", ".local.md files", "YAML frontmatter"
 - References show real implementations (multi-agent-swarm, ralph-wiggum)
 - Working parsing scripts
@@ -319,6 +333,7 @@ Each demonstrates progressive disclosure and strong triggering.
 ### What Goes in SKILL.md
 
 **Include (always loaded when skill triggers):**
+
 - Core concepts and overview
 - Essential procedures and workflows
 - Quick reference tables
@@ -330,6 +345,7 @@ Each demonstrates progressive disclosure and strong triggering.
 ### What Goes in references/
 
 **Move to references/ (loaded as needed):**
+
 - Detailed patterns and advanced techniques
 - Comprehensive API documentation
 - Migration guides
@@ -341,6 +357,7 @@ Each demonstrates progressive disclosure and strong triggering.
 ### What Goes in examples/
 
 **Working code examples:**
+
 - Complete, runnable scripts
 - Configuration files
 - Template files
@@ -351,6 +368,7 @@ Each demonstrates progressive disclosure and strong triggering.
 ### What Goes in scripts/
 
 **Utility scripts:**
+
 - Validation tools
 - Testing helpers
 - Parsing utilities
@@ -365,6 +383,7 @@ Each demonstrates progressive disclosure and strong triggering.
 Write using verb-first instructions, not second person:
 
 **Correct (imperative):**
+
 ```
 To create a hook, define the event type.
 Configure the MCP server with authentication.
@@ -372,6 +391,7 @@ Validate settings before use.
 ```
 
 **Incorrect (second person):**
+
 ```
 You should create a hook by defining the event type.
 You need to configure the MCP server.
@@ -383,11 +403,13 @@ You must validate settings before use.
 The frontmatter description must use third person:
 
 **Correct:**
+
 ```yaml
 description: This skill should be used when the user asks to "create X", "configure Y"...
 ```
 
 **Incorrect:**
+
 ```yaml
 description: Use this skill when you want to create X...
 description: Load this skill when user asks...
@@ -398,6 +420,7 @@ description: Load this skill when user asks...
 Focus on what to do, not who should do it:
 
 **Correct:**
+
 ```
 Parse the frontmatter using sed.
 Extract fields with grep.
@@ -405,6 +428,7 @@ Validate values before use.
 ```
 
 **Incorrect:**
+
 ```
 You can parse the frontmatter...
 Claude should extract fields...
@@ -416,18 +440,22 @@ The user might validate values...
 Before finalizing a skill:
 
 **Structure:**
+
 - [ ] SKILL.md file exists with valid YAML frontmatter
 - [ ] Frontmatter has `name` and `description` fields
 - [ ] Markdown body is present and substantial
 - [ ] Referenced files actually exist
 
 **Description Quality:**
+
 - [ ] Uses third person ("This skill should be used when...")
 - [ ] Includes specific trigger phrases users would say
 - [ ] Lists concrete scenarios ("create X", "configure Y")
 - [ ] Not vague or generic
+- [ ] Description is max 300 characters
 
 **Content Quality:**
+
 - [ ] SKILL.md body uses imperative/infinitive form
 - [ ] Body is focused and lean (1,500-2,000 words ideal, <5k max)
 - [ ] Detailed content moved to references/
@@ -435,6 +463,7 @@ Before finalizing a skill:
 - [ ] Scripts are executable and documented
 
 **Progressive Disclosure:**
+
 - [ ] Core concepts in SKILL.md
 - [ ] Detailed docs in references/
 - [ ] Working code in examples/
@@ -442,6 +471,7 @@ Before finalizing a skill:
 - [ ] SKILL.md references these resources
 
 **Testing:**
+
 - [ ] Skill triggers on expected user queries
 - [ ] Content is helpful for intended tasks
 - [ ] No duplicated information across files
@@ -452,6 +482,7 @@ Before finalizing a skill:
 ### Mistake 1: Weak Trigger Description
 
 ❌ **Bad:**
+
 ```yaml
 description: Provides guidance for working with hooks.
 ```
@@ -459,6 +490,7 @@ description: Provides guidance for working with hooks.
 **Why bad:** Vague, no specific trigger phrases, not third person
 
 ✅ **Good:**
+
 ```yaml
 description: This skill should be used when the user asks to "create a hook", "add a PreToolUse hook", "validate tool use", or mentions hook events. Provides comprehensive hooks API guidance.
 ```
@@ -468,6 +500,7 @@ description: This skill should be used when the user asks to "create a hook", "a
 ### Mistake 2: Too Much in SKILL.md
 
 ❌ **Bad:**
+
 ```
 skill-name/
 └── SKILL.md  (8,000 words - everything in one file)
@@ -476,6 +509,7 @@ skill-name/
 **Why bad:** Bloats context when skill loads, detailed content always loaded
 
 ✅ **Good:**
+
 ```
 skill-name/
 ├── SKILL.md  (1,800 words - core essentials)
@@ -489,6 +523,7 @@ skill-name/
 ### Mistake 3: Second Person Writing
 
 ❌ **Bad:**
+
 ```markdown
 You should start by reading the configuration file.
 You need to validate the input.
@@ -498,6 +533,7 @@ You can use the grep tool to search.
 **Why bad:** Second person, not imperative form
 
 ✅ **Good:**
+
 ```markdown
 Start by reading the configuration file.
 Validate the input before processing.
@@ -509,6 +545,7 @@ Use the grep tool to search for patterns.
 ### Mistake 4: Missing Resource References
 
 ❌ **Bad:**
+
 ```markdown
 # SKILL.md
 
@@ -519,20 +556,33 @@ Use the grep tool to search for patterns.
 
 **Why bad:** Claude doesn't know references exist
 
-✅ **Good:**
-```markdown
-# SKILL.md
+### Mistake 5: Incorrect Name Metadata Format
 
-[Core content]
+❌ **Bad:**
+
+```yaml
+name: Skill Name
+```
+
+**Why bad:** Name should be lowercase with hyphens
+
+✅ **Good:**
+
+```yaml
+name: skill-name
+```
 
 ## Additional Resources
 
 ### Reference Files
+
 - **`references/patterns.md`** - Detailed patterns
 - **`references/advanced.md`** - Advanced techniques
 
 ### Examples
+
 - **`examples/script.sh`** - Working example
+
 ```
 
 **Why good:** Claude knows where to find additional information
@@ -542,8 +592,10 @@ Use the grep tool to search for patterns.
 ### Minimal Skill
 
 ```
+
 skill-name/
 └── SKILL.md
+
 ```
 
 Good for: Simple knowledge, no complex resources needed
@@ -551,12 +603,14 @@ Good for: Simple knowledge, no complex resources needed
 ### Standard Skill (Recommended)
 
 ```
+
 skill-name/
 ├── SKILL.md
 ├── references/
-│   └── detailed-guide.md
+│ └── detailed-guide.md
 └── examples/
-    └── working-example.sh
+└── working-example.sh
+
 ```
 
 Good for: Most plugin skills with detailed documentation
@@ -564,16 +618,18 @@ Good for: Most plugin skills with detailed documentation
 ### Complete Skill
 
 ```
+
 skill-name/
 ├── SKILL.md
 ├── references/
-│   ├── patterns.md
-│   └── advanced.md
+│ ├── patterns.md
+│ └── advanced.md
 ├── examples/
-│   ├── example1.sh
-│   └── example2.json
+│ ├── example1.sh
+│ └── example2.json
 └── scripts/
-    └── validate.sh
+└── validate.sh
+
 ```
 
 Good for: Complex domains with validation utilities
@@ -634,3 +690,4 @@ To create a skill for your plugin:
 8. **Iterate**: Improve based on usage
 
 Focus on strong trigger descriptions, progressive disclosure, and imperative writing style for effective skills that load when needed and provide targeted guidance.
+```

@@ -1,0 +1,34 @@
+{
+  "description": "Web search and Tavily integration hooks",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/webfetch_to_tavily_extract.py"
+          }
+        ]
+      },
+      {
+        "matcher": "WebSearch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/websearch_to_tavily_search.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__tavily__tavily-extract",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tavily_extract_to_advanced.py"
+          }
+        ]
+      }
+    ]
+  }
+}
