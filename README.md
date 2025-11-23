@@ -192,6 +192,27 @@ Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) usin
 </details>
 
 <details>
+<summary><strong>Kimi K2</strong></summary>
+
+Run Claude Code with [Kimi K2](https://moonshotai.github.io/Kimi-K2/) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
+
+- **Thinking model**: `kimi-k2-thinking-turbo` - High-speed thinking, 256K context
+- **Fast model**: `kimi-k2-turbo-preview` - Without extended thinking
+- **API key**: Get from [platform.moonshot.ai](https://platform.moonshot.ai)
+
+```bash
+export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic/"
+export ANTHROPIC_API_KEY="your-moonshot-api-key"
+export ANTHROPIC_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_DEFAULT_OPUS_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_DEFAULT_SONNET_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=kimi-k2-thinking-turbo
+export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2-thinking-turbo
+```
+
+</details>
+
+<details>
 <summary><strong>OpenAI Codex</strong></summary>
 
 Configuration in [`~/.codex/config.toml`](./config.toml):
