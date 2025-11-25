@@ -20,15 +20,24 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - Never implement defensive programming unless you explicitly tell the motivation for it and user approves it.
 - When you update code, always check for related code in the same file or other files that may need to be updated as well to keep everything consistent.
 
-## MCP Tools and Skills
+## MCP Tools
 
-MCP-specific guidance has been moved to distributed skills for better context:
+### Tavily (Web Search)
 
-- **Tavily Search/Extract**: See `plugins/websearch-tools/skills/tavily-usage/SKILL.md` for tool selection guidance
-- **Slack MCP**: See `plugins/ultralytics-dev/skills/slack-usage/SKILL.md` for message search patterns
-- **MongoDB MCP**: See `plugins/ultralytics-dev/skills/mongodb-usage/SKILL.md` for database queries
+- Use `mcp__tavily__tavily-search` for discovery/broad queries
+- Use `mcp__tavily__tavily-extract` for specific URL content
+- Search first to find URLs, then extract for detailed analysis
 
-General MCP patterns:
+### Slack
+
+- ALWAYS use `mcp__slack__slack_search_messages` first for message searches
+- Only use `mcp__slack__slack_get_channel_history` when explicitly asked for channel history
+
+### MongoDB
+
+- MongoDB MCP is READ-ONLY (no write/update/delete operations)
+
+### GitHub
 
 - For GitHub URLs, use `mcp__github__*` tools instead of web scraping
 - For GitHub Actions, use `mcp__github__get_workflow_run` and `mcp__github__get_job_logs`
@@ -83,11 +92,26 @@ General MCP patterns:
 
 ## Git and Pull Request Workflows
 
-Git workflow guidance has been moved to the github-dev plugin for better context:
+### Commit Messages
 
-- **PR Workflow**: See `plugins/github-dev/skills/pr-workflow/SKILL.md` for complete PR creation process
-- **Commit Workflow**: See `plugins/github-dev/skills/commit-workflow/SKILL.md` for commit message standards
+- Format: `{type}: brief description` (max 50 chars first line)
+- Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
+- Focus on 'why' not 'what' - one logical change per commit
+- ONLY analyze staged files (`git diff --cached`), ignore unstaged
+- NO test plans in commit messages
 
-Enable the github-dev plugin to access `/pr-manager` agent, `/commit-staged` command, and `/create-pr` command.
+### Pull Requests
+
+- PR titles: NO type prefix (unlike commits) - start with capital letter + verb
+- Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
+- Inline links: `[src/file.py:42](src/file.py#L42)` or `[src/file.py:15-42](src/file.py#L15-L42)`
+- Self-assign with `-a @me`
+- NO test plans in PR body
+- Find reviewers: `gh pr list --repo <owner>/<repo> --author @me --limit 5`
+
+### Commands
+
+- `/github-dev:commit-staged` - commit staged changes
+- `/github-dev:create-pr` - create pull request
 
 ## Project Overview
