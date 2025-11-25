@@ -36,7 +36,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow tools: commit-manager and pr-manager agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -59,7 +59,7 @@
       "name": "websearch-tools",
       "source": "./plugins/websearch-tools",
       "description": "Web search and content extraction: Tavily search/extract hooks, context7 library docs MCP, plus skills for optimal tool selection.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -81,7 +81,7 @@
       "name": "general-dev",
       "source": "./plugins/general-dev",
       "description": "General development tools: code-simplifier agent for pattern analysis, architecture pattern command, code quality hooks for rg preference and context loading.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -101,7 +101,7 @@
     {
       "name": "plugin-dev",
       "description": "Comprehensive toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -127,7 +127,7 @@
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
