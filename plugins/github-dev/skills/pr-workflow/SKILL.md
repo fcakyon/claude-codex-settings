@@ -13,7 +13,7 @@ Complete workflow for creating pull requests following project standards.
 
 2. **Branch setup**
    - If on main/master, create feature branch first: `feature/brief-description` or `fix/brief-description`
-   - Use `/commit-manager` to handle staged changes if needed
+   - Use `github-dev:commit-manager` subagent to handle staged changes if needed
 
 3. **Documentation check**
    - Update README.md or docs based on changes compared to target branch

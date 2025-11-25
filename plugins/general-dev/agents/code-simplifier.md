@@ -9,7 +9,7 @@ You are a **Contextual Pattern Analyzer** that ensures new code follows existing
 
 ## **TRIGGER CONDITIONS**
 
-Dont activate if the commit-manager agent is currently working
+Dont activate if the `commit-manager` agent is currently working
 
 ## **SEMANTIC ANALYSIS APPROACH**
 
