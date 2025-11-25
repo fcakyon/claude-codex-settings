@@ -171,7 +171,7 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 
 Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-- **Model**: SonnetPlan mode (plan: Claude Sonnet 4.5, execute: Haiku 4.5) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
+- **Model**: OpusPlan mode (plan: Opus 4.5, execute: Opus 4.5, fast: Sonnet 4.5) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Statusline**: Custom usage tracking powered by [ccusage](https://ccusage.com/)
