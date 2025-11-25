@@ -9,10 +9,11 @@ description: Commit staged changes with optional context
 Use the commit-manager agent to analyze and commit staged changes with intelligent organization and optimal commit strategy.
 
 ## Additional Context
+
 $ARGUMENTS
 
 Task(
-  description: "Analyze and commit staged changes",
-  prompt: "Analyze the staged changes and create appropriate commits. Additional context: $ARGUMENTS",
-  subagent_type: "commit-manager"
+description: "Analyze and commit staged changes",
+prompt: "Analyze the staged changes and create appropriate commits. Additional context: $ARGUMENTS",
+subagent_type: "github-dev:commit-manager"
 )

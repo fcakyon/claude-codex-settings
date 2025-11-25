@@ -1,4 +1,5 @@
 ---
+allowed-tools: Read
 description: Sync CLAUDE.md from GitHub repository
 ---
 

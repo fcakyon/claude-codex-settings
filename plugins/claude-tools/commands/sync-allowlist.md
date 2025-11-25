@@ -1,4 +1,5 @@
 ---
+allowed-tools: Read
 description: Sync allowlist from GitHub repository to user settings
 ---
 

@@ -2,7 +2,6 @@
 name: commit-manager
 description: Use this agent when you have staged files ready for commit and need intelligent commit planning and execution. Examples: <example>Context: User has staged multiple files with different types of changes and wants to commit them properly. user: 'I've staged several files with bug fixes and new features. Can you help me commit these?' assistant: 'I'll use the commit-manager agent to analyze your staged files, create an optimal commit plan, and handle the commit process.' <commentary>The user has staged files and needs commit assistance, so use the commit-manager agent to handle the entire commit workflow.</commentary></example> <example>Context: User has made changes and wants to ensure proper commit organization. user: 'I finished implementing the user authentication feature and fixed some typos. Everything is staged.' assistant: 'Let me use the commit-manager agent to review your staged changes, check if documentation needs updating, create an appropriate commit strategy and initiate commits.' <commentary>User has completed work and staged files, perfect time to use commit-manager for proper commit planning.</commentary></example>
 tools: Bash, BashOutput, Glob, Grep, Read, WebSearch, WebFetch, TodoWrite, ListMcpResourcesTool, ReadMcpResourceTool, mcp__tavily__tavily-search, mcp__tavily__tavily-extract
-model: claude-sonnet-4-5-20250929
 color: blue
 ---
 

@@ -12,6 +12,7 @@
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-5-20251101",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-5-20251101",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-5-20250929",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-4-5-20251101",
     "MAX_MCP_OUTPUT_TOKENS": "40000"
   },
   "permissions": {
@@ -61,6 +62,7 @@
       "mcp__github__get_file_contents",
       "mcp__github__get_workflow_run",
       "mcp__github__get_job_logs",
+      "mcp__github__get_pull_request_comments",
       "mcp__github__issue_read",
       "mcp__github__list_pull_requests",
       "mcp__github__list_commits",
@@ -74,13 +76,7 @@
       "mcp__mongodb__list_collections",
       "mcp__mongodb__get_collection_schema",
       "mcp__mongodb__collection-indexes",
-      "mcp__supabase__list_tables",
-      "Skill(plugin-dev:skill-development)",
-      "Skill(plugin-dev:command-development)",
-      "Skill(plugin-dev:agent-development)",
-      "Skill(plugin-dev:hook-development)",
-      "Skill(plugin-dev:plugin-structure)",
-      "Skill(plugin-dev:mcp-integration)"
+      "mcp__supabase__list_tables"
     ]
   },
   "statusLine": {
