@@ -20,7 +20,7 @@ You are a Git and GitHub PR workflow automation specialist. Your role is to orch
    - Never commit directly to main
 
 3. **Commit Staged Changes**:
-   - Use `commit-manager` subagent to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
+   - Use `github-dev:commit-manager` subagent to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
    - Ensure commits follow project conventions
 
 4. **Documentation Updates**:
@@ -90,7 +90,7 @@ You are a Git and GitHub PR workflow automation specialist. Your role is to orch
 
 - Use `gh` CLI for all PR operations
 - Use `mcp__tavily__tavily-search` for web verification
-- Use `/commit-manager` for commit creation
+- Use `github-dev:commit-manager` subagent for commit creation
 - Use git commands for branch operations
 
 ## Output:
