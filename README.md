@@ -47,11 +47,11 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP s
 
 **Hooks:**
 
-- [`format_python_docstrings.py`](./.claude/hooks/format_python_docstrings.py) - Google-style docstring formatter
-- [`python_code_quality.py`](./.claude/hooks/python_code_quality.py) - Python code quality with ruff
-- [`prettier_formatting.py`](./.claude/hooks/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
-- [`markdown_formatting.py`](./.claude/hooks/markdown_formatting.py) - Markdown formatting
-- [`bash_formatting.py`](./.claude/hooks/bash_formatting.py) - Bash script formatting
+- [`format_python_docstrings.py`](./plugins/ultralytics-dev/hooks/scripts/format_python_docstrings.py) - Google-style docstring formatter
+- [`python_code_quality.py`](./plugins/ultralytics-dev/hooks/scripts/python_code_quality.py) - Python code quality with ruff
+- [`prettier_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
+- [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
+- [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
 
 **MCPs:** Slack, MongoDB, Linear
 
@@ -77,6 +77,12 @@ Git and GitHub automation with commit-manager and pr-manager agents plus workflo
 - [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean up deleted remote branches
 - [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit changes with context
 - [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request with context
+- [`/update-pr-summary`](./plugins/github-dev/commands/update-pr-summary.md) - Update PR description with generated summary
+
+**Hooks:**
+
+- [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation modal before commits
+- [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation modal before PR creation
 
 **Skills:**
 
@@ -92,9 +98,9 @@ Tavily MCP server for web search and content extraction with Tavily hooks and us
 
 **Hooks:**
 
-- [`webfetch_to_tavily_extract.py`](./.claude/hooks/webfetch_to_tavily_extract.py) - Redirect WebFetch
-- [`websearch_to_tavily_search.py`](./.claude/hooks/websearch_to_tavily_search.py) - Redirect WebSearch
-- [`tavily_extract_to_advanced.py`](./.claude/hooks/tavily_extract_to_advanced.py) - Auto-enable advanced extraction
+- [`webfetch_to_tavily_extract.py`](./plugins/websearch-tools/hooks/scripts/webfetch_to_tavily_extract.py) - Redirect WebFetch
+- [`websearch_to_tavily_search.py`](./plugins/websearch-tools/hooks/scripts/websearch_to_tavily_search.py) - Redirect WebSearch
+- [`tavily_extract_to_advanced.py`](./plugins/websearch-tools/hooks/scripts/tavily_extract_to_advanced.py) - Auto-enable advanced extraction
 
 **MCPs:** Tavily, Context7
 
@@ -116,9 +122,10 @@ Code quality agent, architecture pattern command, and general utility hooks.
 
 - [`/explain-architecture-pattern`](./plugins/general-dev/commands/explain-architecture-pattern.md) - Identify design patterns
 
-**Hook:**
+**Hooks:**
 
-- [`enforce_rg_over_grep.py`](./.claude/hooks/enforce_rg_over_grep.py) - Suggest ripgrep
+- [`enforce_rg_over_grep.py`](./plugins/general-dev/hooks/scripts/enforce_rg_over_grep.py) - Suggest ripgrep
+- [`notify.sh`](./plugins/general-dev/hooks/scripts/notify.sh) - OS notifications
 
 </details>
 
@@ -143,9 +150,18 @@ Complete toolkit for building Claude Code plugins with skills, agents, and valid
 - [`plugin-validator`](./plugins/plugin-dev/agents/plugin-validator.md) - Validate plugin structure
 - [`skill-reviewer`](./plugins/plugin-dev/agents/skill-reviewer.md) - Improve skill quality
 
-**Command:**
+**Commands:**
 
 - [`/plugin-dev:create-plugin`](./plugins/plugin-dev/commands/create-plugin.md) - 8-phase guided plugin workflow
+- [`/plugin-dev:load-skills`](./plugins/plugin-dev/commands/load-skills.md) - Load all plugin development skills
+
+**Hooks:**
+
+- [`validate_skill.py`](./plugins/plugin-dev/hooks/scripts/validate_skill.py) - Validates SKILL.md structure
+- [`validate_mcp_hook_locations.py`](./plugins/plugin-dev/hooks/scripts/validate_mcp_hook_locations.py) - Validates MCP/hook file locations
+- [`validate_plugin_paths.py`](./plugins/plugin-dev/hooks/scripts/validate_plugin_paths.py) - Validates plugin.json paths
+- [`validate_plugin_structure.py`](./plugins/plugin-dev/hooks/scripts/validate_plugin_structure.py) - Validates plugin directory structure
+- [`sync_marketplace_to_plugins.py`](./plugins/plugin-dev/hooks/scripts/sync_marketplace_to_plugins.py) - Syncs marketplace.json to plugin.json
 
 </details>
 
