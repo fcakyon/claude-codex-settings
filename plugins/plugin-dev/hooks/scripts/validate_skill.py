@@ -7,7 +7,15 @@ import re
 import sys
 from pathlib import Path
 
-import yaml
+
+def parse_simple_yaml(text):
+    """Parse simple key-value YAML frontmatter."""
+    result = {}
+    for line in text.strip().split("\n"):
+        if ":" in line:
+            key, _, value = line.partition(":")
+            result[key.strip()] = value.strip().strip('"').strip("'")
+    return result
 
 
 def get_edited_file_path():
@@ -65,8 +73,8 @@ def validate_skill():
 
         # Parse YAML
         try:
-            frontmatter = yaml.safe_load(parts[1])
-        except yaml.YAMLError as e:
+            frontmatter = parse_simple_yaml(parts[1])
+        except Exception as e:
             errors.append(f"{prefix}: Invalid YAML - {e}")
             continue
 
