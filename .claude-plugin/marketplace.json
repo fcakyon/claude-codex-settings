@@ -127,7 +127,7 @@
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "author": {
         "name": "Fatih Akyon"
       },
