@@ -173,6 +173,7 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 **Commands:**
 
 - [`/load-claude-md`](./plugins/claude-tools/commands/load-claude-md.md) - Refresh context with CLAUDE.md instructions
+- [`/load-frontend-skill`](./plugins/claude-tools/commands/load-frontend-skill.md) - Load frontend design skill from Anthropic
 - [`/sync-claude-md`](./plugins/claude-tools/commands/sync-claude-md.md) - Sync CLAUDE.md from GitHub
 - [`/sync-allowlist`](./plugins/claude-tools/commands/sync-allowlist.md) - Sync permissions allowlist
 
