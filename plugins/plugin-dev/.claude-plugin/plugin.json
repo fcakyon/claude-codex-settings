@@ -1,6 +1,6 @@
 {
   "name": "plugin-dev",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Toolkit for developing Claude Code plugins with skills for hooks, MCP integration, commands, agents, and best practices.",
   "author": {
     "name": "Fatih Akyon"
