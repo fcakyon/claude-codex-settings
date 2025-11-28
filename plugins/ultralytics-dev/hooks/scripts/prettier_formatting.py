@@ -44,8 +44,8 @@ def main():
         if not py_file.exists() or py_file.suffix not in PRETTIER_EXTENSIONS:
             sys.exit(0)
 
-        # Skip lock files and model.json
-        if LOCK_FILE_PATTERN.match(py_file.name) or py_file.name == 'model.json':
+        # Skip virtual env, cache, .claude directories, lock files, model.json, and minified assets
+        if any(p in py_file.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']) or LOCK_FILE_PATTERN.match(py_file.name) or py_file.name == 'model.json' or py_file.name.endswith(('.min.js', '.min.css')):
             sys.exit(0)
 
         # Check if prettier is available

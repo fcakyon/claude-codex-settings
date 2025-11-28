@@ -31,6 +31,10 @@ def validate_skill():
     """Validate all SKILL.md files in skills directory."""
     edited_path = get_edited_file_path()
 
+    # Skip virtual env, cache, and .claude directories
+    if edited_path and any(p in edited_path for p in [".venv", "venv", "site-packages", "__pycache__", ".claude"]):
+        return 0
+
     # Exit early if not editing a skill-related file
     if edited_path and "/skills/" not in edited_path and not edited_path.endswith("SKILL.md"):
         return 0
