@@ -232,7 +232,7 @@ def read_python_path() -> Path | None:
     path = Path(file_path) if file_path else None
     if not path or path.suffix != ".py" or not path.exists():
         return None
-    if any(p in path.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__']):
+    if any(p in path.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']):
         return None
     return path
 

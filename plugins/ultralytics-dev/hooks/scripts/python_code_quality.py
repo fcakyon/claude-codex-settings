@@ -22,13 +22,14 @@ def main():
         if not file_path.endswith('.py'):
             sys.exit(0)
 
-        # Check if ruff is available - silent exit if not (no blocking)
-        if not shutil.which('ruff'):
+        py_file = Path(file_path)
+
+        # Skip virtual env, cache, and .claude directories
+        if not py_file.exists() or any(p in py_file.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']):
             sys.exit(0)
 
-        # Get directory containing the Python file
-        py_file = Path(file_path)
-        if not py_file.exists():
+        # Check if ruff is available - silent exit if not (no blocking)
+        if not shutil.which('ruff'):
             sys.exit(0)
 
         work_dir = py_file.parent
@@ -45,7 +46,7 @@ def main():
 
         # Block only if ruff check finds unfixable errors
         if check_result.returncode != 0:
-            error_output = check_result.stdout.strip() or check_result.stderr.strip()
+            error_output = check_result.stdout.strip() or check_result.stderr.strip() or f'ruff check failed with exit code {check_result.returncode}'
             error_msg = f'ERROR running ruff check ❌ {error_output}'
             print(error_msg, file=sys.stderr)
             output = {
@@ -64,7 +65,8 @@ def main():
 
         # Block only if ruff format fails (unlikely but possible)
         if format_result.returncode != 0:
-            error_msg = f'ERROR running ruff format ❌ {format_result.stderr.strip()}'
+            error_output = format_result.stderr.strip() or f'ruff format failed with exit code {format_result.returncode}'
+            error_msg = f'ERROR running ruff format ❌ {error_output}'
             print(error_msg, file=sys.stderr)
             output = {
                 'systemMessage': f'Ruff format failed for {py_file.name}',

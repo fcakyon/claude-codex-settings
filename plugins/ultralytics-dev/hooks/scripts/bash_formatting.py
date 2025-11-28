@@ -35,7 +35,7 @@ def main():
             sys.exit(0)
 
         sh_file = Path(file_path)
-        if not sh_file.exists():
+        if not sh_file.exists() or any(p in sh_file.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']):
             sys.exit(0)
 
         # Check if prettier is available
@@ -44,11 +44,8 @@ def main():
 
         # Try prettier with prettier-plugin-sh, handle any failure gracefully
         try:
-            subprocess.run([
-                'npx', 'prettier', '--write', '--list-different', '--print-width', '120',
-                '--plugin=$(npm root -g)/prettier-plugin-sh/lib/index.cjs',
-                str(sh_file)
-            ], shell=True, capture_output=True, check=False, cwd=sh_file.parent, timeout=10)
+            cmd = f'npx prettier --write --list-different --print-width 120 --plugin=$(npm root -g)/prettier-plugin-sh/lib/index.cjs "{sh_file}"'
+            subprocess.run(cmd, shell=True, capture_output=True, check=False, cwd=sh_file.parent, timeout=10)
         except Exception:
             pass  # Silently handle any failure (missing plugin, timeout, etc.)
 
