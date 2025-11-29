@@ -57,20 +57,21 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP s
 
 **Skills:**
 
-- **slack-usage** - Search Slack messages and view channel history
-- **mongodb-usage** - Query MongoDB collections and schemas
+- [`slack-usage`](./plugins/ultralytics-dev/skills/slack-usage/SKILL.md) - Search Slack messages and view channel history
+- [`mongodb-usage`](./plugins/ultralytics-dev/skills/mongodb-usage/SKILL.md) - Query MongoDB collections and schemas
 </details>
 
 <details>
 <summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
 
-Git and GitHub automation with commit-manager and pr-manager agents plus workflow skills.
+Git and GitHub automation with commit-manager, pr-manager, and pr-reviewer agents plus workflow skills.
 
 **Agents:**
 
 - [`code-simplifier`](./plugins/general-dev/agents/code-simplifier.md) - Ensures code follows project conventions
 - [`commit-manager`](./plugins/github-dev/agents/commit-manager.md) - Git commit expert
 - [`pr-manager`](./plugins/github-dev/agents/pr-manager.md) - GitHub PR workflow automation
+- [`pr-reviewer`](./plugins/github-dev/agents/pr-reviewer.md) - AI-powered code review
 
 **Commands:**
 
@@ -86,8 +87,8 @@ Git and GitHub automation with commit-manager and pr-manager agents plus workflo
 
 **Skills:**
 
-- **pr-workflow** - Complete PR creation workflow
-- **commit-workflow** - Commit best practices and automation
+- [`pr-workflow`](./plugins/github-dev/skills/pr-workflow/SKILL.md) - Complete PR creation workflow
+- [`commit-workflow`](./plugins/github-dev/skills/commit-workflow/SKILL.md) - Commit best practices and automation
 
 </details>
 
@@ -106,7 +107,7 @@ Tavily MCP server for web search and content extraction with Tavily hooks and us
 
 **Skills:**
 
-- **tavily-usage** - Web search and content extraction workflows
+- [`tavily-usage`](./plugins/websearch-tools/skills/tavily-usage/SKILL.md) - Web search and content extraction workflows
 </details>
 
 <details>
