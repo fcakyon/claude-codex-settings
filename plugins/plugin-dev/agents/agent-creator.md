@@ -1,34 +1,6 @@
 ---
 name: agent-creator
-description: Use this agent when the user asks to "create an agent", "generate an agent", "build a new agent", "make me an agent that...", or describes agent functionality they need. Trigger when user wants to create autonomous agents for plugins. Examples:
-
-<example>
-Context: User wants to create a code review agent
-user: "Create an agent that reviews code for quality issues"
-assistant: "I'll use the agent-creator agent to generate the agent configuration."
-<commentary>
-User requesting new agent creation, trigger agent-creator to generate it.
-</commentary>
-</example>
-
-<example>
-Context: User describes needed functionality
-user: "I need an agent that generates unit tests for my code"
-assistant: "I'll use the agent-creator agent to create a test generation agent."
-<commentary>
-User describes agent need, trigger agent-creator to build it.
-</commentary>
-</example>
-
-<example>
-Context: User wants to add agent to plugin
-user: "Add an agent to my plugin that validates configurations"
-assistant: "I'll use the agent-creator agent to generate a configuration validator agent."
-<commentary>
-Plugin development with agent addition, trigger agent-creator.
-</commentary>
-</example>
-
+description: Use this agent when the user asks to "create an agent", "generate an agent", "build a new agent", "make me an agent that...", or describes agent functionality they need. Trigger when user wants to create autonomous agents for plugins. Examples:\n\n<example>\nContext: User wants to create a code review agent\nuser: "Create an agent that reviews code for quality issues"\nassistant: "I'll use the agent-creator agent to generate the agent configuration."\n<commentary>\nUser requesting new agent creation, trigger agent-creator to generate it.\n</commentary>\n</example>\n\n<example>\nContext: User describes needed functionality\nuser: "I need an agent that generates unit tests for my code"\nassistant: "I'll use the agent-creator agent to create a test generation agent."\n<commentary>\nUser describes agent need, trigger agent-creator to build it.\n</commentary>\n</example>\n\n<example>\nContext: User wants to add agent to plugin\nuser: "Add an agent to my plugin that validates configurations"\nassistant: "I'll use the agent-creator agent to generate a configuration validator agent."\n<commentary>\nPlugin development with agent addition, trigger agent-creator.\n</commentary>\n</example>
 model: inherit
 color: magenta
 tools: ["Write", "Read"]
@@ -179,8 +151,3 @@ Validate with: `scripts/validate-agent.sh agents/[identifier].md`
 - User wants specific tool access: Honor the request in agent configuration
 - User specifies model: Use specified model instead of inherit
 - First agent in plugin: Create agents/ directory first
-
-```
-
-This agent automates agent creation using the proven patterns from Claude Code's internal implementation, making it easy for users to create high-quality autonomous agents.
-```

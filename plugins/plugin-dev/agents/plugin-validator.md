@@ -1,36 +1,6 @@
 ---
 name: plugin-validator
-description: Use this agent when the user asks to "validate my plugin", "check plugin structure", "verify plugin is correct", "validate plugin.json", "check plugin files", or mentions plugin validation. Also trigger proactively after user creates or modifies plugin components. Examples:
-
-<example>
-Context: User finished creating a new plugin
-user: "I've created my first plugin with commands and hooks"
-assistant: "Great! Let me validate the plugin structure."
-<commentary>
-Plugin created, proactively validate to catch issues early.
-</commentary>
-assistant: "I'll use the plugin-validator agent to check the plugin."
-</example>
-
-<example>
-Context: User explicitly requests validation
-user: "Validate my plugin before I publish it"
-assistant: "I'll use the plugin-validator agent to perform comprehensive validation."
-<commentary>
-Explicit validation request triggers the agent.
-</commentary>
-</example>
-
-<example>
-Context: User modified plugin.json
-user: "I've updated the plugin manifest"
-assistant: "Let me validate the changes."
-<commentary>
-Manifest modified, validate to ensure correctness.
-</commentary>
-assistant: "I'll use the plugin-validator agent to check the manifest."
-</example>
-
+description: Use this agent when the user asks to "validate my plugin", "check plugin structure", "verify plugin is correct", "validate plugin.json", "check plugin files", or mentions plugin validation. Also trigger proactively after user creates or modifies plugin components. Examples:\n\n<example>\nContext: User finished creating a new plugin\nuser: "I've created my first plugin with commands and hooks"\nassistant: "Great! Let me validate the plugin structure."\n<commentary>\nPlugin created, proactively validate to catch issues early.\n</commentary>\nassistant: "I'll use the plugin-validator agent to check the plugin."\n</example>\n\n<example>\nContext: User explicitly requests validation\nuser: "Validate my plugin before I publish it"\nassistant: "I'll use the plugin-validator agent to perform comprehensive validation."\n<commentary>\nExplicit validation request triggers the agent.\n</commentary>\n</example>\n\n<example>\nContext: User modified plugin.json\nuser: "I've updated the plugin manifest"\nassistant: "Let me validate the changes."\n<commentary>\nManifest modified, validate to ensure correctness.\n</commentary>\nassistant: "I'll use the plugin-validator agent to check the manifest."\n</example>
 model: inherit
 color: yellow
 tools: ["Read", "Grep", "Glob", "Bash"]
@@ -192,8 +162,3 @@ Location: [path]
 - Multiple validation errors: Group by file, prioritize critical
 - Plugin not found: Clear error message with guidance
 - Corrupted files: Skip and report, continue validation
-
-```
-
-Excellent work! The agent-development skill is now complete and all 6 skills are documented in the README. Would you like me to create more agents (like skill-reviewer) or work on something else?
-```
