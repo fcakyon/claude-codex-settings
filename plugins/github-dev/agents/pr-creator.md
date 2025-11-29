@@ -1,6 +1,6 @@
 ---
-name: pr-manager
-description: Use this agent when you need to create a complete pull request workflow including branch creation, committing staged changes, and PR submission. This agent handles the entire end-to-end process from checking the current branch to creating a properly formatted PR with documentation updates. Examples:\n\n<example>\nContext: User has made code changes and wants to create a PR\nuser: "I've finished implementing the new feature. Please create a PR for the staged changes only"\nassistant: "I'll use the pr-manager agent to handle the complete PR workflow including branch creation, commits, and PR submission"\n<commentary>\nSince the user wants to create a PR, use the pr-manager agent to handle the entire workflow from branch creation to PR submission.\n</commentary>\n</example>\n\n<example>\nContext: User is on main branch with staged changes\nuser: "Create a PR with my staged changes only"\nassistant: "I'll launch the pr-manager agent to create a feature branch, commit your staged changes only, and submit a PR"\n<commentary>\nThe user needs the full PR workflow, so use pr-manager to handle branch creation, commits, and PR submission.\n</commentary>\n</example>
+name: pr-creator
+description: Use this agent when you need to create a complete pull request workflow including branch creation, committing staged changes, and PR submission. This agent handles the entire end-to-end process from checking the current branch to creating a properly formatted PR with documentation updates. Examples:\n\n<example>\nContext: User has made code changes and wants to create a PR\nuser: "I've finished implementing the new feature. Please create a PR for the staged changes only"\nassistant: "I'll use the pr-creator agent to handle the complete PR workflow including branch creation, commits, and PR submission"\n<commentary>\nSince the user wants to create a PR, use the pr-creator agent to handle the entire workflow from branch creation to PR submission.\n</commentary>\n</example>\n\n<example>\nContext: User is on main branch with staged changes\nuser: "Create a PR with my staged changes only"\nassistant: "I'll launch the pr-creator agent to create a feature branch, commit your staged changes only, and submit a PR"\n<commentary>\nThe user needs the full PR workflow, so use pr-creator to handle branch creation, commits, and PR submission.\n</commentary>\n</example>
 tools: Bash, BashOutput, Glob, Grep, Read, WebSearch, WebFetch, TodoWrite, SlashCommand, ListMcpResourcesTool, ReadMcpResourceTool, mcp__tavily__tavily-search, mcp__tavily__tavily-extract
 color: cyan
 skills: pr-workflow, commit-workflow
@@ -22,7 +22,7 @@ You are a Git and GitHub PR workflow automation specialist. Your role is to orch
    - Never commit directly to main
 
 3. **Commit Staged Changes**:
-   - Use `github-dev:commit-manager` subagent to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
+   - Use `github-dev:commit-creator` subagent to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
    - Ensure commits follow project conventions
 
 4. **Documentation Updates**:
@@ -92,7 +92,7 @@ You are a Git and GitHub PR workflow automation specialist. Your role is to orch
 
 - Use `gh` CLI for all PR operations
 - Use `mcp__tavily__tavily-search` for web verification
-- Use `github-dev:commit-manager` subagent for commit creation
+- Use `github-dev:commit-creator` subagent for commit creation
 - Use git commands for branch operations
 
 ## Output:

@@ -1,35 +1,6 @@
 ---
 name: skill-reviewer
-description: Use this agent when the user has created or modified a skill and needs quality review, asks to "review my skill", "check skill quality", "improve skill description", or wants to ensure skill follows best practices. Trigger proactively after skill creation. Examples:
-
-<example>
-Context: User just created a new skill
-user: "I've created a PDF processing skill"
-assistant: "Great! Let me review the skill quality."
-<commentary>
-Skill created, proactively trigger skill-reviewer to ensure it follows best practices.
-</commentary>
-assistant: "I'll use the skill-reviewer agent to review the skill."
-</example>
-
-<example>
-Context: User requests skill review
-user: "Review my skill and tell me how to improve it"
-assistant: "I'll use the skill-reviewer agent to analyze the skill quality."
-<commentary>
-Explicit skill review request triggers the agent.
-</commentary>
-</example>
-
-<example>
-Context: User modified skill description
-user: "I updated the skill description, does it look good?"
-assistant: "I'll use the skill-reviewer agent to review the changes."
-<commentary>
-Skill description modified, review for triggering effectiveness.
-</commentary>
-</example>
-
+description: Use this agent when the user has created or modified a skill and needs quality review, asks to "review my skill", "check skill quality", "improve skill description", or wants to ensure skill follows best practices. Trigger proactively after skill creation. Examples:\n\n<example>\nContext: User just created a new skill\nuser: "I've created a PDF processing skill"\nassistant: "Great! Let me review the skill quality."\n<commentary>\nSkill created, proactively trigger skill-reviewer to ensure it follows best practices.\n</commentary>\nassistant: "I'll use the skill-reviewer agent to review the skill."\n</example>\n\n<example>\nContext: User requests skill review\nuser: "Review my skill and tell me how to improve it"\nassistant: "I'll use the skill-reviewer agent to analyze the skill quality."\n<commentary>\nExplicit skill review request triggers the agent.\n</commentary>\n</example>\n\n<example>\nContext: User modified skill description\nuser: "I updated the skill description, does it look good?"\nassistant: "I'll use the skill-reviewer agent to review the changes."\n<commentary>\nSkill description modified, review for triggering effectiveness.\n</commentary>\n</example>
 model: inherit
 color: cyan
 tools: ["Read", "Grep", "Glob"]
@@ -198,8 +169,3 @@ You are an expert skill architect specializing in reviewing and improving Claude
 - New skill (minimal content): Provide constructive building guidance
 - Perfect skill: Acknowledge quality and suggest minor enhancements only
 - Missing referenced files: Report errors clearly with paths
-
-```
-
-This agent helps users create high-quality skills by applying the same standards used in plugin-dev's own skills.
-```

@@ -1,6 +1,6 @@
 ---
 name: commit-workflow
-description: This skill should be used when user asks to "commit these changes", "write commit message", "stage and commit", "create a commit", "commit staged files", or runs /commit-staged or /commit-manager commands.
+description: This skill should be used when user asks to "commit these changes", "write commit message", "stage and commit", "create a commit", "commit staged files", or runs /commit-staged or /commit-creator commands.
 ---
 
 # Commit Workflow
@@ -9,7 +9,7 @@ Complete workflow for creating commits following project standards.
 
 ## Process
 
-1. **Use commit-manager agent**
+1. **Use commit-creator agent**
    - Run `/commit-staged [context]` for automated commit handling
    - Or follow manual steps below
 

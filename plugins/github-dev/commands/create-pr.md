@@ -6,7 +6,7 @@ description: Create pull request with optional context
 
 # Create Pull Request
 
-Use the pr-manager agent to handle the complete PR workflow including branch creation, commits, and PR submission.
+Use the pr-creator agent to handle the complete PR workflow including branch creation, commits, and PR submission.
 
 ## Additional Context
 
@@ -15,5 +15,5 @@ $ARGUMENTS
 Task(
 description: "Create pull request",
 prompt: "Handle the complete PR workflow including branch creation, commits, and PR submission. Additional context: $ARGUMENTS",
-subagent_type: "github-dev:pr-manager"
+subagent_type: "github-dev:pr-creator"
 )
