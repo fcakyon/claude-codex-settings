@@ -1,7 +1,7 @@
 {
   "name": "ultralytics-dev",
   "version": "1.2.2",
-  "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP servers for Slack message search, MongoDB queries, and Linear tracking, with usage skills.",
+  "description": "Ultralytics-specific development tools: Python/JavaScript/Markdown/Bash formatting hooks, Slack/MongoDB/Linear MCP integration, plus skills for optimal MCP usage.",
   "author": {
     "name": "Fatih Akyon"
   },
