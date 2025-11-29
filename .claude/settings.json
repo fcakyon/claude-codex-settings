@@ -22,6 +22,7 @@
       "Bash(cat:*)",
       "Bash(sed:*)",
       "Bash(source:*)",
+      "Bash(tree:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
