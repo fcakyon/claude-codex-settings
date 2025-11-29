@@ -1,6 +1,6 @@
 ---
 name: pr-workflow
-description: This skill should be used when user asks to "create a PR", "make a pull request", "open PR for this branch", "submit changes as PR", "push and create PR", or runs /create-pr or /pr-manager commands.
+description: This skill should be used when user asks to "create a PR", "make a pull request", "open PR for this branch", "submit changes as PR", "push and create PR", or runs /create-pr or /pr-creator commands.
 ---
 
 # Pull Request Workflow
@@ -13,7 +13,7 @@ Complete workflow for creating pull requests following project standards.
 
 2. **Branch setup**
    - If on main/master, create feature branch first: `feature/brief-description` or `fix/brief-description`
-   - Use `github-dev:commit-manager` subagent to handle staged changes if needed
+   - Use `github-dev:commit-creator` subagent to handle staged changes if needed
 
 3. **Documentation check**
    - Update README.md or docs based on changes compared to target branch
@@ -25,7 +25,7 @@ Complete workflow for creating pull requests following project standards.
    - Focus on what changed from reviewer perspective
 
 5. **Create PR**
-   - Use `/pr-manager` agent or `gh pr create` with parameters:
+   - Use `/pr-creator` agent or `gh pr create` with parameters:
      - `-t` (title): Start with capital letter, use verb, NO "fix:" or "feat:" prefix
      - `-b` (body): Brief summary + bullet points with inline markdown links
      - `-a @me` (self-assign)

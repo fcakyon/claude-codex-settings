@@ -4,8 +4,8 @@
     "name": "Fatih Akyon"
   },
   "metadata": {
-    "description": "Battle-tested Claude Code plugin collection: auto-formatting, Git workflow agents, pattern analysis, productivity commands, and 100+ MCP tools.",
-    "version": "1.2.2"
+    "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
+    "version": "1.2.3"
   },
   "plugins": [
     {
@@ -26,8 +26,8 @@
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
-      "description": "GitHub and Git workflow tools: commit-manager, pr-manager, and pr-reviewer agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
-      "version": "1.2.2",
+      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, and pr-reviewer agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
+      "version": "1.2.3",
       "author": {
         "name": "Fatih Akyon"
       },

@@ -63,6 +63,7 @@
       "mcp__github__get_workflow_run",
       "mcp__github__get_job_logs",
       "mcp__github__get_pull_request_comments",
+      "mcp__github__get_pull_request_reviews",
       "mcp__github__issue_read",
       "mcp__github__list_pull_requests",
       "mcp__github__list_commits",
