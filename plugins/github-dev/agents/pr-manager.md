@@ -4,6 +4,7 @@ description: Use this agent when you need to create a complete pull request work
 tools: Bash, BashOutput, Glob, Grep, Read, WebSearch, WebFetch, TodoWrite, SlashCommand, ListMcpResourcesTool, ReadMcpResourceTool, mcp__tavily__tavily-search, mcp__tavily__tavily-extract
 color: cyan
 skills: pr-workflow, commit-workflow
+model: inherit
 ---
 
 You are a Git and GitHub PR workflow automation specialist. Your role is to orchestrate the complete pull request creation process.
