@@ -1,9 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "opusplan",
-  "includeCoAuthoredBy": false,
-  "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true,
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "your_zai_api_key",
     "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
@@ -17,6 +13,7 @@
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "GLM-4.5-Air",
     "MAX_MCP_OUTPUT_TOKENS": "40000"
   },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(find:*)",
@@ -64,6 +61,8 @@
       "mcp__github__get_file_contents",
       "mcp__github__get_workflow_run",
       "mcp__github__get_job_logs",
+      "mcp__github__get_pull_request_comments",
+      "mcp__github__get_pull_request_reviews",
       "mcp__github__issue_read",
       "mcp__github__list_pull_requests",
       "mcp__github__list_commits",
@@ -77,18 +76,13 @@
       "mcp__mongodb__list_collections",
       "mcp__mongodb__get_collection_schema",
       "mcp__mongodb__collection-indexes",
-      "mcp__supabase__list_tables",
-      "Skill(plugin-dev:skill-development)",
-      "Skill(plugin-dev:command-development)",
-      "Skill(plugin-dev:agent-development)",
-      "Skill(plugin-dev:hook-development)",
-      "Skill(plugin-dev:plugin-structure)",
-      "Skill(plugin-dev:mcp-integration)"
+      "mcp__supabase__list_tables"
     ]
   },
+  "model": "opusplan",
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccusage@latest statusline",
+    "command": "npx -y ccusage@latest statusline --cost-source cc",
     "padding": 0
   },
   "extraKnownMarketplaces": {
@@ -98,5 +92,7 @@
         "repo": "fcakyon/claude-codex-settings"
       }
     }
-  }
+  },
+  "spinnerTipsEnabled": false,
+  "alwaysThinkingEnabled": true
 }

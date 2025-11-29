@@ -1,9 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "model": "opusplan",
-  "includeCoAuthoredBy": false,
-  "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true,
   "env": {
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
     "DISABLE_BUG_COMMAND": "1",
@@ -15,6 +11,7 @@
     "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-4-5-20251101",
     "MAX_MCP_OUTPUT_TOKENS": "40000"
   },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "Bash(find:*)",
@@ -80,9 +77,10 @@
       "mcp__supabase__list_tables"
     ]
   },
+  "model": "opusplan",
   "statusLine": {
     "type": "command",
-    "command": "npx -y ccusage@latest statusline",
+    "command": "npx -y ccusage@latest statusline --cost-source cc",
     "padding": 0
   },
   "extraKnownMarketplaces": {
@@ -92,5 +90,7 @@
         "repo": "fcakyon/claude-codex-settings"
       }
     }
-  }
+  },
+  "spinnerTipsEnabled": false,
+  "alwaysThinkingEnabled": true
 }
