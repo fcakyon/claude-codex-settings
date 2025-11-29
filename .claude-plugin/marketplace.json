@@ -19,23 +19,14 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "ultralytics",
-        "formatting",
-        "hooks",
-        "slack",
-        "mongodb",
-        "linear",
-        "python",
-        "code-quality"
-      ],
+      "keywords": ["ultralytics", "formatting", "hooks", "slack", "mongodb", "linear", "python", "code-quality"],
       "category": "productivity",
       "tags": ["formatting", "mcp", "development"]
     },
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
-      "description": "GitHub and Git workflow tools: commit-manager and pr-manager agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
+      "description": "GitHub and Git workflow tools: commit-manager, pr-manager, and pr-reviewer agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
       "version": "1.2.2",
       "author": {
         "name": "Fatih Akyon"
@@ -43,15 +34,7 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "git",
-        "commit",
-        "pull-request",
-        "github",
-        "workflow",
-        "agents",
-        "commands"
-      ],
+      "keywords": ["git", "commit", "pull-request", "github", "workflow", "agents", "commands"],
       "category": "development",
       "tags": ["git", "workflow", "automation"]
     },
@@ -66,14 +49,7 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "web-search",
-        "tavily",
-        "context7",
-        "search",
-        "content-extraction",
-        "mcp"
-      ],
+      "keywords": ["web-search", "tavily", "context7", "search", "content-extraction", "mcp"],
       "category": "tools",
       "tags": ["search", "mcp", "integration"]
     },
@@ -88,13 +64,7 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "code-patterns",
-        "simplification",
-        "architecture",
-        "analysis",
-        "code-quality"
-      ],
+      "keywords": ["code-patterns", "simplification", "architecture", "analysis", "code-quality"],
       "category": "development",
       "tags": ["analysis", "patterns", "quality"]
     },
@@ -109,17 +79,7 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugin-dev",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "plugin",
-        "development",
-        "claude",
-        "skills",
-        "hooks",
-        "mcp",
-        "commands",
-        "agents",
-        "best-practices"
-      ],
+      "keywords": ["plugin", "development", "claude", "skills", "hooks", "mcp", "commands", "agents", "best-practices"],
       "category": "development",
       "tags": ["plugin", "development", "claude"]
     },
@@ -134,14 +94,7 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "claude",
-        "settings",
-        "sync",
-        "config",
-        "allowlist",
-        "context"
-      ],
+      "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
       "category": "productivity",
       "tags": ["settings", "sync", "config"]
     }

@@ -1,7 +1,7 @@
 {
   "name": "general-dev",
   "version": "1.2.1",
-  "description": "Code quality tools: code-simplifier agent for pattern analysis, architecture explanation command, and hooks for rg enforcement.",
+  "description": "General development tools: code-simplifier agent for pattern analysis, architecture pattern command, code quality hooks for rg preference and context loading.",
   "author": {
     "name": "Fatih Akyon"
   },
