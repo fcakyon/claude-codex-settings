@@ -36,7 +36,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow tools: commit-manager and pr-manager agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "author": {
         "name": "Fatih Akyon"
       },
