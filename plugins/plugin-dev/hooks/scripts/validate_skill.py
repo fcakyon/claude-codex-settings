@@ -2,7 +2,6 @@
 """Validate SKILL.md files for structure, name format, and description length."""
 
 import json
-import os
 import re
 import sys
 from pathlib import Path
@@ -18,33 +17,51 @@ def parse_simple_yaml(text):
     return result
 
 
-def get_edited_file_path():
-    """Extract file path from hook input."""
+def find_plugin_root(file_path: Path) -> Path | None:
+    """Walk up from file_path to find .claude-plugin/plugin.json."""
+    current = file_path.parent if file_path.is_file() else file_path
+    for parent in [current, *current.parents]:
+        if (parent / ".claude-plugin" / "plugin.json").exists():
+            return parent
+        if parent == parent.parent:
+            break
+    return None
+
+
+def get_edited_file_path() -> Path | None:
+    """Parse stdin to get the file being edited."""
     try:
-        input_data = json.load(sys.stdin)
-        return input_data.get("tool_input", {}).get("file_path", "")
-    except (json.JSONDecodeError, KeyError):
-        return ""
+        tool_input = json.load(sys.stdin)
+        file_path = tool_input.get("file_path")
+        return Path(file_path) if file_path else None
+    except (json.JSONDecodeError, AttributeError):
+        return None
 
 
 def validate_skill():
     """Validate all SKILL.md files in skills directory."""
-    edited_path = get_edited_file_path()
+    edited_file = get_edited_file_path()
+    if not edited_file:
+        return 0
 
     # Skip virtual env, cache, and .claude directories
-    if edited_path and any(p in edited_path for p in [".venv", "venv", "site-packages", "__pycache__", ".claude"]):
+    edited_str = str(edited_file)
+    if any(p in edited_str for p in [".venv", "venv", "site-packages", "__pycache__", ".claude/plugins/cache"]):
         return 0
 
     # Exit early if not editing a skill-related file
-    if edited_path and "/skills/" not in edited_path and not edited_path.endswith("SKILL.md"):
+    if "/skills/" not in edited_str and not edited_str.endswith("SKILL.md"):
+        return 0
+
+    plugin_root = find_plugin_root(edited_file)
+    if not plugin_root:
+        return 0  # Not in a plugin directory
+
+    skills_dir = plugin_root / "skills"
+    if not skills_dir.exists():
         return 0
 
     errors = []
-    plugin_root = Path(os.environ.get("CLAUDE_PLUGIN_ROOT", "."))
-    skills_dir = plugin_root / "skills"
-
-    if not skills_dir.exists():
-        return 0
 
     for skill_path in skills_dir.iterdir():
         if not skill_path.is_dir():
