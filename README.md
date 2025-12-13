@@ -256,21 +256,17 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 <img src="https://github.com/user-attachments/assets/6677e1bd-7803-4dab-8f42-ecf7454c7d26" width="400">
 
-The setup includes a custom statusline powered by [ccusage](https://ccusage.com/) that displays Claude usage statistics in real-time. The statusline configuration provides:
+Real-time usage tracking powered by [ccusage](https://ccusage.com/).
 
-- **Real-time usage tracking**: Monitor token consumption and API costs as you work
-- **Offline support**: Cached data ensures statusline works without internet connectivity
-- **Customizable refresh**: Updates every 2 seconds for responsive feedback
-- **Turkish localization**: Displays costs and dates in Turkish format (configurable)
+<details>
+<summary><strong>Configuration</strong></summary>
 
-### Configuration
+- [`.claude/settings.json`](./.claude/settings.json) - Statusline command
+- [`.claude/ccusage.json`](./.claude/ccusage.json) - Locale, timezone, refresh settings
 
-The statusline is configured through two files:
+See [ccusage statusline guide](https://ccusage.com/guide/statusline) for setup.
 
-- **[`.claude/settings.json`](./.claude/settings.json)**: Contains the statusline command configuration
-- **[`.claude/ccusage.json`](./.claude/ccusage.json)**: ccusage-specific settings for locale, timezone, and refresh behavior
-
-For detailed setup instructions and customization options, see the [ccusage statusline guide](https://ccusage.com/guide/statusline).
+</details>
 
 ## References
 
