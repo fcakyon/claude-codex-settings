@@ -24,8 +24,8 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 
 ### Tavily (Web Search)
 
-- Use `mcp__tavily__tavily-search` for discovery/broad queries
-- Use `mcp__tavily__tavily-extract` for specific URL content
+- Use `mcp__tavily__tavily_search` for discovery/broad queries
+- Use `mcp__tavily__tavily_extract` for specific URL content
 - Search first to find URLs, then extract for detailed analysis
 
 ### Slack
