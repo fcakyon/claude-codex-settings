@@ -17,7 +17,7 @@ Complete workflow for creating pull requests following project standards.
 
 3. **Documentation check**
    - Update README.md or docs based on changes compared to target branch
-   - For config/API changes, use `mcp__tavily__tavily-search` to verify info and include sources
+   - For config/API changes, use `mcp__tavily__tavily_search` to verify info and include sources
 
 4. **Analyze all commits**
    - Use `git diff <base-branch>...HEAD` to review complete changeset

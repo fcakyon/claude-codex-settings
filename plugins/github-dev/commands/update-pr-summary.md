@@ -26,7 +26,7 @@ Update PR description with automatically generated summary based on complete cha
    - Add few bullet points of key changes
    - For significant changes, include before/after code examples in PR body
    - Include inline markdown links to relevant code lines when helpful (format: `[src/auth.py:42](src/auth.py#L42)`)
-   - For config/API changes, use `mcp__tavily__tavily-search` to verify information and include source links inline
+   - For config/API changes, use `mcp__tavily__tavily_search` to verify information and include source links inline
    - Never include test plans in PR descriptions
 
 4. **Update PR Title** (if needed):
