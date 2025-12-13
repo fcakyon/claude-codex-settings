@@ -242,6 +242,18 @@ Configuration in [`~/.codex/config.toml`](./config.toml):
 </details>
 
 <details>
+<summary><strong>ccproxy (Use Claude Code with Any LLM)</strong></summary>
+
+Assign any API or model to any task type via [ccproxy](https://github.com/starbased-co/ccproxy):
+
+- **MAX/Pro subscription**: Uses OAuth from your Claude subscription (no API keys)
+- **Any provider**: OpenAI, Gemini, Perplexity, local LLMs, or any OpenAI-compatible API
+- **Fully customizable**: Assign different models to default, thinking, planning, background tasks
+- **SDK support**: Works with Anthropic SDK and LiteLLM SDK beyond Claude Code
+
+</details>
+
+<details>
 <summary><strong>VSCode</strong></summary>
 
 Settings in [`.vscode/settings.json`](./.vscode/settings.json):
