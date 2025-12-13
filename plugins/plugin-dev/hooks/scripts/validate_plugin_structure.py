@@ -7,18 +7,50 @@ Checks:
 - agents/, commands/, hooks/ directories follow naming conventions
 - No invalid file/directory names
 - Required metadata files present
+
+Only runs when editing files within a plugin directory.
 """
 
+import json
 import os
 import re
 import sys
 from pathlib import Path
 
 
+def find_plugin_root(file_path: Path) -> Path | None:
+    """Walk up from file_path to find .claude-plugin/plugin.json."""
+    current = file_path.parent if file_path.is_file() else file_path
+    for parent in [current, *current.parents]:
+        if (parent / ".claude-plugin" / "plugin.json").exists():
+            return parent
+        if parent == parent.parent:
+            break
+    return None
+
+
+def get_edited_file_path() -> Path | None:
+    """Parse stdin to get the file being edited."""
+    try:
+        tool_input = json.load(sys.stdin)
+        file_path = tool_input.get("file_path")
+        return Path(file_path) if file_path else None
+    except (json.JSONDecodeError, AttributeError):
+        return None
+
+
 def validate_plugin_structure():
     """Check plugin directory structure and naming."""
+    # Get the file being edited and find its plugin root
+    edited_file = get_edited_file_path()
+    if not edited_file:
+        return 0  # No file path in input, skip
+
+    plugin_root = find_plugin_root(edited_file)
+    if not plugin_root:
+        return 0  # Not editing a plugin file, skip silently
+
     errors = []
-    plugin_root = Path(os.environ.get("CLAUDE_PLUGIN_ROOT", "."))
 
     # Check for valid component directories
     valid_dirs = {"skills", "agents", "commands", "hooks", ".claude-plugin"}
