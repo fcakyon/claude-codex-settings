@@ -18,7 +18,7 @@ print(json.dumps({
     "hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",
-        "permissionDecisionReason": f"Please use mcp__tavily__tavily-search with query: '{query}'"
+        "permissionDecisionReason": f"Please use mcp__tavily__tavily_search with query: '{query}'"
     }
 }, separators=(',', ':')))
 sys.exit(0)

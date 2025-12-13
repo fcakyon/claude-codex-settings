@@ -9,7 +9,7 @@ Use Tavily MCP tools for web search and content retrieval operations.
 
 ## Tool Selection
 
-### Tavily Search (`mcp__tavily__tavily-search`)
+### Tavily Search (`mcp__tavily__tavily_search`)
 
 Use for:
 
@@ -37,7 +37,7 @@ Use for:
 
 ## Integration Pattern
 
-1. Use `mcp__tavily__tavily-search` for discovery phase
+1. Use `mcp__tavily__tavily_search` for discovery phase
 2. Analyze results to find relevant URLs
 3. Use `mcp__tavily__tavily-extract` for detailed content on specific URLs
 4. Process extracted content for user needs
