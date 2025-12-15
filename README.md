@@ -13,6 +13,9 @@ My daily battle-tested Claude [Code](https://github.com/anthropics/claude-code)/
 
 ## Installation
 
+[![Run in Smithery](https://smithery.ai/badge/skills/fcakyon)](https://smithery.ai/skills?ns=fcakyon&utm_source=github&utm_medium=badge)
+
+
 > **Prerequisites:** Before installing, ensure you have Claude Code and required tools installed. See [INSTALL.md](INSTALL.md) for complete prerequisites.
 
 Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugins](https://docs.claude.com/en/docs/claude-code/plugins) system:
