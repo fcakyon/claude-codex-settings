@@ -255,7 +255,7 @@ def main() -> None:
                 'systemMessage': f'Docstring formatting failed for {python_file.name}',
                 'hookSpecificOutput': {'hookEventName': 'PostToolUse', 'decision': 'block', 'reason': error_msg},
             }
-            print(json.dumps(output))
+            print(json.dumps(output), file=sys.stderr)
             sys.exit(2)
     sys.exit(0)
 
