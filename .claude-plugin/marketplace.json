@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "1.2.3"
+    "version": "1.2.4"
   },
   "plugins": [
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Ultralytics-specific development tools: Python/JavaScript/Markdown/Bash formatting hooks, Slack/MongoDB/Linear MCP integration, plus skills for optimal MCP usage.",
-      "version": "1.2.2",
+      "version": "1.2.4",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -42,7 +42,7 @@
       "name": "websearch-tools",
       "source": "./plugins/websearch-tools",
       "description": "Web search and content extraction: Tavily search/extract hooks, context7 library docs MCP, plus skills for optimal tool selection.",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "author": {
         "name": "Fatih Akyon"
       },

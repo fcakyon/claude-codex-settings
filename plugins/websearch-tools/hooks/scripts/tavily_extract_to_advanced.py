@@ -12,31 +12,31 @@ try:
     tool_input = data["tool_input"]
     urls = tool_input.get("urls", [])
 
-    # Check for GitHub URLs
+    # Always ensure extract_depth="advanced"
+    tool_input["extract_depth"] = "advanced"
+
+    # Check for GitHub URLs and add soft suggestion
     github_domains = ("github.com", "raw.githubusercontent.com", "gist.github.com")
     github_urls = [url for url in urls if any(domain in url for domain in github_domains)]
 
     if github_urls:
-        # Block and suggest GitHub MCP tools
+        # Allow but suggest GitHub MCP/gh CLI for next time
         print(json.dumps({
-            "systemMessage": "GitHub URL detected in Tavily extract tool. AI is directed to use GitHub MCP tools instead.",
+            "systemMessage": "Tip: For GitHub URLs, consider using GitHub MCP tools (mcp__github__*) or gh CLI for better context retrieval.",
             "hookSpecificOutput": {
                 "hookEventName": "PreToolUse",
-                "permissionDecision": "deny",
-                "permissionDecisionReason": "GitHub URL detected. Please use GitHub MCP tools (mcp__github__*) for more robust data retrieval."
-            },
+                "permissionDecision": "allow",
+                "updatedInput": tool_input
+            }
         }, separators=(',', ':')))
-        sys.exit(2)
-
-    # Always ensure extract_depth="advanced" for non-GitHub URLs
-    tool_input["extract_depth"] = "advanced"
+        sys.exit(0)
 
     # Allow the call to proceed
     print(json.dumps({
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",
             "permissionDecision": "allow",
-            "permissionDecisionReason": "Automatically upgrading Tavily extract to advanced mode for better content extraction"
+            "updatedInput": tool_input
         }
     }, separators=(',', ':')))
     sys.exit(0)

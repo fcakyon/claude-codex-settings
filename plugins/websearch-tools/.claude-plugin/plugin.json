@@ -1,6 +1,6 @@
 {
   "name": "websearch-tools",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Web search and content extraction: Tavily search/extract hooks, context7 library docs MCP, plus skills for optimal tool selection.",
   "author": {
     "name": "Fatih Akyon"

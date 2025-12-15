@@ -53,7 +53,7 @@ def main():
                 'systemMessage': f'Ruff errors detected in {py_file.name}',
                 'hookSpecificOutput': {'hookEventName': 'PostToolUse', 'decision': 'block', 'reason': error_msg},
             }
-            print(json.dumps(output))
+            print(json.dumps(output), file=sys.stderr)
             sys.exit(2)
 
         # Run ruff format
@@ -72,7 +72,7 @@ def main():
                 'systemMessage': f'Ruff format failed for {py_file.name}',
                 'hookSpecificOutput': {'hookEventName': 'PostToolUse', 'decision': 'block', 'reason': error_msg},
             }
-            print(json.dumps(output))
+            print(json.dumps(output), file=sys.stderr)
             sys.exit(2)
 
     except Exception as e:

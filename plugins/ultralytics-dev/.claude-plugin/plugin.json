@@ -1,6 +1,6 @@
 {
   "name": "ultralytics-dev",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "description": "Ultralytics-specific development tools: Python/JavaScript/Markdown/Bash formatting hooks, Slack/MongoDB/Linear MCP integration, plus skills for optimal MCP usage.",
   "author": {
     "name": "Fatih Akyon"
