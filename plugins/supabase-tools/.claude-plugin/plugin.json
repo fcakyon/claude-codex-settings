@@ -1,6 +1,6 @@
 {
   "name": "supabase-tools",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Official Supabase MCP for database management with OAuth authentication.",
   "author": {
     "name": "Fatih Akyon"

@@ -1,6 +1,6 @@
 {
   "name": "github-dev",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "GitHub and Git workflow tools: commit-creator, pr-creator, and pr-reviewer agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
   "author": {
     "name": "Fatih Akyon"
