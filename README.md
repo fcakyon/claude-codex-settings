@@ -37,6 +37,7 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin install notification-tools@fcakyon-claude-plugins # OS notifications
 /plugin install plugin-dev@fcakyon-claude-plugins         # Plugin development toolkit
 /plugin install claude-tools@fcakyon-claude-plugins       # Sync CLAUDE.md + allowlist
+/plugin install ccproxy-tools@fcakyon-claude-plugins      # Use any LLM via ccproxy/LiteLLM
 ```
 
 After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
@@ -316,6 +317,21 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 - [`/load-frontend-skill`](./plugins/claude-tools/commands/load-frontend-skill.md) - Load frontend design skill from Anthropic
 - [`/sync-claude-md`](./plugins/claude-tools/commands/sync-claude-md.md) - Sync CLAUDE.md from GitHub
 - [`/sync-allowlist`](./plugins/claude-tools/commands/sync-allowlist.md) - Sync permissions allowlist
+
+</details>
+
+<details>
+<summary><strong>ccproxy-tools</strong> - Use Claude Code with any LLM</summary>
+
+Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, GitHub Copilot, or other providers. Run `/ccproxy-tools:setup` after install.
+
+**Commands:**
+
+- [`/ccproxy-tools:setup`](./plugins/ccproxy-tools/commands/setup.md) - Configure ccproxy/LiteLLM
+
+**Skills:**
+
+- [`setup`](./plugins/ccproxy-tools/skills/setup/SKILL.md) - Troubleshooting guide
 
 </details>
 
