@@ -4,6 +4,8 @@ description: Configure Linear OAuth authentication
 
 # Linear Tools Setup
 
+**Source:** [Linear MCP Docs](https://linear.app/docs/mcp)
+
 Check Linear MCP status and configure OAuth if needed.
 
 ## Step 1: Test Current Setup

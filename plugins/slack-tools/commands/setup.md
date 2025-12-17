@@ -4,6 +4,8 @@ description: Configure Slack MCP tokens
 
 # Slack Tools Setup
 
+**Source:** [ubie-oss/slack-mcp-server](https://github.com/ubie-oss/slack-mcp-server)
+
 Check Slack MCP status and configure tokens if needed.
 
 ## Step 1: Test Current Setup
