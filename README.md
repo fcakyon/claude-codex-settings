@@ -24,15 +24,15 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 # Install plugins (pick what you need)
 /plugin install ultralytics-dev@fcakyon-claude-plugins    # Auto-formatting hooks
 /plugin install github-dev@fcakyon-claude-plugins         # Git workflow + GitHub MCP
-/plugin install tavily-tools@fcakyon-claude-plugins       # Tavily MCP
-/plugin install paper-search-tools@fcakyon-claude-plugins # Academic paper search MCP
-/plugin install supabase-tools@fcakyon-claude-plugins     # Supabase MCP
-/plugin install slack-tools@fcakyon-claude-plugins        # Slack MCP
-/plugin install mongodb-tools@fcakyon-claude-plugins      # MongoDB MCP (read-only)
-/plugin install gcloud-tools@fcakyon-claude-plugins       # GCloud Observability MCP
-/plugin install linear-tools@fcakyon-claude-plugins       # Linear MCP
-/plugin install azure-tools@fcakyon-claude-plugins        # Azure MCP (40+ services)
-/plugin install playwright-tools@fcakyon-claude-plugins   # E2E testing skill
+/plugin install tavily-tools@fcakyon-claude-plugins       # Tavily MCP & Skills
+/plugin install paper-search-tools@fcakyon-claude-plugins # Paper Search MCP & Skills
+/plugin install supabase-tools@fcakyon-claude-plugins     # Supabase MCP & Skills
+/plugin install slack-tools@fcakyon-claude-plugins        # Slack MCP & Skills
+/plugin install mongodb-tools@fcakyon-claude-plugins      # MongoDB MCP & Skills (read-only)
+/plugin install gcloud-tools@fcakyon-claude-plugins       # GCloud MCP & Skills
+/plugin install linear-tools@fcakyon-claude-plugins       # Linear MCP & Skills
+/plugin install azure-tools@fcakyon-claude-plugins        # Azure MCP & Skills (40+ services)
+/plugin install playwright-tools@fcakyon-claude-plugins   # Playwright MCP + E2E skill
 /plugin install general-dev@fcakyon-claude-plugins        # Code simplifier + utilities
 /plugin install notification-tools@fcakyon-claude-plugins # OS notifications
 /plugin install plugin-dev@fcakyon-claude-plugins         # Plugin development toolkit
@@ -68,7 +68,7 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 </details>
 
 <details>
-<summary><strong>slack-tools</strong> - Slack MCP</summary>
+<summary><strong>slack-tools</strong> - Slack MCP & Skills</summary>
 
 Message search and channel history. Run `/slack-tools:setup` after install.
 
@@ -81,12 +81,12 @@ Message search and channel history. Run `/slack-tools:setup` after install.
 
 - [`/slack-tools:setup`](./plugins/slack-tools/commands/setup.md) - Configure Slack MCP
 
-**MCP:** [`.mcp.json`](./plugins/slack-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/slack-tools/.mcp.json) | [ubie-oss/slack-mcp-server](https://github.com/ubie-oss/slack-mcp-server)
 
 </details>
 
 <details>
-<summary><strong>mongodb-tools</strong> - MongoDB MCP</summary>
+<summary><strong>mongodb-tools</strong> - MongoDB MCP & Skills</summary>
 
 Database exploration (read-only). Run `/mongodb-tools:setup` after install.
 
@@ -99,12 +99,12 @@ Database exploration (read-only). Run `/mongodb-tools:setup` after install.
 
 - [`/mongodb-tools:setup`](./plugins/mongodb-tools/commands/setup.md) - Configure MongoDB MCP
 
-**MCP:** [`.mcp.json`](./plugins/mongodb-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/mongodb-tools/.mcp.json) | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server)
 
 </details>
 
 <details>
-<summary><strong>gcloud-tools</strong> - GCloud Observability MCP</summary>
+<summary><strong>gcloud-tools</strong> - GCloud MCP & Skills</summary>
 
 Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 
@@ -117,12 +117,12 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 
 - [`/gcloud-tools:setup`](./plugins/gcloud-tools/commands/setup.md) - Configure GCloud MCP
 
-**MCP:** [`.mcp.json`](./plugins/gcloud-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/gcloud-tools/.mcp.json) | [googleapis/gcloud-mcp](https://github.com/googleapis/gcloud-mcp)
 
 </details>
 
 <details>
-<summary><strong>linear-tools</strong> - Linear MCP</summary>
+<summary><strong>linear-tools</strong> - Linear MCP & Skills</summary>
 
 Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
@@ -135,12 +135,12 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
 - [`/linear-tools:setup`](./plugins/linear-tools/commands/setup.md) - Configure Linear MCP
 
-**MCP:** [`.mcp.json`](./plugins/linear-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/linear-tools/.mcp.json) | [Linear MCP Docs](https://linear.app/docs/mcp)
 
 </details>
 
 <details>
-<summary><strong>azure-tools</strong> - Azure MCP</summary>
+<summary><strong>azure-tools</strong> - Azure MCP & Skills</summary>
 
 40+ Azure services with Azure CLI authentication. Run `/azure-tools:setup` after install.
 
@@ -153,18 +153,24 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
 - [`/azure-tools:setup`](./plugins/azure-tools/commands/setup.md) - Configure Azure MCP
 
-**MCP:** [`.mcp.json`](./plugins/azure-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/azure-tools/.mcp.json) | [microsoft/mcp/Azure.Mcp.Server](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server)
 
 </details>
 
 <details>
-<summary><strong>playwright-tools</strong> - E2E testing skill</summary>
+<summary><strong>playwright-tools</strong> - Playwright MCP & Skills</summary>
 
-Playwright testing best practices (no MCP, no setup needed).
+Browser automation via MCP. Run `/playwright-tools:setup` after install. May require `npx playwright install` for browser binaries.
 
 **Skills:**
 
-- [`playwright-usage`](./plugins/playwright-tools/skills/playwright-usage/SKILL.md) - E2E testing best practices
+- [`playwright-testing`](./plugins/playwright-tools/skills/playwright-testing/SKILL.md) - E2E testing best practices
+
+**Commands:**
+
+- [`/playwright-tools:setup`](./plugins/playwright-tools/commands/setup.md) - Configure Playwright MCP
+
+**MCP:** [`.mcp.json`](./plugins/playwright-tools/.mcp.json) | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp)
 
 </details>
 
@@ -186,12 +192,12 @@ Git and GitHub automation. Run `/github-dev:setup` after install.
 - [`/review-pr`](./plugins/github-dev/commands/review-pr.md) - Review pull request
 - [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean deleted branches
 
-**MCP:** [`.mcp.json`](./plugins/github-dev/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/github-dev/.mcp.json) | [github/github-mcp-server](https://github.com/github/github-mcp-server)
 
 </details>
 
 <details>
-<summary><strong>tavily-tools</strong> - Tavily MCP</summary>
+<summary><strong>tavily-tools</strong> - Tavily MCP & Skills</summary>
 
 Web search and content extraction. Run `/tavily-tools:setup` after install.
 
@@ -204,12 +210,12 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 
 - [`/tavily-tools:setup`](./plugins/tavily-tools/commands/setup.md) - Configure Tavily MCP
 
-**MCP:** [`.mcp.json`](./plugins/tavily-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/tavily-tools/.mcp.json) | [tavily-ai/tavily-mcp](https://github.com/tavily-ai/tavily-mcp)
 
 </details>
 
 <details>
-<summary><strong>paper-search-tools</strong> - Academic Paper Search MCP</summary>
+<summary><strong>paper-search-tools</strong> - Paper Search MCP & Skills</summary>
 
 Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:setup` after install. Requires Docker.
 
@@ -222,12 +228,12 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 
 - [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Configure Paper Search MCP
 
-**MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json) | [mcp/paper-search](https://hub.docker.com/r/mcp/paper-search)
 
 </details>
 
 <details>
-<summary><strong>supabase-tools</strong> - Supabase MCP</summary>
+<summary><strong>supabase-tools</strong> - Supabase MCP & Skills</summary>
 
 Database management with OAuth. Run `/supabase-tools:setup` after install.
 
@@ -240,7 +246,7 @@ Database management with OAuth. Run `/supabase-tools:setup` after install.
 
 - [`/supabase-tools:setup`](./plugins/supabase-tools/commands/setup.md) - Configure Supabase MCP
 
-**MCP:** [`.mcp.json`](./plugins/supabase-tools/.mcp.json)
+**MCP:** [`.mcp.json`](./plugins/supabase-tools/.mcp.json) | [supabase-community/supabase-mcp](https://github.com/supabase-community/supabase-mcp)
 
 </details>
 
