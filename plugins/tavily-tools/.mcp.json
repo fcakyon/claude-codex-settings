@@ -1,0 +1,9 @@
+{
+  "tavily": {
+    "command": "npx",
+    "args": ["-y", "tavily-mcp@latest"],
+    "env": {
+      "TAVILY_API_KEY": "REPLACE_WITH_TAVILY_API_KEY"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "slack-tools",
+  "version": "2.0.0",
+  "description": "Slack MCP integration for message search and channel operations with best practices skill.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

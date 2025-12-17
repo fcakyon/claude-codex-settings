@@ -12,7 +12,7 @@ Update PR description with automatically generated summary based on complete cha
 ## Workflow Steps
 
 1. **Fetch PR Information**:
-   - Get PR details using `gh pr view <pr_number>` or `mcp__github__pull_request_read`
+   - Get PR details using `gh pr view <pr_number> --json title,body,baseRefName,headRefName`
    - Identify base branch and head branch from PR metadata
 
 2. **Analyze Complete Changeset**:
@@ -37,10 +37,11 @@ Update PR description with automatically generated summary based on complete cha
    - Use `gh pr edit <pr_number>` with `--body` (and optionally `--title`) to update the PR
    - Use HEREDOC for proper formatting:
    ```bash
-   gh pr edit <pr_number> --body "$(cat <<'EOF'
+   gh pr edit "$(
+     cat << 'EOF'
    [PR description here]
    EOF
-   )"
+   )" < pr_number > --body
    ```
 
 ## PR Description Format
@@ -76,6 +77,7 @@ Refactor authentication to use async context manager
 - Add context manager support for automatic cleanup
 
 Before:
+
 ```python
 def authenticate(token):
     session = create_session(token)
@@ -83,6 +85,7 @@ def authenticate(token):
 ```
 
 After:
+
 ```python
 async def authenticate(token):
     async with create_session(token) as session:
@@ -103,11 +106,13 @@ Add user profile export functionality
 ## Error Handling
 
 **Pre-Analysis Verification**:
+
 - Verify PR exists and is accessible
-- Check tool availability (GitHub MCP or gh CLI)
+- Check tool availability (`gh auth status`)
 - Confirm authentication status
 
 **Common Issues**:
+
 - Invalid PR number → List available PRs
 - Missing tools → Provide setup instructions
 - Auth issues → Guide through authentication

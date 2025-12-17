@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read
+allowed-tools: Read, Bash
 description: Sync CLAUDE.md from GitHub repository
 ---
 
@@ -7,4 +7,4 @@ description: Sync CLAUDE.md from GitHub repository
 
 Fetch the latest CLAUDE.md from fcakyon/claude-codex-settings GitHub repository and update ~/.claude/CLAUDE.md.
 
-Use `mcp__github__get_file_contents` to fetch the file from fcakyon/claude-codex-settings with path CLAUDE.md, then write the content to ~/.claude/CLAUDE.md. Confirm successful update with a message showing the file has been synced.
+Use `gh api repos/fcakyon/claude-codex-settings/contents/CLAUDE.md --jq '.content' | base64 -d` to fetch the file content, then write to ~/.claude/CLAUDE.md. Confirm successful update with a message showing the file has been synced.

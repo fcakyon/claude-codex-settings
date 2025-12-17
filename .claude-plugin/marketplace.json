@@ -5,29 +5,104 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "1.2.4"
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
-      "description": "Ultralytics-specific development tools: Python/JavaScript/Markdown/Bash formatting hooks, Slack/MongoDB/Linear MCP integration, plus skills for optimal MCP usage.",
-      "version": "1.2.4",
+      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["ultralytics", "formatting", "hooks", "slack", "mongodb", "linear", "python", "code-quality"],
+      "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
       "category": "productivity",
-      "tags": ["formatting", "mcp", "development"]
+      "tags": ["formatting", "development"]
+    },
+    {
+      "name": "slack-tools",
+      "source": "./plugins/slack-tools",
+      "description": "Slack MCP integration for message search and channel operations with best practices skill.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["slack", "mcp", "messaging", "search"],
+      "category": "tools",
+      "tags": ["slack", "mcp", "integration"]
+    },
+    {
+      "name": "mongodb-tools",
+      "source": "./plugins/mongodb-tools",
+      "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["mongodb", "mcp", "database", "nosql"],
+      "category": "tools",
+      "tags": ["mongodb", "mcp", "integration"]
+    },
+    {
+      "name": "gcloud-tools",
+      "source": "./plugins/gcloud-tools",
+      "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["gcloud", "mcp", "observability", "logging", "metrics"],
+      "category": "tools",
+      "tags": ["gcloud", "mcp", "integration"]
+    },
+    {
+      "name": "linear-tools",
+      "source": "./plugins/linear-tools",
+      "description": "Linear MCP integration for issue tracking with workflow best practices skill.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["linear", "mcp", "issues", "project-management"],
+      "category": "tools",
+      "tags": ["linear", "mcp", "integration"]
+    },
+    {
+      "name": "playwright-tools",
+      "source": "./plugins/playwright-tools",
+      "description": "Playwright E2E testing best practices skill covering auth, file uploads, and flaky test fixes.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["playwright", "testing", "e2e", "automation"],
+      "category": "development",
+      "tags": ["testing", "e2e", "automation"]
     },
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow tools: commit-creator, pr-creator, and pr-reviewer agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
-      "version": "1.2.3",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -39,25 +114,70 @@
       "tags": ["git", "workflow", "automation"]
     },
     {
-      "name": "websearch-tools",
-      "source": "./plugins/websearch-tools",
-      "description": "Web search and content extraction: Tavily search/extract hooks, context7 library docs MCP, plus skills for optimal tool selection.",
-      "version": "1.2.4",
+      "name": "tavily-tools",
+      "source": "./plugins/tavily-tools",
+      "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["web-search", "tavily", "context7", "search", "content-extraction", "mcp"],
+      "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
       "category": "tools",
       "tags": ["search", "mcp", "integration"]
     },
     {
+      "name": "paper-search-tools",
+      "source": "./plugins/paper-search-tools",
+      "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "mcp"],
+      "category": "tools",
+      "tags": ["research", "mcp", "integration"]
+    },
+    {
+      "name": "supabase-tools",
+      "source": "./plugins/supabase-tools",
+      "description": "Official Supabase MCP for database management with OAuth authentication.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["supabase", "database", "postgres", "oauth", "mcp"],
+      "category": "tools",
+      "tags": ["database", "mcp", "integration"]
+    },
+    {
+      "name": "notification-tools",
+      "source": "./plugins/notification-tools",
+      "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["notifications", "desktop", "alerts", "macos", "linux"],
+      "category": "productivity",
+      "tags": ["notifications", "alerts"]
+    },
+    {
       "name": "general-dev",
       "source": "./plugins/general-dev",
-      "description": "General development tools: code-simplifier agent for pattern analysis, architecture pattern command, code quality hooks for rg preference and context loading.",
-      "version": "1.2.1",
+      "description": "General development tools: code-simplifier agent for pattern analysis, rg preference hook.",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -71,8 +191,8 @@
     {
       "name": "plugin-dev",
       "source": "./plugins/plugin-dev",
-      "description": "Comprehensive toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
-      "version": "1.2.3",
+      "description": "Toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -84,10 +204,25 @@
       "tags": ["plugin", "development", "claude"]
     },
     {
+      "name": "azure-tools",
+      "source": "./plugins/azure-tools",
+      "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["azure", "mcp", "cloud", "storage", "keyvault", "cosmos", "aks"],
+      "category": "tools",
+      "tags": ["azure", "mcp", "integration"]
+    },
+    {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
-      "version": "1.2.2",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih Akyon"
       },

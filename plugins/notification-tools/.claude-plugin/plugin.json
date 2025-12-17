@@ -1,0 +1,11 @@
+{
+  "name": "notification-tools",
+  "version": "2.0.0",
+  "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

@@ -1,6 +1,6 @@
-# CLAUDE.md AGENTS.md
+# Claude Code Settings
 
-This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and other agentic AI tools when working with code in this repository.
+Guidance for Claude Code and other AI tools working in this repository.
 
 ## AI Guidance
 
@@ -22,25 +22,9 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 
 ## MCP Tools
 
-### Tavily (Web Search)
-
-- Use `mcp__tavily__tavily_search` for discovery/broad queries
-- Use `mcp__tavily__tavily_extract` for specific URL content
-- Search first to find URLs, then extract for detailed analysis
-
-### Slack
-
-- ALWAYS use `mcp__slack__slack_search_messages` first for message searches
-- Only use `mcp__slack__slack_get_channel_history` when explicitly asked for channel history
-
-### MongoDB
-
+- Use `mcp__tavily__tavily_search` for web discovery, `mcp__tavily__tavily_extract` for specific URLs
 - MongoDB MCP is READ-ONLY (no write/update/delete operations)
-
-### GitHub
-
-- For GitHub URLs, use `mcp__github__*` tools instead of web scraping
-- For GitHub Actions, use `mcp__github__get_workflow_run` and `mcp__github__get_job_logs`
+- For GitHub URLs, use `mcp__github__*` tools or `gh` CLI instead of web scraping
 
 ## Python Coding
 
@@ -81,13 +65,7 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 - Redundant duplicate code use is inefficient and unacceptable.
 - Never assume anything without testing it with `python3 -c "..."` (don't create file)
 - Always consider MongoDB/Gemini/OpenAI/Claude/Voyage API and time costs, and keep them as efficient as possible
-- When using 3rd party package functions/classes or want to explore them:
-  - 1.  Find location by:
-    ```bash
-    python -c "import ultralytics; print(ultralytics.__file__)"
-    ```
-  - 2.  Use List() Read() tools to explore the package and understand the function/class you want to use or read function docstrings
-  - 3.  Then properly set the parameters and use the function/class
+- When using 3rd party package functions/classes, find location with `python -c "import pkg; print(pkg.__file__)"`, then use Read tools to explore
 - When running Python commands, run `source .venv/bin/activate` to activate the virtual environment before running any scripts or run with uv `uv run python -c "import example"`
 
 ## Git and Pull Request Workflows
@@ -113,5 +91,3 @@ This file provides guidance to Claude Code (claude.ai/code), OpenAI Codex and ot
 
 - `/github-dev:commit-staged` - commit staged changes
 - `/github-dev:create-pr` - create pull request
-
-## Project Overview
