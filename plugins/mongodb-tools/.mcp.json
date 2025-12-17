@@ -1,0 +1,10 @@
+{
+  "mongodb": {
+    "command": "npx",
+    "args": ["-y", "mongodb-mcp-server"],
+    "env": {
+      "MDB_MCP_CONNECTION_STRING": "REPLACE_WITH_CONNECTION_STRING",
+      "MDB_MCP_READ_ONLY": "true"
+    }
+  }
+}
