@@ -1,6 +1,6 @@
 {
   "name": "playwright-tools",
-  "version": "2.1.0",
+  "version": "2.0.2",
   "description": "Playwright MCP server for browser automation plus E2E testing best practices skill.",
   "author": {
     "name": "Fatih Akyon"

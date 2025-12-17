@@ -1,6 +1,6 @@
 {
   "name": "ccproxy-tools",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max, GitHub Copilot, or any LLM.",
   "author": {
     "name": "Fatih Akyon"

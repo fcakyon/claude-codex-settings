@@ -1,6 +1,6 @@
 {
   "name": "general-dev",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "General development tools: code-simplifier agent for pattern analysis, rg preference hook.",
   "author": {
     "name": "Fatih Akyon"
