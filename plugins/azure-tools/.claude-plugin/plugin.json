@@ -1,6 +1,6 @@
 {
   "name": "azure-tools",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
   "author": {
     "name": "Fatih Akyon"

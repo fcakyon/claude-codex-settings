@@ -1,6 +1,6 @@
 {
   "name": "claude-tools",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
   "author": {
     "name": "Fatih Akyon"
