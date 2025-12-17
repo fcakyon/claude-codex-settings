@@ -1,7 +1,7 @@
 {
-  "name": "websearch-tools",
-  "version": "1.2.4",
-  "description": "Web search and content extraction: Tavily search/extract hooks, context7 library docs MCP, plus skills for optimal tool selection.",
+  "name": "tavily-tools",
+  "version": "2.0.0",
+  "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
   "author": {
     "name": "Fatih Akyon"
   },
