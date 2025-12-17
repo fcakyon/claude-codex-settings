@@ -1,0 +1,11 @@
+{
+  "name": "gcloud-tools",
+  "version": "2.0.0",
+  "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

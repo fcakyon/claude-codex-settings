@@ -1,0 +1,16 @@
+{
+  "description": "OS notifications on Claude Code events",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notify.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

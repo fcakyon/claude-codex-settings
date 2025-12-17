@@ -1,0 +1,6 @@
+{
+  "gcloud-observability": {
+    "command": "npx",
+    "args": ["-y", "@google-cloud/observability-mcp"]
+  }
+}
