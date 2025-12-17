@@ -4,6 +4,8 @@ description: Configure Paper Search MCP (requires Docker)
 
 # Paper Search Tools Setup
 
+**Source:** [mcp/paper-search](https://hub.docker.com/r/mcp/paper-search)
+
 Configure the Paper Search MCP server. Requires Docker.
 
 ## Step 1: Check Docker Installation

@@ -4,6 +4,8 @@ description: Configure Supabase MCP with OAuth authentication
 
 # Supabase Tools Setup
 
+**Source:** [supabase-community/supabase-mcp](https://github.com/supabase-community/supabase-mcp)
+
 Configure the official Supabase MCP server with OAuth.
 
 ## Step 1: Check Current Status

@@ -4,6 +4,8 @@ description: Configure GCloud CLI authentication
 
 # GCloud Tools Setup
 
+**Source:** [googleapis/gcloud-mcp](https://github.com/googleapis/gcloud-mcp)
+
 Check GCloud MCP status and configure CLI authentication if needed.
 
 ## Step 1: Check gcloud CLI

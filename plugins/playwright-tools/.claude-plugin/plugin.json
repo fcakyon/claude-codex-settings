@@ -1,7 +1,7 @@
 {
   "name": "playwright-tools",
-  "version": "2.0.0",
-  "description": "Playwright E2E testing best practices skill covering auth, file uploads, and flaky test fixes.",
+  "version": "2.1.0",
+  "description": "Playwright MCP server for browser automation plus E2E testing best practices skill.",
   "author": {
     "name": "Fatih Akyon"
   },

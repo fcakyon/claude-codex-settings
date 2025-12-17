@@ -4,6 +4,8 @@ description: Configure GitHub CLI authentication
 
 # GitHub CLI Setup
 
+**Source:** [github/github-mcp-server](https://github.com/github/github-mcp-server)
+
 Configure `gh` CLI for GitHub access.
 
 ## Step 1: Check Current Status

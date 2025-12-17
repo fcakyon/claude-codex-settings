@@ -4,6 +4,8 @@ description: Configure Tavily MCP server credentials
 
 # Tavily Tools Setup
 
+**Source:** [tavily-ai/tavily-mcp](https://github.com/tavily-ai/tavily-mcp)
+
 Configure the Tavily MCP server with your API key.
 
 ## Step 1: Check Current Status

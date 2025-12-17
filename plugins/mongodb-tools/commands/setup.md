@@ -4,6 +4,8 @@ description: Configure MongoDB MCP connection
 
 # MongoDB Tools Setup
 
+**Source:** [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server)
+
 Check MongoDB MCP status and configure connection if needed.
 
 ## Step 1: Test Current Setup
