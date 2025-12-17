@@ -92,7 +92,7 @@ Database exploration (read-only). Run `/mongodb-tools:setup` after install.
 
 **Skills:**
 
-- [`mongodb-usage`](./plugins/mongodb-tools/skills/mongodb-usage/SKILL.md) - Best practices for MongoDB MCP
+- [`mongodb-usage`](./plugins/mongodb-tools/skills/mongodb-usage/SKILL.md) - Best practices for MongoDB
 - [`setup`](./plugins/mongodb-tools/skills/setup/SKILL.md) - Troubleshooting guide
 
 **Commands:**
@@ -110,14 +110,14 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 
 **Skills:**
 
-- [`gcloud-usage`](./plugins/gcloud-tools/skills/gcloud-usage/SKILL.md) - Best practices for GCloud MCP
+- [`gcloud-usage`](./plugins/gcloud-tools/skills/gcloud-usage/SKILL.md) - Best practices for GCloud Logs/Metrics/Traces
 - [`setup`](./plugins/gcloud-tools/skills/setup/SKILL.md) - Troubleshooting guide
 
 **Commands:**
 
 - [`/gcloud-tools:setup`](./plugins/gcloud-tools/commands/setup.md) - Configure GCloud MCP
 
-**MCP:** [`.mcp.json`](./plugins/gcloud-tools/.mcp.json) | [googleapis/gcloud-mcp](https://github.com/googleapis/gcloud-mcp)
+**MCP:** [`.mcp.json`](./plugins/gcloud-tools/.mcp.json) | [google-cloud/observability-mcp](https://github.com/googleapis/gcloud-mcp)
 
 </details>
 
@@ -128,7 +128,7 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
 **Skills:**
 
-- [`linear-usage`](./plugins/linear-tools/skills/linear-usage/SKILL.md) - Best practices for Linear MCP
+- [`linear-usage`](./plugins/linear-tools/skills/linear-usage/SKILL.md) - Best practices for Linear
 - [`setup`](./plugins/linear-tools/skills/setup/SKILL.md) - Troubleshooting guide
 
 **Commands:**
@@ -146,7 +146,7 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
 **Skills:**
 
-- [`azure-usage`](./plugins/azure-tools/skills/azure-usage/SKILL.md) - Best practices for Azure MCP
+- [`azure-usage`](./plugins/azure-tools/skills/azure-usage/SKILL.md) - Best practices for Azure
 - [`setup`](./plugins/azure-tools/skills/setup/SKILL.md) - Troubleshooting guide
 
 **Commands:**
@@ -203,7 +203,7 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 
 **Skills:**
 
-- [`tavily-usage`](./plugins/tavily-tools/skills/tavily-usage/SKILL.md) - Best practices for Tavily MCP
+- [`tavily-usage`](./plugins/tavily-tools/skills/tavily-usage/SKILL.md) - Best practices for Tavily Search
 - [`setup`](./plugins/tavily-tools/skills/setup/SKILL.md) - Troubleshooting guide
 
 **Commands:**
@@ -440,6 +440,18 @@ Real-time usage tracking powered by [ccusage](https://ccusage.com/).
 See [ccusage statusline guide](https://ccusage.com/guide/statusline) for setup.
 
 </details>
+
+## TODO
+
+- [ ] Update Supabase usage skill to include Supabase based Auth/Row Level Security/Table relationships and optimal query pattern skills instead of MCP skills
+- [ ] App [dokploy](https://github.com/Dokploy/dokploy) tools plugin with [dokploy-mcp](https://github.com/Dokploy/mcp) server and deployment best practices skill
+- [ ] Add more comprehsensive fullstack-dev plugin with various ocnfigurable skills:
+  - Frontend: Next.js 16 (App Router, React 19, TypeScript)
+  - Backend: FastAPI, NodeJS
+  - Auth: Clerk (Auth, Email), Firebase/Firestore (Auth, DB), Supabase+Resend (Auth, DB, Email) RBAC with org:admin and org:member roles
+  - Styling: Tailwind CSS v4, [shadcn/ui components](https://github.com/shadcn-ui/ui), [Radix UI primitives](https://github.com/radix-ui/primitives)
+  - Monitoring: Sentry (errors, APM, session replay, structured logs)
+  - Analytics: [Web Vitals + Google Analytics](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 
 ## References
 
