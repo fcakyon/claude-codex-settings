@@ -1,0 +1,11 @@
+{
+  "name": "linear-tools",
+  "version": "2.0.0",
+  "description": "Linear MCP integration for issue tracking with workflow best practices skill.",
+  "author": {
+    "name": "Fatih Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}
