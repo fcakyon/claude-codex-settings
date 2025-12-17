@@ -21,14 +21,25 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 # Add marketplace
 /plugin marketplace add fcakyon/claude-codex-settings
 
-# Install plugins
-/plugin install ultralytics-dev@fcakyon-claude-plugins # Formatting hooks + Slack/MongoDB MCPs
-/plugin install github-dev@fcakyon-claude-plugins      # Git workflow agents + commands
-/plugin install websearch-tools@fcakyon-claude-plugins # Tavily hooks + web search MCP
-/plugin install general-dev@fcakyon-claude-plugins     # Code simplifier + utilities
-/plugin install plugin-dev@fcakyon-claude-plugins      # Plugin development toolkit
-/plugin install claude-tools@fcakyon-claude-plugins    # Sync CLAUDE.md + allowlist
+# Install plugins (pick what you need)
+/plugin install ultralytics-dev@fcakyon-claude-plugins    # Auto-formatting hooks
+/plugin install github-dev@fcakyon-claude-plugins         # Git workflow + GitHub MCP
+/plugin install tavily-tools@fcakyon-claude-plugins       # Tavily MCP
+/plugin install paper-search-tools@fcakyon-claude-plugins # Academic paper search MCP
+/plugin install supabase-tools@fcakyon-claude-plugins     # Supabase MCP
+/plugin install slack-tools@fcakyon-claude-plugins        # Slack MCP
+/plugin install mongodb-tools@fcakyon-claude-plugins      # MongoDB MCP (read-only)
+/plugin install gcloud-tools@fcakyon-claude-plugins       # GCloud Observability MCP
+/plugin install linear-tools@fcakyon-claude-plugins       # Linear MCP
+/plugin install azure-tools@fcakyon-claude-plugins        # Azure MCP (40+ services)
+/plugin install playwright-tools@fcakyon-claude-plugins   # E2E testing skill
+/plugin install general-dev@fcakyon-claude-plugins        # Code simplifier + utilities
+/plugin install notification-tools@fcakyon-claude-plugins # OS notifications
+/plugin install plugin-dev@fcakyon-claude-plugins         # Plugin development toolkit
+/plugin install claude-tools@fcakyon-claude-plugins       # Sync CLAUDE.md + allowlist
 ```
+
+After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
 
 Then create symlink for cross-tool compatibility:
 
@@ -41,9 +52,9 @@ Restart Claude Code to activate.
 ## Plugins
 
 <details>
-<summary><strong>ultralytics-dev</strong> - Auto-formatting + Slack/MongoDB/Linear MCPs</summary>
+<summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
 
-Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP servers for Slack, MongoDB, and Linear with usage skills.
+Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 
 **Hooks:**
 
@@ -53,80 +64,208 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash. Includes MCP s
 - [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
 - [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
 
-**MCPs:** Slack, MongoDB, Linear
+</details>
+
+<details>
+<summary><strong>slack-tools</strong> - Slack MCP</summary>
+
+Message search and channel history. Run `/slack-tools:setup` after install.
 
 **Skills:**
 
-- [`slack-usage`](./plugins/ultralytics-dev/skills/slack-usage/SKILL.md) - Search Slack messages and view channel history
-- [`mongodb-usage`](./plugins/ultralytics-dev/skills/mongodb-usage/SKILL.md) - Query MongoDB collections and schemas
+- [`slack-usage`](./plugins/slack-tools/skills/slack-usage/SKILL.md) - Best practices for Slack MCP
+- [`setup`](./plugins/slack-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/slack-tools:setup`](./plugins/slack-tools/commands/setup.md) - Configure Slack MCP
+
+**MCP:** [`.mcp.json`](./plugins/slack-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>mongodb-tools</strong> - MongoDB MCP</summary>
+
+Database exploration (read-only). Run `/mongodb-tools:setup` after install.
+
+**Skills:**
+
+- [`mongodb-usage`](./plugins/mongodb-tools/skills/mongodb-usage/SKILL.md) - Best practices for MongoDB MCP
+- [`setup`](./plugins/mongodb-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/mongodb-tools:setup`](./plugins/mongodb-tools/commands/setup.md) - Configure MongoDB MCP
+
+**MCP:** [`.mcp.json`](./plugins/mongodb-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>gcloud-tools</strong> - GCloud Observability MCP</summary>
+
+Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
+
+**Skills:**
+
+- [`gcloud-usage`](./plugins/gcloud-tools/skills/gcloud-usage/SKILL.md) - Best practices for GCloud MCP
+- [`setup`](./plugins/gcloud-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/gcloud-tools:setup`](./plugins/gcloud-tools/commands/setup.md) - Configure GCloud MCP
+
+**MCP:** [`.mcp.json`](./plugins/gcloud-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>linear-tools</strong> - Linear MCP</summary>
+
+Issue tracking with OAuth. Run `/linear-tools:setup` after install.
+
+**Skills:**
+
+- [`linear-usage`](./plugins/linear-tools/skills/linear-usage/SKILL.md) - Best practices for Linear MCP
+- [`setup`](./plugins/linear-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/linear-tools:setup`](./plugins/linear-tools/commands/setup.md) - Configure Linear MCP
+
+**MCP:** [`.mcp.json`](./plugins/linear-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>azure-tools</strong> - Azure MCP</summary>
+
+40+ Azure services with Azure CLI authentication. Run `/azure-tools:setup` after install.
+
+**Skills:**
+
+- [`azure-usage`](./plugins/azure-tools/skills/azure-usage/SKILL.md) - Best practices for Azure MCP
+- [`setup`](./plugins/azure-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/azure-tools:setup`](./plugins/azure-tools/commands/setup.md) - Configure Azure MCP
+
+**MCP:** [`.mcp.json`](./plugins/azure-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>playwright-tools</strong> - E2E testing skill</summary>
+
+Playwright testing best practices (no MCP, no setup needed).
+
+**Skills:**
+
+- [`playwright-usage`](./plugins/playwright-tools/skills/playwright-usage/SKILL.md) - E2E testing best practices
+
 </details>
 
 <details>
 <summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
 
-Git and GitHub automation with commit-manager, pr-manager, and pr-reviewer agents plus workflow skills.
+Git and GitHub automation. Run `/github-dev:setup` after install.
 
 **Agents:**
 
-- [`code-simplifier`](./plugins/general-dev/agents/code-simplifier.md) - Ensures code follows project conventions
-- [`commit-manager`](./plugins/github-dev/agents/commit-manager.md) - Git commit expert
-- [`pr-manager`](./plugins/github-dev/agents/pr-manager.md) - GitHub PR workflow automation
-- [`pr-reviewer`](./plugins/github-dev/agents/pr-reviewer.md) - AI-powered code review
+- [`commit-creator`](./plugins/github-dev/agents/commit-creator.md) - Intelligent commit workflow
+- [`pr-creator`](./plugins/github-dev/agents/pr-creator.md) - Pull request creation
+- [`pr-reviewer`](./plugins/github-dev/agents/pr-reviewer.md) - Code review agent
 
 **Commands:**
 
-- [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean up deleted remote branches
-- [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit changes with context
-- [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request with context
-- [`/update-pr-summary`](./plugins/github-dev/commands/update-pr-summary.md) - Update PR description with generated summary
+- [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit staged changes
+- [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request
+- [`/review-pr`](./plugins/github-dev/commands/review-pr.md) - Review pull request
+- [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean deleted branches
 
-**Hooks:**
-
-- [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation modal before commits
-- [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation modal before PR creation
-
-**Skills:**
-
-- [`pr-workflow`](./plugins/github-dev/skills/pr-workflow/SKILL.md) - Complete PR creation workflow
-- [`commit-workflow`](./plugins/github-dev/skills/commit-workflow/SKILL.md) - Commit best practices and automation
+**MCP:** [`.mcp.json`](./plugins/github-dev/.mcp.json)
 
 </details>
 
 <details>
-<summary><strong>websearch-tools</strong> - Tavily web search + hooks</summary>
+<summary><strong>tavily-tools</strong> - Tavily MCP</summary>
 
-Tavily MCP server for web search and content extraction with Tavily hooks and usage skill.
-
-**Hooks:**
-
-- [`webfetch_to_tavily_extract.py`](./plugins/websearch-tools/hooks/scripts/webfetch_to_tavily_extract.py) - Redirect WebFetch
-- [`websearch_to_tavily_search.py`](./plugins/websearch-tools/hooks/scripts/websearch_to_tavily_search.py) - Redirect WebSearch
-- [`tavily_extract_to_advanced.py`](./plugins/websearch-tools/hooks/scripts/tavily_extract_to_advanced.py) - Auto-enable advanced extraction
-
-**MCPs:** Tavily, Context7
+Web search and content extraction. Run `/tavily-tools:setup` after install.
 
 **Skills:**
 
-- [`tavily-usage`](./plugins/websearch-tools/skills/tavily-usage/SKILL.md) - Web search and content extraction workflows
+- [`tavily-usage`](./plugins/tavily-tools/skills/tavily-usage/SKILL.md) - Best practices for Tavily MCP
+- [`setup`](./plugins/tavily-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/tavily-tools:setup`](./plugins/tavily-tools/commands/setup.md) - Configure Tavily MCP
+
+**MCP:** [`.mcp.json`](./plugins/tavily-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>paper-search-tools</strong> - Academic Paper Search MCP</summary>
+
+Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:setup` after install. Requires Docker.
+
+**Skills:**
+
+- [`paper-search-usage`](./plugins/paper-search-tools/skills/paper-search-usage/SKILL.md) - Best practices for paper search
+- [`setup`](./plugins/paper-search-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Configure Paper Search MCP
+
+**MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>supabase-tools</strong> - Supabase MCP</summary>
+
+Database management with OAuth. Run `/supabase-tools:setup` after install.
+
+**Skills:**
+
+- [`supabase-usage`](./plugins/supabase-tools/skills/supabase-usage/SKILL.md) - Best practices for Supabase MCP
+- [`setup`](./plugins/supabase-tools/skills/setup/SKILL.md) - Troubleshooting guide
+
+**Commands:**
+
+- [`/supabase-tools:setup`](./plugins/supabase-tools/commands/setup.md) - Configure Supabase MCP
+
+**MCP:** [`.mcp.json`](./plugins/supabase-tools/.mcp.json)
+
+</details>
+
+<details>
+<summary><strong>notification-tools</strong> - OS notifications</summary>
+
+Desktop notifications when Claude Code completes tasks.
+
+**Hooks:**
+
+- [`notify.sh`](./plugins/notification-tools/hooks/scripts/notify.sh) - OS notifications on task completion
+
 </details>
 
 <details>
 <summary><strong>general-dev</strong> - Code simplifier + utilities</summary>
 
-Code quality agent, architecture pattern command, and general utility hooks.
+Code quality agent and utility hooks.
 
 **Agent:**
 
 - [`code-simplifier`](./plugins/general-dev/agents/code-simplifier.md) - Ensures code follows conventions
 
-**Command:**
-
-- [`/explain-architecture-pattern`](./plugins/general-dev/commands/explain-architecture-pattern.md) - Identify design patterns
-
 **Hooks:**
 
 - [`enforce_rg_over_grep.py`](./plugins/general-dev/hooks/scripts/enforce_rg_over_grep.py) - Suggest ripgrep
-- [`notify.sh`](./plugins/general-dev/hooks/scripts/notify.sh) - OS notifications
 
 </details>
 
