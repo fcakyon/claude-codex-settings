@@ -8,19 +8,19 @@ Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, G
 
 ## Step 1: Check Prerequisites
 
-Check if required tools are installed:
+Check if `uv` is installed:
 
 ```bash
 which uv
-uv tool list | grep -E "litellm|ccproxy" || echo "Not installed"
 ```
 
-If not installed, show:
+If not installed, install it:
 
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
-Install ccproxy and LiteLLM:
-uv tool install 'litellm[proxy]' 'ccproxy'
-```
+
+Then reload shell or run `source ~/.bashrc` (or `~/.zshrc`).
 
 ## Step 2: Ask Provider Choice
 
@@ -38,71 +38,40 @@ Use AskUserQuestion:
   - label: "Gemini API (LiteLLM)"
     description: "Use Google Gemini models via LiteLLM proxy"
 
-## Step 3: Provider-Specific Setup
+## Step 3: Install Proxy Tool
 
 ### If Claude Pro/Max (ccproxy)
 
-Tell the user:
+Install and initialize ccproxy:
 
-```
-Claude Pro/Max Setup via ccproxy:
-
-1. Initialize ccproxy config:
-   ccproxy init
-
-2. Start the proxy server:
-   ccproxy start
-
-   The proxy runs on http://localhost:4000
-
-3. When prompted, authenticate via browser with your Claude subscription.
-
-4. I'll update your .claude/settings.json with:
-   - ANTHROPIC_BASE_URL: http://localhost:4000
-
-5. Restart Claude Code to apply changes.
-
-Note: Keep ccproxy running in a terminal or use tmux:
-tmux new-session -d -s ccproxy 'ccproxy start'
+```bash
+uv tool install ccproxy
+ccproxy init
 ```
 
-Update `.claude/settings.json` env section with:
+### If GitHub Copilot, OpenAI, or Gemini (LiteLLM)
 
-```json
-{
-  "ANTHROPIC_BASE_URL": "http://localhost:4000"
-}
+Install LiteLLM:
+
+```bash
+uv tool install 'litellm[proxy]'
 ```
 
-### If GitHub Copilot (LiteLLM)
+## Step 4: Configure LiteLLM (if applicable)
 
-Tell the user:
+### For GitHub Copilot
 
-```
-GitHub Copilot Setup via LiteLLM:
+Auto-detect VS Code and Copilot versions:
 
-1. Create LiteLLM config at ~/.litellm/config.yaml with the content I'll provide.
+```bash
+# Get VS Code version
+VSCODE_VERSION=$(code --version 2> /dev/null | head -1 || echo "1.96.0")
 
-2. Start LiteLLM proxy:
-   litellm --config ~/.litellm/config.yaml
-
-   The proxy runs on http://localhost:4000
-
-3. When you see "Please visit ... and enter code XXXX-XXXX to authenticate"
-   Open the link and authenticate with your GitHub Copilot account.
-
-4. I'll update your .claude/settings.json with:
-   - ANTHROPIC_BASE_URL: http://localhost:4000
-   - ANTHROPIC_AUTH_TOKEN: sk-dummy
-   - Model mappings for opus/sonnet/haiku
-
-5. Restart Claude Code to apply changes.
-
-Note: Keep LiteLLM running in a terminal or use tmux:
-tmux new-session -d -s litellm 'litellm --config ~/.litellm/config.yaml'
+# Find Copilot Chat extension version
+COPILOT_VERSION=$(ls ~/.vscode/extensions/ 2> /dev/null | grep "github.copilot-chat-" | sed 's/github.copilot-chat-//' | sort -V | tail -1 || echo "0.26.7")
 ```
 
-Create `~/.litellm/config.yaml`:
+Create `~/.litellm/config.yaml` with detected versions:
 
 ```yaml
 general_settings:
@@ -110,57 +79,17 @@ general_settings:
 litellm_settings:
   drop_params: true
 model_list:
-  - model_name: claude-opus-4
-    litellm_params:
-      model: github_copilot/claude-opus-4
-      extra_headers:
-        editor-version: "vscode/1.104.3"
-        editor-plugin-version: "copilot-chat/0.26.7"
-        Copilot-Integration-Id: "vscode-chat"
-        user-agent: "GitHubCopilotChat/0.26.7"
-        x-github-api-version: "2025-04-01"
-  - model_name: claude-sonnet-4.5
-    litellm_params:
-      model: github_copilot/claude-sonnet-4.5
-      extra_headers:
-        editor-version: "vscode/1.104.3"
-        editor-plugin-version: "copilot-chat/0.26.7"
-        Copilot-Integration-Id: "vscode-chat"
-        user-agent: "GitHubCopilotChat/0.26.7"
-        x-github-api-version: "2025-04-01"
-  - model_name: gpt-5-mini
-    litellm_params:
-      model: github_copilot/gpt-5-mini
-      extra_headers:
-        editor-version: "vscode/1.104.3"
-        editor-plugin-version: "copilot-chat/0.26.7"
-        Copilot-Integration-Id: "vscode-chat"
-        user-agent: "GitHubCopilotChat/0.26.7"
-        x-github-api-version: "2025-04-01"
   - model_name: "*"
     litellm_params:
       model: "github_copilot/*"
       extra_headers:
-        editor-version: "vscode/1.104.3"
-        editor-plugin-version: "copilot-chat/0.26.7"
+        editor-version: "vscode/${VSCODE_VERSION}"
+        editor-plugin-version: "copilot-chat/${COPILOT_VERSION}"
         Copilot-Integration-Id: "vscode-chat"
-        user-agent: "GitHubCopilotChat/0.26.7"
-        x-github-api-version: "2025-04-01"
+        user-agent: "GitHubCopilotChat/${COPILOT_VERSION}"
 ```
 
-Update `.claude/settings.json` env section with:
-
-```json
-{
-  "ANTHROPIC_BASE_URL": "http://localhost:4000",
-  "ANTHROPIC_AUTH_TOKEN": "sk-dummy",
-  "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4",
-  "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.5",
-  "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini"
-}
-```
-
-### If OpenAI API (LiteLLM)
+### For OpenAI API
 
 Ask for OpenAI API key using AskUserQuestion:
 
@@ -180,33 +109,13 @@ general_settings:
 litellm_settings:
   drop_params: true
 model_list:
-  - model_name: claude-opus-4
-    litellm_params:
-      model: openai/gpt-5
-      api_key: YOUR_OPENAI_KEY
-  - model_name: claude-sonnet-4.5
-    litellm_params:
-      model: openai/gpt-5
-      api_key: YOUR_OPENAI_KEY
   - model_name: "*"
     litellm_params:
-      model: openai/gpt-5-mini
-      api_key: YOUR_OPENAI_KEY
+      model: openai/gpt-4o
+      api_key: ${OPENAI_API_KEY}
 ```
 
-Update `.claude/settings.json` env section with:
-
-```json
-{
-  "ANTHROPIC_BASE_URL": "http://localhost:4000",
-  "ANTHROPIC_AUTH_TOKEN": "sk-dummy",
-  "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4",
-  "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.5",
-  "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini"
-}
-```
-
-### If Gemini API (LiteLLM)
+### For Gemini API
 
 Ask for Gemini API key using AskUserQuestion:
 
@@ -226,40 +135,193 @@ general_settings:
 litellm_settings:
   drop_params: true
 model_list:
-  - model_name: claude-opus-4
-    litellm_params:
-      model: gemini/gemini-2.5-pro
-      api_key: YOUR_GEMINI_KEY
-  - model_name: claude-sonnet-4.5
-    litellm_params:
-      model: gemini/gemini-2.5-flash
-      api_key: YOUR_GEMINI_KEY
   - model_name: "*"
     litellm_params:
       model: gemini/gemini-2.5-flash
-      api_key: YOUR_GEMINI_KEY
+      api_key: ${GEMINI_API_KEY}
 ```
 
-Update `.claude/settings.json` env section with:
+## Step 5: Setup Auto-Start Service
+
+Detect platform and create appropriate service:
+
+### macOS (launchd)
+
+For ccproxy, create `~/Library/LaunchAgents/com.ccproxy.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.ccproxy</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>${HOME}/.local/bin/ccproxy</string>
+        <string>start</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>${HOME}/.local/share/ccproxy/stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>${HOME}/.local/share/ccproxy/stderr.log</string>
+</dict>
+</plist>
+```
+
+For LiteLLM, create `~/Library/LaunchAgents/com.litellm.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.litellm</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>${HOME}/.local/bin/litellm</string>
+        <string>--config</string>
+        <string>${HOME}/.litellm/config.yaml</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>${HOME}/.local/share/litellm/stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>${HOME}/.local/share/litellm/stderr.log</string>
+</dict>
+</plist>
+```
+
+Load and start the service:
+
+```bash
+launchctl load ~/Library/LaunchAgents/com.ccproxy.plist # or com.litellm.plist
+```
+
+### Linux (systemd user service)
+
+For ccproxy, create `~/.config/systemd/user/ccproxy.service`:
+
+```ini
+[Unit]
+Description=ccproxy LLM Proxy
+
+[Service]
+ExecStart=%h/.local/bin/ccproxy start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+```
+
+For LiteLLM, create `~/.config/systemd/user/litellm.service`:
+
+```ini
+[Unit]
+Description=LiteLLM Proxy
+
+[Service]
+ExecStart=%h/.local/bin/litellm --config %h/.litellm/config.yaml
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+```
+
+Enable and start the service:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now ccproxy # or litellm
+```
+
+## Step 6: Authenticate (ccproxy only)
+
+For ccproxy, tell the user:
+
+```
+The proxy is starting. A browser window will open for authentication.
+
+1. Sign in with your Claude Pro/Max account
+2. Authorize the connection
+3. Return here after successful authentication
+```
+
+Wait for authentication to complete.
+
+## Step 7: Verify Proxy is Running
+
+Check if proxy is healthy:
+
+```bash
+curl -s http://localhost:4000/health
+```
+
+Retry up to 5 times with 3-second delays if not responding.
+
+If proxy is not healthy after retries:
+
+- Show error and troubleshooting steps
+- Do NOT proceed to update settings
+- Exit
+
+## Step 8: Confirm Before Updating Settings
+
+Use AskUserQuestion:
+
+- question: "Proxy is running. Ready to configure Claude Code to use it?"
+- header: "Configure"
+- options:
+  - label: "Yes, configure now"
+    description: "Update settings to use the proxy (requires restart)"
+  - label: "No, not yet"
+    description: "Keep current settings, I'll configure later"
+
+If user selects "No, not yet":
+
+- Tell them they can run `/ccproxy-tools:setup` again when ready
+- Exit without changing settings
+
+## Step 9: Update Settings
+
+1. Read current `~/.claude/settings.json`
+2. Create backup at `~/.claude/settings.json.backup`
+3. Add to env section based on provider:
+
+For ccproxy:
 
 ```json
 {
-  "ANTHROPIC_BASE_URL": "http://localhost:4000",
-  "ANTHROPIC_AUTH_TOKEN": "sk-dummy",
-  "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4",
-  "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4.5",
-  "ANTHROPIC_DEFAULT_HAIKU_MODEL": "gpt-5-mini"
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://localhost:4000"
+  }
 }
 ```
 
-## Step 4: Update Settings
+For LiteLLM:
 
-1. Read current `.claude/settings.json`
-2. Create backup at `.claude/settings.json.backup`
-3. Merge the provider-specific env variables into the existing env section
-4. Write updated settings back
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "http://localhost:4000",
+    "ANTHROPIC_AUTH_TOKEN": "sk-dummy"
+  }
+}
+```
 
-## Step 5: Confirm Success
+4. Write updated settings
+
+## Step 10: Confirm Success
 
 Tell the user:
 
@@ -268,15 +330,50 @@ Configuration complete!
 
 IMPORTANT: Restart Claude Code for changes to take effect.
 - Exit Claude Code
-- Start the proxy (ccproxy start OR litellm --config ~/.litellm/config.yaml)
 - Run `claude` again
+
+The proxy will start automatically on system boot.
 
 To verify after restart:
 - Claude Code should connect to the proxy at localhost:4000
-- Check proxy terminal for request logs
+- Check proxy logs: ~/Library/LaunchAgents/*.log (macOS) or journalctl --user -u ccproxy (Linux)
+```
 
-Troubleshooting:
-- Run /ccproxy-tools:setup again if issues occur
-- Check proxy is running: curl http://localhost:4000/health
-- See ccproxy docs: https://github.com/starbased-co/ccproxy
+## Recovery Instructions
+
+Always show these recovery instructions:
+
+```
+If Claude Code stops working after setup:
+
+1. Check proxy status:
+   curl http://localhost:4000/health
+
+2. Restart proxy:
+   macOS: launchctl kickstart -k gui/$(id -u)/com.ccproxy
+   Linux: systemctl --user restart ccproxy
+
+3. Check proxy logs:
+   macOS: cat ~/.local/share/ccproxy/stderr.log
+   Linux: journalctl --user -u ccproxy
+
+4. Restore original settings (removes proxy):
+   cp ~/.claude/settings.json.backup ~/.claude/settings.json
+
+   Or manually edit ~/.claude/settings.json and remove:
+   - ANTHROPIC_BASE_URL
+   - ANTHROPIC_AUTH_TOKEN (if present)
+```
+
+## Troubleshooting
+
+If proxy setup fails:
+
+```
+Common fixes:
+1. Port in use - Check if another process uses port 4000: lsof -i :4000
+2. Service not starting - Check logs in ~/.local/share/ccproxy/ or ~/.local/share/litellm/
+3. Authentication failed - Re-run setup to re-authenticate
+4. Permission denied - Ensure ~/.local/bin is in PATH
+5. Config invalid - Verify ~/.litellm/config.yaml syntax
 ```
