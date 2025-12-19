@@ -37,7 +37,7 @@
       "name": "slack-tools",
       "source": "./plugins/slack-tools",
       "description": "Slack MCP integration for message search and channel operations with best practices skill.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -366,8 +366,8 @@
     {
       "name": "ccproxy-tools",
       "source": "./plugins/ccproxy-tools",
-      "description": "Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max, GitHub Copilot, or any LLM.",
-      "version": "2.0.2",
+      "description": "Use Claude Code with your GitHub Copilot credits, Gemini API, local ollama models or any LLM.",
+      "version": "2.0.3",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -376,7 +376,7 @@
       "license": "Apache-2.0",
       "keywords": [
         "ccproxy",
-        "litellm",
+        "gemini",
         "proxy",
         "copilot",
         "llm",
