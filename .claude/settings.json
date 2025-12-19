@@ -78,7 +78,7 @@
       "mcp__mongodb__db-stats",
       "mcp__mongodb__count",
       "mcp__supabase__list_tables",
-      "mcp__gcloud-observability__list_log_entries",
+      "mcp__gcloud-observability__list_log_entries"
     ]
   },
   "model": "opusplan",
