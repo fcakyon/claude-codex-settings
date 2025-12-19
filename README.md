@@ -451,6 +451,10 @@ See [ccusage statusline guide](https://ccusage.com/guide/statusline) for setup.
   - Styling: Tailwind CSS v4, [shadcn/ui components](https://github.com/shadcn-ui/ui), [Radix UI primitives](https://github.com/radix-ui/primitives)
   - Monitoring: Sentry (errors, APM, session replay, structured logs)
   - Analytics: [Web Vitals + Google Analytics](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
+- [ ] Refactor marketplace name to `claude-settings` to make it concise
+- [ ] Publish `claudesettings.com` as a comprehensive documentation for installing, using and sharing useful Claude-Code settings
+- [ ] Rename plugins names to `mongodb-skills`, `github-skills` ...instead of `mongodb-tools`, `github-dev` ... for better UX
+
 
 ## References
 
