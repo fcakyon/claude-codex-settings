@@ -6,79 +6,107 @@ description: Configure MongoDB MCP connection
 
 **Source:** [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server)
 
-Check MongoDB MCP status and configure connection if needed.
+Configure the MongoDB MCP server with your connection string.
 
-## Step 1: Test Current Setup
+## Step 1: Check Current Status
 
-Try listing databases using `mcp__mongodb__list_databases`.
+Read the MCP configuration from `${CLAUDE_PLUGIN_ROOT}/.mcp.json`.
 
-If successful: Tell user MongoDB is configured and working.
+Check if MongoDB is configured:
 
-If fails with connection error: Continue to Step 2.
+- If `mongodb.env.MDB_MCP_CONNECTION_STRING` contains `REPLACE_WITH_CONNECTION_STRING`, it needs configuration
+- If it contains a value starting with `mongodb://` or `mongodb+srv://`, already configured
 
-## Step 2: Connection String Format
+Report status:
+
+- "MongoDB MCP is not configured - needs a connection string"
+- OR "MongoDB MCP is already configured"
+
+## Step 2: Show Setup Guide
 
 Tell the user:
 
 ```
-MongoDB MCP requires a connection string.
+To configure MongoDB MCP, you need a connection string.
 
 Formats:
 - Atlas: mongodb+srv://username:password@cluster.mongodb.net/database
 - Local: mongodb://localhost:27017/database
-- Replica Set: mongodb://host1,host2,host3/database?replicaSet=rs0
 
-Get Atlas connection string from: https://cloud.mongodb.com
-  1. Go to your cluster
-  2. Click "Connect"
-  3. Choose "Drivers"
-  4. Copy connection string
+Get Atlas connection string:
+1. Go to cloud.mongodb.com
+2. Navigate to your cluster
+3. Click "Connect" → "Drivers"
+4. Copy connection string
 
 Note: MCP runs in READ-ONLY mode.
+
+Don't need MongoDB MCP? Disable it via /mcp command.
 ```
 
-## Step 3: Edit Configuration
+## Step 3: Ask for Connection String
 
-Guide user to edit the plugin's `.mcp.json` file:
+Use AskUserQuestion:
 
-1. Open `${CLAUDE_PLUGIN_ROOT}/.mcp.json`
-2. Replace `REPLACE_WITH_CONNECTION_STRING` with actual MongoDB URI
-3. Save the file
+- question: "Do you have your MongoDB connection string ready?"
+- header: "MongoDB"
+- options:
+  - label: "Yes, I have it"
+    description: "I have my MongoDB connection string ready to paste"
+  - label: "No, skip for now"
+    description: "I'll configure it later"
 
-## Step 4: Restart
+If user selects "No, skip for now":
+
+- Tell them they can run `/mongodb-tools:setup` again when ready
+- Remind them they can disable MongoDB MCP via `/mcp` if not needed
+- Exit
+
+If user selects "Yes" or provides connection string via "Other":
+
+- If they provided connection string in "Other" response, use that
+- Otherwise, ask them to paste the connection string
+
+## Step 4: Validate Connection String
+
+Validate the provided connection string:
+
+- Must start with `mongodb://` or `mongodb+srv://`
+
+If invalid:
+
+- Show error: "Invalid connection string format. Must start with 'mongodb://' or 'mongodb+srv://'"
+- Ask if they want to try again or skip
+
+## Step 5: Update Configuration
+
+1. Read current `${CLAUDE_PLUGIN_ROOT}/.mcp.json`
+2. Create backup at `${CLAUDE_PLUGIN_ROOT}/.mcp.json.backup`
+3. Update `mongodb.env.MDB_MCP_CONNECTION_STRING` value to the actual connection string
+4. Write updated configuration back to `${CLAUDE_PLUGIN_ROOT}/.mcp.json`
+
+## Step 6: Confirm Success
 
 Tell the user:
 
 ```
-After saving .mcp.json:
-1. Exit Claude Code
-2. Run `claude` again
+MongoDB MCP configured successfully!
 
-Changes take effect after restart.
+IMPORTANT: Restart Claude Code for changes to take effect.
+- Exit Claude Code
+- Run `claude` again
+
+To verify after restart, run /mcp and check that 'mongodb' server is connected.
 ```
 
 ## Troubleshooting
 
-If MongoDB MCP fails:
+If MongoDB MCP fails after configuration:
 
 ```
 Common fixes:
 1. Authentication failed - Add ?authSource=admin to connection string
-2. Invalid connection string - Check mongodb:// or mongodb+srv:// prefix
-3. Network timeout - Whitelist IP in Atlas Network Access settings
-4. Wrong credentials - Verify username/password, special chars need URL encoding
-5. SSL/TLS errors - For Atlas, ensure mongodb+srv:// is used
-```
-
-## Alternative: Disable Plugin
-
-If user doesn't need MongoDB integration:
-
-```
-To disable this plugin:
-1. Run /mcp command
-2. Find the mongodb server
-3. Disable it
-
-This prevents errors from unconfigured credentials.
+2. Network timeout - Whitelist IP in Atlas Network Access settings
+3. Wrong credentials - Verify username/password, special chars need URL encoding
+4. SSL/TLS errors - For Atlas, ensure mongodb+srv:// is used
 ```

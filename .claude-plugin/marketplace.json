@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.0.2"
+    "version": "2.0.3"
   },
   "plugins": [
     {
@@ -61,7 +61,7 @@
       "name": "mongodb-tools",
       "source": "./plugins/mongodb-tools",
       "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "author": {
         "name": "Fatih Akyon"
       },
