@@ -1,6 +1,6 @@
 {
   "name": "mongodb-tools",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
   "author": {
     "name": "Fatih Akyon"
