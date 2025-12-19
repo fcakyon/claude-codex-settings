@@ -1,6 +1,6 @@
 {
   "name": "slack-tools",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Slack MCP integration for message search and channel operations with best practices skill.",
   "author": {
     "name": "Fatih Akyon"
