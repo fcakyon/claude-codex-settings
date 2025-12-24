@@ -81,11 +81,6 @@
     ]
   },
   "model": "opusplan",
-  "statusLine": {
-    "type": "command",
-    "command": "npx -y ccusage@latest statusline --cost-source cc",
-    "padding": 0
-  },
   "extraKnownMarketplaces": {
     "fcakyon-claude-plugins": {
       "source": {
