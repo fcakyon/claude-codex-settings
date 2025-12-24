@@ -19,19 +19,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "ultralytics",
-        "formatting",
-        "hooks",
-        "python",
-        "code-quality",
-        "docstrings"
-      ],
+      "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
       "category": "productivity",
-      "tags": [
-        "formatting",
-        "development"
-      ]
+      "tags": ["formatting", "development"]
     },
     {
       "name": "slack-tools",
@@ -44,18 +34,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "slack",
-        "mcp",
-        "messaging",
-        "search"
-      ],
+      "keywords": ["slack", "mcp", "messaging", "search"],
       "category": "tools",
-      "tags": [
-        "slack",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["slack", "mcp", "integration"]
     },
     {
       "name": "mongodb-tools",
@@ -68,18 +49,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "mongodb",
-        "mcp",
-        "database",
-        "nosql"
-      ],
+      "keywords": ["mongodb", "mcp", "database", "nosql"],
       "category": "tools",
-      "tags": [
-        "mongodb",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["mongodb", "mcp", "integration"]
     },
     {
       "name": "gcloud-tools",
@@ -92,19 +64,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "gcloud",
-        "mcp",
-        "observability",
-        "logging",
-        "metrics"
-      ],
+      "keywords": ["gcloud", "mcp", "observability", "logging", "metrics"],
       "category": "tools",
-      "tags": [
-        "gcloud",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["gcloud", "mcp", "integration"]
     },
     {
       "name": "linear-tools",
@@ -117,23 +79,14 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "linear",
-        "mcp",
-        "issues",
-        "project-management"
-      ],
+      "keywords": ["linear", "mcp", "issues", "project-management"],
       "category": "tools",
-      "tags": [
-        "linear",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["linear", "mcp", "integration"]
     },
     {
       "name": "playwright-tools",
       "source": "./plugins/playwright-tools",
-      "description": "Playwright E2E testing best practices skill covering auth, file uploads, and flaky test fixes.",
+      "description": "Playwright browser automation with E2E testing skill and responsive design testing agent.",
       "version": "2.0.3",
       "author": {
         "name": "Fatih Akyon"
@@ -141,18 +94,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "playwright",
-        "testing",
-        "e2e",
-        "automation"
-      ],
+      "keywords": ["playwright", "testing", "e2e", "automation", "responsive", "viewport", "mobile"],
       "category": "development",
-      "tags": [
-        "testing",
-        "e2e",
-        "automation"
-      ]
+      "tags": ["testing", "e2e", "automation"]
     },
     {
       "name": "github-dev",
@@ -165,21 +109,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "git",
-        "commit",
-        "pull-request",
-        "github",
-        "workflow",
-        "agents",
-        "commands"
-      ],
+      "keywords": ["git", "commit", "pull-request", "github", "workflow", "agents", "commands"],
       "category": "development",
-      "tags": [
-        "git",
-        "workflow",
-        "automation"
-      ]
+      "tags": ["git", "workflow", "automation"]
     },
     {
       "name": "tavily-tools",
@@ -192,19 +124,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "web-search",
-        "tavily",
-        "search",
-        "content-extraction",
-        "mcp"
-      ],
+      "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
       "category": "tools",
-      "tags": [
-        "search",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["search", "mcp", "integration"]
     },
     {
       "name": "paper-search-tools",
@@ -217,21 +139,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "paper-search",
-        "arxiv",
-        "pubmed",
-        "ieee",
-        "academic",
-        "research",
-        "mcp"
-      ],
+      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "mcp"],
       "category": "tools",
-      "tags": [
-        "research",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["research", "mcp", "integration"]
     },
     {
       "name": "supabase-tools",
@@ -244,19 +154,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "supabase",
-        "database",
-        "postgres",
-        "oauth",
-        "mcp"
-      ],
+      "keywords": ["supabase", "database", "postgres", "oauth", "mcp"],
       "category": "tools",
-      "tags": [
-        "database",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["database", "mcp", "integration"]
     },
     {
       "name": "notification-tools",
@@ -269,18 +169,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "notifications",
-        "desktop",
-        "alerts",
-        "macos",
-        "linux"
-      ],
+      "keywords": ["notifications", "desktop", "alerts", "macos", "linux"],
       "category": "productivity",
-      "tags": [
-        "notifications",
-        "alerts"
-      ]
+      "tags": ["notifications", "alerts"]
     },
     {
       "name": "general-dev",
@@ -293,19 +184,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "code-patterns",
-        "simplification",
-        "architecture",
-        "analysis",
-        "code-quality"
-      ],
+      "keywords": ["code-patterns", "simplification", "architecture", "analysis", "code-quality"],
       "category": "development",
-      "tags": [
-        "analysis",
-        "patterns",
-        "quality"
-      ]
+      "tags": ["analysis", "patterns", "quality"]
     },
     {
       "name": "plugin-dev",
@@ -318,23 +199,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugin-dev",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "plugin",
-        "development",
-        "claude",
-        "skills",
-        "hooks",
-        "mcp",
-        "commands",
-        "agents",
-        "best-practices"
-      ],
+      "keywords": ["plugin", "development", "claude", "skills", "hooks", "mcp", "commands", "agents", "best-practices"],
       "category": "development",
-      "tags": [
-        "plugin",
-        "development",
-        "claude"
-      ]
+      "tags": ["plugin", "development", "claude"]
     },
     {
       "name": "azure-tools",
@@ -347,21 +214,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "azure",
-        "mcp",
-        "cloud",
-        "storage",
-        "keyvault",
-        "cosmos",
-        "aks"
-      ],
+      "keywords": ["azure", "mcp", "cloud", "storage", "keyvault", "cosmos", "aks"],
       "category": "tools",
-      "tags": [
-        "azure",
-        "mcp",
-        "integration"
-      ]
+      "tags": ["azure", "mcp", "integration"]
     },
     {
       "name": "ccproxy-tools",
@@ -374,20 +229,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "ccproxy",
-        "gemini",
-        "proxy",
-        "copilot",
-        "llm",
-        "configuration"
-      ],
+      "keywords": ["ccproxy", "gemini", "proxy", "copilot", "llm", "configuration"],
       "category": "tools",
-      "tags": [
-        "proxy",
-        "llm",
-        "configuration"
-      ]
+      "tags": ["proxy", "llm", "configuration"]
     },
     {
       "name": "claude-tools",
@@ -400,20 +244,9 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": [
-        "claude",
-        "settings",
-        "sync",
-        "config",
-        "allowlist",
-        "context"
-      ],
+      "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
       "category": "productivity",
-      "tags": [
-        "settings",
-        "sync",
-        "config"
-      ]
+      "tags": ["settings", "sync", "config"]
     }
   ]
 }
