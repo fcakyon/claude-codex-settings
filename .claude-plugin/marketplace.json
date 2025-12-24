@@ -134,7 +134,7 @@
       "name": "playwright-tools",
       "source": "./plugins/playwright-tools",
       "description": "Playwright E2E testing best practices skill covering auth, file uploads, and flaky test fixes.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "author": {
         "name": "Fatih Akyon"
       },
