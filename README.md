@@ -432,15 +432,22 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 <img src="https://github.com/user-attachments/assets/6677e1bd-7803-4dab-8f42-ecf7454c7d26" width="400">
 
-Real-time usage tracking powered by [ccusage](https://ccusage.com/).
+Real-time usage tracking in Claude Code.
 
 <details>
-<summary><strong>Configuration</strong></summary>
+<summary><strong>Setup</strong></summary>
 
-- [`.claude/settings.json`](./.claude/settings.json) - Statusline command
-- [`.claude/ccusage.json`](./.claude/ccusage.json) - Locale, timezone, refresh settings
+Run `/claude-tools:statusline-setup` to configure the statusline.
 
-See [ccusage statusline guide](https://ccusage.com/guide/statusline) for setup.
+**Options:**
+
+- **Native (session context % and cost)** - Anthropic API only
+- **ccusage (session/daily stats)**
+- **Disable** - Remove statusline
+
+**Requirements:** Native statusline requires `jq` (`brew install jq` on macOS).
+
+See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for details.
 
 </details>
 
