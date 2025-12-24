@@ -219,9 +219,13 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 </details>
 
 <details>
-<summary><strong>playwright-tools</strong> - Playwright MCP & Skills</summary>
+<summary><strong>playwright-tools</strong> - Playwright MCP & E2E Testing</summary>
 
-Browser automation via MCP. Run `/playwright-tools:setup` after install. May require `npx playwright install` for browser binaries.
+Browser automation with E2E testing skill and responsive design testing agent. Run `/playwright-tools:setup` after install. May require `npx playwright install` for browser binaries.
+
+**Agents:**
+
+- [`responsive-tester`](./plugins/playwright-tools/agents/responsive-tester.md) - Test pages across viewport breakpoints
 
 **Skills:**
 
@@ -454,7 +458,6 @@ See [ccusage statusline guide](https://ccusage.com/guide/statusline) for setup.
 - [ ] Refactor marketplace name to `claude-settings` to make it concise
 - [ ] Publish `claudesettings.com` as a comprehensive documentation for installing, using and sharing useful Claude-Code settings
 - [ ] Rename plugins names to `mongodb-skills`, `github-skills` ...instead of `mongodb-tools`, `github-dev` ... for better UX
-
 
 ## References
 
