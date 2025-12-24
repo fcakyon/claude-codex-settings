@@ -1,6 +1,6 @@
 ---
 name: playwright-testing
-description: This skill should be used when user asks about "Playwright test", "E2E testing", "browser automation", "test login flow", "file upload test", "handle authentication in tests", or "fix flaky tests".
+description: This skill should be used when user asks about "Playwright", "responsiveness test", "test with playwright", "test login flow", "file upload test", "handle authentication in tests", or "fix flaky tests".
 ---
 
 # Playwright Testing Best Practices
@@ -319,3 +319,15 @@ await page.locator(".btn:nth-child(3)").click();
 // Good: Semantic selector
 await page.getByRole("button", { name: "Submit" }).click();
 ```
+
+## Responsive Design Testing
+
+For comprehensive responsive testing across viewport breakpoints, use the **responsive-tester** agent. It automatically:
+
+- Tests pages across 7 standard breakpoints (375px to 1536px)
+- Detects horizontal overflow issues
+- Verifies mobile-first design patterns
+- Checks touch target sizes (44x44px minimum)
+- Flags anti-patterns like fixed widths without mobile fallback
+
+Trigger it by asking to "test responsiveness", "check breakpoints", or "test mobile/desktop layout".
