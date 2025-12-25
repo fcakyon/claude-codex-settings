@@ -4,7 +4,7 @@ description: Configure Claude Code status line
 
 # Statusline Setup
 
-Configure the Claude Code status line to display context usage, cost, and model information.
+Configure the Claude Code status line to display context usage, cache hit rate, cost, and model information with color-coded indicators.
 
 ## Step 1: Check Current Status
 
@@ -27,7 +27,9 @@ Statusline displays real-time info at the bottom of Claude Code.
 
 Options:
 1. Native - Uses Claude Code's built-in JSON data
-   - Shows: [Model] Session Context% | $Session Cost
+   - Shows: Model | Context: X% | Cache: Y% | $Z.ZZ
+   - Color-coded context % (green <50%, yellow 50-80%, red >80%)
+   - Cache hit rate shows prompt caching efficiency
    - Best for: Anthropic API users
    - Note: May not work with z.ai/third-party endpoints
 
@@ -46,8 +48,8 @@ Use AskUserQuestion:
 - question: "Which statusline configuration do you want?"
 - header: "Statusline"
 - options:
-  - label: "Native (session data)"
-    description: "Anthropic API only - fast, no dependencies"
+  - label: "Native (colored, with cache %)"
+    description: "Anthropic API only - shows context/cache/cost with colors"
   - label: "ccusage (session/daily)"
     description: "Works with z.ai too - reads Claude Code logs"
   - label: "Disable"
@@ -67,14 +69,37 @@ CONTEXT_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200
 USAGE=$(echo "$input" | jq '.context_window.current_usage // null')
 COST=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 
+# Colors
+RESET='\033[0m'
+WHITE='\033[97m'
+DIM='\033[2m'
+GREEN='\033[32m'
+YELLOW='\033[33m'
+RED='\033[31m'
+
 if [ "$USAGE" != "null" ] && [ "$CONTEXT_SIZE" != "null" ]; then
-  CURRENT=$(echo "$USAGE" | jq '.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens')
+  INPUT_TOKENS=$(echo "$USAGE" | jq '.input_tokens // 0')
+  CACHE_CREATE=$(echo "$USAGE" | jq '.cache_creation_input_tokens // 0')
+  CACHE_READ=$(echo "$USAGE" | jq '.cache_read_input_tokens // 0')
+  CURRENT=$((INPUT_TOKENS + CACHE_CREATE + CACHE_READ))
   PERCENT=$((CURRENT * 100 / CONTEXT_SIZE))
+  CACHE_TOTAL=$((CACHE_READ + CACHE_CREATE))
+  CACHE_PCT=$((CACHE_TOTAL > 0 ? CACHE_READ * 100 / CACHE_TOTAL : 0))
 else
   PERCENT=0
+  CACHE_PCT=0
 fi
 
-printf "[%s] %d%% | $%.2f" "$MODEL" "$PERCENT" "$COST"
+# Context color based on usage
+if [ $PERCENT -lt 50 ]; then
+  CTX_COLOR=$GREEN
+elif [ $PERCENT -lt 80 ]; then
+  CTX_COLOR=$YELLOW
+else
+  CTX_COLOR=$RED
+fi
+
+printf "${WHITE}%s${RESET} ${DIM}|${RESET} ${DIM}Context:${RESET} ${CTX_COLOR}%d%%${RESET} ${DIM}|${RESET} ${DIM}Cache:${RESET} ${WHITE}%d%%${RESET} ${DIM}|${RESET} ${WHITE}\$%.2f${RESET}" "$MODEL" "$PERCENT" "$CACHE_PCT" "$COST"
 ```
 
 2. Run `chmod +x ~/.claude/statusline.sh`
@@ -138,3 +163,7 @@ If jq not installed, tell user:
 - macOS: `brew install jq`
 - Ubuntu/Debian: `sudo apt install jq`
 - Other: https://jqlang.org/download/
+
+## Docs
+
+[Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for more details.
