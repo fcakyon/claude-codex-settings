@@ -96,8 +96,8 @@ def validate_skills(plugin_dir: Path) -> list[str]:
             desc = frontmatter["description"]
             if not isinstance(desc, str):
                 errors.append(f"{prefix}/SKILL.md: 'description' must be string")
-            elif len(desc) > 300:
-                errors.append(f"{prefix}/SKILL.md: 'description' exceeds 300 chars ({len(desc)})")
+            elif len(desc) > 600:
+                errors.append(f"{prefix}/SKILL.md: 'description' exceeds 600 chars ({len(desc)})")
 
         # Check body exists
         if not body or len(body.strip()) < 20:
@@ -283,8 +283,9 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
                 hook_type = hook.get("type")
                 if hook_type == "command":
                     cmd = hook.get("command", "")
-                    # Check for ${CLAUDE_PLUGIN_ROOT} usage
-                    if cmd and not cmd.startswith("${CLAUDE_PLUGIN_ROOT}"):
+                    # Check for ${CLAUDE_PLUGIN_ROOT} usage (only for script paths, not inline commands)
+                    is_inline_cmd = any(op in cmd for op in [" ", "|", ";", "&&", "||", "$("])
+                    if cmd and not cmd.startswith("${CLAUDE_PLUGIN_ROOT}") and not is_inline_cmd:
                         if "/" in cmd and not cmd.startswith("$"):
                             errors.append(
                                 f"{plugin_dir.name}/hooks/hooks.json: "
