@@ -453,7 +453,6 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 
 ## TODO
 
-- [ ] Update Supabase usage skill to include Supabase based Auth/Row Level Security/Table relationships and optimal query pattern skills instead of MCP skills
 - [ ] App [dokploy](https://github.com/Dokploy/dokploy) tools plugin with [dokploy-mcp](https://github.com/Dokploy/mcp) server and deployment best practices skill
 - [ ] Add more comprehsensive fullstack-dev plugin with various ocnfigurable skills:
   - Frontend: Next.js 16 (App Router, React 19, TypeScript)
