@@ -23,22 +23,22 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install plugins (pick what you need)
-/plugin install azure-tools@fcakyon-claude-plugins        # Azure MCP & Skills (40+ services)
-/plugin install ccproxy-tools@fcakyon-claude-plugins      # Use any LLM via ccproxy/LiteLLM
-/plugin install claude-tools@fcakyon-claude-plugins       # Sync CLAUDE.md + allowlist
-/plugin install gcloud-tools@fcakyon-claude-plugins       # GCloud MCP & Skills
-/plugin install general-dev@fcakyon-claude-plugins        # Code simplifier + utilities
-/plugin install github-dev@fcakyon-claude-plugins         # Git workflow + GitHub MCP
-/plugin install linear-tools@fcakyon-claude-plugins       # Linear MCP & Skills
-/plugin install mongodb-tools@fcakyon-claude-plugins      # MongoDB MCP & Skills (read-only)
-/plugin install notification-tools@fcakyon-claude-plugins # OS notifications
-/plugin install paper-search-tools@fcakyon-claude-plugins # Paper Search MCP & Skills
-/plugin install playwright-tools@fcakyon-claude-plugins   # Playwright MCP + E2E skill
-/plugin install plugin-dev@fcakyon-claude-plugins         # Plugin development toolkit
-/plugin install slack-tools@fcakyon-claude-plugins        # Slack MCP & Skills
-/plugin install supabase-tools@fcakyon-claude-plugins     # Supabase MCP & Skills
-/plugin install tavily-tools@fcakyon-claude-plugins       # Tavily MCP & Skills
-/plugin install ultralytics-dev@fcakyon-claude-plugins    # Auto-formatting hooks
+/plugin install azure-tools@claude-settings        # Azure MCP & Skills (40+ services)
+/plugin install ccproxy-tools@claude-settings      # Use any LLM via ccproxy/LiteLLM
+/plugin install claude-tools@claude-settings       # Sync CLAUDE.md + allowlist
+/plugin install gcloud-tools@claude-settings       # GCloud MCP & Skills
+/plugin install general-dev@claude-settings        # Code simplifier + utilities
+/plugin install github-dev@claude-settings         # Git workflow + GitHub MCP
+/plugin install linear-tools@claude-settings       # Linear MCP & Skills
+/plugin install mongodb-tools@claude-settings      # MongoDB MCP & Skills (read-only)
+/plugin install notification-tools@claude-settings # OS notifications
+/plugin install paper-search-tools@claude-settings # Paper Search MCP & Skills
+/plugin install playwright-tools@claude-settings   # Playwright MCP + E2E skill
+/plugin install plugin-dev@claude-settings         # Plugin development toolkit
+/plugin install slack-tools@claude-settings        # Slack MCP & Skills
+/plugin install supabase-tools@claude-settings     # Supabase MCP & Skills
+/plugin install tavily-tools@claude-settings       # Tavily MCP & Skills
+/plugin install ultralytics-dev@claude-settings    # Auto-formatting hooks
 ```
 
 After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
@@ -462,7 +462,6 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
   - Styling: Tailwind CSS v4, [shadcn/ui components](https://github.com/shadcn-ui/ui), [Radix UI primitives](https://github.com/radix-ui/primitives)
   - Monitoring: Sentry (errors, APM, session replay, structured logs)
   - Analytics: [Web Vitals + Google Analytics](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
-- [ ] Refactor marketplace name to `claude-settings` to make it concise
 - [ ] Publish `claudesettings.com` as a comprehensive documentation for installing, using and sharing useful Claude-Code settings
 - [ ] Rename plugins names to `mongodb-skills`, `github-skills` ...instead of `mongodb-tools`, `github-dev` ... for better UX
 

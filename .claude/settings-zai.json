@@ -82,7 +82,7 @@
   },
   "model": "opusplan",
   "extraKnownMarketplaces": {
-    "fcakyon-claude-plugins": {
+    "claude-settings": {
       "source": {
         "source": "github",
         "repo": "fcakyon/claude-codex-settings"
