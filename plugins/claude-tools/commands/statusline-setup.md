@@ -111,7 +111,8 @@ printf "${WHITE}%s${RESET} ${DIM}|${RESET} ${DIM}Context:${RESET} ${CTX_COLOR}%d
 ```json
 "statusLine": {
   "type": "command",
-  "command": "~/.claude/statusline.sh"
+  "command": "~/.claude/statusline.sh",
+  "padding": 0
 }
 ```
 
