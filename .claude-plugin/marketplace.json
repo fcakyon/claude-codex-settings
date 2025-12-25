@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.0.4"
+    "version": "2.0.5"
   },
   "plugins": [
     {
@@ -192,7 +192,7 @@
       "name": "plugin-dev",
       "source": "./plugins/plugin-dev",
       "description": "Toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -237,7 +237,7 @@
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for setting up statusline, syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
-      "version": "2.0.3",
+      "version": "2.0.4",
       "author": {
         "name": "Fatih Akyon"
       },
