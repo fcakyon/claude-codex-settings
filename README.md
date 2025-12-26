@@ -446,7 +446,7 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 ## Statusline
 
-<img src="https://github.com/user-attachments/assets/8c3da893-6335-460f-b6b9-9ed2071e6d5d" width="400">
+<img src="https://github.com/user-attachments/assets/7bbb8e98-2755-46be-b0a4-cc8367a58fdb" width="600">
 
 Real-time usage tracking in Claude Code.
 
