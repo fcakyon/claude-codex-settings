@@ -1,7 +1,7 @@
 {
-  "name": "claude-tools",
-  "version": "2.0.4",
-  "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
+  "name": "statusline-tools",
+  "version": "1.0.0",
+  "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
   "author": {
     "name": "Fatih Akyon"
   },
