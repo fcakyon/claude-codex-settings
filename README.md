@@ -36,6 +36,7 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin install playwright-tools@claude-settings   # Playwright MCP + E2E skill
 /plugin install plugin-dev@claude-settings         # Plugin development toolkit
 /plugin install slack-tools@claude-settings        # Slack MCP & Skills
+/plugin install statusline-tools@claude-settings   # Session + 5H usage statusline
 /plugin install supabase-tools@claude-settings     # Supabase MCP & Skills
 /plugin install tavily-tools@claude-settings       # Tavily MCP & Skills
 /plugin install ultralytics-dev@claude-settings    # Auto-formatting hooks
@@ -294,6 +295,21 @@ Message search and channel history. Run `/slack-tools:setup` after install.
 </details>
 
 <details>
+<summary><strong>statusline-tools</strong> - Session + 5H Usage Statusline</summary>
+
+Cross-platform statusline showing session context %, cost, and account-wide 5H usage with time until reset. Run `/statusline-tools:setup` after install.
+
+**Skills:**
+
+- [`setup`](./plugins/statusline-tools/skills/setup/SKILL.md) - Statusline configuration guide
+
+**Commands:**
+
+- [`/statusline-tools:setup`](./plugins/statusline-tools/commands/setup.md) - Configure statusline
+
+</details>
+
+<details>
 <summary><strong>supabase-tools</strong> - Supabase MCP & Skills</summary>
 
 Database management with OAuth. Run `/supabase-tools:setup` after install.
@@ -430,22 +446,28 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 ## Statusline
 
-<img src="https://github.com/user-attachments/assets/8c3da893-6335-460f-b6b9-9ed2071e6d5d" width="400">
+<img src="https://github.com/user-attachments/assets/7bbb8e98-2755-46be-b0a4-cc8367a58fdb" width="600">
 
 Real-time usage tracking in Claude Code.
 
 <details>
 <summary><strong>Setup</strong></summary>
 
-Run `/claude-tools:statusline-setup` to configure the statusline.
+Run `/statusline-tools:setup` to configure the statusline.
 
 **Options:**
 
-- **Native (session context % and cost)** - Anthropic API only
-- **ccusage (session/daily stats)**
+- **Native (session + 5H usage)** - Shows session context %, cost, account-wide 5H usage %, and time until reset
+- **ccusage (session/daily stats)** - Works with z.ai too
 - **Disable** - Remove statusline
 
-**Requirements:** Native statusline requires `jq` (`brew install jq` on macOS).
+**Color coding:**
+
+- 🟢 <50% usage / <1h until reset
+- 🟡 50-70% usage / 1-3.5h until reset
+- 🔴 70%+ usage / >3.5h until reset
+
+**Requirements:** Native statusline requires `jq` and `curl` (`brew install jq` on macOS).
 
 See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for details.
 
