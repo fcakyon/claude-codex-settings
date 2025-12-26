@@ -39,6 +39,21 @@
       "tags": ["slack", "mcp", "integration"]
     },
     {
+      "name": "statusline-tools",
+      "source": "./plugins/statusline-tools",
+      "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["statusline", "usage", "context", "cost", "monitoring"],
+      "category": "productivity",
+      "tags": ["statusline", "monitoring"]
+    },
+    {
       "name": "mongodb-tools",
       "source": "./plugins/mongodb-tools",
       "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
@@ -236,7 +251,7 @@
     {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
-      "description": "Commands for setting up statusline, syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
+      "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
       "version": "2.0.4",
       "author": {
         "name": "Fatih Akyon"
