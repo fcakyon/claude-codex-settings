@@ -1,6 +1,6 @@
 {
   "name": "statusline-tools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
   "author": {
     "name": "Fatih Akyon"
