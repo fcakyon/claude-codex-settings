@@ -446,28 +446,26 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 ## Statusline
 
-<img src="https://github.com/user-attachments/assets/7bbb8e98-2755-46be-b0a4-cc8367a58fdb" width="600">
+Simple statusline plugin that uses the official usage API to show account-wide block usage and reset time in real-time. Works for both API and subscription users.
 
-Real-time usage tracking in Claude Code.
+<a href="https://github.com/fcakyon/claude-codex-settings?tab=readme-ov-file#statusline" target="_blank" rel="noopener noreferrer">
+  <img src="https://github.com/user-attachments/assets/7bbb8e98-2755-46be-b0a4-cc8367a58fdb" width="600">
+</a>
 
 <details>
 <summary><strong>Setup</strong></summary>
 
-Run `/statusline-tools:setup` to configure the statusline.
-
-**Options:**
-
-- **Native (session + 5H usage)** - Shows session context %, cost, account-wide 5H usage %, and time until reset
-- **ccusage (session/daily stats)** - Works with z.ai too
-- **Disable** - Remove statusline
+```bash
+/plugin marketplace add fcakyon/claude-codex-settings
+/plugin install statusline-tools@claude-settings
+/statusline-tools:setup
+```
 
 **Color coding:**
 
 - 🟢 <50% usage / <1h until reset
 - 🟡 50-70% usage / 1-3.5h until reset
 - 🔴 70%+ usage / >3.5h until reset
-
-**Requirements:** Native statusline requires `jq` and `curl` (`brew install jq` on macOS).
 
 See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for details.
 
