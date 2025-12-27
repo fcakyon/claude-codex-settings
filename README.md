@@ -483,6 +483,8 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
   - Analytics: [Web Vitals + Google Analytics](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 - [ ] Publish `claudesettings.com` as a comprehensive documentation for installing, using and sharing useful Claude-Code settings
 - [ ] Rename plugins names to `mongodb-skills`, `github-skills` ...instead of `mongodb-tools`, `github-dev` ... for better UX
+- [ ] Add worktree support to github-dev create-pr and commit-staged commands for easier work on multiple branches of the same repo simultaneously
+- [ ] Add current repo branch and worktree info into statusline-tools plugin
 
 ## References
 
