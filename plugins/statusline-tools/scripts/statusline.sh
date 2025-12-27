@@ -1,115 +1,72 @@
 #!/bin/bash
-# Combined statusline: Session stats + Account usage
+# Cross-platform statusline (no jq)
 
-# === COLORS ===
-RST='\033[0m'
-WHITE='\033[97m'
-DIM='\033[2m'
-GREEN='\033[32m'
-YELLOW='\033[33m'
-RED='\033[31m'
+RST='\033[0m' WHITE='\033[97m' DIM='\033[2m'
+GREEN='\033[32m' YELLOW='\033[33m' RED='\033[31m'
 
-color_for_pct() {
-  if [ "$1" -lt 50 ]; then
-    echo "$GREEN"
-  elif [ "$1" -lt 70 ]; then
-    echo "$YELLOW"
-  else echo "$RED"; fi
-}
+json_num() { echo "$2" | sed -n 's/.*"'"$1"'"[[:space:]]*:[[:space:]]*\([0-9.]*\).*/\1/p' | head -1; }
+color_pct() { [ "$1" -lt 50 ] && echo "$GREEN" || { [ "$1" -lt 70 ] && echo "$YELLOW" || echo "$RED"; }; }
+color_time() { [ "$1" -lt 3600 ] && echo "$GREEN" || { [ "$1" -lt 12600 ] && echo "$YELLOW" || echo "$RED"; }; }
 
-color_for_time() {
-  if [ "$1" -lt 3600 ]; then
-    echo "$GREEN" # <1h (resets soon!)
-  elif [ "$1" -lt 12600 ]; then
-    echo "$YELLOW"     # 1-3.5h
-  else echo "$RED"; fi # >3.5h (long wait)
-}
-
-# === SESSION STATS (from stdin JSON) ===
+# Session stats from stdin
 input=$(cat)
-CONTEXT_SIZE=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
-USAGE=$(echo "$input" | jq '.context_window.current_usage // null')
-COST=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
+CTX_SIZE=$(json_num context_window_size "$input")
+CTX_SIZE=${CTX_SIZE:-200000}
+COST=$(json_num total_cost_usd "$input")
+COST=${COST:-0}
+INPUT_T=$(json_num input_tokens "$input")
+INPUT_T=${INPUT_T:-0}
+CACHE_C=$(json_num cache_creation_input_tokens "$input")
+CACHE_C=${CACHE_C:-0}
+CACHE_R=$(json_num cache_read_input_tokens "$input")
+CACHE_R=${CACHE_R:-0}
 
-if [ "$USAGE" != "null" ] && [ "$CONTEXT_SIZE" != "null" ]; then
-  INPUT_TOKENS=$(echo "$USAGE" | jq '.input_tokens // 0')
-  CACHE_CREATE=$(echo "$USAGE" | jq '.cache_creation_input_tokens // 0')
-  CACHE_READ=$(echo "$USAGE" | jq '.cache_read_input_tokens // 0')
-  CURRENT=$((INPUT_TOKENS + CACHE_CREATE + CACHE_READ))
-  CTX_PCT=$((CURRENT * 100 / CONTEXT_SIZE))
-else
-  CTX_PCT=0
-fi
-COST_INT=$(printf "%.0f" "$COST")
-CTX_CLR=$(color_for_pct $CTX_PCT)
+CURRENT=$((INPUT_T + CACHE_C + CACHE_R))
+CTX_PCT=$((CTX_SIZE > 0 ? CURRENT * 100 / CTX_SIZE : 0))
+COST_INT=$(LC_NUMERIC=C printf "%.0f" "${COST:-0}" 2> /dev/null || echo 0)
 
-# === ACCOUNT USAGE (from API with cache) ===
+# Account usage from API (cached 30s)
 CACHE_FILE="/tmp/claude-usage-cache.json"
-CACHE_AGE=30
-
-get_file_age() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo $(($(date +%s) - $(stat -f %m "$1" 2> /dev/null || echo 0)))
-  else
-    echo $(($(date +%s) - $(stat -c %Y "$1" 2> /dev/null || echo 0)))
-  fi
-}
-
-get_token() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    security find-generic-password -s "Claude Code-credentials" -w 2> /dev/null | jq -r '.claudeAiOauth.accessToken // empty'
-  else
-    # Try secret-tool first, fall back to credentials file
-    local token
-    token=$(secret-tool lookup service "Claude Code-credentials" 2> /dev/null | jq -r '.claudeAiOauth.accessToken // empty')
-    if [ -z "$token" ] && [ -f "$HOME/.claude/.credentials.json" ]; then
-      token=$(jq -r '.claudeAiOauth.accessToken // empty' "$HOME/.claude/.credentials.json" 2> /dev/null)
-    fi
-    echo "$token"
-  fi
-}
-
-API_USAGE=""
-if [ -f "$CACHE_FILE" ]; then
-  AGE=$(get_file_age "$CACHE_FILE")
-  if [ "$AGE" -lt "$CACHE_AGE" ]; then
-    API_USAGE=$(cat "$CACHE_FILE")
-  fi
+if [[ "$OSTYPE" == darwin* ]]; then
+  AGE=$(($(date +%s) - $(stat -f %m "$CACHE_FILE" 2> /dev/null || echo 0)))
+else
+  AGE=$(($(date +%s) - $(stat -c %Y "$CACHE_FILE" 2> /dev/null || echo 0)))
 fi
 
-if [ -z "$API_USAGE" ]; then
-  TOKEN=$(get_token)
+API=""
+[ -f "$CACHE_FILE" ] && [ "$AGE" -lt 30 ] && API=$(cat "$CACHE_FILE")
+
+if [ -z "$API" ]; then
+  if [[ "$OSTYPE" == darwin* ]]; then
+    CREDS=$(security find-generic-password -s "Claude Code-credentials" -w 2> /dev/null)
+  elif [ -f "$HOME/.claude/.credentials.json" ]; then
+    CREDS=$(cat "$HOME/.claude/.credentials.json")
+  fi
+  TOKEN=$(echo "$CREDS" | sed -n 's/.*"claudeAiOauth"[^}]*"accessToken"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
   if [ -n "$TOKEN" ]; then
-    API_USAGE=$(curl -s "https://api.anthropic.com/api/oauth/usage" \
+    API=$(curl -s "https://api.anthropic.com/api/oauth/usage" \
       -H "Authorization: Bearer $TOKEN" \
       -H "anthropic-beta: oauth-2025-04-20" \
       -H "User-Agent: claude-code/2.0.76")
-    echo "$API_USAGE" > "$CACHE_FILE" 2> /dev/null
+    echo "$API" > "$CACHE_FILE" 2> /dev/null
   fi
 fi
 
-ACCT_PCT=$(echo "$API_USAGE" | jq -r '.five_hour.utilization // 0' | cut -d. -f1)
-RESET_AT=$(echo "$API_USAGE" | jq -r '.five_hour.resets_at // empty')
+ACCT_PCT=$(echo "$API" | sed -n 's/.*"five_hour"[^}]*"utilization"[[:space:]]*:[[:space:]]*\([0-9.]*\).*/\1/p' | head -1)
+ACCT_PCT=${ACCT_PCT%.*}
+ACCT_PCT=${ACCT_PCT:-0}
+RESET_AT=$(echo "$API" | sed -n 's/.*"five_hour"[^}]*"resets_at"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
 
+TIME_STR="?" SECS=0
 if [ -n "$RESET_AT" ]; then
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$OSTYPE" == darwin* ]]; then
     RESET_EPOCH=$(TZ=UTC date -j -f "%Y-%m-%dT%H:%M:%S" "${RESET_AT:0:19}" +%s 2> /dev/null || echo 0)
   else
     RESET_EPOCH=$(date -u -d "${RESET_AT:0:19}" +%s 2> /dev/null || echo 0)
   fi
-  NOW=$(date +%s)
-  SECS_LEFT=$((RESET_EPOCH - NOW))
-  [ "$SECS_LEFT" -lt 0 ] && SECS_LEFT=0
-  HOURS=$((SECS_LEFT / 3600))
-  MINS=$(((SECS_LEFT % 3600) / 60))
-  TIME_STR="${HOURS}h${MINS}m"
-else
-  TIME_STR="?"
-  SECS_LEFT=0
+  SECS=$((RESET_EPOCH - $(date +%s)))
+  [ "$SECS" -lt 0 ] && SECS=0
+  TIME_STR="$((SECS / 3600))h$(((SECS % 3600) / 60))m"
 fi
 
-ACCT_CLR=$(color_for_pct $ACCT_PCT)
-TIME_CLR=$(color_for_time $SECS_LEFT)
-
-# === OUTPUT ===
-printf "${DIM}[Session]${RST} ${CTX_CLR}%d%%${RST} ${WHITE}\$%d${RST} ${DIM}|${RST} ${DIM}[5H]${RST} ${ACCT_CLR}%d%%${RST} ${TIME_CLR}%s${RST}" "$CTX_PCT" "$COST_INT" "$ACCT_PCT" "$TIME_STR"
+printf "${DIM}[Session]${RST} $(color_pct $CTX_PCT)%d%%${RST} ${WHITE}\$%d${RST} ${DIM}|${RST} ${DIM}[5H]${RST} $(color_pct $ACCT_PCT)%d%%${RST} $(color_time $SECS)%s${RST}" "$CTX_PCT" "$COST_INT" "$ACCT_PCT" "$TIME_STR"
