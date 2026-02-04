@@ -45,7 +45,7 @@ def main():
             sys.exit(0)
 
         # Skip virtual env, cache, .claude directories, lock files, model.json, and minified assets
-        if any(p in py_file.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']) or LOCK_FILE_PATTERN.match(py_file.name) or py_file.name == 'model.json' or py_file.name.endswith(('.min.js', '.min.css')):
+        if any(p in py_file.parts for p in ['.git', '.venv', 'venv', 'env', '.env', '__pycache__', '.mypy_cache', '.pytest_cache', '.tox', '.nox', '.eggs', 'eggs', '.idea', '.vscode', 'node_modules', 'site-packages', 'build', 'dist', '.claude']) or LOCK_FILE_PATTERN.match(py_file.name) or py_file.name == 'model.json' or py_file.name.endswith(('.min.js', '.min.css')):
             sys.exit(0)
 
         # Check if prettier is available

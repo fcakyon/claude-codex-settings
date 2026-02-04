@@ -35,7 +35,7 @@ def main():
             sys.exit(0)
 
         sh_file = Path(file_path)
-        if not sh_file.exists() or any(p in sh_file.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']):
+        if not sh_file.exists() or any(p in sh_file.parts for p in ['.git', '.venv', 'venv', 'env', '.env', '__pycache__', '.mypy_cache', '.pytest_cache', '.tox', '.nox', '.eggs', 'eggs', '.idea', '.vscode', 'node_modules', 'site-packages', 'build', 'dist', '.claude']):
             sys.exit(0)
 
         # Check if prettier is available
