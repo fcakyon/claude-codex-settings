@@ -12,7 +12,7 @@
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
-      "version": "2.0.2",
+      "version": "2.1.0",
       "author": {
         "name": "Fatih Akyon"
       },
