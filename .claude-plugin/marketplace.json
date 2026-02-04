@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.0.7"
+    "version": "2.1.0"
   },
   "plugins": [
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
-      "version": "2.0.2",
+      "version": "2.1.0",
       "author": {
         "name": "Fatih Akyon"
       },

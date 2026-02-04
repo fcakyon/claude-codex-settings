@@ -82,7 +82,7 @@ def add_indentation(code_block: str, num_spaces: int) -> str:
 
 
 def format_code_with_ruff(temp_dir: Path) -> None:
-    """Format Python files in a temporary directory with Ruff.
+    """Format Python files in a temporary directory with Ruff and docstring formatter.
 
     Args:
         temp_dir (Path): Directory containing extracted Python blocks.
@@ -99,7 +99,7 @@ def format_code_with_ruff(temp_dir: Path) -> None:
                 "ruff",
                 "check",
                 "--fix",
-                "--extend-select=F,I,D,UP,RUF,FA",
+                "--extend-select=F,I,D,UP,RUF",
                 "--target-version=py39",
                 "--ignore=D100,D101,D103,D104,D203,D205,D212,D213,D401,D406,D407,D413,F821,F841,RUF001,RUF002,RUF012",
                 str(temp_dir),
@@ -109,6 +109,19 @@ def format_code_with_ruff(temp_dir: Path) -> None:
         print("Completed ruff check ✅")
     except Exception as exc:
         print(f"ERROR running ruff check ❌ {exc}")
+
+    # Format docstrings in extracted Python blocks (matches actions pipeline)
+    try:
+        from format_python_docstrings import format_python_file
+
+        for py_file in Path(temp_dir).glob("*.py"):
+            content = py_file.read_text()
+            formatted = format_python_file(content)
+            if formatted != content:
+                py_file.write_text(formatted)
+        print("Completed docstring formatting ✅")
+    except Exception as exc:
+        print(f"ERROR running docstring formatter ❌ {exc}")
 
 
 def format_bash_with_prettier(temp_dir: Path) -> None:
@@ -237,9 +250,9 @@ def run_prettier(markdown_file: Path) -> None:
     if not check_prettier_version():
         return
     is_docs = "docs" in markdown_file.parts and "reference" not in markdown_file.parts
-    command = ["npx", "prettier", "--write", "--list-different", str(markdown_file)]
+    command = ["npx", "prettier", "--write", "--list-different", "--print-width", "120", str(markdown_file)]
     if is_docs:
-        command = ["npx", "prettier", "--tab-width", "4", "--write", "--list-different", str(markdown_file)]
+        command = ["npx", "prettier", "--tab-width", "4", "--print-width", "120", "--write", "--list-different", str(markdown_file)]
     subprocess.run(command, capture_output=True, check=False, cwd=markdown_file.parent)
 
 
@@ -281,7 +294,7 @@ def read_markdown_path() -> Path | None:
     path = Path(file_path) if file_path else None
     if not path or path.suffix.lower() != ".md" or not path.exists():
         return None
-    if any(p in path.parts for p in ['.venv', 'venv', 'site-packages', '__pycache__', '.claude']):
+    if any(p in path.parts for p in ['.git', '.venv', 'venv', 'env', '.env', '__pycache__', '.mypy_cache', '.pytest_cache', '.tox', '.nox', '.eggs', 'eggs', '.idea', '.vscode', 'node_modules', 'site-packages', 'build', 'dist', '.claude']):
         return None
     return path
 
