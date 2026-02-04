@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.0.7"
+    "version": "2.1.0"
   },
   "plugins": [
     {
