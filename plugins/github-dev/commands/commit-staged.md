@@ -14,6 +14,6 @@ $ARGUMENTS
 
 Task(
 description: "Analyze and commit staged changes",
-prompt: "Analyze the staged changes and create appropriate commits. Additional context: $ARGUMENTS",
+prompt: "Analyze the staged changes and create appropriate commits. Use the full conversation context to understand the motivation and findings behind changes. Additional context: $ARGUMENTS",
 subagent_type: "github-dev:commit-creator"
 )
