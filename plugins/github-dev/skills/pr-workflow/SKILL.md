@@ -32,42 +32,31 @@ Complete workflow for creating pull requests following project standards.
      - `-r <reviewer>`: Find via `gh pr list --repo <owner>/<repo> --author @me --limit 5`
 
 6. **PR Body Guidelines**
-   - **Summary**: Few words or 1 sentence describing changes
-   - **Changes**: Bullet points with inline links `[src/auth.py:42](src/auth.py#L42)`
-   - **Examples**: For significant changes, include before/after code examples
-   - **No test plans**: Never mention test procedures in PR
+   - Single section, no headers if possible. Very concise
+   - Few bullet points + 1 CLI/usage snippet or simple before/after snippet
+   - No test plans, no changed file lists, no line-number links
 
 ## Examples
 
-### With inline source links:
+### CLI snippet:
 
 ```
-Update Claude Haiku to version 4.5
+Add compare command for side-by-side model comparison
 
-- Model ID: claude-3-haiku-20240307 → claude-haiku-4-5-20251001 ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
-- Pricing: $0.80/$4.00 → $1.00/$5.00 per MTok ([source](https://docs.anthropic.com/en/docs/about-claude/pricing))
-- Max output: 4,096 → 64,000 tokens ([source](https://docs.anthropic.com/en/docs/about-claude/models/overview))
+- Run multiple models on same images with `--models` and `--phrases` flags
+- Horizontal panel concatenation with model name headers
+
+`ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
 ```
 
-### With code changes:
+### Before/after:
 
 ```
-Refactor authentication to use async context manager
+Inline single-use variables in compare_models
 
-- Replace synchronous auth flow with async/await pattern in [src/auth.py:15-42](src/auth.py#L15-L42)
-- Add context manager support for automatic cleanup
+- xyxy2xywhn handles empty arrays, guard unnecessary
+- Use function reference for draw dispatch
 
-Before:
-\`\`\`python
-def authenticate(token):
-    session = create_session(token)
-    return session
-\`\`\`
-
-After:
-\`\`\`python
-async def authenticate(token):
-    async with create_session(token) as session:
-        return session
-\`\`\`
+Before: `boxes = result.get(...); ops.xyxy2xywhn(boxes, ...)`
+After: `ops.xyxy2xywhn(result.get(...), ...)`
 ```

@@ -85,6 +85,11 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
   ```
 - Understand existing variable naming, function importing, class method definition, function signature ordering and naming patterns of the given modules and align your implementation with existing patterns. Always exploit existing utilities/optimization/data structures/modules in the project when suggesting something new.
 - Redundant duplicate code use is inefficient and unacceptable.
+- **File paths**: Use pathlib instead of os.path
+- **Function purpose**: Functions should have a clear, single purpose. Don't hardcode behavior that makes them less general
+- **No trivial wrappers**: Never create functions for repeated content that is 2 lines or less. Inline it
+- **Inline single-use variables**: If a variable is assigned and used only once, inline it at the usage site
+- **Observability**: Don't use try/except blocks unless critical. Let errors surface for easier debugging
 - Never assume anything without testing it with `python3 -c "..."` (don't create file)
 - Always consider MongoDB/Gemini/OpenAI/Claude/Voyage API and time costs, and keep them as efficient as possible
 - When using 3rd party package functions/classes, find location with `python -c "import pkg; print(pkg.__file__)"`, then use Read tools to explore
@@ -95,8 +100,9 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 ### Commit Messages
 
 - Format: `{type}: brief description` (max 50 chars first line)
+- Optional second line: 1 sentence with findings/motivation
 - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
-- Focus on 'why' not 'what' - one logical change per commit
+- Simple terms, no jargon
 - ONLY analyze staged files (`git diff --cached`), ignore unstaged
 - NO test plans in commit messages
 
@@ -104,15 +110,23 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 
 - PR titles: NO type prefix (unlike commits) - start with capital letter + verb
 - Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
-- Inline links: `[src/file.py:42](src/file.py#L42)` or `[src/file.py:15-42](src/file.py#L15-L42)`
+- PR body: single section, no headers, 1-2 sentences + usage snippet
+- No test plans, no changed files list, no line-number links in PR body
 - Self-assign with `-a @me`
-- NO test plans in PR body
 - Find reviewers: `gh pr list --repo <owner>/<repo> --author @me --limit 5`
+
+### PR Comments and Reviews
+
+- Create pending reviews only, never auto-submit
+- Comment style: start lowercase, no em-dashes, simple terms, no end punctuation, max 1 sentence
+- Bot comment responses: few words is enough
+- Real person responses: polite, concise
 
 ### Commands
 
 - `/github-dev:commit-staged` - commit staged changes
 - `/github-dev:create-pr` - create pull request
+- `/github-dev:resolve-pr-comments` - analyze and address unresolved PR review comments
 
 ## Citation Verification Rules
 

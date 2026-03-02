@@ -14,6 +14,6 @@ $ARGUMENTS
 
 Task(
 description: "Create pull request",
-prompt: "Handle the complete PR workflow including branch creation, commits, and PR submission. Additional context: $ARGUMENTS",
+prompt: "Handle the complete PR workflow including branch creation, commits, and PR submission. Use the full conversation context to understand the motivation and findings behind changes. Additional context: $ARGUMENTS",
 subagent_type: "github-dev:pr-creator"
 )

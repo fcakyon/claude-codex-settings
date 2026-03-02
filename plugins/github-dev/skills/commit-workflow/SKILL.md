@@ -19,9 +19,10 @@ Complete workflow for creating commits following project standards.
    - Completely ignore unstaged changes
 
 3. **Commit message format**
-   - First line: `{task-type}: brief description of the big picture change`
-   - Task types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
-   - Focus on 'why' and 'what', not implementation details
+   - First line: `{type}: brief description` (max 50 chars)
+   - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
+   - Focus on 'why' not 'what'
+   - 1 sentence conventional style + 1 sentence motivation/findings if possible
    - For complex changes, add bullet points after blank line
 
 4. **Message examples**
@@ -44,7 +45,7 @@ Complete workflow for creating commits following project standards.
 ## Best Practices
 
 - Analyze staged files before writing message
-- Keep first line concise (50 chars recommended)
+- Keep first line under 50 chars
 - Use active voice in message
 - Reference related code if helpful
 - One logical change per commit
