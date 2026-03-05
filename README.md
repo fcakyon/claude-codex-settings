@@ -144,13 +144,29 @@ Git and GitHub automation. Run `/github-dev:setup` after install.
 - [`commit-creator`](./plugins/github-dev/agents/commit-creator.md) - Intelligent commit workflow
 - [`pr-creator`](./plugins/github-dev/agents/pr-creator.md) - Pull request creation
 - [`pr-reviewer`](./plugins/github-dev/agents/pr-reviewer.md) - Code review agent
+- [`pr-comment-resolver`](./plugins/github-dev/agents/pr-comment-resolver.md) - PR comment resolution
+
+**Skills:**
+
+- [`commit-workflow`](./plugins/github-dev/skills/commit-workflow/SKILL.md) - Commit process and message format
+- [`pr-workflow`](./plugins/github-dev/skills/pr-workflow/SKILL.md) - PR creation workflow
+- [`pr-comment-workflow`](./plugins/github-dev/skills/pr-comment-workflow/SKILL.md) - PR comment style and resolution
+- [`setup`](./plugins/github-dev/skills/setup/SKILL.md) - GitHub CLI troubleshooting
 
 **Commands:**
 
 - [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit staged changes
 - [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request
 - [`/review-pr`](./plugins/github-dev/commands/review-pr.md) - Review pull request
+- [`/resolve-pr-comments`](./plugins/github-dev/commands/resolve-pr-comments.md) - Address unresolved PR comments
+- [`/update-pr-summary`](./plugins/github-dev/commands/update-pr-summary.md) - Update PR description
 - [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean deleted branches
+- [`/github-dev:setup`](./plugins/github-dev/commands/setup.md) - Configure GitHub CLI
+
+**Hooks:**
+
+- [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation before git commit
+- [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation before gh pr create
 
 </details>
 
