@@ -27,8 +27,8 @@ Run the following commands in sequence:
 
 4. **Remove worktrees for gone branches (if any):**
    ```bash
-   git branch -vv | grep '\[gone\]' | awk '{print $1}' | sed 's/^[*+]*//' | while read -r branch; do
-     worktree=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+   git branch -vv | rg ': gone\]' | awk '{print $1}' | sed 's/^[*+]*//' | while read -r branch; do
+     worktree=$(git worktree list | rg "\[$branch\]" | awk '{print $1}')
      if [ -n "$worktree" ]; then
        echo "Removing worktree: $worktree"
        git worktree remove --force "$worktree"
@@ -38,7 +38,7 @@ Run the following commands in sequence:
 
 5. **Delete gone branches:**
    ```bash
-   git branch -vv | grep '\[gone\]' | awk '{print $1}' | sed 's/^[*+]*//' | xargs -I {} git branch -D {}
+   git branch -vv | rg ': gone\]' | awk '{print $1}' | sed 's/^[*+]*//' | xargs -I {} git branch -D {}
    ```
 
 Report the results: list of removed worktrees and deleted branches, or notify if no [gone] branches exist.
