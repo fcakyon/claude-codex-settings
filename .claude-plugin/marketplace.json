@@ -117,7 +117,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "author": {
         "name": "Fatih Akyon"
       },
