@@ -43,16 +43,20 @@ understand which comments are already addressed.
 
 2. **For each comment, decide**:
    - **Valid concern needing code change**: fix it, AND search codebase for same problem
-     in other locations — fix ALL occurrences, not just the one mentioned
+     in other locations. Fix ALL occurrences, not just the one mentioned
    - **Not a valid concern**: draft a response (don't post yet)
-   - **Automated bot comment**: few words response is enough
+   - **Automated bot comment**: single concise sentence, no pleasantries, just state the fact
 
 3. **Response style**:
-   - lowercase start, no em-dashes, no complex sentences
+   - lowercase start, no complex sentences
+   - never use em-dashes (`—`, `–`, `--`) between sentences, expressions, examples, or terms. Use commas, periods, or "or" instead
    - simple terms, concise, no end punctuation if possible
    - max 1 sentence or shorter
    - polite when responding to real people
+   - bot comments: no pleasantries ("good catch", "nice find", "thanks"), just state the fact directly
 
 4. **Never auto-submit**: present all draft responses to user for review before posting
 
-5. **Post responses** only after explicit human approval
+5. **Post responses** only after explicit human approval:
+   - Reply comments (responses to existing threads) are posted directly, not as pending
+   - Add a random 3-5 second delay between each reply: `sleep $((RANDOM % 3 + 3))`

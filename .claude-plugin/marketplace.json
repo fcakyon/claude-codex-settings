@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "plugins": [
     {
@@ -116,8 +116,8 @@
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
-      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, and pr-reviewer agents, slash commands for commits and PRs, GitHub MCP integration, plus skills for PR/commit workflows.",
-      "version": "2.0.2",
+      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
+      "version": "2.2.0",
       "author": {
         "name": "Fatih Akyon"
       },
