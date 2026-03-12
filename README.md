@@ -47,7 +47,7 @@ After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., 
 Then create symlink for cross-tool compatibility:
 
 ```bash
-ln -s CLAUDE.md AGENTS.md
+ln -sfn CLAUDE.md AGENTS.md
 ```
 
 Restart Claude Code to activate.
