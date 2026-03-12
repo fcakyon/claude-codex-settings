@@ -266,8 +266,8 @@
     {
       "name": "phd-skills",
       "source": {
-        "source": "github",
-        "repo": "fcakyon/phd-skills"
+        "source": "url",
+        "url": "https://github.com/fcakyon/phd-skills.git"
       },
       "description": "Research integrity plugin for Claude Code — paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
       "version": "1.0.0",
