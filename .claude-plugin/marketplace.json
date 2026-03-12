@@ -262,6 +262,24 @@
       "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
       "category": "productivity",
       "tags": ["settings", "sync", "config"]
+    },
+    {
+      "name": "phd-skills",
+      "source": {
+        "source": "github",
+        "repo": "fcakyon/phd-skills"
+      },
+      "description": "Research integrity plugin for Claude Code — paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Cagatay Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/phd-skills",
+      "repository": "https://github.com/fcakyon/phd-skills",
+      "license": "MIT",
+      "keywords": ["research", "academic", "phd", "paper-writing", "citations", "experiments", "latex"],
+      "category": "productivity",
+      "tags": ["research", "academic", "latex"]
     }
   ]
 }
