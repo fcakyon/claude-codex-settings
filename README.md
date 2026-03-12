@@ -284,10 +284,6 @@ Complete toolkit for building Claude Code plugins with skills, agents, and valid
 
 **Hooks:**
 
-- [`validate_skill.py`](./plugins/plugin-dev/hooks/scripts/validate_skill.py) - Validates SKILL.md structure
-- [`validate_mcp_hook_locations.py`](./plugins/plugin-dev/hooks/scripts/validate_mcp_hook_locations.py) - Validates MCP/hook file locations
-- [`validate_plugin_paths.py`](./plugins/plugin-dev/hooks/scripts/validate_plugin_paths.py) - Validates plugin.json paths
-- [`validate_plugin_structure.py`](./plugins/plugin-dev/hooks/scripts/validate_plugin_structure.py) - Validates plugin directory structure
 - [`sync_marketplace_to_plugins.py`](./plugins/plugin-dev/hooks/scripts/sync_marketplace_to_plugins.py) - Syncs marketplace.json to plugin.json
 
 </details>
@@ -356,6 +352,12 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 **Commands:**
 
 - [`/tavily-tools:setup`](./plugins/tavily-tools/commands/setup.md) - Configure Tavily MCP
+
+**Hooks:**
+
+- [`webfetch_to_tavily_extract.py`](./plugins/tavily-tools/hooks/scripts/webfetch_to_tavily_extract.py) - Redirect WebFetch to Tavily extract
+- [`websearch_to_tavily_search.py`](./plugins/tavily-tools/hooks/scripts/websearch_to_tavily_search.py) - Redirect WebSearch to Tavily search
+- [`tavily_extract_to_advanced.py`](./plugins/tavily-tools/hooks/scripts/tavily_extract_to_advanced.py) - Upgrade Tavily extract depth
 
 **MCP:** [`.mcp.json`](./plugins/tavily-tools/.mcp.json) | [tavily-ai/tavily-mcp](https://github.com/tavily-ai/tavily-mcp)
 
@@ -429,7 +431,7 @@ export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2-thinking-turbo
 <details>
 <summary><strong>OpenAI Codex</strong></summary>
 
-Configuration in [`~/.codex/config.toml`](./config.toml):
+Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 
 - **Model**: `gpt-5-codex` with `model_reasoning_effort` set to "high"
 - **Provider**: Azure via `responses` API surface
