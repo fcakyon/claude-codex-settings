@@ -11,7 +11,8 @@
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-6",
     "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-4-6",
     "MAX_MCP_OUTPUT_TOKENS": "40000",
-    "CLAUDE_CODE_EFFORT_LEVEL": "high"
+    "CLAUDE_CODE_EFFORT_LEVEL": "high",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
   "attribution": {
     "commit": "",
