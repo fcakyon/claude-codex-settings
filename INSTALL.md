@@ -119,7 +119,7 @@ npm install -g prettier@3.6.2 prettier-plugin-sh
 Create a symlink for cross-tool compatibility ([AGENTS.md](https://agents.md/)):
 
 ```bash
-ln -s CLAUDE.md AGENTS.md
+ln -sfn CLAUDE.md AGENTS.md
 ```
 
 This lets tools like [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.
