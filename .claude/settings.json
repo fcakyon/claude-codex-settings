@@ -5,7 +5,6 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
     "DISABLE_BUG_COMMAND": "1",
     "DISABLE_ERROR_REPORTING": "1",
-    "DISABLE_TELEMETRY": "1",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-6",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-6",
@@ -118,7 +117,7 @@
     ]
   },
   "outputStyle": "Explanatory",
-  "model": "opus",
+  "model": "opus[1m]",
   "extraKnownMarketplaces": {
     "claude-settings": {
       "source": {
