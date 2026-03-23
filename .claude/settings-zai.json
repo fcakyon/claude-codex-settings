@@ -7,14 +7,19 @@
     "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
     "DISABLE_BUG_COMMAND": "1",
     "DISABLE_ERROR_REPORTING": "1",
-    "DISABLE_TELEMETRY": "1",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "GLM-5",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "GLM-5",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "GLM-5-Turbo",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "GLM-5-Turbo",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "GLM-4.7-Flash",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "GLM-5-Turbo",
     "MAX_MCP_OUTPUT_TOKENS": "40000",
+    "CLAUDE_CODE_EFFORT_LEVEL": "high",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
-  "includeCoAuthoredBy": false,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "Bash(find:*)",
@@ -125,5 +130,8 @@
     }
   },
   "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "cleanupPeriodDays": 9999,
+  "showClearContextOnPlanAccept": false,
+  "autoUpdatesChannel": "latest"
 }

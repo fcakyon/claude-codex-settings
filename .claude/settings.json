@@ -127,5 +127,8 @@
     }
   },
   "spinnerTipsEnabled": false,
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "cleanupPeriodDays": 9999,
+  "showClearContextOnPlanAccept": false,
+  "autoUpdatesChannel": "latest"
 }
