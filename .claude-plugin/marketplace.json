@@ -210,6 +210,7 @@
         "url": "https://github.com/anthropics/claude-plugins-official.git"
       },
       "description": "Feature development agents, frontend design, CLAUDE.md management, and skill creation from Anthropic.",
+      "version": "1.0.0",
       "strict": false,
       "skills": [
         "./plugins/frontend-design/skills/frontend-design",
@@ -259,6 +260,7 @@
         "url": "https://github.com/anthropics/skills.git"
       },
       "description": "Document processing (PDF, Word, PowerPoint, Excel), theme generation, and web artifact building from Anthropic.",
+      "version": "1.0.0",
       "strict": false,
       "skills": [
         "./skills/pdf",
@@ -280,6 +282,7 @@
         "path": "plugins/plugin-dev"
       },
       "description": "Plugin development toolkit with skills for hooks, MCP, commands, agents, and plugin structure from Anthropic.",
+      "version": "1.0.0",
       "keywords": ["plugin", "development", "hooks", "mcp", "anthropic"],
       "category": "development",
       "tags": ["plugin", "development", "anthropic"]
