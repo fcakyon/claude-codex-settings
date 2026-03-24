@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "plugins": [
     {
@@ -204,19 +204,85 @@
       "tags": ["analysis", "patterns", "quality"]
     },
     {
-      "name": "plugin-dev",
-      "source": "./plugins/plugin-dev",
-      "description": "Toolkit for developing Claude Code plugins. Includes 7 expert skills covering hooks, MCP integration, commands, agents, and best practices. AI-assisted plugin creation and validation.",
-      "version": "2.0.3",
-      "author": {
-        "name": "Fatih Akyon"
+      "name": "anthropic-essentials",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/claude-plugins-official.git"
       },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugin-dev",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "description": "Feature development agents, frontend design, CLAUDE.md management, and skill creation from Anthropic.",
+      "strict": false,
+      "skills": [
+        "./plugins/frontend-design/skills/frontend-design",
+        "./plugins/claude-md-management/skills/claude-md-improver",
+        "./plugins/skill-creator/skills/skill-creator"
+      ],
+      "agents": [
+        "./plugins/feature-dev/agents/code-architect.md",
+        "./plugins/feature-dev/agents/code-explorer.md",
+        "./plugins/feature-dev/agents/code-reviewer.md"
+      ],
+      "commands": [
+        "./plugins/feature-dev/commands/feature-dev.md",
+        "./plugins/claude-md-management/commands/revise-claude-md.md"
+      ],
+      "hooks": {
+        "Stop": [
+          {
+            "hooks": [
+              {
+                "type": "prompt",
+                "prompt": "Check if this turn made significant code changes (new features, architecture changes, discovered gotchas). If so, briefly suggest the user run /revise-claude-md to capture learnings in CLAUDE.md. Only suggest if meaningful patterns were discovered. Do not suggest for trivial changes, and do not repeat if already suggested this session."
+              }
+            ]
+          }
+        ],
+        "SessionEnd": [
+          {
+            "hooks": [
+              {
+                "type": "prompt",
+                "prompt": "This session is ending. If significant codebase changes were made and CLAUDE.md was not updated, remind the user to run /revise-claude-md in their next session to capture learnings."
+              }
+            ]
+          }
+        ]
+      },
       "license": "Apache-2.0",
-      "keywords": ["plugin", "development", "claude", "skills", "hooks", "mcp", "commands", "agents", "best-practices"],
+      "keywords": ["feature-dev", "frontend", "claude-md", "skill-creator", "agents", "anthropic"],
       "category": "development",
-      "tags": ["plugin", "development", "claude"]
+      "tags": ["development", "design", "anthropic"]
+    },
+    {
+      "name": "anthropic-creative-suite",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/anthropics/skills.git"
+      },
+      "description": "Document processing (PDF, Word, PowerPoint, Excel), theme generation, and web artifact building from Anthropic.",
+      "strict": false,
+      "skills": [
+        "./skills/pdf",
+        "./skills/docx",
+        "./skills/pptx",
+        "./skills/xlsx",
+        "./skills/theme-factory",
+        "./skills/web-artifacts-builder"
+      ],
+      "keywords": ["documents", "pdf", "docx", "theming", "artifacts", "anthropic"],
+      "category": "productivity",
+      "tags": ["documents", "creative", "anthropic"]
+    },
+    {
+      "name": "anthropic-plugin-dev",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/anthropics/claude-plugins-official.git",
+        "path": "plugins/plugin-dev"
+      },
+      "description": "Plugin development toolkit with skills for hooks, MCP, commands, agents, and plugin structure from Anthropic.",
+      "keywords": ["plugin", "development", "hooks", "mcp", "anthropic"],
+      "category": "development",
+      "tags": ["plugin", "development", "anthropic"]
     },
     {
       "name": "azure-tools",
@@ -251,8 +317,8 @@
     {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
-      "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context from CLAUDE.md files.",
-      "version": "2.0.4",
+      "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
+      "version": "2.1.0",
       "author": {
         "name": "Fatih Akyon"
       },
