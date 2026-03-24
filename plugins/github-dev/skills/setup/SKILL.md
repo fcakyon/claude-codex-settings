@@ -1,32 +1,27 @@
 ---
 name: setup
-description: This skill should be used when the user asks "how to setup GitHub CLI", "configure gh", "gh auth not working", "GitHub CLI connection failed", "gh CLI error", or needs help with GitHub authentication.
+description: "Set up and troubleshoot GitHub CLI authentication, including login, token scopes, and connection issues. Use when the user asks how to set up GitHub CLI, configure gh, fix gh auth errors, resolve GitHub CLI connection failures, or needs help with GitHub authentication."
 ---
 
 # GitHub CLI Setup
 
-Configure `gh` CLI for GitHub access.
+## Quick Start
 
-## Quick Setup
-
-```bash
-gh auth login
-```
-
-Select: GitHub.com → HTTPS → Login with browser
-
-## Verify Authentication
+1. Run `gh auth login`
+2. Select: GitHub.com, HTTPS, Login with browser
+3. Verify: `gh auth status`
 
 ```bash
+# Full verification
 gh auth status
 gh api user --jq '.login'
 ```
 
 ## Troubleshooting
 
-If `gh` commands fail:
-
-1. **Check authentication** - `gh auth status`
-2. **Re-login if needed** - `gh auth login`
-3. **Check scopes** - Ensure token has repo access
-4. **Update gh** - `brew upgrade gh` or equivalent
+| Problem | Solution |
+|---------|----------|
+| Auth expired | `gh auth login` |
+| Missing scopes | Re-login and ensure token has `repo` access |
+| CLI outdated | `brew upgrade gh` or equivalent |
+| Commands fail | Run `gh auth status` to diagnose |

@@ -1,112 +1,84 @@
 ---
 name: mongodb-usage
-description: This skill should be used when user asks to "query MongoDB", "show database collections", "get collection schema", "list MongoDB databases", "search records in MongoDB", or "check database indexes".
+description: "Query MongoDB databases, inspect collections and schemas, check indexes, and apply best practices for schema design and aggregation pipelines. Operates in read-only mode. Use when the user asks to query MongoDB, show collections, get collection schemas, list databases, search records, or check database indexes."
 ---
 
 # MongoDB Best Practices
 
-## MCP Limitation
+> **READ-ONLY mode**: This MCP cannot write, update, or delete data.
 
-**This MCP operates in READ-ONLY mode.** No write, update, or delete operations are possible.
-
-## Schema Design Patterns
+## 1. Schema Design Patterns
 
 ### Embedding vs Referencing
 
-**Embed when:**
+**Embed when:** data is accessed together, child documents are bounded, one-to-few relationships, data rarely changes.
 
-- Data is accessed together frequently
-- Child documents are bounded (won't grow unbounded)
-- One-to-few relationships
-- Data doesn't change frequently
-
-**Reference when:**
-
-- Data is accessed independently
-- Many-to-many relationships
-- Documents would exceed 16MB limit
-- Frequent updates to referenced data
+**Reference when:** data is accessed independently, many-to-many relationships, documents would exceed 16MB, referenced data updates frequently.
 
 ### Common Patterns
 
-**Subset pattern:** Store frequently accessed subset in parent, full data in separate collection.
+- **Subset pattern:** Store frequently accessed subset in parent, full data in a separate collection
+- **Bucket pattern:** Group time-series data into buckets (e.g., hourly readings in one document)
+- **Computed pattern:** Store pre-computed values for expensive calculations
 
-**Bucket pattern:** Group time-series data into buckets (e.g., hourly readings in one document).
+## 2. Index Strategies
 
-**Computed pattern:** Store pre-computed values for expensive calculations.
+### ESR Rule for Compound Indexes
 
-## Index Strategies
-
-### Index Guidelines
-
-- Index fields used in queries, sorts, and aggregation $match stages
-- Compound indexes support queries on prefix fields
-- Covered queries (all fields in index) are fastest
-- Too many indexes slow writes
-
-### Index Types
-
-- **Single field:** Basic index on one field
-- **Compound:** Multiple fields, order matters for queries
-- **Multikey:** Automatically created for array fields
-- **Text:** Full-text search on string content
-- **TTL:** Auto-expire documents after time period
-
-### ESR Rule
-
-For compound indexes, order fields by:
+Order fields by:
 
 1. **E**quality (exact match fields)
 2. **S**ort (sort order fields)
-3. **R**ange (range query fields like $gt, $lt)
+3. **R**ange (range query fields like `$gt`, `$lt`)
 
-## Aggregation Pipeline
+### Index Types
 
-### Performance Tips
+| Type | Purpose |
+|------|---------|
+| **Single field** | Basic index on one field |
+| **Compound** | Multiple fields; order matters for queries |
+| **Multikey** | Automatically created for array fields |
+| **Text** | Full-text search on string content |
+| **TTL** | Auto-expire documents after a time period |
 
-- Put `$match` and `$project` early to reduce documents
-- Use `$limit` early when possible
-- Avoid `$lookup` on large collections without indexes
-- Use `$facet` for multiple aggregations in one query
+Index fields used in queries, sorts, and `$match` stages. Covered queries (all fields in index) are fastest. Too many indexes slow writes.
 
-### Common Stages
+## 3. Aggregation Pipeline
+
+Place `$match` and `$project` early to reduce the document set. Use `$limit` early when possible. Avoid `$lookup` on large collections without indexes.
 
 ```javascript
-// Filter documents
-{ $match: { status: "active" } }
-
-// Reshape documents
-{ $project: { name: 1, total: { $sum: "$items.price" } } }
-
-// Group and aggregate
-{ $group: { _id: "$category", count: { $sum: 1 } } }
-
-// Sort results
-{ $sort: { count: -1 } }
-
-// Join collections
-{ $lookup: { from: "orders", localField: "_id", foreignField: "userId", as: "orders" } }
+// Example: count active orders by category
+[
+  { $match: { status: "active" } },
+  { $group: { _id: "$category", count: { $sum: 1 } } },
+  { $sort: { count: -1 } }
+]
 ```
 
-## Connection Best Practices
+Additional stages:
 
-### Connection String Formats
+```javascript
+{ $project: { name: 1, total: { $sum: "$items.price" } } }
+{ $lookup: { from: "orders", localField: "_id", foreignField: "userId", as: "orders" } }
+{ $facet: { /* multiple aggregations in one query */ } }
+```
 
-- **Atlas:** `mongodb+srv://user:pass@cluster.mongodb.net/database`
-- **Local:** `mongodb://localhost:27017/database`
-- **Replica set:** `mongodb://host1,host2,host3/database?replicaSet=rs0`
+## 4. Connection Best Practices
 
-### Connection Pooling
+| Format | Connection string |
+|--------|-------------------|
+| **Atlas** | `mongodb+srv://user:pass@cluster.mongodb.net/database` |
+| **Local** | `mongodb://localhost:27017/database` |
+| **Replica set** | `mongodb://host1,host2,host3/database?replicaSet=rs0` |
 
-- Use connection pooling in applications (default in drivers)
-- Set appropriate pool size for your workload
-- Don't create new connections per request
+Use connection pooling (default in drivers). Set appropriate pool size for your workload. Don't create new connections per request.
 
-## Anti-Patterns to Avoid
+## 5. Anti-Patterns to Avoid
 
-- **Unbounded arrays:** Arrays that grow without limit
-- **Massive documents:** Documents approaching 16MB
-- **Too many collections:** Use embedding instead
-- **Missing indexes:** Queries doing collection scans
-- **$where operator:** Use aggregation instead for security
-- **Storing files in documents:** Use GridFS for large files
+- **Unbounded arrays** that grow without limit
+- **Massive documents** approaching 16MB
+- **Too many collections** where embedding would suffice
+- **Missing indexes** causing collection scans
+- **`$where` operator** instead of aggregation (security risk)
+- **Storing files in documents** instead of GridFS

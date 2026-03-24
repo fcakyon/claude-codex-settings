@@ -1,6 +1,6 @@
 ---
 name: tavily-usage
-description: This skill should be used when user asks to "search the web", "fetch content from URL", "extract page content", "use Tavily search", "scrape this website", "get information from this link", or "web search for X".
+description: "Search the web and extract content from URLs using Tavily MCP tools. Provides keyword-based web search for discovery and URL content extraction for deep analysis. Use when asked to 'search the web', 'fetch content from URL', 'extract page content', 'scrape this website', 'get information from this link', 'web search for X', or when performing research tasks requiring live web data."
 ---
 
 # Tavily Search and Extract
@@ -9,50 +9,38 @@ Use Tavily MCP tools for web search and content retrieval operations.
 
 ## Tool Selection
 
-### Tavily Search (`mcp__tavily__tavily_search`)
+| Tool | Command | Best For |
+|------|---------|----------|
+| **Search** | `mcp__tavily__tavily_search` | Keyword queries, finding sources, broad research |
+| **Extract** | `mcp__tavily__tavily-extract` | Specific URL content, deep page analysis, structured data |
 
-Use for:
+## Search-then-Extract Workflow
 
-- Keyword-based searches across the web
-- Finding relevant pages and content
-- Quick answer gathering
-- Multiple result discovery
+1. Run `mcp__tavily__tavily_search` with your query to discover relevant pages
+2. Review search results and identify the most relevant URLs
+3. Run `mcp__tavily__tavily-extract` on specific URLs for detailed content
+4. Process and synthesize the extracted content for the user
 
-**Best for**: Initial research, finding sources, broad queries
+### Example: Researching a Topic
 
-### Tavily Extract (`mcp__tavily__tavily-extract`)
+```
+# Step 1: Broad search
+mcp__tavily__tavily_search("latest Python 3.13 features")
 
-Use for:
-
-- Getting detailed content from specific URLs
-- Deep analysis of page content
-- Structured data extraction
-- Following up on search results
-
-**Best for**: In-depth analysis, specific URL content, detailed information
+# Step 2: Extract detail from a relevant result
+mcp__tavily__tavily-extract("https://docs.python.org/3.13/whatsnew/3.13.html")
+```
 
 ## Hook Behavior
 
-`tavily_extract_to_advanced.py` hook automatically upgrades extract calls to advanced mode for better accuracy when needed.
-
-## Integration Pattern
-
-1. Use `mcp__tavily__tavily_search` for discovery phase
-2. Analyze results to find relevant URLs
-3. Use `mcp__tavily__tavily-extract` for detailed content on specific URLs
-4. Process extracted content for user needs
+The `tavily_extract_to_advanced.py` hook automatically upgrades extract calls to advanced mode for better accuracy when needed.
 
 ## Environment Variables
 
-Tavily MCP requires:
+Tavily MCP requires `TAVILY_API_KEY` (format: `tvly-...`). Configure in your shell before using the plugin.
 
-- `TAVILY_API_KEY` - API key from Tavily (tvly-...)
+## Cost Tips
 
-Configure in shell before using the plugin.
-
-## Cost Considerations
-
-- Search is cheaper than extract
-- Use search to filter relevant URLs first
-- Only extract URLs that are likely relevant
-- Cache results when possible
+- Search is cheaper than extract -- use search to filter URLs first
+- Only extract URLs that are likely relevant to the task
+- Cache results when possible to avoid duplicate API calls

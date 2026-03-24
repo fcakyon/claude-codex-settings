@@ -1,19 +1,25 @@
 ---
 name: setup
-description: This skill should be used when user encounters "Azure MCP error", "Azure authentication failed", "az login required", "Azure CLI not found", or needs help configuring Azure MCP integration.
+description: "Configure and troubleshoot Azure MCP integration for Claude Code. Use when the user encounters Azure MCP errors, Azure authentication failures, az login issues, missing Azure CLI, or needs to set up Azure MCP from scratch. Covers installation, authentication, and permission troubleshooting."
 ---
 
 # Azure Tools Setup
 
-Run `/azure-tools:setup` to configure Azure MCP.
+## Getting Started
 
-## Quick Fixes
+1. Run `/azure-tools:setup` to configure Azure MCP.
+2. Authenticate with `az login` when prompted.
+3. Verify the connection is working by listing a resource (e.g., storage accounts).
 
-- **Authentication failed** - Run `az login` to authenticate
-- **Azure CLI not found** - Install Azure CLI first
-- **Permission denied** - Check Azure RBAC roles for your account
-- **Node.js not found** - Install Node.js 20 LTS or later
+## Troubleshooting
 
-## Don't Need Azure MCP?
+| Error | Fix |
+| ----- | --- |
+| Authentication failed | Run `az login` to re-authenticate |
+| Azure CLI not found | Install [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) first |
+| Permission denied | Check Azure RBAC roles assigned to your account |
+| Node.js not found | Install Node.js 20 LTS or later |
 
-Disable via `/mcp` command to prevent errors.
+## Disabling Azure MCP
+
+If you don't need Azure MCP, disable it via the `/mcp` command to prevent errors.

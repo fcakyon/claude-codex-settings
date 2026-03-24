@@ -1,13 +1,13 @@
 ---
 name: supabase-usage
-description: This skill should be used when user asks to "query Supabase", "list Supabase tables", "get Supabase schema", "search Supabase records", "check Supabase database", "Supabase auth", "Supabase authentication", "RLS policy", "row level security", "Supabase foreign key", "table relationships", "Supabase join", "Supabase filter", "Supabase pagination", or needs guidance on Supabase database patterns, auth flows, RLS policies, or query best practices.
+description: "Query Supabase databases, inspect table schemas, manage RLS policies, and apply best practices for auth flows, filtering, pagination, and joins. Use when asked to 'query Supabase', 'list tables', 'get schema', 'search records', 'check database', manage 'RLS policy' or 'row level security', work with 'table relationships', 'foreign keys', 'joins', 'filters', or 'pagination'."
 ---
 
 # Supabase Database Patterns
 
 Patterns for working with Supabase databases including Auth, Row Level Security, table relationships, and query best practices.
 
-## Overview
+## Capabilities
 
 - **MCP Tools**: Query and explore database structure
 - **Authentication**: User management, sessions, auth tables

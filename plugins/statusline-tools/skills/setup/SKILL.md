@@ -1,44 +1,51 @@
 ---
 name: setup
-description: This skill should be used when user asks to "configure statusline", "setup statusline", "show context usage", "display token count", "5H usage", "time until reset", "statusline colors", "statusline not working", or wants to change how the Claude Code status bar displays information.
+description: "Configure the Claude Code statusline to display session context usage, token costs, and 5-hour rate limit status. Supports native Anthropic API and ccusage modes. Use when asked to 'configure statusline', 'setup statusline', 'show context usage', 'display token count', '5H usage', 'time until reset', 'statusline colors', 'statusline not working', or to change the Claude Code status bar display."
 ---
 
 # Statusline Setup
 
-Run `/statusline-tools:setup` to configure the Claude Code statusline.
+## Setup Workflow
 
-## Options
+1. Run `/statusline-tools:setup` to launch the configuration wizard
+2. Choose a display mode:
+   - **Native** - Session + 5H usage via Anthropic API, color-coded
+   - **ccusage** - Session and daily stats, works with z.ai and third-party endpoints
+   - **Disable** - Remove the statusline display entirely
+3. Verify the statusline appears in your Claude Code session
 
-- **Native (session + 5H usage)** - Anthropic API only, color-coded display
-- **ccusage (session/daily stats)** - Works with z.ai too
-- **Disable** - Remove statusline display
+## Native Statusline Display
 
-## What Native Statusline Shows
+Example output:
 
-`[Session] 45% $3 | [5H] 16% 3h52m`
+```
+[Session] 45% $3 | [5H] 16% 3h52m
+```
 
-**Displayed information:**
+| Metric | Description |
+|--------|-------------|
+| Session % | Context window usage for the current session |
+| Session cost | Running cost in USD |
+| 5H % | Account-wide 5-hour usage percentage |
+| Time to reset | Countdown until the 5H rate limit block resets |
 
-- Session context window usage percentage
-- Session cost in USD
-- Account-wide 5-hour usage percentage
-- Time until 5H block resets
+### Color Coding
 
-**Color scheme:**
+| Color | Usage threshold | Reset time threshold |
+|-------|----------------|---------------------|
+| Green | Below 50% | Less than 1h until reset |
+| Yellow | 50-70% | 1-3.5h until reset |
+| Red | Above 70% | More than 3.5h until reset |
 
-- 🟢 <50% usage or <1h until reset
-- 🟡 50-70% usage or 1-3.5h until reset
-- 🔴 70%+ usage or >3.5h until reset
-
-**Note:** Native may not work with z.ai/third-party endpoints. Use ccusage for z.ai.
+**Note:** Native mode requires the Anthropic API. For z.ai or other third-party endpoints, use ccusage instead.
 
 ## Requirements
 
-Native statusline requires `jq` and `curl`. Install:
+Native statusline depends on `jq` and `curl`:
 
-- macOS: `brew install jq`
-- Ubuntu/Debian: `sudo apt install jq`
+- **macOS**: `brew install jq`
+- **Ubuntu/Debian**: `sudo apt install jq`
 
-## Docs
+## Reference
 
-[Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for more details.
+See the [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for full configuration details.

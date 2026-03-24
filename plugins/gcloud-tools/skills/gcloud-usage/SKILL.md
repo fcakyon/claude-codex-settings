@@ -1,11 +1,11 @@
 ---
 name: gcloud-usage
-description: This skill should be used when user asks about "GCloud logs", "Cloud Logging queries", "Google Cloud metrics", "GCP observability", "trace analysis", or "debugging production issues on GCP".
+description: "Guide GCP observability tasks including Cloud Logging queries, structured log formatting, metric and trace analysis, alert policy design, and log cost reduction. Use when the user asks about GCloud logs, Cloud Logging queries, Google Cloud metrics, GCP observability, trace analysis, or debugging production issues on GCP."
 ---
 
 # GCP Observability Best Practices
 
-## Structured Logging
+## 1. Structured Logging
 
 ### JSON Log Format
 
@@ -23,8 +23,6 @@ Use structured JSON logging for better queryability:
 
 ### Severity Levels
 
-Use appropriate severity for filtering:
-
 - **DEBUG:** Detailed diagnostic info
 - **INFO:** Normal operations, milestones
 - **NOTICE:** Normal but significant events
@@ -34,7 +32,7 @@ Use appropriate severity for filtering:
 - **ALERT:** Person must take action immediately
 - **EMERGENCY:** System is unusable
 
-## Log Filtering Queries
+## 2. Log Filtering Queries
 
 ### Common Filters
 
@@ -72,64 +70,37 @@ textPayload : "connection refused"
 severity = (ERROR OR CRITICAL)
 ```
 
-## Metrics vs Logs vs Traces
+## 3. Choosing Between Metrics, Logs, and Traces
 
-### When to Use Each
+**Metrics** (aggregated numeric data over time): request counts, latency percentiles, resource utilization (CPU, memory), business KPIs (orders/minute).
 
-**Metrics:** Aggregated numeric data over time
+**Logs** (detailed event records): error details and stack traces, audit trails, debugging specific requests.
 
-- Request counts, latency percentiles
-- Resource utilization (CPU, memory)
-- Business KPIs (orders/minute)
+**Traces** (request flow across services): latency breakdown by service, identifying bottlenecks, distributed system debugging.
 
-**Logs:** Detailed event records
+## 4. Alert Policy Design
 
-- Error details and stack traces
-- Audit trails
-- Debugging specific requests
+### Best Practices
 
-**Traces:** Request flow across services
-
-- Latency breakdown by service
-- Identifying bottlenecks
-- Distributed system debugging
-
-## Alert Policy Design
-
-### Alert Best Practices
-
-- **Avoid alert fatigue:** Only alert on actionable issues
-- **Use multi-condition alerts:** Reduce noise from transient spikes
-- **Set appropriate windows:** 5-15 min for most metrics
-- **Include runbook links:** Help responders act quickly
+- Only alert on actionable issues to avoid alert fatigue
+- Use multi-condition alerts to reduce noise from transient spikes
+- Set appropriate windows (5-15 min for most metrics)
+- Include runbook links so responders can act quickly
 
 ### Common Alert Patterns
 
-**Error rate:**
+| Pattern | Condition | Use Case |
+|---------|-----------|----------|
+| Error rate | Error rate > 1% for 5 min | Service health monitoring |
+| Latency | P99 > 2s for 10 min | Performance degradation detection |
+| Resource exhaustion | Memory > 90% for 5 min | Capacity planning triggers |
 
-- Condition: Error rate > 1% for 5 minutes
-- Good for: Service health monitoring
-
-**Latency:**
-
-- Condition: P99 latency > 2s for 10 minutes
-- Good for: Performance degradation detection
-
-**Resource exhaustion:**
-
-- Condition: Memory > 90% for 5 minutes
-- Good for: Capacity planning triggers
-
-## Cost Optimization
-
-### Reducing Log Costs
+## 5. Cost Reduction
 
 - **Exclusion filters:** Drop verbose logs at ingestion
-- **Sampling:** Log only percentage of high-volume events
+- **Sampling:** Log only a percentage of high-volume events
 - **Shorter retention:** Reduce default 30-day retention
 - **Downgrade logs:** Route to cheaper storage buckets
-
-### Exclusion Filter Examples
 
 ```
 # Exclude health checks
@@ -139,7 +110,7 @@ resource.type="cloud_run_revision" AND httpRequest.requestUrl="/health"
 severity = DEBUG
 ```
 
-## Debugging Workflow
+## 6. Debugging Workflow
 
 1. **Start with metrics:** Identify when issues started
 2. **Correlate with logs:** Filter logs around problem time
