@@ -581,7 +581,6 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 
 - [ ] App [dokploy](https://github.com/Dokploy/dokploy) tools plugin with [dokploy-mcp](https://github.com/Dokploy/mcp) server and deployment best practices skill
 - [ ] Add more comprehsensive fullstack-dev plugin with various ocnfigurable skills:
-  - Frontend: Next.js 16 (App Router, React 19, TypeScript)
   - Backend: FastAPI, NodeJS
   - Auth: Clerk (Auth, Email), Firebase/Firestore (Auth, DB), Supabase+Resend (Auth, DB, Email) RBAC with org:admin and org:member roles
   - Styling: Tailwind CSS v4, [shadcn/ui components](https://github.com/shadcn-ui/ui), [Radix UI primitives](https://github.com/radix-ui/primitives)
