@@ -1,5 +1,5 @@
 {
-  "description": "Plugin development marketplace sync hooks",
+  "description": "Claude tools hooks for marketplace sync",
   "hooks": {
     "PostToolUse": [
       {
