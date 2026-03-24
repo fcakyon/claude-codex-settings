@@ -23,23 +23,25 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install plugins (pick what you need)
-/plugin install azure-tools@claude-settings        # Azure MCP & Skills (40+ services)
-/plugin install ccproxy-tools@claude-settings      # Use any LLM via ccproxy/LiteLLM
-/plugin install claude-tools@claude-settings       # Sync CLAUDE.md + allowlist
-/plugin install gcloud-tools@claude-settings       # GCloud MCP & Skills
-/plugin install general-dev@claude-settings        # Code simplifier + utilities
-/plugin install github-dev@claude-settings         # Git workflow + GitHub MCP
-/plugin install linear-tools@claude-settings       # Linear MCP & Skills
-/plugin install mongodb-tools@claude-settings      # MongoDB MCP & Skills (read-only)
-/plugin install notification-tools@claude-settings # OS notifications
-/plugin install paper-search-tools@claude-settings # Paper Search MCP & Skills
-/plugin install playwright-tools@claude-settings   # Playwright MCP + E2E skill
-/plugin install plugin-dev@claude-settings         # Plugin development toolkit
-/plugin install slack-tools@claude-settings        # Slack MCP & Skills
-/plugin install statusline-tools@claude-settings   # Session + 5H usage statusline
-/plugin install supabase-tools@claude-settings     # Supabase MCP & Skills
-/plugin install tavily-tools@claude-settings       # Tavily MCP & Skills
-/plugin install ultralytics-dev@claude-settings    # Auto-formatting hooks
+/plugin install azure-tools@claude-settings              # Azure MCP & Skills (40+ services)
+/plugin install ccproxy-tools@claude-settings            # Use any LLM via ccproxy/LiteLLM
+/plugin install claude-tools@claude-settings             # Sync CLAUDE.md + allowlist
+/plugin install gcloud-tools@claude-settings             # GCloud MCP & Skills
+/plugin install general-dev@claude-settings              # Code simplifier + utilities
+/plugin install github-dev@claude-settings               # Git workflow + GitHub MCP
+/plugin install linear-tools@claude-settings             # Linear MCP & Skills
+/plugin install mongodb-tools@claude-settings            # MongoDB MCP & Skills (read-only)
+/plugin install notification-tools@claude-settings       # OS notifications
+/plugin install paper-search-tools@claude-settings       # Paper Search MCP & Skills
+/plugin install playwright-tools@claude-settings         # Playwright MCP + E2E skill
+/plugin install anthropic-essentials@claude-settings     # Anthropic feature-dev, frontend, CLAUDE.md, skills
+/plugin install anthropic-creative-suite@claude-settings # Anthropic docs, theming, artifacts
+/plugin install anthropic-plugin-dev@claude-settings     # Anthropic plugin development toolkit
+/plugin install slack-tools@claude-settings              # Slack MCP & Skills
+/plugin install statusline-tools@claude-settings         # Session + 5H usage statusline
+/plugin install supabase-tools@claude-settings           # Supabase MCP & Skills
+/plugin install tavily-tools@claude-settings             # Tavily MCP & Skills
+/plugin install ultralytics-dev@claude-settings          # Auto-formatting hooks
 ```
 
 After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
@@ -95,9 +97,12 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 **Commands:**
 
 - [`/load-claude-md`](./plugins/claude-tools/commands/load-claude-md.md) - Refresh context with CLAUDE.md instructions
-- [`/load-frontend-skill`](./plugins/claude-tools/commands/load-frontend-skill.md) - Load frontend design skill from Anthropic
 - [`/sync-claude-md`](./plugins/claude-tools/commands/sync-claude-md.md) - Sync CLAUDE.md from GitHub
 - [`/sync-allowlist`](./plugins/claude-tools/commands/sync-allowlist.md) - Sync permissions allowlist
+
+**Hooks:**
+
+- [`sync_marketplace_to_plugins.py`](./plugins/claude-tools/hooks/scripts/sync_marketplace_to_plugins.py) - Syncs marketplace.json to plugin.json
 
 </details>
 
@@ -257,34 +262,60 @@ Browser automation with E2E testing skill and responsive design testing agent. R
 </details>
 
 <details>
-<summary><strong>plugin-dev</strong> - Plugin development toolkit</summary>
+<summary><strong>anthropic-essentials</strong> - Feature dev, frontend design, CLAUDE.md management, skill creation</summary>
 
-Complete toolkit for building Claude Code plugins with skills, agents, and validation.
+Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
 
 **Skills:**
 
-- [`hook-development`](./plugins/plugin-dev/skills/hook-development/SKILL.md) - Create hooks with prompt-based API
-- [`mcp-integration`](./plugins/plugin-dev/skills/mcp-integration/SKILL.md) - Configure MCP servers
-- [`plugin-structure`](./plugins/plugin-dev/skills/plugin-structure/SKILL.md) - Plugin layout and auto-discovery
-- [`plugin-settings`](./plugins/plugin-dev/skills/plugin-settings/SKILL.md) - Per-project configuration
-- [`command-development`](./plugins/plugin-dev/skills/command-development/SKILL.md) - Create custom commands
-- [`agent-development`](./plugins/plugin-dev/skills/agent-development/SKILL.md) - Build autonomous agents
-- [`skill-development`](./plugins/plugin-dev/skills/skill-development/SKILL.md) - Create reusable skills with progressive disclosure
+- `frontend-design` - Production-grade frontend interfaces with high design quality
+- `claude-md-improver` - Audit and improve CLAUDE.md files across a codebase
+- `skill-creator` - Create, improve, and benchmark Agent Skills with eval testing
 
 **Agents:**
 
-- [`agent-creator`](./plugins/plugin-dev/agents/agent-creator.md) - AI-assisted agent generation
-- [`plugin-validator`](./plugins/plugin-dev/agents/plugin-validator.md) - Validate plugin structure
-- [`skill-reviewer`](./plugins/plugin-dev/agents/skill-reviewer.md) - Improve skill quality
+- `code-architect` - Architecture design from codebase patterns
+- `code-explorer` - Deep codebase exploration and analysis
+- `code-reviewer` - Code quality and review
 
 **Commands:**
 
-- [`/plugin-dev:create-plugin`](./plugins/plugin-dev/commands/create-plugin.md) - 8-phase guided plugin workflow
-- [`/plugin-dev:load-skills`](./plugins/plugin-dev/commands/load-skills.md) - Load all plugin development skills
+- `/feature-dev` - Guided feature development workflow
+- `/revise-claude-md` - Capture session learnings into CLAUDE.md
 
 **Hooks:**
 
-- [`sync_marketplace_to_plugins.py`](./plugins/plugin-dev/hooks/scripts/sync_marketplace_to_plugins.py) - Syncs marketplace.json to plugin.json
+- `Stop` (prompt) - Suggest CLAUDE.md updates after significant code changes
+- `SessionEnd` (prompt) - Remind to capture learnings when session ends
+
+</details>
+
+<details>
+<summary><strong>anthropic-creative-suite</strong> - Documents, theming, web artifacts</summary>
+
+Selected skills from [anthropics/skills](https://github.com/anthropics/skills). Document skills are proprietary/source-available; others are Apache 2.0.
+
+**Skills:**
+
+- `pdf` - PDF processing (read, merge, split, create, OCR)
+- `docx` - Word document creation and editing
+- `pptx` - PowerPoint presentation building
+- `xlsx` - Excel spreadsheet processing
+- `theme-factory` - Generate themes and styling systems
+- `web-artifacts-builder` - Build interactive web artifacts
+
+</details>
+
+<details>
+<summary><strong>anthropic-plugin-dev</strong> - Plugin development toolkit</summary>
+
+Actively maintained plugin development toolkit from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev). 7 skills, 3 agents, and guided plugin creation.
+
+**Skills:** hook-development, mcp-integration, plugin-structure, plugin-settings, command-development, agent-development, skill-development
+
+**Agents:** agent-creator, plugin-validator, skill-reviewer
+
+**Commands:** `/create-plugin` - Guided plugin workflow
 
 </details>
 
