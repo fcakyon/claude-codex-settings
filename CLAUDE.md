@@ -128,6 +128,38 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 - `/github-dev:create-pr` - create pull request
 - `/github-dev:resolve-pr-comments` - analyze and address unresolved PR review comments
 
+## Marketplace Plugin Conventions
+
+### Source Types in `marketplace.json`
+
+- **Local path**: `"source": "./plugins/my-plugin"` — for plugins in this repo
+- **URL source**: `"source": { "source": "url", "url": "https://github.com/owner/repo.git" }` — for external repos. Use this over `github` source (which has been unreliable)
+- **Git subdir**: `"source": { "source": "git-subdir", "url": "https://github.com/owner/repo.git", "path": "plugins/subdir" }` — for a single plugin inside a monorepo
+
+### Cherry-picking skills from external repos
+
+Use `strict: false` + explicit `skills` array to expose only specific skills from an external repo. The rest of the repo is ignored. Example (see `anthropic-creative-suite` entry):
+
+```json
+{
+  "source": { "source": "url", "url": "https://github.com/owner/repo.git" },
+  "strict": false,
+  "skills": ["./skills/skill-a", "./skills/skill-b"]
+}
+```
+
+### plugin.json (minimal format)
+
+Local plugins use a minimal `plugin.json` with only: `name`, `version`, `description`, `homepage`, `repository`, `license`. Author is optional — skip for third-party plugins.
+
+### SKILL.md frontmatter
+
+Only two fields: `name` and `description`. Description should start with "This skill should be used when..." with quoted trigger phrases.
+
+### Marketplace entry fields
+
+Rich metadata (`keywords`, `category`, `tags`) lives in `marketplace.json`, not in individual `plugin.json` files.
+
 ## Citation Verification Rules
 
 **CRITICAL**: Never use unverified citation information. Before adding or referencing any academic citation:
