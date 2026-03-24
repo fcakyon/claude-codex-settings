@@ -209,7 +209,7 @@
         "source": "url",
         "url": "https://github.com/anthropics/claude-plugins-official.git"
       },
-      "description": "Feature development agents, frontend design, CLAUDE.md management, and skill creation from Anthropic.",
+      "description": "Feature development with code-architect/explorer/reviewer agents, frontend UI design, CLAUDE.md audit and session learnings, and Agent Skills creation with eval benchmarking from Anthropic.",
       "version": "1.0.0",
       "strict": false,
       "skills": [
@@ -249,7 +249,18 @@
         ]
       },
       "license": "Apache-2.0",
-      "keywords": ["feature-dev", "frontend", "claude-md", "skill-creator", "agents", "anthropic"],
+      "keywords": [
+        "feature-dev",
+        "frontend",
+        "design",
+        "ui",
+        "claude-md",
+        "skill-creator",
+        "agents",
+        "code-review",
+        "architecture",
+        "anthropic"
+      ],
       "category": "development",
       "tags": ["development", "design", "anthropic"]
     },
@@ -270,7 +281,19 @@
         "./skills/theme-factory",
         "./skills/web-artifacts-builder"
       ],
-      "keywords": ["documents", "pdf", "docx", "theming", "artifacts", "anthropic"],
+      "keywords": [
+        "documents",
+        "pdf",
+        "docx",
+        "word",
+        "pptx",
+        "powerpoint",
+        "xlsx",
+        "excel",
+        "theming",
+        "artifacts",
+        "anthropic"
+      ],
       "category": "productivity",
       "tags": ["documents", "creative", "anthropic"]
     },
@@ -281,9 +304,9 @@
         "url": "https://github.com/anthropics/claude-plugins-official.git",
         "path": "plugins/plugin-dev"
       },
-      "description": "Plugin development toolkit with skills for hooks, MCP, commands, agents, and plugin structure from Anthropic.",
+      "description": "Plugin development toolkit with skills for hooks, MCP servers, slash commands, subagents, skill creation, and plugin structure from Anthropic.",
       "version": "1.0.0",
-      "keywords": ["plugin", "development", "hooks", "mcp", "anthropic"],
+      "keywords": ["plugin", "development", "hooks", "mcp", "skills", "agents", "commands", "structure", "anthropic"],
       "category": "development",
       "tags": ["plugin", "development", "anthropic"]
     },
