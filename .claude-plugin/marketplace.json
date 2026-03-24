@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "plugins": [
     {
@@ -354,6 +354,33 @@
       "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
       "category": "productivity",
       "tags": ["settings", "sync", "config"]
+    },
+    {
+      "name": "react-skills",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/vercel-labs/agent-skills.git"
+      },
+      "description": "React, Next.js, and React Native best practices. 64 React/Next.js rules and 35+ React Native/Expo rules covering performance, rendering, state, animations, and navigation.",
+      "version": "1.0.0",
+      "strict": false,
+      "skills": ["./skills/react-best-practices", "./skills/react-native-skills"],
+      "license": "MIT",
+      "keywords": ["react", "react-native", "nextjs", "expo", "performance", "best-practices"],
+      "category": "development",
+      "tags": ["react", "frontend", "best-practices"]
+    },
+    {
+      "name": "web-design-guidelines",
+      "source": "./plugins/web-design-guidelines",
+      "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, forms, animation, performance, and more.",
+      "version": "1.0.0",
+      "homepage": "https://github.com/vercel-labs/web-interface-guidelines",
+      "repository": "https://github.com/vercel-labs/agent-skills",
+      "license": "MIT",
+      "keywords": ["web-design", "ui-review", "accessibility", "a11y", "guidelines", "frontend"],
+      "category": "development",
+      "tags": ["frontend", "design", "guidelines"]
     },
     {
       "name": "phd-skills",
