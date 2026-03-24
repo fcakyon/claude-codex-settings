@@ -455,7 +455,7 @@ Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) usin
 <details>
 <summary><strong>Kimi K2.5</strong></summary>
 
-Run Claude Code with [Kimi K2.5](https://moonshotai.github.io/Kimi-K2/) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
+Run Claude Code with [Kimi K2.5](https://www.kimi.com/blog/kimi-k2-5) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
 
 - **Model**: `kimi-k2.5` - High-speed thinking, 256K context
 - **API key**: Get from [platform.moonshot.ai](https://platform.moonshot.ai)
