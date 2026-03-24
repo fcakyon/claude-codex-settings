@@ -23,25 +23,26 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install plugins (pick what you need)
+/plugin install anthropic-essentials@claude-settings     # Anthropic feature-dev, frontend, CLAUDE.md, skills
+/plugin install anthropic-creative-suite@claude-settings # Anthropic docs, theming, artifacts
+/plugin install anthropic-plugin-dev@claude-settings     # Anthropic plugin development toolkit
+/plugin install phd-skills@claude-settings               # Hypothesis design, paper review, citation checks
+/plugin install github-dev@claude-settings               # Git workflow + GitHub MCP
+/plugin install statusline-tools@claude-settings         # Session + 5H usage statusline
+/plugin install ultralytics-dev@claude-settings          # Auto-formatting hooks
+/plugin install notification-tools@claude-settings       # OS notifications
 /plugin install azure-tools@claude-settings              # Azure MCP & Skills (40+ services)
 /plugin install ccproxy-tools@claude-settings            # Use any LLM via ccproxy/LiteLLM
 /plugin install claude-tools@claude-settings             # Sync CLAUDE.md + allowlist
 /plugin install gcloud-tools@claude-settings             # GCloud MCP & Skills
 /plugin install general-dev@claude-settings              # Code simplifier + utilities
-/plugin install github-dev@claude-settings               # Git workflow + GitHub MCP
 /plugin install linear-tools@claude-settings             # Linear MCP & Skills
 /plugin install mongodb-tools@claude-settings            # MongoDB MCP & Skills (read-only)
-/plugin install notification-tools@claude-settings       # OS notifications
 /plugin install paper-search-tools@claude-settings       # Paper Search MCP & Skills
 /plugin install playwright-tools@claude-settings         # Playwright MCP + E2E skill
-/plugin install anthropic-essentials@claude-settings     # Anthropic feature-dev, frontend, CLAUDE.md, skills
-/plugin install anthropic-creative-suite@claude-settings # Anthropic docs, theming, artifacts
-/plugin install anthropic-plugin-dev@claude-settings     # Anthropic plugin development toolkit
 /plugin install slack-tools@claude-settings              # Slack MCP & Skills
-/plugin install statusline-tools@claude-settings         # Session + 5H usage statusline
 /plugin install supabase-tools@claude-settings           # Supabase MCP & Skills
 /plugin install tavily-tools@claude-settings             # Tavily MCP & Skills
-/plugin install ultralytics-dev@claude-settings          # Auto-formatting hooks
 ```
 
 After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
@@ -55,6 +56,154 @@ ln -sfn CLAUDE.md AGENTS.md
 Restart Claude Code to activate.
 
 ## Plugins
+
+<details>
+<summary><strong>anthropic-essentials</strong> - Feature dev, frontend design, CLAUDE.md management, skill creation</summary>
+
+Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
+
+**Skills:**
+
+- `frontend-design` - Production-grade frontend interfaces with high design quality
+- `claude-md-improver` - Audit and improve CLAUDE.md files across a codebase
+- `skill-creator` - Create, improve, and benchmark Agent Skills with eval testing
+
+**Agents:**
+
+- `code-architect` - Architecture design from codebase patterns
+- `code-explorer` - Deep codebase exploration and analysis
+- `code-reviewer` - Code quality and review
+
+**Commands:**
+
+- `/feature-dev` - Guided feature development workflow
+- `/revise-claude-md` - Capture session learnings into CLAUDE.md
+
+**Hooks:**
+
+- `Stop` (prompt) - Suggest CLAUDE.md updates after significant code changes
+- `SessionEnd` (prompt) - Remind to capture learnings when session ends
+
+</details>
+
+<details>
+<summary><strong>anthropic-creative-suite</strong> - Documents, theming, web artifacts</summary>
+
+Selected skills from [anthropics/skills](https://github.com/anthropics/skills). Document skills are proprietary/source-available; others are Apache 2.0.
+
+**Skills:**
+
+- `pdf` - PDF processing (read, merge, split, create, OCR)
+- `docx` - Word document creation and editing
+- `pptx` - PowerPoint presentation building
+- `xlsx` - Excel spreadsheet processing
+- `theme-factory` - Generate themes and styling systems
+- `web-artifacts-builder` - Build interactive web artifacts
+
+</details>
+
+<details>
+<summary><strong>anthropic-plugin-dev</strong> - Plugin development toolkit</summary>
+
+Actively maintained plugin development toolkit from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev). 7 skills, 3 agents, and guided plugin creation.
+
+**Skills:** hook-development, mcp-integration, plugin-structure, plugin-settings, command-development, agent-development, skill-development
+
+**Agents:** agent-creator, plugin-validator, skill-reviewer
+
+**Commands:** `/create-plugin` - Guided plugin workflow
+
+</details>
+
+<details>
+<summary><strong>phd-skills</strong> - Hypothesis design, paper review, citation checks</summary>
+
+Academic research toolkit from [fcakyon/phd-skills](https://github.com/fcakyon/phd-skills). Experiment design, literature review, paper writing, citation verification, and reviewer defense for PhD workflows.
+
+**Skills:** dataset-curation, experiment-design, latex-setup, literature-research, paper-verification, paper-writing, research-publishing, reviewer-defense
+
+**Agents:** experiment-analyzer, paper-auditor
+
+**Commands:** `/factcheck`, `/fortify`, `/gaps`, `/help`, `/setup`, `/xray`
+
+</details>
+
+<details>
+<summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
+
+Git and GitHub automation. Run `/github-dev:setup` after install.
+
+**Agents:**
+
+- [`commit-creator`](./plugins/github-dev/agents/commit-creator.md) - Intelligent commit workflow
+- [`pr-creator`](./plugins/github-dev/agents/pr-creator.md) - Pull request creation
+- [`pr-reviewer`](./plugins/github-dev/agents/pr-reviewer.md) - Code review agent
+- [`pr-comment-resolver`](./plugins/github-dev/agents/pr-comment-resolver.md) - PR comment resolution
+
+**Skills:**
+
+- [`commit-workflow`](./plugins/github-dev/skills/commit-workflow/SKILL.md) - Commit process and message format
+- [`pr-workflow`](./plugins/github-dev/skills/pr-workflow/SKILL.md) - PR creation workflow
+- [`pr-comment-workflow`](./plugins/github-dev/skills/pr-comment-workflow/SKILL.md) - PR comment style and resolution
+- [`setup`](./plugins/github-dev/skills/setup/SKILL.md) - GitHub CLI troubleshooting
+
+**Commands:**
+
+- [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit staged changes
+- [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request
+- [`/review-pr`](./plugins/github-dev/commands/review-pr.md) - Review pull request
+- [`/resolve-pr-comments`](./plugins/github-dev/commands/resolve-pr-comments.md) - Address unresolved PR comments
+- [`/update-pr-summary`](./plugins/github-dev/commands/update-pr-summary.md) - Update PR description
+- [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean deleted branches
+- [`/github-dev:setup`](./plugins/github-dev/commands/setup.md) - Configure GitHub CLI
+
+**Hooks:**
+
+- [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation before git commit
+- [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation before gh pr create
+
+</details>
+
+<details>
+<summary><strong>statusline-tools</strong> - Session + 5H Usage Statusline</summary>
+
+Cross-platform statusline showing session context %, cost, and account-wide 5H usage with time until reset. Run `/statusline-tools:setup` after install.
+
+**Skills:**
+
+- [`setup`](./plugins/statusline-tools/skills/setup/SKILL.md) - Statusline configuration guide
+
+**Commands:**
+
+- [`/statusline-tools:setup`](./plugins/statusline-tools/commands/setup.md) - Configure statusline
+
+</details>
+
+<details>
+<summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
+
+Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
+
+**Hooks:**
+
+- [`format_python_docstrings.py`](./plugins/ultralytics-dev/hooks/scripts/format_python_docstrings.py) - Google-style docstring formatter
+- [`python_code_quality.py`](./plugins/ultralytics-dev/hooks/scripts/python_code_quality.py) - Python code quality with ruff
+- [`prettier_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
+- [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
+- [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
+
+</details>
+
+<details>
+<summary><strong>notification-tools</strong> - OS notifications</summary>
+
+Desktop notifications when Claude Code completes tasks.
+
+**Hooks:**
+
+- [`notify.sh`](./plugins/notification-tools/hooks/scripts/notify.sh) - OS notifications on task completion
+
+</details>
 
 <details>
 <summary><strong>azure-tools</strong> - Azure MCP & Skills</summary>
@@ -140,42 +289,6 @@ Code quality agent and utility hooks.
 </details>
 
 <details>
-<summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
-
-Git and GitHub automation. Run `/github-dev:setup` after install.
-
-**Agents:**
-
-- [`commit-creator`](./plugins/github-dev/agents/commit-creator.md) - Intelligent commit workflow
-- [`pr-creator`](./plugins/github-dev/agents/pr-creator.md) - Pull request creation
-- [`pr-reviewer`](./plugins/github-dev/agents/pr-reviewer.md) - Code review agent
-- [`pr-comment-resolver`](./plugins/github-dev/agents/pr-comment-resolver.md) - PR comment resolution
-
-**Skills:**
-
-- [`commit-workflow`](./plugins/github-dev/skills/commit-workflow/SKILL.md) - Commit process and message format
-- [`pr-workflow`](./plugins/github-dev/skills/pr-workflow/SKILL.md) - PR creation workflow
-- [`pr-comment-workflow`](./plugins/github-dev/skills/pr-comment-workflow/SKILL.md) - PR comment style and resolution
-- [`setup`](./plugins/github-dev/skills/setup/SKILL.md) - GitHub CLI troubleshooting
-
-**Commands:**
-
-- [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit staged changes
-- [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request
-- [`/review-pr`](./plugins/github-dev/commands/review-pr.md) - Review pull request
-- [`/resolve-pr-comments`](./plugins/github-dev/commands/resolve-pr-comments.md) - Address unresolved PR comments
-- [`/update-pr-summary`](./plugins/github-dev/commands/update-pr-summary.md) - Update PR description
-- [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean deleted branches
-- [`/github-dev:setup`](./plugins/github-dev/commands/setup.md) - Configure GitHub CLI
-
-**Hooks:**
-
-- [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation before git commit
-- [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation before gh pr create
-
-</details>
-
-<details>
 <summary><strong>linear-tools</strong> - Linear MCP & Skills</summary>
 
 Issue tracking with OAuth. Run `/linear-tools:setup` after install.
@@ -208,17 +321,6 @@ Database exploration (read-only). Run `/mongodb-tools:setup` after install.
 - [`/mongodb-tools:setup`](./plugins/mongodb-tools/commands/setup.md) - Configure MongoDB MCP
 
 **MCP:** [`.mcp.json`](./plugins/mongodb-tools/.mcp.json) | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server)
-
-</details>
-
-<details>
-<summary><strong>notification-tools</strong> - OS notifications</summary>
-
-Desktop notifications when Claude Code completes tasks.
-
-**Hooks:**
-
-- [`notify.sh`](./plugins/notification-tools/hooks/scripts/notify.sh) - OS notifications on task completion
 
 </details>
 
@@ -262,64 +364,6 @@ Browser automation with E2E testing skill and responsive design testing agent. R
 </details>
 
 <details>
-<summary><strong>anthropic-essentials</strong> - Feature dev, frontend design, CLAUDE.md management, skill creation</summary>
-
-Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
-
-**Skills:**
-
-- `frontend-design` - Production-grade frontend interfaces with high design quality
-- `claude-md-improver` - Audit and improve CLAUDE.md files across a codebase
-- `skill-creator` - Create, improve, and benchmark Agent Skills with eval testing
-
-**Agents:**
-
-- `code-architect` - Architecture design from codebase patterns
-- `code-explorer` - Deep codebase exploration and analysis
-- `code-reviewer` - Code quality and review
-
-**Commands:**
-
-- `/feature-dev` - Guided feature development workflow
-- `/revise-claude-md` - Capture session learnings into CLAUDE.md
-
-**Hooks:**
-
-- `Stop` (prompt) - Suggest CLAUDE.md updates after significant code changes
-- `SessionEnd` (prompt) - Remind to capture learnings when session ends
-
-</details>
-
-<details>
-<summary><strong>anthropic-creative-suite</strong> - Documents, theming, web artifacts</summary>
-
-Selected skills from [anthropics/skills](https://github.com/anthropics/skills). Document skills are proprietary/source-available; others are Apache 2.0.
-
-**Skills:**
-
-- `pdf` - PDF processing (read, merge, split, create, OCR)
-- `docx` - Word document creation and editing
-- `pptx` - PowerPoint presentation building
-- `xlsx` - Excel spreadsheet processing
-- `theme-factory` - Generate themes and styling systems
-- `web-artifacts-builder` - Build interactive web artifacts
-
-</details>
-
-<details>
-<summary><strong>anthropic-plugin-dev</strong> - Plugin development toolkit</summary>
-
-Actively maintained plugin development toolkit from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev). 7 skills, 3 agents, and guided plugin creation.
-
-**Skills:** hook-development, mcp-integration, plugin-structure, plugin-settings, command-development, agent-development, skill-development
-
-**Agents:** agent-creator, plugin-validator, skill-reviewer
-
-**Commands:** `/create-plugin` - Guided plugin workflow
-
-</details>
-
-<details>
 <summary><strong>slack-tools</strong> - Slack MCP & Skills</summary>
 
 Message search and channel history. Run `/slack-tools:setup` after install.
@@ -334,21 +378,6 @@ Message search and channel history. Run `/slack-tools:setup` after install.
 - [`/slack-tools:setup`](./plugins/slack-tools/commands/setup.md) - Configure Slack MCP
 
 **MCP:** [`.mcp.json`](./plugins/slack-tools/.mcp.json) | [ubie-oss/slack-mcp-server](https://github.com/ubie-oss/slack-mcp-server)
-
-</details>
-
-<details>
-<summary><strong>statusline-tools</strong> - Session + 5H Usage Statusline</summary>
-
-Cross-platform statusline showing session context %, cost, and account-wide 5H usage with time until reset. Run `/statusline-tools:setup` after install.
-
-**Skills:**
-
-- [`setup`](./plugins/statusline-tools/skills/setup/SKILL.md) - Statusline configuration guide
-
-**Commands:**
-
-- [`/statusline-tools:setup`](./plugins/statusline-tools/commands/setup.md) - Configure statusline
 
 </details>
 
@@ -394,21 +423,6 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 
 </details>
 
-<details>
-<summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
-
-Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
-
-**Hooks:**
-
-- [`format_python_docstrings.py`](./plugins/ultralytics-dev/hooks/scripts/format_python_docstrings.py) - Google-style docstring formatter
-- [`python_code_quality.py`](./plugins/ultralytics-dev/hooks/scripts/python_code_quality.py) - Python code quality with ruff
-- [`prettier_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
-- [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
-- [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
-
-</details>
-
 ---
 
 ## Configuration
@@ -418,7 +432,7 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 
 Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-- **Model**: OpusPlan mode (plan: Opus 4.5, execute: Opus 4.5, fast: Sonnet 4.5) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
+- **Model**: OpusPlan mode (plan: Opus 4.6, execute: Opus 4.6, fast: Sonnet 4.6) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Statusline**: Custom usage tracking powered by [ccusage](https://ccusage.com/)
@@ -431,30 +445,30 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
 Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/scenario-example/develop-tools/claude):
 
-- **Main model**: GLM-4.6 (dialogue, planning, coding, complex reasoning)
-- **Fast model**: GLM-4.5-Air (file search, syntax checking)
-- **Cost savings**: 85% cheaper than Claude 4.5 - [source](https://z.ai/blog/glm-4.6)
+- **Main model**: GLM-5-Turbo (dialogue, planning, coding, complex reasoning)
+- **Fast model**: GLM-4.7-Flash (file search, syntax checking)
+- **Cost savings**: 85% cheaper than Claude 4.6 - [source](https://z.ai/blog/glm-4.6)
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
 </details>
 
 <details>
-<summary><strong>Kimi K2</strong></summary>
+<summary><strong>Kimi K2.5</strong></summary>
 
-Run Claude Code with [Kimi K2](https://moonshotai.github.io/Kimi-K2/) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
+Run Claude Code with [Kimi K2.5](https://www.kimi.com/blog/kimi-k2-5) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
 
-- **Thinking model**: `kimi-k2-thinking-turbo` - High-speed thinking, 256K context
-- **Fast model**: `kimi-k2-turbo-preview` - Without extended thinking
+- **Model**: `kimi-k2.5` - High-speed thinking, 256K context
 - **API key**: Get from [platform.moonshot.ai](https://platform.moonshot.ai)
 
 ```bash
-export ANTHROPIC_BASE_URL="https://api.moonshot.ai/anthropic/"
-export ANTHROPIC_API_KEY="your-moonshot-api-key"
-export ANTHROPIC_MODEL=kimi-k2-thinking-turbo
-export ANTHROPIC_DEFAULT_OPUS_MODEL=kimi-k2-thinking-turbo
-export ANTHROPIC_DEFAULT_SONNET_MODEL=kimi-k2-thinking-turbo
-export ANTHROPIC_DEFAULT_HAIKU_MODEL=kimi-k2-thinking-turbo
-export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2-thinking-turbo
+export ANTHROPIC_BASE_URL=https://api.moonshot.ai/anthropic
+export ANTHROPIC_AUTH_TOKEN="your-moonshot-api-key"
+export ANTHROPIC_MODEL=kimi-k2.5
+export ANTHROPIC_DEFAULT_OPUS_MODEL=kimi-k2.5
+export ANTHROPIC_DEFAULT_SONNET_MODEL=kimi-k2.5
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=kimi-k2.5
+export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2.5
+export ENABLE_TOOL_SEARCH=false
 ```
 
 </details>
@@ -464,7 +478,7 @@ export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2-thinking-turbo
 
 Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 
-- **Model**: `gpt-5-codex` with `model_reasoning_effort` set to "high"
+- **Model**: `gpt-5.4` with `model_reasoning_effort` set to "high"
 - **Provider**: Azure via `responses` API surface
 - **Auth**: Project-specific base URL with `env_key` authentication
 

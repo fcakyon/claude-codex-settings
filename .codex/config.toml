@@ -1,4 +1,4 @@
-model = "gpt-5-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
 model_provider = "azure"
 # Streamable HTTP requires the experimental rmcp client
