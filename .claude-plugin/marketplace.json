@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "plugins": [
     {
@@ -97,21 +97,6 @@
       "keywords": ["linear", "mcp", "issues", "project-management"],
       "category": "tools",
       "tags": ["linear", "mcp", "integration"]
-    },
-    {
-      "name": "playwright-tools",
-      "source": "./plugins/playwright-tools",
-      "description": "Playwright browser automation with E2E testing skill and responsive design testing agent.",
-      "version": "2.0.3",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["playwright", "testing", "e2e", "automation", "responsive", "viewport", "mobile"],
-      "category": "development",
-      "tags": ["testing", "e2e", "automation"]
     },
     {
       "name": "github-dev",
@@ -369,6 +354,21 @@
       "keywords": ["react", "react-native", "nextjs", "expo", "performance", "best-practices"],
       "category": "development",
       "tags": ["react", "frontend", "best-practices"]
+    },
+    {
+      "name": "agent-browser",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/vercel-labs/agent-browser.git"
+      },
+      "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps with minimal token usage via snapshot + element refs.",
+      "version": "1.0.0",
+      "strict": false,
+      "skills": ["./skills/agent-browser"],
+      "license": "MIT",
+      "keywords": ["browser", "automation", "testing", "agent-browser", "web", "screenshots", "e2e"],
+      "category": "development",
+      "tags": ["browser", "automation", "testing"]
     },
     {
       "name": "web-design-guidelines",
