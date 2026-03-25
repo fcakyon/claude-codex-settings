@@ -28,6 +28,7 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin install anthropic-plugin-dev@claude-settings     # Anthropic plugin development toolkit
 /plugin install phd-skills@claude-settings               # Hypothesis design, paper review, citation checks
 /plugin install react-skills@claude-settings             # React, Next.js, React Native best practices
+/plugin install agent-browser@claude-settings            # Browser automation CLI
 /plugin install web-design-guidelines@claude-settings    # UI review for accessibility, forms, performance
 /plugin install github-dev@claude-settings               # Git workflow + GitHub MCP
 /plugin install statusline-tools@claude-settings         # Session + 5H usage statusline
@@ -41,7 +42,6 @@ Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugin
 /plugin install linear-tools@claude-settings             # Linear MCP & Skills
 /plugin install mongodb-tools@claude-settings            # MongoDB MCP & Skills (read-only)
 /plugin install paper-search-tools@claude-settings       # Paper Search MCP & Skills
-/plugin install playwright-tools@claude-settings         # Playwright MCP + E2E skill
 /plugin install slack-tools@claude-settings              # Slack MCP & Skills
 /plugin install supabase-tools@claude-settings           # Supabase MCP & Skills
 /plugin install tavily-tools@claude-settings             # Tavily MCP & Skills
@@ -157,6 +157,19 @@ Cherry-picked skills from [vercel-labs/agent-skills](https://github.com/vercel-l
 
 - `react-best-practices` - React and Next.js performance patterns: waterfalls, bundle size, server components, re-renders, rendering, JS performance, advanced patterns
 - `react-native` - React Native and Expo: list virtualization, animations with Reanimated, native navigation, UI patterns, state management, monorepo config
+
+</details>
+
+<details>
+<summary><strong>agent-browser</strong> - Browser Automation CLI for AI Agents</summary>
+
+Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. From [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
+
+**Skills:**
+
+- `agent-browser` - Browser automation: navigation, forms, clicking, screenshots, auth, sessions, profiling, video recording
+
+**CLI Tool:** [agent-browser](https://github.com/vercel-labs/agent-browser) — install via `npm i -g agent-browser && agent-browser install`
 
 </details>
 
@@ -382,27 +395,6 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 - [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Configure Paper Search MCP
 
 **MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json) | [mcp/paper-search](https://hub.docker.com/r/mcp/paper-search)
-
-</details>
-
-<details>
-<summary><strong>playwright-tools</strong> - Playwright MCP & E2E Testing</summary>
-
-Browser automation with E2E testing skill and responsive design testing agent. Run `/playwright-tools:setup` after install. May require `npx playwright install` for browser binaries.
-
-**Agents:**
-
-- [`responsive-tester`](./plugins/playwright-tools/agents/responsive-tester.md) - Test pages across viewport breakpoints
-
-**Skills:**
-
-- [`playwright-testing`](./plugins/playwright-tools/skills/playwright-testing/SKILL.md) - E2E testing best practices
-
-**Commands:**
-
-- [`/playwright-tools:setup`](./plugins/playwright-tools/commands/setup.md) - Configure Playwright MCP
-
-**MCP:** [`.mcp.json`](./plugins/playwright-tools/.mcp.json) | [microsoft/playwright-mcp](https://github.com/microsoft/playwright-mcp)
 
 </details>
 
