@@ -9,186 +9,6 @@
   },
   "plugins": [
     {
-      "name": "ultralytics-dev",
-      "source": "./plugins/ultralytics-dev",
-      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
-      "version": "2.1.1",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
-      "category": "productivity",
-      "tags": ["formatting", "development"]
-    },
-    {
-      "name": "slack-tools",
-      "source": "./plugins/slack-tools",
-      "description": "Slack MCP integration for message search and channel operations with best practices skill.",
-      "version": "2.0.3",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["slack", "mcp", "messaging", "search"],
-      "category": "tools",
-      "tags": ["slack", "mcp", "integration"]
-    },
-    {
-      "name": "statusline-tools",
-      "source": "./plugins/statusline-tools",
-      "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
-      "version": "1.0.1",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["statusline", "usage", "context", "cost", "monitoring"],
-      "category": "productivity",
-      "tags": ["statusline", "monitoring"]
-    },
-    {
-      "name": "mongodb-tools",
-      "source": "./plugins/mongodb-tools",
-      "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
-      "version": "2.0.3",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["mongodb", "mcp", "database", "nosql"],
-      "category": "tools",
-      "tags": ["mongodb", "mcp", "integration"]
-    },
-    {
-      "name": "gcloud-tools",
-      "source": "./plugins/gcloud-tools",
-      "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["gcloud", "mcp", "observability", "logging", "metrics"],
-      "category": "tools",
-      "tags": ["gcloud", "mcp", "integration"]
-    },
-    {
-      "name": "linear-tools",
-      "source": "./plugins/linear-tools",
-      "description": "Linear MCP integration for issue tracking with workflow best practices skill.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["linear", "mcp", "issues", "project-management"],
-      "category": "tools",
-      "tags": ["linear", "mcp", "integration"]
-    },
-    {
-      "name": "github-dev",
-      "source": "./plugins/github-dev",
-      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
-      "version": "2.2.1",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["git", "commit", "pull-request", "github", "workflow", "agents", "commands"],
-      "category": "development",
-      "tags": ["git", "workflow", "automation"]
-    },
-    {
-      "name": "tavily-tools",
-      "source": "./plugins/tavily-tools",
-      "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
-      "category": "tools",
-      "tags": ["search", "mcp", "integration"]
-    },
-    {
-      "name": "paper-search-tools",
-      "source": "./plugins/paper-search-tools",
-      "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "mcp"],
-      "category": "tools",
-      "tags": ["research", "mcp", "integration"]
-    },
-    {
-      "name": "supabase-tools",
-      "source": "./plugins/supabase-tools",
-      "description": "Official Supabase MCP for database management with OAuth authentication.",
-      "version": "2.0.3",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["supabase", "database", "postgres", "oauth", "mcp"],
-      "category": "tools",
-      "tags": ["database", "mcp", "integration"]
-    },
-    {
-      "name": "notification-tools",
-      "source": "./plugins/notification-tools",
-      "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["notifications", "desktop", "alerts", "macos", "linux"],
-      "category": "productivity",
-      "tags": ["notifications", "alerts"]
-    },
-    {
-      "name": "general-dev",
-      "source": "./plugins/general-dev",
-      "description": "General development tools: code-simplifier agent for pattern analysis, rg preference hook.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["code-patterns", "simplification", "architecture", "analysis", "code-quality"],
-      "category": "development",
-      "tags": ["analysis", "patterns", "quality"]
-    },
-    {
       "name": "anthropic-essentials",
       "source": {
         "source": "url",
@@ -247,7 +67,11 @@
         "anthropic"
       ],
       "category": "development",
-      "tags": ["development", "design", "anthropic"]
+      "tags": [
+        "development",
+        "design",
+        "anthropic"
+      ]
     },
     {
       "name": "anthropic-creative-suite",
@@ -280,7 +104,11 @@
         "anthropic"
       ],
       "category": "productivity",
-      "tags": ["documents", "creative", "anthropic"]
+      "tags": [
+        "documents",
+        "creative",
+        "anthropic"
+      ]
     },
     {
       "name": "anthropic-plugin-dev",
@@ -291,9 +119,235 @@
       },
       "description": "Plugin development toolkit with skills for hooks, MCP servers, slash commands, subagents, skill creation, and plugin structure from Anthropic.",
       "version": "1.0.0",
-      "keywords": ["plugin", "development", "hooks", "mcp", "skills", "agents", "commands", "structure", "anthropic"],
+      "keywords": [
+        "plugin",
+        "development",
+        "hooks",
+        "mcp",
+        "skills",
+        "agents",
+        "commands",
+        "structure",
+        "anthropic"
+      ],
       "category": "development",
-      "tags": ["plugin", "development", "anthropic"]
+      "tags": [
+        "plugin",
+        "development",
+        "anthropic"
+      ]
+    },
+    {
+      "name": "phd-skills",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/fcakyon/phd-skills.git",
+        "path": "plugin"
+      },
+      "description": "Research skills for Claude Code — paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
+      "version": "1.1.0",
+      "author": {
+        "name": "Fatih Cagatay Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/phd-skills",
+      "repository": "https://github.com/fcakyon/phd-skills",
+      "license": "MIT",
+      "keywords": [
+        "research",
+        "academic",
+        "phd",
+        "paper-writing",
+        "citations",
+        "experiments",
+        "latex"
+      ],
+      "category": "productivity",
+      "tags": [
+        "research",
+        "academic",
+        "latex"
+      ]
+    },
+    {
+      "name": "react-skills",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/vercel-labs/agent-skills.git"
+      },
+      "description": "React, Next.js, and React Native best practices. 64 React/Next.js rules and 35+ React Native/Expo rules covering performance, rendering, state, animations, and navigation.",
+      "version": "1.0.0",
+      "strict": false,
+      "skills": [
+        "./skills/react-best-practices",
+        "./skills/react-native-skills"
+      ],
+      "license": "MIT",
+      "keywords": [
+        "react",
+        "react-native",
+        "nextjs",
+        "expo",
+        "performance",
+        "best-practices"
+      ],
+      "category": "development",
+      "tags": [
+        "react",
+        "frontend",
+        "best-practices"
+      ]
+    },
+    {
+      "name": "agent-browser",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/vercel-labs/agent-browser.git"
+      },
+      "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps with minimal token usage via snapshot + element refs.",
+      "version": "1.0.0",
+      "strict": false,
+      "skills": [
+        "./skills/agent-browser"
+      ],
+      "license": "MIT",
+      "keywords": [
+        "browser",
+        "automation",
+        "testing",
+        "agent-browser",
+        "web",
+        "screenshots",
+        "e2e"
+      ],
+      "category": "development",
+      "tags": [
+        "browser",
+        "automation",
+        "testing"
+      ]
+    },
+    {
+      "name": "web-design-guidelines",
+      "source": "./plugins/web-design-guidelines",
+      "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, forms, animation, performance, and more.",
+      "version": "1.0.0",
+      "homepage": "https://github.com/vercel-labs/web-interface-guidelines",
+      "repository": "https://github.com/vercel-labs/agent-skills",
+      "license": "MIT",
+      "keywords": [
+        "web-design",
+        "ui-review",
+        "accessibility",
+        "a11y",
+        "guidelines",
+        "frontend"
+      ],
+      "category": "development",
+      "tags": [
+        "frontend",
+        "design",
+        "guidelines"
+      ]
+    },
+    {
+      "name": "github-dev",
+      "source": "./plugins/github-dev",
+      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
+      "version": "2.2.1",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "git",
+        "commit",
+        "pull-request",
+        "github",
+        "workflow",
+        "agents",
+        "commands"
+      ],
+      "category": "development",
+      "tags": [
+        "git",
+        "workflow",
+        "automation"
+      ]
+    },
+    {
+      "name": "statusline-tools",
+      "source": "./plugins/statusline-tools",
+      "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
+      "version": "1.0.1",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "statusline",
+        "usage",
+        "context",
+        "cost",
+        "monitoring"
+      ],
+      "category": "productivity",
+      "tags": [
+        "statusline",
+        "monitoring"
+      ]
+    },
+    {
+      "name": "ultralytics-dev",
+      "source": "./plugins/ultralytics-dev",
+      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
+      "version": "2.1.1",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "ultralytics",
+        "formatting",
+        "hooks",
+        "python",
+        "code-quality",
+        "docstrings"
+      ],
+      "category": "productivity",
+      "tags": [
+        "formatting",
+        "development"
+      ]
+    },
+    {
+      "name": "notification-tools",
+      "source": "./plugins/notification-tools",
+      "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
+      "version": "2.0.2",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "notifications",
+        "desktop",
+        "alerts",
+        "macos",
+        "linux"
+      ],
+      "category": "productivity",
+      "tags": [
+        "notifications",
+        "alerts"
+      ]
     },
     {
       "name": "azure-tools",
@@ -306,9 +360,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["azure", "mcp", "cloud", "storage", "keyvault", "cosmos", "aks"],
+      "keywords": [
+        "azure",
+        "mcp",
+        "cloud",
+        "storage",
+        "keyvault",
+        "cosmos",
+        "aks"
+      ],
       "category": "tools",
-      "tags": ["azure", "mcp", "integration"]
+      "tags": [
+        "azure",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "ccproxy-tools",
@@ -321,9 +387,20 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["ccproxy", "gemini", "proxy", "copilot", "llm", "configuration"],
+      "keywords": [
+        "ccproxy",
+        "gemini",
+        "proxy",
+        "copilot",
+        "llm",
+        "configuration"
+      ],
       "category": "tools",
-      "tags": ["proxy", "llm", "configuration"]
+      "tags": [
+        "proxy",
+        "llm",
+        "configuration"
+      ]
     },
     {
       "name": "claude-tools",
@@ -336,69 +413,219 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
+      "keywords": [
+        "claude",
+        "settings",
+        "sync",
+        "config",
+        "allowlist",
+        "context"
+      ],
       "category": "productivity",
-      "tags": ["settings", "sync", "config"]
+      "tags": [
+        "settings",
+        "sync",
+        "config"
+      ]
     },
     {
-      "name": "react-skills",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/vercel-labs/agent-skills.git"
-      },
-      "description": "React, Next.js, and React Native best practices. 64 React/Next.js rules and 35+ React Native/Expo rules covering performance, rendering, state, animations, and navigation.",
-      "version": "1.0.0",
-      "strict": false,
-      "skills": ["./skills/react-best-practices", "./skills/react-native-skills"],
-      "license": "MIT",
-      "keywords": ["react", "react-native", "nextjs", "expo", "performance", "best-practices"],
-      "category": "development",
-      "tags": ["react", "frontend", "best-practices"]
-    },
-    {
-      "name": "agent-browser",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/vercel-labs/agent-browser.git"
-      },
-      "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps with minimal token usage via snapshot + element refs.",
-      "version": "1.0.0",
-      "strict": false,
-      "skills": ["./skills/agent-browser"],
-      "license": "MIT",
-      "keywords": ["browser", "automation", "testing", "agent-browser", "web", "screenshots", "e2e"],
-      "category": "development",
-      "tags": ["browser", "automation", "testing"]
-    },
-    {
-      "name": "web-design-guidelines",
-      "source": "./plugins/web-design-guidelines",
-      "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, forms, animation, performance, and more.",
-      "version": "1.0.0",
-      "homepage": "https://github.com/vercel-labs/web-interface-guidelines",
-      "repository": "https://github.com/vercel-labs/agent-skills",
-      "license": "MIT",
-      "keywords": ["web-design", "ui-review", "accessibility", "a11y", "guidelines", "frontend"],
-      "category": "development",
-      "tags": ["frontend", "design", "guidelines"]
-    },
-    {
-      "name": "phd-skills",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/fcakyon/phd-skills.git"
-      },
-      "description": "Research integrity plugin for Claude Code — paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
-      "version": "1.0.0",
+      "name": "gcloud-tools",
+      "source": "./plugins/gcloud-tools",
+      "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
+      "version": "2.0.2",
       "author": {
-        "name": "Fatih Cagatay Akyon"
+        "name": "Fatih Akyon"
       },
-      "homepage": "https://github.com/fcakyon/phd-skills",
-      "repository": "https://github.com/fcakyon/phd-skills",
-      "license": "MIT",
-      "keywords": ["research", "academic", "phd", "paper-writing", "citations", "experiments", "latex"],
-      "category": "productivity",
-      "tags": ["research", "academic", "latex"]
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "gcloud",
+        "mcp",
+        "observability",
+        "logging",
+        "metrics"
+      ],
+      "category": "tools",
+      "tags": [
+        "gcloud",
+        "mcp",
+        "integration"
+      ]
+    },
+    {
+      "name": "general-dev",
+      "source": "./plugins/general-dev",
+      "description": "General development tools: code-simplifier agent for pattern analysis, rg preference hook.",
+      "version": "2.0.2",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "code-patterns",
+        "simplification",
+        "architecture",
+        "analysis",
+        "code-quality"
+      ],
+      "category": "development",
+      "tags": [
+        "analysis",
+        "patterns",
+        "quality"
+      ]
+    },
+    {
+      "name": "linear-tools",
+      "source": "./plugins/linear-tools",
+      "description": "Linear MCP integration for issue tracking with workflow best practices skill.",
+      "version": "2.0.2",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "linear",
+        "mcp",
+        "issues",
+        "project-management"
+      ],
+      "category": "tools",
+      "tags": [
+        "linear",
+        "mcp",
+        "integration"
+      ]
+    },
+    {
+      "name": "mongodb-tools",
+      "source": "./plugins/mongodb-tools",
+      "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
+      "version": "2.0.3",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "mongodb",
+        "mcp",
+        "database",
+        "nosql"
+      ],
+      "category": "tools",
+      "tags": [
+        "mongodb",
+        "mcp",
+        "integration"
+      ]
+    },
+    {
+      "name": "paper-search-tools",
+      "source": "./plugins/paper-search-tools",
+      "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
+      "version": "2.0.2",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "paper-search",
+        "arxiv",
+        "pubmed",
+        "ieee",
+        "academic",
+        "research",
+        "mcp"
+      ],
+      "category": "tools",
+      "tags": [
+        "research",
+        "mcp",
+        "integration"
+      ]
+    },
+    {
+      "name": "slack-tools",
+      "source": "./plugins/slack-tools",
+      "description": "Slack MCP integration for message search and channel operations with best practices skill.",
+      "version": "2.0.3",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "slack",
+        "mcp",
+        "messaging",
+        "search"
+      ],
+      "category": "tools",
+      "tags": [
+        "slack",
+        "mcp",
+        "integration"
+      ]
+    },
+    {
+      "name": "supabase-tools",
+      "source": "./plugins/supabase-tools",
+      "description": "Official Supabase MCP for database management with OAuth authentication.",
+      "version": "2.0.3",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "supabase",
+        "database",
+        "postgres",
+        "oauth",
+        "mcp"
+      ],
+      "category": "tools",
+      "tags": [
+        "database",
+        "mcp",
+        "integration"
+      ]
+    },
+    {
+      "name": "tavily-tools",
+      "source": "./plugins/tavily-tools",
+      "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
+      "version": "2.0.2",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": [
+        "web-search",
+        "tavily",
+        "search",
+        "content-extraction",
+        "mcp"
+      ],
+      "category": "tools",
+      "tags": [
+        "search",
+        "mcp",
+        "integration"
+      ]
     }
   ]
 }
