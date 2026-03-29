@@ -129,6 +129,7 @@
       }
     }
   },
+  "showThinkingSummaries": true,
   "spinnerTipsEnabled": false,
   "alwaysThinkingEnabled": true,
   "cleanupPeriodDays": 9999,
