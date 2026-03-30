@@ -2,7 +2,10 @@
   <img src="https://github.com/user-attachments/assets/a978cb0a-785d-4a7d-aff2-7e962edd3120" width="10000" alt="Claude Codex Settings Logo">
 
 [![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/hesreallyhim/awesome-claude-code)
-[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-Plugin-blue)](#available-plugins)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](#installation)
+[![Codex CLI](https://img.shields.io/badge/Codex_CLI-Plugin-green)](#installation)
+[![Gemini CLI](https://img.shields.io/badge/Gemini_CLI-Extension-orange)](#installation)
+[![Cursor](https://img.shields.io/badge/Cursor-Plugin-purple)](#installation)
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
 [![llms.txt](https://img.shields.io/badge/llms.txt-✓-brightgreen)](https://context7.com/fcakyon/claude-codex-settings/llms.txt)
 
@@ -14,48 +17,58 @@ My daily battle-tested Claude [Code](https://github.com/anthropics/claude-code)/
 
 ## Installation
 
-> **Prerequisites:** Before installing, ensure you have Claude Code and required tools installed. See [INSTALL.md](INSTALL.md) for complete prerequisites.
+Plugins add skills, commands, and automations to your AI coding tool. Install only what you need from the plugin list below.
 
-Install agents, commands, hooks, skills, and MCP servers via [Claude Code Plugins](https://docs.claude.com/en/docs/claude-code/plugins) system:
+> **Prerequisites:** See [INSTALL.md](INSTALL.md) for setup requirements.
+
+<details open>
+<summary><strong>Claude Code</strong></summary>
 
 ```bash
-# Add marketplace
+# Add marketplace (one time)
 /plugin marketplace add fcakyon/claude-codex-settings
 
-# Install plugins (pick what you need)
-/plugin install anthropic-essentials@claude-settings     # Anthropic feature-dev, frontend, CLAUDE.md, skills
-/plugin install anthropic-creative-suite@claude-settings # Anthropic docs, theming, artifacts
-/plugin install anthropic-plugin-dev@claude-settings     # Anthropic plugin development toolkit
-/plugin install phd-skills@claude-settings               # Hypothesis design, paper review, citation checks
-/plugin install react-skills@claude-settings             # React, Next.js, React Native best practices
-/plugin install agent-browser@claude-settings            # Browser automation CLI
-/plugin install web-design-guidelines@claude-settings    # UI review for accessibility, forms, performance
-/plugin install github-dev@claude-settings               # Git workflow + GitHub MCP
-/plugin install statusline-tools@claude-settings         # Session + 5H usage statusline
-/plugin install ultralytics-dev@claude-settings          # Auto-formatting hooks
-/plugin install notification-tools@claude-settings       # OS notifications
-/plugin install azure-tools@claude-settings              # Azure MCP & Skills (40+ services)
-/plugin install ccproxy-tools@claude-settings            # Use any LLM via ccproxy/LiteLLM
-/plugin install claude-tools@claude-settings             # Sync CLAUDE.md + allowlist
-/plugin install gcloud-tools@claude-settings             # GCloud MCP & Skills
-/plugin install general-dev@claude-settings              # Code simplifier + utilities
-/plugin install linear-tools@claude-settings             # Linear MCP & Skills
-/plugin install mongodb-tools@claude-settings            # MongoDB MCP & Skills (read-only)
-/plugin install paper-search-tools@claude-settings       # Paper Search MCP & Skills
-/plugin install slack-tools@claude-settings              # Slack MCP & Skills
-/plugin install supabase-tools@claude-settings           # Supabase MCP & Skills
-/plugin install tavily-tools@claude-settings             # Tavily MCP & Skills
+# Install any plugin by name
+/plugin install <plugin-name>@claude-settings
 ```
 
-After installing MCP plugins, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
+After installing, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
 
-Then create symlink for cross-tool compatibility:
+</details>
+
+<details>
+<summary><strong>Codex CLI</strong></summary>
+
+```bash
+codex plugin install <plugin-name>@claude-settings
+```
+
+</details>
+
+<details>
+<summary><strong>Gemini CLI</strong></summary>
+
+```bash
+gemini extensions install --path ./plugins/<plugin-name>
+```
+
+</details>
+
+<details>
+<summary><strong>Cursor</strong></summary>
+
+```bash
+cursor plugin install <plugin-name>@claude-settings
+```
+
+</details>
+
+Create symlinks for cross-tool compatibility:
 
 ```bash
 ln -sfn CLAUDE.md AGENTS.md
+ln -sfn CLAUDE.md GEMINI.md
 ```
-
-Restart Claude Code to activate.
 
 ## Plugins
 
@@ -176,6 +189,11 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 <details>
 <summary><strong>web-design-guidelines</strong> - UI code review for web interface guidelines</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install web-design-guidelines@claude-settings` | `codex plugin install web-design-guidelines@claude-settings` | `gemini extensions install --path ./plugins/web-design-guidelines` |
+
+
 Review UI code for compliance with [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines). Full ruleset inlined for offline use.
 
 **Skills:**
@@ -186,6 +204,11 @@ Review UI code for compliance with [Web Interface Guidelines](https://github.com
 
 <details>
 <summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install github-dev@claude-settings` | `codex plugin install github-dev@claude-settings` | `gemini extensions install --path ./plugins/github-dev` |
+
 
 Git and GitHub automation. Run `/github-dev:setup` after install.
 
@@ -223,6 +246,11 @@ Git and GitHub automation. Run `/github-dev:setup` after install.
 <details>
 <summary><strong>statusline-tools</strong> - Session + 5H Usage Statusline</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install statusline-tools@claude-settings` | `codex plugin install statusline-tools@claude-settings` | `gemini extensions install --path ./plugins/statusline-tools` |
+
+
 Cross-platform statusline showing session context %, cost, and account-wide 5H usage with time until reset. Run `/statusline-tools:setup` after install.
 
 **Skills:**
@@ -237,6 +265,11 @@ Cross-platform statusline showing session context %, cost, and account-wide 5H u
 
 <details>
 <summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install ultralytics-dev@claude-settings` | `codex plugin install ultralytics-dev@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-dev` |
+
 
 Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 
@@ -253,6 +286,11 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 <details>
 <summary><strong>notification-tools</strong> - OS notifications</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install notification-tools@claude-settings` | `codex plugin install notification-tools@claude-settings` | `gemini extensions install --path ./plugins/notification-tools` |
+
+
 Desktop notifications when Claude Code completes tasks.
 
 **Hooks:**
@@ -263,6 +301,11 @@ Desktop notifications when Claude Code completes tasks.
 
 <details>
 <summary><strong>azure-tools</strong> - Azure MCP & Skills</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install azure-tools@claude-settings` | `codex plugin install azure-tools@claude-settings` | `gemini extensions install --path ./plugins/azure-tools` |
+
 
 40+ Azure services with Azure CLI authentication. Run `/azure-tools:setup` after install.
 
@@ -282,6 +325,11 @@ Desktop notifications when Claude Code completes tasks.
 <details>
 <summary><strong>ccproxy-tools</strong> - Use Claude Code with any LLM</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install ccproxy-tools@claude-settings` | `codex plugin install ccproxy-tools@claude-settings` | `gemini extensions install --path ./plugins/ccproxy-tools` |
+
+
 Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, GitHub Copilot, or other providers. Run `/ccproxy-tools:setup` after install.
 
 **Commands:**
@@ -296,6 +344,11 @@ Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, G
 
 <details>
 <summary><strong>claude-tools</strong> - Sync CLAUDE.md + allowlist + context refresh</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install claude-tools@claude-settings` | `codex plugin install claude-tools@claude-settings` | `gemini extensions install --path ./plugins/claude-tools` |
+
 
 Commands for syncing CLAUDE.md and permissions allowlist from repository, plus context refresh for long conversations.
 
@@ -313,6 +366,11 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 
 <details>
 <summary><strong>gcloud-tools</strong> - GCloud MCP & Skills</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install gcloud-tools@claude-settings` | `codex plugin install gcloud-tools@claude-settings` | `gemini extensions install --path ./plugins/gcloud-tools` |
+
 
 Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 
@@ -332,6 +390,11 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 <details>
 <summary><strong>general-dev</strong> - Code simplifier + utilities</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install general-dev@claude-settings` | `codex plugin install general-dev@claude-settings` | `gemini extensions install --path ./plugins/general-dev` |
+
+
 Code quality agent and utility hooks.
 
 **Agent:**
@@ -346,6 +409,11 @@ Code quality agent and utility hooks.
 
 <details>
 <summary><strong>linear-tools</strong> - Linear MCP & Skills</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install linear-tools@claude-settings` | `codex plugin install linear-tools@claude-settings` | `gemini extensions install --path ./plugins/linear-tools` |
+
 
 Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
@@ -365,6 +433,11 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 <details>
 <summary><strong>mongodb-tools</strong> - MongoDB MCP & Skills</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install mongodb-tools@claude-settings` | `codex plugin install mongodb-tools@claude-settings` | `gemini extensions install --path ./plugins/mongodb-tools` |
+
+
 Database exploration (read-only). Run `/mongodb-tools:setup` after install.
 
 **Skills:**
@@ -382,6 +455,11 @@ Database exploration (read-only). Run `/mongodb-tools:setup` after install.
 
 <details>
 <summary><strong>paper-search-tools</strong> - Paper Search MCP & Skills</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install paper-search-tools@claude-settings` | `codex plugin install paper-search-tools@claude-settings` | `gemini extensions install --path ./plugins/paper-search-tools` |
+
 
 Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:setup` after install. Requires Docker.
 
@@ -401,6 +479,11 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 <details>
 <summary><strong>slack-tools</strong> - Slack MCP & Skills</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install slack-tools@claude-settings` | `codex plugin install slack-tools@claude-settings` | `gemini extensions install --path ./plugins/slack-tools` |
+
+
 Message search and channel history. Run `/slack-tools:setup` after install.
 
 **Skills:**
@@ -419,6 +502,11 @@ Message search and channel history. Run `/slack-tools:setup` after install.
 <details>
 <summary><strong>supabase-tools</strong> - Supabase MCP & Skills</summary>
 
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install supabase-tools@claude-settings` | `codex plugin install supabase-tools@claude-settings` | `gemini extensions install --path ./plugins/supabase-tools` |
+
+
 Database management with OAuth. Run `/supabase-tools:setup` after install.
 
 **Skills:**
@@ -436,6 +524,11 @@ Database management with OAuth. Run `/supabase-tools:setup` after install.
 
 <details>
 <summary><strong>tavily-tools</strong> - Tavily MCP & Skills</summary>
+
+| Claude Code | Codex CLI | Gemini CLI |
+|-------------|-----------|------------|
+| `/plugin install tavily-tools@claude-settings` | `codex plugin install tavily-tools@claude-settings` | `gemini extensions install --path ./plugins/tavily-tools` |
+
 
 Web search and content extraction. Run `/tavily-tools:setup` after install.
 
@@ -571,22 +664,40 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 
 ## TODO
 
-- [ ] App [dokploy](https://github.com/Dokploy/dokploy) tools plugin with [dokploy-mcp](https://github.com/Dokploy/mcp) server and deployment best practices skill
-- [ ] Add more comprehsensive fullstack-dev plugin with various ocnfigurable skills:
-  - Backend: FastAPI, NodeJS
-  - Auth: Clerk (Auth, Email), Firebase/Firestore (Auth, DB), Supabase+Resend (Auth, DB, Email) RBAC with org:admin and org:member roles
-  - Styling: Tailwind CSS v4, [shadcn/ui components](https://github.com/shadcn-ui/ui), [Radix UI primitives](https://github.com/radix-ui/primitives)
-  - Monitoring: Sentry (errors, APM, session replay, structured logs)
-  - Analytics: [Web Vitals + Google Analytics](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
-- [ ] Publish `claudesettings.com` as a comprehensive documentation for installing, using and sharing useful Claude-Code settings
-- [ ] Rename plugins names to `mongodb-skills`, `github-skills` ...instead of `mongodb-tools`, `github-dev` ... for better UX
-- [ ] Add worktree support to github-dev create-pr and commit-staged commands for easier work on multiple branches of the same repo simultaneously
-- [ ] Add current repo branch and worktree info into statusline-tools plugin
+**Visual demos:**
+- [ ] Add before/after comparison slider images or GIFs for each plugin showing the value visually
+
+**Zero-MCP goal:**
+- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, slack, tavily, gcloud, azure, linear, supabase, paper-search)
+
+**New plugins/skills:**
+- [ ] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) integration
+- [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
+- [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form), React/React Native (OpenAI source), frontend design (OpenAI source)
+- [ ] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
+- [ ] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (in addition to Anthropic ones)
+- [ ] Auth: Clerk, Firebase, Supabase Auth patterns
+- [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
+
+**Static website:**
+- [ ] Publish plugin catalog site with search, category filtering, and per-tool install snippets
+
+**Other:**
+- [ ] Rename plugins to `mongodb-skills`, `github-skills` etc. for better UX
+- [ ] Add worktree support to github-dev create-pr and commit-staged commands
+- [ ] Add current repo branch and worktree info into statusline-tools
 
 ## References
 
 - [Claude Code](https://github.com/anthropics/claude-code) - Official CLI for Claude
+- [Claude Code Plugins](https://code.claude.com/docs/en/plugins-reference) - Plugin format reference
 - [Anthropic Skills](https://github.com/anthropics/skills) - Official skill examples
+- [OpenAI Codex](https://github.com/openai/codex) - Official CLI for Codex
+- [Codex Plugins](https://developers.openai.com/codex/plugins/build/) - Plugin format reference
+- [Gemini CLI](https://github.com/google-gemini/gemini-cli) - Official CLI for Gemini
+- [Gemini Extensions](https://geminicli.com/docs/extensions/reference/) - Extension format reference
+- [Cursor Plugins](https://cursor.com/docs/reference/plugins) - Plugin format reference
+- [AGENTS.md](https://agents.md/) - Cross-tool agent specification
 
 ## Thank you for the support!
 

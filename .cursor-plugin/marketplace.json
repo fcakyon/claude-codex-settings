@@ -1,0 +1,102 @@
+{
+  "name": "claude-settings",
+  "displayName": "Claude & Cursor Settings",
+  "plugins": [
+    {
+      "name": "web-design-guidelines",
+      "source": "./plugins/web-design-guidelines",
+      "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, forms, animation, performance, and more.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "github-dev",
+      "source": "./plugins/github-dev",
+      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
+      "version": "2.2.1"
+    },
+    {
+      "name": "statusline-tools",
+      "source": "./plugins/statusline-tools",
+      "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
+      "version": "1.0.1"
+    },
+    {
+      "name": "ultralytics-dev",
+      "source": "./plugins/ultralytics-dev",
+      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
+      "version": "2.1.1"
+    },
+    {
+      "name": "notification-tools",
+      "source": "./plugins/notification-tools",
+      "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
+      "version": "2.0.2"
+    },
+    {
+      "name": "azure-tools",
+      "source": "./plugins/azure-tools",
+      "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
+      "version": "2.0.2"
+    },
+    {
+      "name": "ccproxy-tools",
+      "source": "./plugins/ccproxy-tools",
+      "description": "Use Claude Code with your GitHub Copilot credits, Gemini API, local ollama models or any LLM.",
+      "version": "2.0.3"
+    },
+    {
+      "name": "claude-tools",
+      "source": "./plugins/claude-tools",
+      "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
+      "version": "2.1.0"
+    },
+    {
+      "name": "gcloud-tools",
+      "source": "./plugins/gcloud-tools",
+      "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
+      "version": "2.0.2"
+    },
+    {
+      "name": "general-dev",
+      "source": "./plugins/general-dev",
+      "description": "General development tools: code-simplifier agent for pattern analysis, rg preference hook.",
+      "version": "2.0.2"
+    },
+    {
+      "name": "linear-tools",
+      "source": "./plugins/linear-tools",
+      "description": "Linear MCP integration for issue tracking with workflow best practices skill.",
+      "version": "2.0.2"
+    },
+    {
+      "name": "mongodb-tools",
+      "source": "./plugins/mongodb-tools",
+      "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
+      "version": "2.0.3"
+    },
+    {
+      "name": "paper-search-tools",
+      "source": "./plugins/paper-search-tools",
+      "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
+      "version": "2.0.2"
+    },
+    {
+      "name": "slack-tools",
+      "source": "./plugins/slack-tools",
+      "description": "Slack MCP integration for message search and channel operations with best practices skill.",
+      "version": "2.0.3"
+    },
+    {
+      "name": "supabase-tools",
+      "source": "./plugins/supabase-tools",
+      "description": "Official Supabase MCP for database management with OAuth authentication.",
+      "version": "2.0.3"
+    },
+    {
+      "name": "tavily-tools",
+      "source": "./plugins/tavily-tools",
+      "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
+      "version": "2.0.2"
+    }
+  ]
+}

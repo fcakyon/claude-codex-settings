@@ -332,6 +332,101 @@ def validate_mcp(plugin_dir: Path) -> list[str]:
     return errors
 
 
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+CLAUDE_MARKETPLACE = REPO_ROOT / ".claude-plugin" / "marketplace.json"
+CODEX_MARKETPLACE = REPO_ROOT / ".agents" / "plugins" / "marketplace.json"
+CURSOR_MARKETPLACE = REPO_ROOT / ".cursor-plugin" / "marketplace.json"
+
+
+def load_json(path: Path) -> dict | list | None:
+    """Load JSON file, return None on failure."""
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError:
+        return None
+
+
+def get_local_plugin_names() -> set[str]:
+    """Extract local plugin names from Claude marketplace."""
+    data = load_json(CLAUDE_MARKETPLACE)
+    if not data:
+        return set()
+    return {
+        e["name"]
+        for e in data.get("plugins", [])
+        if e.get("name") and isinstance(e.get("source"), str)
+    }
+
+
+def validate_symlinks() -> list[str]:
+    """Validate AGENTS.md and GEMINI.md are symlinks to CLAUDE.md."""
+    errors = []
+    for name in ("AGENTS.md", "GEMINI.md"):
+        path = REPO_ROOT / name
+        if not path.exists():
+            errors.append(f"missing {name} (should be symlink to CLAUDE.md)")
+        elif not path.is_symlink():
+            errors.append(f"{name} exists but is not a symlink (should point to CLAUDE.md)")
+        elif path.resolve().name != "CLAUDE.md":
+            errors.append(f"{name} points to {path.resolve().name}, expected CLAUDE.md")
+    return errors
+
+
+def validate_cross_tool_manifests(plugin_dir: Path) -> list[str]:
+    """Validate cross-tool manifests exist and match Claude manifest."""
+    errors = []
+    claude = load_json(plugin_dir / ".claude-plugin" / "plugin.json")
+    if not claude:
+        return errors
+
+    ref_name = claude.get("name", "")
+    ref_version = claude.get("version", "")
+
+    for label, manifest_path in [
+        ("codex", plugin_dir / ".codex-plugin" / "plugin.json"),
+        ("cursor", plugin_dir / ".cursor-plugin" / "plugin.json"),
+        ("gemini", plugin_dir / "gemini-extension.json"),
+    ]:
+        data = load_json(manifest_path)
+        if data is None:
+            if manifest_path.exists():
+                errors.append(f"[{plugin_dir.name}] {label}: invalid JSON in {manifest_path.name}")
+            else:
+                errors.append(f"[{plugin_dir.name}] {label}: missing {manifest_path.relative_to(plugin_dir)}")
+            continue
+        if data.get("name") != ref_name:
+            errors.append(f"[{plugin_dir.name}] {label}: name '{data.get('name')}' != claude '{ref_name}'")
+        if data.get("version", "") and ref_version and data["version"] != ref_version:
+            errors.append(f"[{plugin_dir.name}] {label}: version '{data['version']}' != claude '{ref_version}'")
+
+    return errors
+
+
+def validate_marketplace_alignment() -> list[str]:
+    """Validate Codex and Cursor marketplaces list the same local plugins as Claude."""
+    errors = []
+    local_names = get_local_plugin_names()
+    if not local_names:
+        return errors
+
+    for label, path in [("codex", CODEX_MARKETPLACE), ("cursor", CURSOR_MARKETPLACE)]:
+        data = load_json(path)
+        if not data:
+            errors.append(f"{label} marketplace: missing {path.relative_to(REPO_ROOT)}")
+            continue
+        other_names = {e["name"] for e in data.get("plugins", []) if e.get("name")}
+        missing = local_names - other_names
+        extra = other_names - local_names
+        if missing:
+            errors.append(f"{label} marketplace missing plugins: {', '.join(sorted(missing))}")
+        if extra:
+            errors.append(f"{label} marketplace has extra plugins: {', '.join(sorted(extra))}")
+
+    return errors
+
+
 def main():
     """Validate all plugins and return exit code."""
     plugins_dir = Path("plugins")
@@ -353,6 +448,10 @@ def main():
         all_errors.extend(validate_commands(plugin_dir))
         all_errors.extend(validate_hooks(plugin_dir))
         all_errors.extend(validate_mcp(plugin_dir))
+        all_errors.extend(validate_cross_tool_manifests(plugin_dir))
+
+    all_errors.extend(validate_symlinks())
+    all_errors.extend(validate_marketplace_alignment())
 
     if all_errors:
         print("Plugin Validation Failed:")
