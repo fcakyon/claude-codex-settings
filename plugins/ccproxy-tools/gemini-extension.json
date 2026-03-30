@@ -1,0 +1,5 @@
+{
+  "name": "ccproxy-tools",
+  "version": "2.0.3",
+  "description": "Use Claude Code with your GitHub Copilot credits, Gemini API, local ollama models or any LLM."
+}

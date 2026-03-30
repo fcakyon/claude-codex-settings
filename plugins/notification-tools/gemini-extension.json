@@ -1,0 +1,5 @@
+{
+  "name": "notification-tools",
+  "version": "2.0.2",
+  "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux."
+}

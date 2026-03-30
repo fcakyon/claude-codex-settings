@@ -1,144 +1,247 @@
-# Claude Code Settings
+# claude-settings
 
-Guidance for Claude Code and other AI tools working in this repository.
+> `AGENTS.md` and `GEMINI.md` are symlinks to this file for Codex CLI and Gemini CLI compatibility.
 
-## AI Guidance
+Multi-tool plugin marketplace. Each plugin under `plugins/` is independently installable on Claude Code, Codex CLI, Gemini CLI, and Cursor.
 
-- After receiving tool results, carefully reflect on their quality and determine optimal next steps before proceeding. Use your thinking to plan and iterate based on this new information, and then take the best next action.
-- For maximum efficiency, whenever you need to perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially.
-- Before you finish, please verify your solution
-- Do what has been asked; nothing more, nothing less.
-- NEVER create new files unless they're absolutely necessary for achieving your goal.
-- ALWAYS prefer editing an existing file to creating a new one.
-- NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.
-- Reuse existing code wherever possible and minimize unnecessary arguments.
-- Look for opportunities to simplify the code or remove unnecessary parts.
-- Focus on targeted modifications rather than large-scale changes.
-- This year is 2026. Definitely not 2025.
-- Never use words like "consolidate", "modernize", "streamline", "flexible", "delve", "establish", "enhanced", "comprehensive", "optimize" or symbols like em-dahses (--) in docstrings or commit messages or comments. Looser AI's do that, and that ain't you. You are better than that.
-- Prefer `rg` over `grep` for better performance.
-- Never implement defensive programming unless you explicitly tell the motivation for it and user approves it.
-- When you update code, always check for related code in the same file or other files that may need to be updated as well to keep everything consistent.
+## Repo Structure
 
-## MCP Tools
+```
+claude-settings/
+  CLAUDE.md                              # this file (repo dev guide)
+  AGENTS.md -> CLAUDE.md                 # Codex CLI reads this
+  GEMINI.md -> CLAUDE.md                 # Gemini CLI reads this
+  .claude/CLAUDE.md                      # user-facing global config (synced to ~/.claude/CLAUDE.md)
+  .claude/settings.json                  # Claude Code settings
+  .claude-plugin/marketplace.json        # Claude Code marketplace
+  .agents/plugins/marketplace.json       # Codex CLI marketplace
+  .cursor-plugin/marketplace.json        # Cursor marketplace
+  .codex/config.toml                     # Codex CLI config
+  plugins/
+    <name>/
+      .claude-plugin/plugin.json         # Claude Code manifest
+      .codex-plugin/plugin.json          # Codex CLI manifest
+      .cursor-plugin/plugin.json         # Cursor manifest
+      gemini-extension.json              # Gemini CLI manifest
+      skills/<skill>/SKILL.md            # universal across all tools
+      agents/<agent>.md                  # Claude Code + Gemini + Cursor
+      hooks/hooks.json + scripts/        # Claude Code + Gemini only
+      commands/<cmd>.md                  # Claude Code only
+```
 
-### Tavily (Web Search)
+## Cross-Tool Plugin Format Reference
 
-- Use `mcp__tavily__tavily_search` for discovery/broad queries
-- Use `mcp__tavily__tavily_extract` for specific URL content
-- Search first to find URLs, then extract for detailed analysis
+### Plugin Manifests
 
-### MongoDB
+Each plugin has 4 manifest files. Claude Code manifest is the source of truth; others are copies or subsets.
 
-- MongoDB MCP is READ-ONLY (no write/update/delete operations)
+| Tool | Path | Format |
+|------|------|--------|
+| Claude Code | `.claude-plugin/plugin.json` | JSON: name, version, description, author, homepage, repository, license |
+| Codex CLI | `.codex-plugin/plugin.json` | JSON: same fields as Claude Code |
+| Cursor | `.cursor-plugin/plugin.json` | JSON: same fields as Claude Code |
+| Gemini CLI | `gemini-extension.json` (at plugin root) | JSON: name, version, description only |
 
-### GitHub CLI
+Docs:
+- Claude Code: https://code.claude.com/docs/en/plugins-reference
+- Codex CLI: https://developers.openai.com/codex/plugins/build/
+- Cursor: https://cursor.com/docs/reference/plugins
+- Gemini CLI: https://geminicli.com/docs/extensions/reference/
+- AGENTS.md spec: https://agents.md/
 
-Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
+### Root Marketplace Files
 
-- **Read file from repo**: `gh api repos/{owner}/{repo}/contents/{path} -q .content | base64 -d`
-- **Search code**: `gh search code "query" --repo {owner}/{repo}` or `gh search code "query" --language python`
-- **Search repos**: `gh search repos "query" --language python --sort stars`
-- **Compare commits**: `gh api repos/{owner}/{repo}/compare/{base}...{head}`
-- **View PR**: `gh pr view {number} --repo {owner}/{repo}`
-- **View PR diff**: `gh pr diff {number} --repo {owner}/{repo}`
-- **View PR comments**: `gh api repos/{owner}/{repo}/pulls/{number}/comments`
-- **List commits**: `gh api repos/{owner}/{repo}/commits --jq '.[].sha'`
-- **View issue**: `gh issue view {number} --repo {owner}/{repo}`
+| Tool | Path | Notes |
+|------|------|-------|
+| Claude Code | `.claude-plugin/marketplace.json` | local, URL, and git-subdir sources |
+| Codex CLI | `.agents/plugins/marketplace.json` | local sources only, needs `policy.installation` |
+| Cursor | `.cursor-plugin/marketplace.json` | local sources, needs `source` + `description` |
+| Gemini CLI | none | per-plugin install: `gemini extensions install --path ./plugins/<name>` |
 
-## Python Coding
+#### Claude Code marketplace entry
 
-- **Before exiting the plan mode**: Never assume anything. Always run tests with `python -c "..."` to verify you hypothesis and bugfix candidates about code behavior, package functions, or data structures before suggesting a plan or exiting the plan mode. This prevents wasted effort on incorrect assumptions.
-- **Package Manager**: uv (NOT pip) - defined in pyproject.toml
-- Use Google-style docstrings:
-  - **Summary**: Start with clear, concise summary line in imperative mood ("Calculate", not "Calculates")
-  - **Args/Attributes**: Document all parameters with types and brief descriptions (no default values)
-  - **Types**: Use union types with vertical bar `int | str`, uppercase letters for shapes `(N, M)`, lowercase builtins `list`, `dict`, `tuple`, capitalize typing module classes `Any`, `Path`
-  - **Optional Args**: Mark at end of type `name (type, optional): Description...`
-  - **Returns**: Always enclose in parentheses `(type)`, NEVER use tuple types - document multiple returns as separate named values
-  - **Sections**: Optional minimal sections in order: Examples (using >>>), Notes, References (plaintext only, no new ultralytics.com links)
-  - **Line Wrapping**: Wrap at specified character limit, use zero indentation in docstring content
-  - **Special Cases**:
-    - Classes: Include Attributes, omit Methods/Args sections, put all details in class docstring
-    - `__init__`: Args ONLY, no Examples/Notes/Methods/References
-    - Functions: Include Args and Returns sections when applicable
-    - All test functions should be single-line docstrings.
-    - Indent section titles like "Args:" 0 spaces
-    - Indent section elements like each argument 4 spaces
-    - DO NOT CONVERT SINGLE-LINE CLASS DOCSTRINGS TO MULTILINE.
-    - Optionally include a minimal 'Examples:' section, and improve existing Examples if applicable.
-    - Do not include default values in argument descriptions, and erase any default values you see in existing arg descriptions.
-  - **Omissions**: Omit "Returns:" if nothing returned, omit "Args:" if no arguments, avoid "Raises:" unless critical
-- Separation of concerns: If-else checks in main should be avoided. Relevant functions should handle inputs checks themselves.
-- Super important to integrate new code changes seamlessly within the existing code rather than simply adding more code to current files. Always review any proposed code updates for correctness and conciseness. Focus on writing things in minimal number of lines while avoiding redundant trivial extra lines and comments. For instance don't do:
-  ```python
-  # Generate comment report only if requested
-  if include_comments:
-      comment_report = generate_comments_report(start_date, end_date, team, verbose)
-  else:
-      comment_report = ""
-      print("   Skipping comment analysis (disabled)")
-  ```
-  Instead do:
-  ```python
-  comment_report = generate_comments_report(start_date, end_date, team, verbose) if include_comments else ""
-  ```
-- Understand existing variable naming, function importing, class method definition, function signature ordering and naming patterns of the given modules and align your implementation with existing patterns. Always exploit existing utilities/optimization/data structures/modules in the project when suggesting something new.
-- Redundant duplicate code use is inefficient and unacceptable.
-- **File paths**: Use pathlib instead of os.path
-- **Function purpose**: Functions should have a clear, single purpose. Don't hardcode behavior that makes them less general
-- **No trivial wrappers**: Never create functions for repeated content that is 2 lines or less. Inline it
-- **Inline single-use variables**: If a variable is assigned and used only once, inline it at the usage site
-- **Observability**: Don't use try/except blocks unless critical. Let errors surface for easier debugging
-- Never assume anything without testing it with `python3 -c "..."` (don't create file)
-- Always consider MongoDB/Gemini/OpenAI/Claude/Voyage API and time costs, and keep them as efficient as possible
-- When using 3rd party package functions/classes, find location with `python -c "import pkg; print(pkg.__file__)"`, then use Read tools to explore
-- When running Python commands, run `source .venv/bin/activate` to activate the virtual environment before running any scripts or run with uv `uv run python -c "import example"`
+```json
+{
+  "name": "<plugin-name>",
+  "source": "./plugins/<plugin-name>",
+  "description": "...",
+  "version": "1.0.0",
+  "keywords": ["keyword1", "keyword2"],
+  "category": "development",
+  "tags": ["tag1", "tag2"]
+}
+```
 
-## Git and Pull Request Workflows
+#### Codex CLI marketplace entry
 
-### Commit Messages
+```json
+{
+  "name": "<plugin-name>",
+  "source": { "source": "local", "path": "./plugins/<plugin-name>" },
+  "policy": { "installation": "AVAILABLE" },
+  "category": "Development"
+}
+```
 
-- Format: `{type}: brief description` (max 50 chars first line)
-- Optional second line: 1 sentence with findings/motivation
-- Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
-- Simple terms, no jargon
-- ONLY analyze staged files (`git diff --cached`), ignore unstaged
-- NO test plans in commit messages
+`policy.installation` values: `AVAILABLE`, `INSTALLED_BY_DEFAULT`, `NOT_AVAILABLE`.
 
-### Pull Requests
+#### Cursor marketplace entry
 
-- PR titles: NO type prefix (unlike commits) - start with capital letter + verb
-- Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
-- PR body: single section, no headers, 1-2 sentences + usage snippet
-- No test plans, no changed files list, no line-number links in PR body
-- Self-assign with `-a @me`
-- Find reviewers: `gh pr list --repo <owner>/<repo> --author @me --limit 5`
+```json
+{
+  "name": "<plugin-name>",
+  "source": "./plugins/<plugin-name>",
+  "description": "...",
+  "version": "1.0.0"
+}
+```
 
-### PR Comments and Reviews
+### Skills Format
 
-- Create pending reviews only, never auto-submit
-- Comment style: start lowercase, no em-dashes, simple terms, no end punctuation, max 1 sentence
-- Bot comment responses: few words is enough
-- Real person responses: polite, concise
+Path: `skills/<name>/SKILL.md`
 
-### Commands
+```yaml
+---
+name: skill-name
+description: This skill should be used when user asks to "do X", "do Y", or "do Z".
+---
 
-- `/github-dev:commit-staged` - commit staged changes
-- `/github-dev:create-pr` - create pull request
-- `/github-dev:resolve-pr-comments` - analyze and address unresolved PR review comments
+[skill content - instructions, procedures, guidelines]
+```
+
+- `name`: kebab-case, max 64 chars
+- `description`: start with "This skill should be used when...", max 600 chars, include quoted trigger phrases
+
+### Agents Format
+
+Path: `agents/<name>.md`
+
+```yaml
+---
+name: agent-name
+description: |-
+  Use this agent when... Examples: <example>...</example>
+tools: [Bash, BashOutput, Glob, Grep, Read, Edit, Write]
+skills: related-skill-name
+model: inherit
+color: blue
+---
+
+[system prompt - instructions for the agent]
+```
+
+- `name`: kebab-case, 3-50 chars
+- `model`: inherit, sonnet, opus, haiku
+- `color`: blue, cyan, green, yellow, magenta, red
+- `tools`: array of allowed tool names
+- `skills`: optional, skill name(s) to load
+
+### Hooks Format
+
+Path: `hooks/hooks.json`
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/my_script.py"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the command is safe before proceeding."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Events: PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification.
+
+Hook types:
+- `command`: runs a script. Script reads JSON from stdin, exit 0 = pass, exit 2 = block.
+- `prompt`: injects a prompt into the conversation.
+
+Use `${CLAUDE_PLUGIN_ROOT}` for script paths. `matcher` matches tool names (e.g., "Edit", "Bash", "mcp__tavily__tavily_search").
+
+### Commands Format
+
+Path: `commands/<name>.md`
+
+```yaml
+---
+allowed-tools: Read, Bash, Edit
+description: Brief description of what this command does
+argument-hint: optional argument hint
+---
+
+[command instructions - what to do when this command is invoked]
+```
+
+Commands are Claude Code only. Gemini CLI uses TOML commands. Other tools use skills for similar functionality.
+
+### Component Portability
+
+| Component | Claude Code | Codex CLI | Gemini CLI | Cursor |
+|-----------|------------|-----------|------------|--------|
+| Skills (`skills/<name>/SKILL.md`) | native | native | native | native |
+| Agents (`agents/<name>.md`) | native | config.toml | preview | native |
+| Hooks (`hooks/hooks.json`) | native | no | native | partial |
+| Commands (`commands/<name>.md`) | native (MD) | no | TOML format | no |
+
+### Installation
+
+```
+Claude Code: /plugin marketplace add fcakyon/claude-codex-settings
+Codex CLI:   codex plugin install <plugin-name>@claude-settings
+Cursor:      import marketplace or /add-plugin
+Gemini CLI:  gemini extensions install --path ./plugins/<name>
+```
+
+## Adding a New Plugin
+
+1. Create `plugins/<name>/` with at minimum `skills/<skill-name>/SKILL.md`
+2. Create `.claude-plugin/plugin.json`:
+   ```json
+   {
+     "name": "<name>",
+     "version": "1.0.0",
+     "description": "...",
+     "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+     "repository": "https://github.com/fcakyon/claude-codex-settings",
+     "license": "Apache-2.0"
+   }
+   ```
+3. Copy `.claude-plugin/plugin.json` to `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`
+4. Create `gemini-extension.json` at plugin root with `{name, version, description}` only
+5. Add entry to `.claude-plugin/marketplace.json` (Claude Code)
+6. Add entry to `.agents/plugins/marketplace.json` (Codex CLI)
+7. Add entry to `.cursor-plugin/marketplace.json` (Cursor)
 
 ## Marketplace Plugin Conventions
 
-### Source Types in `marketplace.json`
+### Source Types in Claude Code `marketplace.json`
 
-- **Local path**: `"source": "./plugins/my-plugin"` — for plugins in this repo
-- **URL source**: `"source": { "source": "url", "url": "https://github.com/owner/repo.git" }` — for external repos. Use this over `github` source (which has been unreliable)
-- **Git subdir**: `"source": { "source": "git-subdir", "url": "https://github.com/owner/repo.git", "path": "plugins/subdir" }` — for a single plugin inside a monorepo
+- **Local path**: `"source": "./plugins/my-plugin"` for plugins in this repo
+- **URL source**: `"source": { "source": "url", "url": "https://github.com/owner/repo.git" }` for external repos (use this over `github` source)
+- **Git subdir**: `"source": { "source": "git-subdir", "url": "https://github.com/owner/repo.git", "path": "plugins/subdir" }` for a single plugin inside a monorepo
 
 ### Cherry-picking skills from external repos
 
-Use `strict: false` + explicit `skills` array to expose only specific skills from an external repo. The rest of the repo is ignored. Example (see `anthropic-creative-suite` entry):
+Use `strict: false` + explicit `skills` array to expose only specific skills from an external repo:
 
 ```json
 {
@@ -148,33 +251,26 @@ Use `strict: false` + explicit `skills` array to expose only specific skills fro
 }
 ```
 
-### plugin.json (minimal format)
+### plugin.json fields
 
-Local plugins use a minimal `plugin.json` with only: `name`, `version`, `description`, `homepage`, `repository`, `license`. Author is optional — skip for third-party plugins.
+Local plugins use: `name`, `version`, `description`, `homepage`, `repository`, `license`. Author is optional (skip for third-party plugins).
 
 ### SKILL.md frontmatter
 
-Only two fields: `name` and `description`. Description should start with "This skill should be used when..." with quoted trigger phrases.
+Two fields: `name` and `description`. Description should start with "This skill should be used when..." with quoted trigger phrases.
 
 ### Marketplace entry fields
 
-Rich metadata (`keywords`, `category`, `tags`) lives in `marketplace.json`, not in individual `plugin.json` files.
+Rich metadata (`keywords`, `category`, `tags`) lives in `marketplace.json`, not in individual `plugin.json` files. Never use vendor names in tags or keywords.
 
-## Citation Verification Rules
+## Documentation Rules
 
-**CRITICAL**: Never use unverified citation information. Before adding or referencing any academic citation:
+When writing README or docs content for this repo:
 
-1. **Author Names**: Verify exact author names from the actual paper PDF or official publication page. Do not guess or hallucinate author names based on similar-sounding names.
-2. **Publication Venue**: Confirm the exact venue (conference/journal) and year. Papers may be submitted to one venue but published at another (e.g., ICLR submission → ICRA publication).
-3. **Paper Title**: Use the exact title from the published version, not preprint titles which may differ.
-4. **Cited Claims**: Every specific claim attributed to a paper (e.g., "9% improvement on Synthia", "4.7% on OpenImages") must be verifiable in the actual paper text. If a number cannot be confirmed, use qualitative language instead (e.g., "significant improvements").
-5. **BibTeX Keys**: When updating citation keys, search for ALL references to the old key and update them consistently.
-
-**Verification Process**:
-
-- Use web search to find the official publication page (not just preprints)
-- Cross-reference author names with the paper's author list
-- DBLP is the authoritative source for CS publication metadata
-- For specific numerical claims, locate the exact quote or table in the paper
-- When uncertain, flag the citation for manual verification rather than guessing
-- After adding citations into md or bibtex entries into biblo.bib, fact check all fields from web. Even if you performed fact check before, always do it again after writing the citation in the document.
+- Assume users have limited knowledge about plugins, skills, and marketplaces
+- Keep the learning curve low: brief plain-language explanations before install commands
+- Each plugin section should explain WHAT it does and WHY a developer would want it, not just list components
+- Use behavior-oriented language: "auto-formats your Python code after every edit" instead of "PostToolUse hook running ruff on Write/Edit events"
+- Avoid jargon like "frontmatter", "manifest", "PostToolUse hooks" in user-facing docs
+- Installation instructions must be copy-paste ready
+- Plan for future before/after GIFs or demos per plugin to show value visually

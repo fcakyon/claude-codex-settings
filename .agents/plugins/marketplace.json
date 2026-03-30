@@ -1,0 +1,184 @@
+{
+  "name": "claude-settings",
+  "interface": {
+    "displayName": "Claude & Codex Settings"
+  },
+  "plugins": [
+    {
+      "name": "web-design-guidelines",
+      "source": {
+        "source": "local",
+        "path": "./plugins/web-design-guidelines"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "development"
+    },
+    {
+      "name": "github-dev",
+      "source": {
+        "source": "local",
+        "path": "./plugins/github-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "development"
+    },
+    {
+      "name": "statusline-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/statusline-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "productivity"
+    },
+    {
+      "name": "ultralytics-dev",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ultralytics-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "productivity"
+    },
+    {
+      "name": "notification-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/notification-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "productivity"
+    },
+    {
+      "name": "azure-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/azure-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "ccproxy-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ccproxy-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "claude-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/claude-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "productivity"
+    },
+    {
+      "name": "gcloud-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/gcloud-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "general-dev",
+      "source": {
+        "source": "local",
+        "path": "./plugins/general-dev"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "development"
+    },
+    {
+      "name": "linear-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/linear-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "mongodb-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/mongodb-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "paper-search-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/paper-search-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "slack-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/slack-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "supabase-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/supabase-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    },
+    {
+      "name": "tavily-tools",
+      "source": {
+        "source": "local",
+        "path": "./plugins/tavily-tools"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "tools"
+    }
+  ]
+}

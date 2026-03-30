@@ -55,60 +55,63 @@ Optionally install IDE extension:
 
 - [Codex VSCode extension](https://developers.openai.com/codex/ide) for IDE integration
 
+### Gemini CLI
+
+Install Gemini CLI:
+
+```bash
+npm install -g @anthropic-ai/gemini-cli
+```
+
+Install individual plugins:
+
+```bash
+gemini extensions install --path ./plugins/<plugin-name>
+```
+
 ### Required Tools
 
 #### jq (JSON processor - required for hooks)
 
-**macOS:**
-
 ```bash
+# macOS
 brew install jq
-```
 
-**Ubuntu/Debian:**
-
-```bash
+# Ubuntu/Debian
 sudo apt-get install jq
+
+# No sudo: local binary
+mkdir -p ~/.local/bin
+curl -Lo ~/.local/bin/jq https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+chmod +x ~/.local/bin/jq
 ```
 
-**Other Linux distributions:**
+#### GitHub CLI (required for github-dev plugin)
 
 ```bash
-# Check your package manager, e.g.:
-# sudo yum install jq (RHEL/CentOS)
-# sudo pacman -S jq (Arch)
-```
-
-#### GitHub CLI (required for pr-manager agent)
-
-**macOS:**
-
-```bash
+# macOS
 brew install gh
-```
 
-**Ubuntu/Debian:**
-
-```bash
+# Ubuntu/Debian
 sudo apt-get install gh
+
+# No sudo: local binary
+mkdir -p ~/.local/bin
+GH_VERSION=$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep tag_name | cut -d '"' -f 4 | sed 's/v//')
+curl -Lo gh.tar.gz "https://github.com/cli/cli/releases/latest/download/gh_${GH_VERSION}_linux_amd64.tar.gz"
+tar xzf gh.tar.gz --strip-components=1 -C ~/.local/bin "gh_${GH_VERSION}_linux_amd64/bin/gh"
+rm gh.tar.gz
 ```
 
-**Other Linux distributions:**
-
-```bash
-# Check your package manager, e.g.:
-# sudo yum install gh (RHEL/CentOS)
-# sudo pacman -S github-cli (Arch)
-```
+> If using local binaries, add `~/.local/bin` to PATH: `export PATH="$HOME/.local/bin:$PATH"`
 
 ### Code Quality Tools
 
 ```bash
 # Python formatting (required for Python hook)
-pip install ruff
+uv tool install ruff
 
 # Prettier for JS/TS/CSS/JSON/YAML/HTML/Markdown/Shell formatting (required for prettier hooks)
-# Note: npm is required for prettier even though Claude Code no longer needs it
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
@@ -116,10 +119,11 @@ npm install -g prettier@3.6.2 prettier-plugin-sh
 
 ### Create Shared Agent Guidance
 
-Create a symlink for cross-tool compatibility ([AGENTS.md](https://agents.md/)):
+Create symlinks for cross-tool compatibility ([AGENTS.md](https://agents.md/)):
 
 ```bash
 ln -sfn CLAUDE.md AGENTS.md
+ln -sfn CLAUDE.md GEMINI.md
 ```
 
 This lets tools like [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.

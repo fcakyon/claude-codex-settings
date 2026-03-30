@@ -1,0 +1,5 @@
+{
+  "name": "tavily-tools",
+  "version": "2.0.2",
+  "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection."
+}

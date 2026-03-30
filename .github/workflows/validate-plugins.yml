@@ -5,10 +5,24 @@ on:
     branches: [main]
     paths:
       - "plugins/**"
+      - ".claude-plugin/**"
+      - ".codex-plugin/**"
+      - ".cursor-plugin/**"
+      - ".agents/**"
+      - "CLAUDE.md"
+      - "AGENTS.md"
+      - "GEMINI.md"
   pull_request:
     branches: [main]
     paths:
       - "plugins/**"
+      - ".claude-plugin/**"
+      - ".codex-plugin/**"
+      - ".cursor-plugin/**"
+      - ".agents/**"
+      - "CLAUDE.md"
+      - "AGENTS.md"
+      - "GEMINI.md"
 
 jobs:
   validate:
