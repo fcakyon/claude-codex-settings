@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sync marketplace.json plugin entries to individual plugin.json files."""
+"""Sync marketplace.json plugin entries to individual plugin.json files across Claude Code, Codex CLI, and Cursor."""
 
 import json
 import sys
@@ -72,6 +72,32 @@ def sync_marketplace_to_plugins():
         if current_data != plugin_data:
             plugin_json_path.write_text(json.dumps(plugin_data, indent=2) + "\n")
             synced.append(plugin.get("name", source))
+
+        # Sync to Codex and Cursor manifests (same content as Claude)
+        for tool_dir in [".codex-plugin", ".cursor-plugin"]:
+            tool_json_dir = plugin_dir / tool_dir
+            tool_json_path = tool_json_dir / "plugin.json"
+            tool_json_dir.mkdir(parents=True, exist_ok=True)
+            tool_current = {}
+            if tool_json_path.exists():
+                try:
+                    tool_current = json.loads(tool_json_path.read_text())
+                except json.JSONDecodeError:
+                    pass
+            if tool_current != plugin_data:
+                tool_json_path.write_text(json.dumps(plugin_data, indent=2) + "\n")
+
+        # Sync gemini-extension.json (minimal: name, version, description)
+        gemini_path = plugin_dir / "gemini-extension.json"
+        gemini_data = {k: plugin_data[k] for k in ["name", "version", "description"] if k in plugin_data}
+        gemini_current = {}
+        if gemini_path.exists():
+            try:
+                gemini_current = json.loads(gemini_path.read_text())
+            except json.JSONDecodeError:
+                pass
+        if gemini_current != gemini_data:
+            gemini_path.write_text(json.dumps(gemini_data, indent=2) + "\n")
 
     if synced:
         print(f"✓ Synced {len(synced)} plugin manifest(s): {', '.join(synced)}")
