@@ -127,6 +127,7 @@
     }
   },
   "showThinkingSummaries": true,
+  "autoDreamEnabled": true,
   "spinnerTipsEnabled": false,
   "alwaysThinkingEnabled": true,
   "cleanupPeriodDays": 9999,
