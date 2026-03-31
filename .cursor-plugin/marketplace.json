@@ -69,10 +69,10 @@
       "version": "2.0.2"
     },
     {
-      "name": "mongodb-tools",
-      "source": "./plugins/mongodb-tools",
-      "description": "MongoDB MCP integration (read-only) for database exploration with best practices skill.",
-      "version": "2.0.3"
+      "name": "mongodb-skills",
+      "source": "./plugins/mongodb-skills",
+      "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections.",
+      "version": "1.0.0"
     },
     {
       "name": "paper-search-tools",
@@ -87,10 +87,10 @@
       "version": "2.0.3"
     },
     {
-      "name": "supabase-tools",
-      "source": "./plugins/supabase-tools",
-      "description": "Official Supabase MCP for database management with OAuth authentication.",
-      "version": "2.0.3"
+      "name": "supabase-skills",
+      "source": "./plugins/supabase-skills",
+      "description": "Official Supabase Postgres best practices skill for query and schema design.",
+      "version": "1.0.0"
     },
     {
       "name": "tavily-tools",

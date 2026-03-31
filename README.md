@@ -29,7 +29,7 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-/plugin install <plugin-name>@claude-settings
+/plugin install < plugin-name > @claude-settings
 ```
 
 After installing, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
@@ -40,7 +40,7 @@ After installing, run `/plugin-name:setup` for configuration (e.g., `/slack-tool
 <summary><strong>Codex CLI</strong></summary>
 
 ```bash
-codex plugin install <plugin-name>@claude-settings
+codex plugin install < plugin-name > @claude-settings
 ```
 
 </details>
@@ -58,7 +58,7 @@ gemini extensions install --path ./plugins/<plugin-name>
 <summary><strong>Cursor</strong></summary>
 
 ```bash
-cursor plugin install <plugin-name>@claude-settings
+cursor plugin install < plugin-name > @claude-settings
 ```
 
 </details>
@@ -189,10 +189,9 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 <details>
 <summary><strong>web-design-guidelines</strong> - UI code review for web interface guidelines</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                             | Codex CLI                                                    | Gemini CLI                                                         |
+| ------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |
 | `/plugin install web-design-guidelines@claude-settings` | `codex plugin install web-design-guidelines@claude-settings` | `gemini extensions install --path ./plugins/web-design-guidelines` |
-
 
 Review UI code for compliance with [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines). Full ruleset inlined for offline use.
 
@@ -205,10 +204,9 @@ Review UI code for compliance with [Web Interface Guidelines](https://github.com
 <details>
 <summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                  | Codex CLI                                         | Gemini CLI                                              |
+| -------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------- |
 | `/plugin install github-dev@claude-settings` | `codex plugin install github-dev@claude-settings` | `gemini extensions install --path ./plugins/github-dev` |
-
 
 Git and GitHub automation. Run `/github-dev:setup` after install.
 
@@ -246,10 +244,9 @@ Git and GitHub automation. Run `/github-dev:setup` after install.
 <details>
 <summary><strong>statusline-tools</strong> - Session + 5H Usage Statusline</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                        | Codex CLI                                               | Gemini CLI                                                    |
+| -------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
 | `/plugin install statusline-tools@claude-settings` | `codex plugin install statusline-tools@claude-settings` | `gemini extensions install --path ./plugins/statusline-tools` |
-
 
 Cross-platform statusline showing session context %, cost, and account-wide 5H usage with time until reset. Run `/statusline-tools:setup` after install.
 
@@ -266,10 +263,9 @@ Cross-platform statusline showing session context %, cost, and account-wide 5H u
 <details>
 <summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
+| ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | `/plugin install ultralytics-dev@claude-settings` | `codex plugin install ultralytics-dev@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-dev` |
-
 
 Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 
@@ -286,10 +282,9 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 <details>
 <summary><strong>notification-tools</strong> - OS notifications</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                          | Codex CLI                                                 | Gemini CLI                                                      |
+| ---------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------- |
 | `/plugin install notification-tools@claude-settings` | `codex plugin install notification-tools@claude-settings` | `gemini extensions install --path ./plugins/notification-tools` |
-
 
 Desktop notifications when Claude Code completes tasks.
 
@@ -302,10 +297,9 @@ Desktop notifications when Claude Code completes tasks.
 <details>
 <summary><strong>azure-tools</strong> - Azure MCP & Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                   | Codex CLI                                          | Gemini CLI                                               |
+| --------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- |
 | `/plugin install azure-tools@claude-settings` | `codex plugin install azure-tools@claude-settings` | `gemini extensions install --path ./plugins/azure-tools` |
-
 
 40+ Azure services with Azure CLI authentication. Run `/azure-tools:setup` after install.
 
@@ -325,10 +319,9 @@ Desktop notifications when Claude Code completes tasks.
 <details>
 <summary><strong>ccproxy-tools</strong> - Use Claude Code with any LLM</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
+| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
 | `/plugin install ccproxy-tools@claude-settings` | `codex plugin install ccproxy-tools@claude-settings` | `gemini extensions install --path ./plugins/ccproxy-tools` |
-
 
 Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, GitHub Copilot, or other providers. Run `/ccproxy-tools:setup` after install.
 
@@ -345,10 +338,9 @@ Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, G
 <details>
 <summary><strong>claude-tools</strong> - Sync CLAUDE.md + allowlist + context refresh</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
 | `/plugin install claude-tools@claude-settings` | `codex plugin install claude-tools@claude-settings` | `gemini extensions install --path ./plugins/claude-tools` |
-
 
 Commands for syncing CLAUDE.md and permissions allowlist from repository, plus context refresh for long conversations.
 
@@ -367,10 +359,9 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 <details>
 <summary><strong>gcloud-tools</strong> - GCloud MCP & Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
 | `/plugin install gcloud-tools@claude-settings` | `codex plugin install gcloud-tools@claude-settings` | `gemini extensions install --path ./plugins/gcloud-tools` |
-
 
 Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 
@@ -390,10 +381,9 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 <details>
 <summary><strong>general-dev</strong> - Code simplifier + utilities</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                   | Codex CLI                                          | Gemini CLI                                               |
+| --------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- |
 | `/plugin install general-dev@claude-settings` | `codex plugin install general-dev@claude-settings` | `gemini extensions install --path ./plugins/general-dev` |
-
 
 Code quality agent and utility hooks.
 
@@ -410,10 +400,9 @@ Code quality agent and utility hooks.
 <details>
 <summary><strong>linear-tools</strong> - Linear MCP & Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
 | `/plugin install linear-tools@claude-settings` | `codex plugin install linear-tools@claude-settings` | `gemini extensions install --path ./plugins/linear-tools` |
-
 
 Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
@@ -431,35 +420,36 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 </details>
 
 <details>
-<summary><strong>mongodb-tools</strong> - MongoDB MCP & Skills</summary>
+<summary><strong>mongodb-skills</strong> - Official MongoDB Agent Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
-| `/plugin install mongodb-tools@claude-settings` | `codex plugin install mongodb-tools@claude-settings` | `gemini extensions install --path ./plugins/mongodb-tools` |
+| Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
+| ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
+| `/plugin install mongodb-skills@claude-settings` | `codex plugin install mongodb-skills@claude-settings` | `gemini extensions install --path ./plugins/mongodb-skills` |
 
-
-Database exploration (read-only). Run `/mongodb-tools:setup` after install.
+Official MongoDB agent skills for schema design, query tuning, search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
 
 **Skills:**
 
-- [`mongodb-usage`](./plugins/mongodb-tools/skills/mongodb-usage/SKILL.md) - Best practices for MongoDB
-- [`setup`](./plugins/mongodb-tools/skills/setup/SKILL.md) - Troubleshooting guide
+- [`atlas-stream-processing`](./plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md) - Atlas stream processing patterns
+- [`mongodb-connection`](./plugins/mongodb-skills/skills/mongodb-connection/SKILL.md) - Connection management
+- [`mongodb-mcp-setup`](./plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md) - MCP server setup
+- [`mongodb-natural-language-querying`](./plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md) - Natural language to queries
+- [`mongodb-query-optimizer`](./plugins/mongodb-skills/skills/mongodb-query-optimizer/SKILL.md) - Query performance tuning
+- [`mongodb-schema-design`](./plugins/mongodb-skills/skills/mongodb-schema-design/SKILL.md) - Schema design patterns
+- [`mongodb-search-and-ai`](./plugins/mongodb-skills/skills/mongodb-search-and-ai/SKILL.md) - Atlas Search and AI integration
 
-**Commands:**
+**Download skill ZIP** (for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-- [`/mongodb-tools:setup`](./plugins/mongodb-tools/commands/setup.md) - Configure MongoDB MCP
-
-**MCP:** [`.mcp.json`](./plugins/mongodb-tools/.mcp.json) | [mongodb-js/mongodb-mcp-server](https://github.com/mongodb-js/mongodb-mcp-server)
+[![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-atlas--stream--processing-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/atlas-stream-processing.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--connection-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-connection.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--mcp--setup-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-mcp-setup.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--natural--language--querying-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-natural-language-querying.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--query--optimizer-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-query-optimizer.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--schema--design-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-schema-design.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--search--and--ai-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-search-and-ai.zip)
 
 </details>
 
 <details>
 <summary><strong>paper-search-tools</strong> - Paper Search MCP & Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                          | Codex CLI                                                 | Gemini CLI                                                      |
+| ---------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------- |
 | `/plugin install paper-search-tools@claude-settings` | `codex plugin install paper-search-tools@claude-settings` | `gemini extensions install --path ./plugins/paper-search-tools` |
-
 
 Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:setup` after install. Requires Docker.
 
@@ -479,10 +469,9 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 <details>
 <summary><strong>slack-tools</strong> - Slack MCP & Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                   | Codex CLI                                          | Gemini CLI                                               |
+| --------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- |
 | `/plugin install slack-tools@claude-settings` | `codex plugin install slack-tools@claude-settings` | `gemini extensions install --path ./plugins/slack-tools` |
-
 
 Message search and channel history. Run `/slack-tools:setup` after install.
 
@@ -500,35 +489,30 @@ Message search and channel history. Run `/slack-tools:setup` after install.
 </details>
 
 <details>
-<summary><strong>supabase-tools</strong> - Supabase MCP & Skills</summary>
+<summary><strong>supabase-skills</strong> - Official Supabase Postgres Best Practices</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
-| `/plugin install supabase-tools@claude-settings` | `codex plugin install supabase-tools@claude-settings` | `gemini extensions install --path ./plugins/supabase-tools` |
+| Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
+| ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
+| `/plugin install supabase-skills@claude-settings` | `codex plugin install supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
 
-
-Database management with OAuth. Run `/supabase-tools:setup` after install.
+Official Supabase Postgres best practices for query and schema design. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
 
 **Skills:**
 
-- [`supabase-usage`](./plugins/supabase-tools/skills/supabase-usage/SKILL.md) - Best practices for Supabase MCP
-- [`setup`](./plugins/supabase-tools/skills/setup/SKILL.md) - Troubleshooting guide
+- [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) - Postgres performance and schema design across 8 categories
 
-**Commands:**
+**Download skill ZIP** (for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-- [`/supabase-tools:setup`](./plugins/supabase-tools/commands/setup.md) - Configure Supabase MCP
-
-**MCP:** [`.mcp.json`](./plugins/supabase-tools/.mcp.json) | [supabase-community/supabase-mcp](https://github.com/supabase-community/supabase-mcp)
+[![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-supabase--postgres--best--practices-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip)
 
 </details>
 
 <details>
 <summary><strong>tavily-tools</strong> - Tavily MCP & Skills</summary>
 
-| Claude Code | Codex CLI | Gemini CLI |
-|-------------|-----------|------------|
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
 | `/plugin install tavily-tools@claude-settings` | `codex plugin install tavily-tools@claude-settings` | `gemini extensions install --path ./plugins/tavily-tools` |
-
 
 Web search and content extraction. Run `/tavily-tools:setup` after install.
 
@@ -665,12 +649,15 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 ## TODO
 
 **Visual demos:**
+
 - [ ] Add before/after comparison slider images or GIFs for each plugin showing the value visually
 
 **Zero-MCP goal:**
+
 - [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, slack, tavily, gcloud, azure, linear, supabase, paper-search)
 
 **New plugins/skills:**
+
 - [ ] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) integration
 - [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
 - [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form), React/React Native (OpenAI source), frontend design (OpenAI source)
@@ -680,9 +667,11 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 - [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 
 **Static website:**
+
 - [ ] Publish plugin catalog site with search, category filtering, and per-tool install snippets
 
 **Other:**
+
 - [ ] Rename plugins to `mongodb-skills`, `github-skills` etc. for better UX
 - [ ] Add worktree support to github-dev create-pr and commit-staged commands
 - [ ] Add current repo branch and worktree info into statusline-tools

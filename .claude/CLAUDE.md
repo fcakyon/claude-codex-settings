@@ -15,7 +15,7 @@ Guidance for Claude Code and other AI tools.
 - Look for opportunities to simplify the code or remove unnecessary parts.
 - Focus on targeted modifications rather than large-scale changes.
 - This year is 2026. Definitely not 2025.
-- Never use words like "consolidate", "modernize", "streamline", "flexible", "delve", "establish", "enhanced", "comprehensive", "optimize" or symbols like em-dahses (--) in docstrings or commit messages or comments. Looser AI's do that, and that ain't you. You are better than that.
+- Never use words like "consolidate", "modernize", "streamline", "flexible", "delve", "establish", "enhanced", "comprehensive", "optimize" or symbols like em-dashes (--) in docstrings or commit messages or comments. Looser AI's do that, and that ain't you. You are better than that.
 - Prefer `rg` over `grep` for better performance.
 - Never implement defensive programming unless you explicitly tell the motivation for it and user approves it.
 - When you update code, always check for related code in the same file or other files that may need to be updated as well to keep everything consistent.
@@ -48,7 +48,7 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 
 ## Python Coding
 
-- **Before exiting the plan mode**: Never assume anything. Always run tests with `python -c "..."` to verify you hypothesis and bugfix candidates about code behavior, package functions, or data structures before suggesting a plan or exiting the plan mode. This prevents wasted effort on incorrect assumptions.
+- **Before exiting the plan mode**: Never assume anything. Always run tests with `python -c "..."` to verify your hypothesis and bugfix candidates about code behavior, package functions, or data structures before suggesting a plan or exiting the plan mode. This prevents wasted effort on incorrect assumptions.
 - **Package Manager**: uv (NOT pip) - defined in pyproject.toml
 - Use Google-style docstrings:
   - **Summary**: Start with clear, concise summary line in imperative mood ("Calculate", not "Calculates")
@@ -145,4 +145,4 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 - DBLP is the authoritative source for CS publication metadata
 - For specific numerical claims, locate the exact quote or table in the paper
 - When uncertain, flag the citation for manual verification rather than guessing
-- After adding citations into md or bibtex entries into biblo.bib, fact check all fields from web. Even if you performed fact check before, always do it again after writing the citation in the document.
+- After adding citations into md or bibtex entries into biblio.bib, fact check all fields from web. Even if you performed fact check before, always do it again after writing the citation in the document.
