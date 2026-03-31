@@ -126,15 +126,15 @@
       "category": "tools"
     },
     {
-      "name": "mongodb-tools",
+      "name": "mongodb-skills",
       "source": {
         "source": "local",
-        "path": "./plugins/mongodb-tools"
+        "path": "./plugins/mongodb-skills"
       },
       "policy": {
         "installation": "AVAILABLE"
       },
-      "category": "tools"
+      "category": "skills"
     },
     {
       "name": "paper-search-tools",
@@ -159,15 +159,15 @@
       "category": "tools"
     },
     {
-      "name": "supabase-tools",
+      "name": "supabase-skills",
       "source": {
         "source": "local",
-        "path": "./plugins/supabase-tools"
+        "path": "./plugins/supabase-skills"
       },
       "policy": {
         "installation": "AVAILABLE"
       },
-      "category": "tools"
+      "category": "skills"
     },
     {
       "name": "tavily-tools",

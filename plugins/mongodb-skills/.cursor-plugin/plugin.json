@@ -1,0 +1,5 @@
+{
+  "name": "mongodb-skills",
+  "version": "1.0.0",
+  "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections."
+}
