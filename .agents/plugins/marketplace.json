@@ -115,17 +115,6 @@
       "category": "development"
     },
     {
-      "name": "linear-tools",
-      "source": {
-        "source": "local",
-        "path": "./plugins/linear-tools"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "tools"
-    },
-    {
       "name": "mongodb-skills",
       "source": {
         "source": "local",
