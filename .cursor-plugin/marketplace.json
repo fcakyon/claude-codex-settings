@@ -63,12 +63,6 @@
       "version": "2.0.2"
     },
     {
-      "name": "linear-tools",
-      "source": "./plugins/linear-tools",
-      "description": "Linear MCP integration for issue tracking with workflow best practices skill.",
-      "version": "2.0.2"
-    },
-    {
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
       "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections.",
