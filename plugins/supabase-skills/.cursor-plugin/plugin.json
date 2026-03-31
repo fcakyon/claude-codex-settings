@@ -1,0 +1,5 @@
+{
+  "name": "supabase-skills",
+  "version": "1.0.0",
+  "description": "Official Supabase Postgres best practices skill for query and schema design."
+}

@@ -17,6 +17,12 @@ claude-settings/
   .agents/plugins/marketplace.json       # Codex CLI marketplace
   .cursor-plugin/marketplace.json        # Cursor marketplace
   .codex/config.toml                     # Codex CLI config
+  .github/scripts/                       # repo maintenance scripts
+    _helpers.sh                          # shared sync/zip functions
+    sync-<vendor>-skills.sh              # per-vendor skill sync
+    sync-versions.sh                     # version alignment
+    release.sh                           # GitHub release creation
+    validate_plugins.py                  # CI plugin validation
   plugins/
     <name>/
       .claude-plugin/plugin.json         # Claude Code manifest
@@ -35,14 +41,15 @@ claude-settings/
 
 Each plugin has 4 manifest files. Claude Code manifest is the source of truth; others are copies or subsets.
 
-| Tool | Path | Format |
-|------|------|--------|
-| Claude Code | `.claude-plugin/plugin.json` | JSON: name, version, description, author, homepage, repository, license |
-| Codex CLI | `.codex-plugin/plugin.json` | JSON: same fields as Claude Code |
-| Cursor | `.cursor-plugin/plugin.json` | JSON: same fields as Claude Code |
-| Gemini CLI | `gemini-extension.json` (at plugin root) | JSON: name, version, description only |
+| Tool        | Path                                     | Format                                                                  |
+| ----------- | ---------------------------------------- | ----------------------------------------------------------------------- |
+| Claude Code | `.claude-plugin/plugin.json`             | JSON: name, version, description, author, homepage, repository, license |
+| Codex CLI   | `.codex-plugin/plugin.json`              | JSON: same fields as Claude Code                                        |
+| Cursor      | `.cursor-plugin/plugin.json`             | JSON: same fields as Claude Code                                        |
+| Gemini CLI  | `gemini-extension.json` (at plugin root) | JSON: name, version, description only                                   |
 
 Docs:
+
 - Claude Code: https://code.claude.com/docs/en/plugins-reference
 - Codex CLI: https://developers.openai.com/codex/plugins/build/
 - Cursor: https://cursor.com/docs/reference/plugins
@@ -51,12 +58,12 @@ Docs:
 
 ### Root Marketplace Files
 
-| Tool | Path | Notes |
-|------|------|-------|
-| Claude Code | `.claude-plugin/marketplace.json` | local, URL, and git-subdir sources |
-| Codex CLI | `.agents/plugins/marketplace.json` | local sources only, needs `policy.installation` |
-| Cursor | `.cursor-plugin/marketplace.json` | local sources, needs `source` + `description` |
-| Gemini CLI | none | per-plugin install: `gemini extensions install --path ./plugins/<name>` |
+| Tool        | Path                               | Notes                                                                   |
+| ----------- | ---------------------------------- | ----------------------------------------------------------------------- |
+| Claude Code | `.claude-plugin/marketplace.json`  | local, URL, and git-subdir sources                                      |
+| Codex CLI   | `.agents/plugins/marketplace.json` | local sources only, needs `policy.installation`                         |
+| Cursor      | `.cursor-plugin/marketplace.json`  | local sources, needs `source` + `description`                           |
+| Gemini CLI  | none                               | per-plugin install: `gemini extensions install --path ./plugins/<name>` |
 
 #### Claude Code marketplace entry
 
@@ -105,7 +112,6 @@ Path: `skills/<name>/SKILL.md`
 name: skill-name
 description: This skill should be used when user asks to "do X", "do Y", or "do Z".
 ---
-
 [skill content - instructions, procedures, guidelines]
 ```
 
@@ -126,7 +132,6 @@ skills: related-skill-name
 model: inherit
 color: blue
 ---
-
 [system prompt - instructions for the agent]
 ```
 
@@ -172,10 +177,11 @@ Path: `hooks/hooks.json`
 Events: PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification.
 
 Hook types:
+
 - `command`: runs a script. Script reads JSON from stdin, exit 0 = pass, exit 2 = block.
 - `prompt`: injects a prompt into the conversation.
 
-Use `${CLAUDE_PLUGIN_ROOT}` for script paths. `matcher` matches tool names (e.g., "Edit", "Bash", "mcp__tavily__tavily_search").
+Use `${CLAUDE_PLUGIN_ROOT}` for script paths. `matcher` matches tool names (e.g., "Edit", "Bash", "mcp**tavily**tavily_search").
 
 ### Commands Format
 
@@ -187,7 +193,6 @@ allowed-tools: Read, Bash, Edit
 description: Brief description of what this command does
 argument-hint: optional argument hint
 ---
-
 [command instructions - what to do when this command is invoked]
 ```
 
@@ -195,12 +200,12 @@ Commands are Claude Code only. Gemini CLI uses TOML commands. Other tools use sk
 
 ### Component Portability
 
-| Component | Claude Code | Codex CLI | Gemini CLI | Cursor |
-|-----------|------------|-----------|------------|--------|
-| Skills (`skills/<name>/SKILL.md`) | native | native | native | native |
-| Agents (`agents/<name>.md`) | native | config.toml | preview | native |
-| Hooks (`hooks/hooks.json`) | native | no | native | partial |
-| Commands (`commands/<name>.md`) | native (MD) | no | TOML format | no |
+| Component                         | Claude Code | Codex CLI   | Gemini CLI  | Cursor  |
+| --------------------------------- | ----------- | ----------- | ----------- | ------- |
+| Skills (`skills/<name>/SKILL.md`) | native      | native      | native      | native  |
+| Agents (`agents/<name>.md`)       | native      | config.toml | preview     | native  |
+| Hooks (`hooks/hooks.json`)        | native      | no          | native      | partial |
+| Commands (`commands/<name>.md`)   | native (MD) | no          | TOML format | no      |
 
 ### Installation
 
@@ -274,3 +279,43 @@ When writing README or docs content for this repo:
 - Avoid jargon like "frontmatter", "manifest", "PostToolUse hooks" in user-facing docs
 - Installation instructions must be copy-paste ready
 - Plan for future before/after GIFs or demos per plugin to show value visually
+
+## Maintenance Scripts
+
+Scripts in `.github/scripts/` for repo maintenance. Run from repo root.
+
+### Syncing vendor skills
+
+Per-vendor scripts sync official agent-skills repos into local plugins:
+
+- `_helpers.sh` — shared functions (clone/update, copy, zip)
+- `sync-<name>-skills.sh` — per-vendor: clone repo to ~/dev/, copy SKILL.md + references/, create zip
+
+```bash
+bash .github/scripts/sync-supabase-skills.sh
+bash .github/scripts/sync-mongodb-skills.sh
+```
+
+Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
+
+### Version alignment
+
+`.claude-plugin/plugin.json` is the source of truth for each plugin's version. Run after bumping:
+
+```bash
+bash .github/scripts/sync-versions.sh
+```
+
+Propagates version to `.codex-plugin/`, `.cursor-plugin/`, `gemini-extension.json`, and marketplace entries. CI validates alignment on every PR.
+
+### Releases
+
+```bash
+bash .github/scripts/release.sh <version>
+```
+
+Updates marketplace version, uploads skill zips as artifacts, generates release notes from README + auto-changelog.
+
+### README updates
+
+`/claude-tools:update-readme` regenerates plugin sections and zip download links in README.

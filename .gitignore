@@ -209,3 +209,4 @@ __marimo__/
 # other
 .DS_Store
 pyproject.toml
+*.zip

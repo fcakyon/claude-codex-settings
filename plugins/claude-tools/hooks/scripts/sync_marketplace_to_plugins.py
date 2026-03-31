@@ -50,18 +50,9 @@ def sync_marketplace_to_plugins():
         plugin_json_dir = plugin_dir / ".claude-plugin"
         plugin_json_path = plugin_json_dir / "plugin.json"
 
-        # Build plugin.json content from marketplace entry
-        plugin_data = {"name": plugin.get("name", "")}
-
-        # Add optional fields if present in marketplace
-        for field in ["version", "description", "author", "homepage", "repository", "license"]:
-            if field in plugin:
-                plugin_data[field] = plugin[field]
-
-        # Create directory if needed
+        # Merge marketplace fields into existing plugin.json (preserve local-only fields)
         plugin_json_dir.mkdir(parents=True, exist_ok=True)
 
-        # Check if update needed
         current_data = {}
         if plugin_json_path.exists():
             try:
@@ -69,11 +60,17 @@ def sync_marketplace_to_plugins():
             except json.JSONDecodeError:
                 pass
 
+        plugin_data = dict(current_data)
+        plugin_data["name"] = plugin.get("name", "")
+        for field in ["version", "description"]:
+            if field in plugin:
+                plugin_data[field] = plugin[field]
+
         if current_data != plugin_data:
             plugin_json_path.write_text(json.dumps(plugin_data, indent=2) + "\n")
             synced.append(plugin.get("name", source))
 
-        # Sync to Codex and Cursor manifests (same content as Claude)
+        # Sync to Codex and Cursor manifests (merge, same as Claude)
         for tool_dir in [".codex-plugin", ".cursor-plugin"]:
             tool_json_dir = plugin_dir / tool_dir
             tool_json_path = tool_json_dir / "plugin.json"
@@ -84,8 +81,10 @@ def sync_marketplace_to_plugins():
                     tool_current = json.loads(tool_json_path.read_text())
                 except json.JSONDecodeError:
                     pass
-            if tool_current != plugin_data:
-                tool_json_path.write_text(json.dumps(plugin_data, indent=2) + "\n")
+            tool_merged = dict(tool_current)
+            tool_merged.update({k: plugin_data[k] for k in ["name", "version", "description"] if k in plugin_data})
+            if tool_current != tool_merged:
+                tool_json_path.write_text(json.dumps(tool_merged, indent=2) + "\n")
 
         # Sync gemini-extension.json (minimal: name, version, description)
         gemini_path = plugin_dir / "gemini-extension.json"

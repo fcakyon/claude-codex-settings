@@ -48,7 +48,7 @@ def validate_plugin_json(plugin_dir: Path) -> list[str]:
     return errors
 
 
-def validate_skills(plugin_dir: Path) -> list[str]:
+def validate_skills(plugin_dir: Path, is_vendor: bool = False) -> list[str]:
     """Validate skills conform to Claude Code specs."""
     errors = []
     skills_dir = plugin_dir / "skills"
@@ -96,7 +96,7 @@ def validate_skills(plugin_dir: Path) -> list[str]:
             desc = frontmatter["description"]
             if not isinstance(desc, str):
                 errors.append(f"{prefix}/SKILL.md: 'description' must be string")
-            elif len(desc) > 600:
+            elif not is_vendor and len(desc) > 600:
                 errors.append(f"{prefix}/SKILL.md: 'description' exceeds 600 chars ({len(desc)})")
 
         # Check body exists
@@ -353,11 +353,7 @@ def get_local_plugin_names() -> set[str]:
     data = load_json(CLAUDE_MARKETPLACE)
     if not data:
         return set()
-    return {
-        e["name"]
-        for e in data.get("plugins", [])
-        if e.get("name") and isinstance(e.get("source"), str)
-    }
+    return {e["name"] for e in data.get("plugins", []) if e.get("name") and isinstance(e.get("source"), str)}
 
 
 def validate_symlinks() -> list[str]:
@@ -424,6 +420,24 @@ def validate_marketplace_alignment() -> list[str]:
         if extra:
             errors.append(f"{label} marketplace has extra plugins: {', '.join(sorted(extra))}")
 
+    # Validate marketplace entry versions match plugin.json versions
+    for label, mkt_path in [("claude", CLAUDE_MARKETPLACE), ("cursor", CURSOR_MARKETPLACE)]:
+        mkt = load_json(mkt_path)
+        if not mkt:
+            continue
+        for entry in mkt.get("plugins", []):
+            name = entry.get("name", "")
+            mkt_version = entry.get("version", "")
+            if not mkt_version or not isinstance(entry.get("source"), str):
+                continue
+            plugin_json = REPO_ROOT / "plugins" / name / ".claude-plugin" / "plugin.json"
+            plugin_data = load_json(plugin_json)
+            if not plugin_data:
+                continue
+            plugin_version = plugin_data.get("version", "")
+            if plugin_version and mkt_version != plugin_version:
+                errors.append(f"{label} marketplace/{name}: version '{mkt_version}' != plugin.json '{plugin_version}'")
+
     return errors
 
 
@@ -443,7 +457,12 @@ def main():
             continue
 
         all_errors.extend(validate_plugin_json(plugin_dir))
-        all_errors.extend(validate_skills(plugin_dir))
+        plugin_json = plugin_dir / ".claude-plugin" / "plugin.json"
+        is_vendor = False
+        if plugin_json.exists():
+            pdata = json.loads(plugin_json.read_text())
+            is_vendor = "author" not in pdata
+        all_errors.extend(validate_skills(plugin_dir, is_vendor=is_vendor))
         all_errors.extend(validate_agents(plugin_dir))
         all_errors.extend(validate_commands(plugin_dir))
         all_errors.extend(validate_hooks(plugin_dir))
