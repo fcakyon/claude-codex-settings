@@ -398,28 +398,6 @@ Code quality agent and utility hooks.
 </details>
 
 <details>
-<summary><strong>linear-tools</strong> - Linear MCP & Skills</summary>
-
-| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
-| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
-| `/plugin install linear-tools@claude-settings` | `codex plugin install linear-tools@claude-settings` | `gemini extensions install --path ./plugins/linear-tools` |
-
-Issue tracking with OAuth. Run `/linear-tools:setup` after install.
-
-**Skills:**
-
-- [`linear-usage`](./plugins/linear-tools/skills/linear-usage/SKILL.md) - Best practices for Linear
-- [`setup`](./plugins/linear-tools/skills/setup/SKILL.md) - Troubleshooting guide
-
-**Commands:**
-
-- [`/linear-tools:setup`](./plugins/linear-tools/commands/setup.md) - Configure Linear MCP
-
-**MCP:** [`.mcp.json`](./plugins/linear-tools/.mcp.json) | [Linear MCP Docs](https://linear.app/docs/mcp)
-
-</details>
-
-<details>
 <summary><strong>mongodb-skills</strong> - Official MongoDB Agent Skills</summary>
 
 | Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
