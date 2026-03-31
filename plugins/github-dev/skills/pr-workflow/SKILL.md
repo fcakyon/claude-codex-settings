@@ -29,7 +29,9 @@ Complete workflow for creating pull requests following project standards.
      - `-t` (title): Start with capital letter, use verb, NO "fix:" or "feat:" prefix
      - `-b` (body): Brief summary + bullet points with inline markdown links
      - `-a @me` (self-assign)
-     - `-r <reviewer>`: Find via `gh pr list --repo <owner>/<repo> --author @me --limit 5`
+     - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
+       Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
+       If recent PRs have no reviewers, skip `-r` entirely.
 
 6. **PR Body Guidelines**
    - Single section, no headers if possible. Very concise
