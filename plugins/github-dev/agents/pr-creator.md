@@ -63,11 +63,9 @@ findings in the PR body when available.
        or simple before/after snippet if applicable.
        No test plans, no changed file lists, no line-number links.
      - `-a @me`: Self-assign (confirmation hook will show actual username)
-     - `-r <reviewer>`: Add reviewer by finding most probable reviewer from recent PRs:
-       - Get current repo: `gh repo view --json nameWithOwner -q .nameWithOwner`
-       - First try: `gh pr list --repo <owner>/<repo> --author @me --limit 5` to find PRs by current author
-       - If no PRs by author, fallback: `gh pr list --repo <owner>/<repo> --limit 5` to get any recent PRs
-       - Extract reviewer username from the PR list
+     - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
+       Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
+       If recent PRs have no reviewers, skip `-r` entirely.
    - Example 1 — CLI snippet:
 
      ```

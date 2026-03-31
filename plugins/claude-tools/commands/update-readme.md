@@ -43,10 +43,14 @@ One-line description.
 </details>
 ```
 
-4. For skill-only plugins (no MCP, no commands), add green download badges for each skill zip:
+4. For skill-only plugins (no MCP, no commands), use a table with ZIP download badges:
 
 ```markdown
-[![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-skill--name-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/skill-name.zip)
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                            | Description | ZIP                                                                                                                                                                |
+| ---------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`skill-name`](./plugins/plugin-name/skills/skill-name/SKILL.md) | Description | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/skill-name.zip) |
 ```
 
 5. Also update the Installation section if plugin names have changed.

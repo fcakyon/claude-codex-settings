@@ -428,19 +428,17 @@ Issue tracking with OAuth. Run `/linear-tools:setup` after install.
 
 Official MongoDB agent skills for schema design, query tuning, search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
 
-**Skills:**
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-- [`atlas-stream-processing`](./plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md) - Atlas stream processing patterns
-- [`mongodb-connection`](./plugins/mongodb-skills/skills/mongodb-connection/SKILL.md) - Connection management
-- [`mongodb-mcp-setup`](./plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md) - MCP server setup
-- [`mongodb-natural-language-querying`](./plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md) - Natural language to queries
-- [`mongodb-query-optimizer`](./plugins/mongodb-skills/skills/mongodb-query-optimizer/SKILL.md) - Query performance tuning
-- [`mongodb-schema-design`](./plugins/mongodb-skills/skills/mongodb-schema-design/SKILL.md) - Schema design patterns
-- [`mongodb-search-and-ai`](./plugins/mongodb-skills/skills/mongodb-search-and-ai/SKILL.md) - Atlas Search and AI integration
-
-**Download skill ZIP** (for claude.ai, Claude Code, Cursor, Codex, VS Code):
-
-[![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-atlas--stream--processing-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/atlas-stream-processing.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--connection-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-connection.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--mcp--setup-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-mcp-setup.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--natural--language--querying-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-natural-language-querying.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--query--optimizer-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-query-optimizer.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--schema--design-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-schema-design.zip) [![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-mongodb--search--and--ai-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-search-and-ai.zip)
+| Skill                                                                                                             | Description                      | ZIP                                                                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`atlas-stream-processing`](./plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md)                     | Atlas stream processing patterns | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/atlas-stream-processing.zip)           |
+| [`mongodb-connection`](./plugins/mongodb-skills/skills/mongodb-connection/SKILL.md)                               | Connection management            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-connection.zip)                |
+| [`mongodb-mcp-setup`](./plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md)                                 | MCP server setup                 | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-mcp-setup.zip)                 |
+| [`mongodb-natural-language-querying`](./plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md) | Natural language to queries      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-natural-language-querying.zip) |
+| [`mongodb-query-optimizer`](./plugins/mongodb-skills/skills/mongodb-query-optimizer/SKILL.md)                     | Query performance tuning         | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-query-optimizer.zip)           |
+| [`mongodb-schema-design`](./plugins/mongodb-skills/skills/mongodb-schema-design/SKILL.md)                         | Schema design patterns           | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-schema-design.zip)             |
+| [`mongodb-search-and-ai`](./plugins/mongodb-skills/skills/mongodb-search-and-ai/SKILL.md)                         | Atlas Search and AI integration  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-search-and-ai.zip)             |
 
 </details>
 
@@ -497,13 +495,11 @@ Message search and channel history. Run `/slack-tools:setup` after install.
 
 Official Supabase Postgres best practices for query and schema design. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
 
-**Skills:**
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-- [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) - Postgres performance and schema design across 8 categories
-
-**Download skill ZIP** (for claude.ai, Claude Code, Cursor, Codex, VS Code):
-
-[![Download ZIP](https://img.shields.io/badge/⬇%20Download%20ZIP-supabase--postgres--best--practices-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip)
+| Skill                                                                                                            | Description                                                | ZIP                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) | Postgres performance and schema design across 8 categories | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip) |
 
 </details>
 
