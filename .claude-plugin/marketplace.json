@@ -113,6 +113,26 @@
       "tags": ["voice-ai", "best-practices"]
     },
     {
+      "name": "cloudflare-skills",
+      "source": "./plugins/cloudflare-skills",
+      "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
+      "category": "skills",
+      "tags": ["cloud", "deploy"]
+    },
+    {
+      "name": "web-performance-skills",
+      "source": "./plugins/web-performance-skills",
+      "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["web-performance", "core-web-vitals", "lighthouse", "chrome-devtools", "accessibility"],
+      "category": "skills",
+      "tags": ["performance", "auditing"]
+    },
+    {
       "name": "anthropic-essentials",
       "source": {
         "source": "url",
@@ -312,16 +332,6 @@
       "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
       "category": "tools",
       "tags": ["search", "mcp", "integration"]
-    },
-    {
-      "name": "cloudflare-skills",
-      "source": "./plugins/cloudflare-skills",
-      "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
-      "version": "1.0.0",
-      "license": "Apache-2.0",
-      "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
-      "category": "skills",
-      "tags": ["cloud", "deploy"]
     }
   ]
 }
