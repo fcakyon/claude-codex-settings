@@ -27,6 +27,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "frontend-design-skills",
+      "source": "./plugins/frontend-design-skills",
+      "description": "Frontend design skills from Anthropic and OpenAI for building visually strong landing pages, websites, and apps.",
+      "version": "1.0.0"
+    },
+    {
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
       "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections.",

@@ -49,6 +49,17 @@
       "category": "development"
     },
     {
+      "name": "frontend-design-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/frontend-design-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
       "name": "mongodb-skills",
       "source": {
         "source": "local",

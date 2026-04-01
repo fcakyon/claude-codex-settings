@@ -142,6 +142,18 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 </details>
 
 <details>
+<summary><strong>frontend-design-skills</strong> - Frontend Design (Anthropic + OpenAI)</summary>
+
+Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/skills](https://github.com/openai/skills). Synced locally via `bash .github/scripts/sync-frontend-skills.sh`.
+
+| Skill                                                                                                     | Description                                                                       | Install                                                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`openai-frontend-design`](./plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md)       | Composition-first design: restrained layout, image-led hierarchy, tasteful motion | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openai-frontend-design.zip)    |
+| [`anthropic-frontend-design`](./plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md) | Bold aesthetic direction, distinctive typography, anti-generic AI aesthetics      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/anthropic-frontend-design.zip) |
+
+</details>
+
+<details>
 <summary><strong>mongodb-skills</strong> - Official MongoDB Agent Skills</summary>
 
 | Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
@@ -182,13 +194,12 @@ Official Supabase Postgres best practices for query and schema design. Synced fr
 </details>
 
 <details>
-<summary><strong>anthropic-essentials</strong> - Feature dev, frontend design, CLAUDE.md management, skill creation</summary>
+<summary><strong>anthropic-essentials</strong> - Feature dev, CLAUDE.md management, skill creation</summary>
 
 Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
 
 **Skills:**
 
-- `frontend-design` - Production-grade frontend interfaces with high design quality
 - `claude-md-improver` - Audit and improve CLAUDE.md files across a codebase
 - `skill-creator` - Create, improve, and benchmark Agent Skills with eval testing
 
@@ -594,7 +605,8 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 
 - [ ] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) integration
 - [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
-- [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form), React/React Native (OpenAI source), frontend design (OpenAI source)
+- [x] Frontend design: Anthropic + OpenAI frontend design skills (bundled as `frontend-design-skills`)
+- [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form)
 - [ ] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
 - [ ] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (in addition to Anthropic ones)
 - [ ] Auth: Clerk, Firebase, Supabase Auth patterns
