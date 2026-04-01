@@ -194,6 +194,43 @@ Official Supabase Postgres best practices for query and schema design. Synced fr
 </details>
 
 <details>
+<summary><strong>stripe-skills</strong> - Official Stripe Agent Skills</summary>
+
+| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
+| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `/plugin install stripe-skills@claude-settings` | `codex plugin install stripe-skills@claude-settings` | `gemini extensions install --path ./plugins/stripe-skills` |
+
+Official Stripe agent skills for payments, billing, Connect, and API upgrades. Synced from [stripe/ai](https://github.com/stripe/ai).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                    | Description                                                     | ZIP                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`stripe-best-practices`](./plugins/stripe-skills/skills/stripe-best-practices/SKILL.md) | Payments, billing, Connect, Treasury integration best practices | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/stripe-best-practices.zip) |
+| [`stripe-projects`](./plugins/stripe-skills/skills/stripe-projects/SKILL.md)             | Stripe Projects CLI setup and stack provisioning                | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/stripe-projects.zip)       |
+| [`upgrade-stripe`](./plugins/stripe-skills/skills/upgrade-stripe/SKILL.md)               | Stripe API version and SDK upgrade guide                        | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/upgrade-stripe.zip)        |
+
+</details>
+
+<details>
+<summary><strong>polar-skills</strong> - Official Polar Skills</summary>
+
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
+| `/plugin install polar-skills@claude-settings` | `codex plugin install polar-skills@claude-settings` | `gemini extensions install --path ./plugins/polar-skills` |
+
+Official Polar skills for billing system architecture and local development environment. Synced from [polarsource/polar](https://github.com/polarsource/polar).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                       | Description                                                                   | ZIP                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`polar-billing`](./plugins/polar-skills/skills/polar-billing/SKILL.md)                     | Polar billing system, Stripe integration, subscriptions, benefit provisioning | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/polar-billing.zip)           |
+| [`polar-local-environment`](./plugins/polar-skills/skills/polar-local-environment/SKILL.md) | Polar local development environment with Docker                               | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/polar-local-environment.zip) |
+
+</details>
+
+<details>
 <summary><strong>anthropic-essentials</strong> - Feature dev, CLAUDE.md management, skill creation</summary>
 
 Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
@@ -541,12 +578,13 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 **New plugins/skills:**
 
-- [ ] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) integration
+- [x] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) billing and local dev
+- [ ] Payments: [Paddle](https://www.paddle.com) billing and checkout skills
 - [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
 - [x] Frontend design: Anthropic + OpenAI frontend design skills (bundled as `frontend-design-skills`)
 - [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form)
 - [ ] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
-- [ ] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (in addition to Anthropic ones)
+- [x] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (bundled as `openai-office-skills`)
 - [ ] Auth: Clerk, Firebase, Supabase Auth patterns
 - [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 

@@ -236,6 +236,9 @@ Gemini CLI:  gemini extensions install --path ./plugins/<name>
 5. Add entry to `.claude-plugin/marketplace.json` (Claude Code)
 6. Add entry to `.agents/plugins/marketplace.json` (Codex CLI)
 7. Add entry to `.cursor-plugin/marketplace.json` (Cursor)
+8. Run `/claude-tools:update-readme` to regenerate plugin sections and ZIP links in README.md
+9. Add sync script command to `CLAUDE.md` syncing vendor skills section (if synced plugin)
+10. Update `README.md` TODO section if the plugin was listed there
 
 ## Marketplace Plugin Conventions
 
@@ -281,6 +284,8 @@ Per-vendor scripts sync official agent-skills repos into local plugins:
 ```bash
 bash .github/scripts/sync-mongodb-skills.sh
 bash .github/scripts/sync-supabase-skills.sh
+bash .github/scripts/sync-stripe-skills.sh
+bash .github/scripts/sync-polar-skills.sh
 bash .github/scripts/sync-react-skills.sh
 bash .github/scripts/sync-agent-browser-skills.sh
 bash .github/scripts/sync-anthropic-office-skills.sh
