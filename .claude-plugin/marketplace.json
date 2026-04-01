@@ -103,6 +103,16 @@
       "tags": ["billing", "best-practices"]
     },
     {
+      "name": "livekit-skills",
+      "source": "./plugins/livekit-skills",
+      "description": "LiveKit Agents SDK skills for building voice AI agents with CLI-based workflow, supporting both Cloud and self-hosted deployments.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["livekit", "voice-ai", "agents", "webrtc", "realtime"],
+      "category": "skills",
+      "tags": ["voice-ai", "best-practices"]
+    },
+    {
       "name": "anthropic-essentials",
       "source": {
         "source": "url",

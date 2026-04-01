@@ -32,8 +32,6 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 /plugin install < plugin-name > @claude-settings
 ```
 
-After installing, run `/plugin-name:setup` for configuration (e.g., `/gcloud-tools:setup`).
-
 </details>
 
 <details>
@@ -227,6 +225,23 @@ Official Polar agent skills for billing system, Stripe integration, subscription
 | ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`polar-billing`](./plugins/polar-skills/skills/polar-billing/SKILL.md)                     | Polar billing system, Stripe integration, subscriptions, benefit provisioning | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/polar-billing.zip)           |
 | [`polar-local-environment`](./plugins/polar-skills/skills/polar-local-environment/SKILL.md) | Polar local development environment with Docker                               | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/polar-local-environment.zip) |
+
+</details>
+
+<details>
+<summary><strong>livekit-skills</strong> - LiveKit voice AI agent development (Cloud + self-hosted)</summary>
+
+| Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
+| ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
+| `/plugin install livekit-skills@claude-settings` | `codex plugin install livekit-skills@claude-settings` | `gemini extensions install --path ./plugins/livekit-skills` |
+
+Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports both LiveKit Cloud and self-hosted deployments. Uses `lk` CLI for docs access instead of MCP. Based on [livekit/agent-skills](https://github.com/livekit/agent-skills), patched for CLI workflow and BYOK model providers. Synced via `bash .github/scripts/sync-livekit-skills.sh`.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                       | Description                                                    | ZIP                                                                                                                                                                    |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`livekit-agents`](./plugins/livekit-skills/skills/livekit-agents/SKILL.md) | Voice AI agents: architecture, handoffs, testing, CLI workflow | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/livekit-agents.zip) |
 
 </details>
 
