@@ -294,6 +294,23 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 </details>
 
 <details>
+<summary><strong>hetzner-skills</strong> - Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, and storage</summary>
+
+| Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
+| ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
+| `/plugin install hetzner-skills@claude-settings` | `codex plugin install hetzner-skills@claude-settings` | `gemini extensions install --path ./plugins/hetzner-skills` |
+
+Hetzner Cloud infrastructure management via the `hcloud` CLI. Decision trees for compute, networking, storage, DNS, and common deploy workflows. Reference docs extracted from [hetznercloud/cli](https://github.com/hetznercloud/cli).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                       | Description                                                         | ZIP                                                                                                                                                                    |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`hetzner-deploy`](./plugins/hetzner-skills/skills/hetzner-deploy/SKILL.md) | Servers, networks, firewalls, load balancers, DNS, volumes, storage | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/hetzner-deploy.zip) |
+
+</details>
+
+<details>
 <summary><strong>anthropic-essentials</strong> - Feature dev, CLAUDE.md management, skill creation</summary>
 
 Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
@@ -643,12 +660,14 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 - [x] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) billing and local dev
 - [ ] Payments: [Paddle](https://www.paddle.com) billing and checkout skills
+- [x] Deployment: [Cloudflare](https://www.cloudflare.com) platform skill
+- [x] Deployment: [Hetzner Cloud](https://www.hetzner.com/cloud) CLI skill
 - [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
 - [x] Frontend design: Anthropic + OpenAI frontend design skills (bundled as `frontend-design-skills`)
 - [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form)
 - [x] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
 - [x] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (bundled as `openai-office-skills`)
-- [ ] Auth: Clerk, Firebase, Supabase Auth patterns
+- [ ] Auth: Clerk, Firebase patterns
 - [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 
 **Static website:**
