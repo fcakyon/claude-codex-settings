@@ -133,6 +133,16 @@
       "tags": ["performance", "auditing"]
     },
     {
+      "name": "hetzner-skills",
+      "source": "./plugins/hetzner-skills",
+      "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, volumes, and storage.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["hetzner", "hcloud", "server", "cloud", "deploy", "dns", "firewall"],
+      "category": "skills",
+      "tags": ["cloud", "deploy"]
+    },
+    {
       "name": "anthropic-essentials",
       "source": {
         "source": "url",
