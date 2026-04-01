@@ -225,7 +225,9 @@ for entry in "${PAGES[@]}"; do
   page="${entry%%:*}"
   name="${entry##*:}"
   if command -v lk &> /dev/null; then
-    lk docs get-page "$page" > "$REF_DIR/$name.md" 2> /dev/null \
+    lk docs get-page "$page" 2> /dev/null \
+      | sed '/^This document was rendered at/d' \
+        > "$REF_DIR/$name.md" \
       || printf '# %s\n\nSee: https://docs.livekit.io%s\n' "$name" "$page" > "$REF_DIR/$name.md"
   else
     printf '# %s\n\nSee: https://docs.livekit.io%s\n' "$name" "$page" > "$REF_DIR/$name.md"

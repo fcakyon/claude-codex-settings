@@ -86,7 +86,6 @@ The following articles provide more information about the topics discussed in th
 
 ---
 
-This document was rendered at 2026-04-01T11:24:20.079Z.
 For the latest version of this document, see [https://docs.livekit.io/agents/logic/tools.md](https://docs.livekit.io/agents/logic/tools.md).
 
 To explore all LiveKit documentation, see [llms.txt](https://docs.livekit.io/llms.txt).
