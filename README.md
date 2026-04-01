@@ -294,6 +294,23 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 </details>
 
 <details>
+<summary><strong>hetzner-skills</strong> - Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, and storage</summary>
+
+| Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
+| ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
+| `/plugin install hetzner-skills@claude-settings` | `codex plugin install hetzner-skills@claude-settings` | `gemini extensions install --path ./plugins/hetzner-skills` |
+
+Hetzner Cloud infrastructure management via the `hcloud` CLI. Decision trees for compute, networking, storage, DNS, and common deploy workflows. Reference docs extracted from [hetznercloud/cli](https://github.com/hetznercloud/cli).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                       | Description                                                         | ZIP                                                                                                                                                                    |
+| --------------------------------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`hetzner-deploy`](./plugins/hetzner-skills/skills/hetzner-deploy/SKILL.md) | Servers, networks, firewalls, load balancers, DNS, volumes, storage | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/hetzner-deploy.zip) |
+
+</details>
+
+<details>
 <summary><strong>anthropic-essentials</strong> - Feature dev, CLAUDE.md management, skill creation</summary>
 
 Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
