@@ -115,6 +115,12 @@
       "source": "./plugins/cloudflare-skills",
       "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
       "version": "1.0.0"
+    },
+    {
+      "name": "web-performance-skills",
+      "source": "./plugins/web-performance-skills",
+      "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
+      "version": "1.0.0"
     }
   ]
 }

@@ -322,6 +322,16 @@
       "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
       "category": "skills",
       "tags": ["cloud", "deploy"]
+    },
+    {
+      "name": "web-performance-skills",
+      "source": "./plugins/web-performance-skills",
+      "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["web-performance", "core-web-vitals", "lighthouse", "chrome-devtools", "accessibility"],
+      "category": "skills",
+      "tags": ["performance", "auditing"]
     }
   ]
 }

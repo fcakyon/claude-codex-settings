@@ -212,6 +212,17 @@
         "installation": "AVAILABLE"
       },
       "category": "skills"
+    },
+    {
+      "name": "web-performance-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/web-performance-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
     }
   ]
 }
