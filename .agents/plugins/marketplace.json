@@ -93,32 +93,10 @@
       "category": "development"
     },
     {
-      "name": "statusline-tools",
-      "source": {
-        "source": "local",
-        "path": "./plugins/statusline-tools"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "productivity"
-    },
-    {
       "name": "ultralytics-dev",
       "source": {
         "source": "local",
         "path": "./plugins/ultralytics-dev"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "productivity"
-    },
-    {
-      "name": "notification-tools",
-      "source": {
-        "source": "local",
-        "path": "./plugins/notification-tools"
       },
       "policy": {
         "installation": "AVAILABLE"

@@ -51,22 +51,10 @@
       "version": "2.2.2"
     },
     {
-      "name": "statusline-tools",
-      "source": "./plugins/statusline-tools",
-      "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
-      "version": "1.0.1"
-    },
-    {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
       "version": "2.1.1"
-    },
-    {
-      "name": "notification-tools",
-      "source": "./plugins/notification-tools",
-      "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
-      "version": "2.0.2"
     },
     {
       "name": "azure-tools",
