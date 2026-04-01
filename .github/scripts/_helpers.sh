@@ -84,7 +84,9 @@ create_zip() {
 
   rm -f "$zip_path"
   local zip_contents=("SKILL.md")
-  [ -d "$skill_dir/references" ] && zip_contents+=("references/")
+  for dir in "$skill_dir"/*/; do
+    [ -d "$dir" ] && zip_contents+=("$(basename "$dir")/")
+  done
   (cd "$skill_dir" && zip -r "$skill_name.zip" "${zip_contents[@]}")
 
   echo "Created $1/$skill_name.zip"

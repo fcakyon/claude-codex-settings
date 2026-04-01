@@ -162,42 +162,43 @@ Academic research toolkit from [fcakyon/phd-skills](https://github.com/fcakyon/p
 </details>
 
 <details>
-<summary><strong>react-skills</strong> - React, Next.js, and React Native best practices</summary>
+<summary><strong>react-skills</strong> - React, Next.js, and React Native Best Practices</summary>
 
-Cherry-picked skills from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills). 64 React/Next.js rules and 35+ React Native/Expo rules covering performance, rendering, state, animations, and navigation.
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
+| `/plugin install react-skills@claude-settings` | `codex plugin install react-skills@claude-settings` | `gemini extensions install --path ./plugins/react-skills` |
 
-**Skills:**
+React and frontend best practices synced from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills).
 
-- `react-best-practices` - React and Next.js performance patterns: waterfalls, bundle size, server components, re-renders, rendering, JS performance, advanced patterns
-- `react-native` - React Native and Expo: list virtualization, animations with Reanimated, native navigation, UI patterns, state management, monorepo config
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                     | Description                                                            | ZIP                                                                                                                                                                            |
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`composition-patterns`](./plugins/react-skills/skills/composition-patterns/SKILL.md)     | React composition patterns: compound components, render props, context | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/composition-patterns.zip)   |
+| [`react-best-practices`](./plugins/react-skills/skills/react-best-practices/SKILL.md)     | 64 React/Next.js performance rules from Vercel Engineering             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-best-practices.zip)   |
+| [`react-native-skills`](./plugins/react-skills/skills/react-native-skills/SKILL.md)       | 35+ React Native/Expo rules for performance and animations             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-native-skills.zip)    |
+| [`react-view-transitions`](./plugins/react-skills/skills/react-view-transitions/SKILL.md) | View Transition API for page/route animations                          | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-view-transitions.zip) |
+| [`web-design-guidelines`](./plugins/react-skills/skills/web-design-guidelines/SKILL.md)   | UI review against 16 web interface guideline categories                | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/web-design-guidelines.zip)  |
 
 </details>
 
 <details>
 <summary><strong>agent-browser</strong> - Browser Automation CLI for AI Agents</summary>
 
-Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. From [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
+| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
+| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `/plugin install agent-browser@claude-settings` | `codex plugin install agent-browser@claude-settings` | `gemini extensions install --path ./plugins/agent-browser` |
 
-**Skills:**
+Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. Synced from [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
 
-- `agent-browser` - Browser automation: navigation, forms, clicking, screenshots, auth, sessions, profiling, video recording
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-**CLI Tool:** [agent-browser](https://github.com/vercel-labs/agent-browser) — install via `npm i -g agent-browser && agent-browser install`
+| Skill                                                                    | Description                                                                  | ZIP                                                                                                                                                                   |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`agent-browser`](./plugins/agent-browser/skills/agent-browser/SKILL.md) | Browser automation: navigation, forms, clicking, screenshots, auth, sessions | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/agent-browser.zip) |
+| [`electron`](./plugins/agent-browser/skills/electron/SKILL.md)           | Automate Electron desktop apps (VS Code, Slack, Discord, Figma, Notion)      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/electron.zip)      |
 
-</details>
-
-<details>
-<summary><strong>web-design-guidelines</strong> - UI code review for web interface guidelines</summary>
-
-| Claude Code                                             | Codex CLI                                                    | Gemini CLI                                                         |
-| ------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |
-| `/plugin install web-design-guidelines@claude-settings` | `codex plugin install web-design-guidelines@claude-settings` | `gemini extensions install --path ./plugins/web-design-guidelines` |
-
-Review UI code for compliance with [Web Interface Guidelines](https://github.com/vercel-labs/web-interface-guidelines). Full ruleset inlined for offline use.
-
-**Skills:**
-
-- `web-design-review` - Check code against 16 rule categories: accessibility, focus states, forms, animation, typography, content handling, images, performance, navigation, touch, safe areas, dark mode, locale, hydration safety, hover states, anti-patterns
+**CLI Tool:** [agent-browser](https://github.com/vercel-labs/agent-browser) - install via `npm i -g agent-browser && agent-browser install`
 
 </details>
 
@@ -661,6 +662,7 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 - [Gemini Extensions](https://geminicli.com/docs/extensions/reference/) - Extension format reference
 - [Cursor Plugins](https://cursor.com/docs/reference/plugins) - Plugin format reference
 - [AGENTS.md](https://agents.md/) - Cross-tool agent specification
+- [Agent Skills](https://agentskills.io/) - Open format for giving agents new capabilities
 
 ## Thank you for the support!
 

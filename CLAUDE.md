@@ -55,12 +55,13 @@ Docs:
 - Cursor: https://cursor.com/docs/reference/plugins
 - Gemini CLI: https://geminicli.com/docs/extensions/reference/
 - AGENTS.md spec: https://agents.md/
+- Agent Skills spec: https://agentskills.io/specification
 
 ### Root Marketplace Files
 
 | Tool        | Path                               | Notes                                                                   |
 | ----------- | ---------------------------------- | ----------------------------------------------------------------------- |
-| Claude Code | `.claude-plugin/marketplace.json`  | local, URL, and git-subdir sources                                      |
+| Claude Code | `.claude-plugin/marketplace.json`  | local sources only (use sync scripts for external repos)                |
 | Codex CLI   | `.agents/plugins/marketplace.json` | local sources only, needs `policy.installation`                         |
 | Cursor      | `.cursor-plugin/marketplace.json`  | local sources, needs `source` + `description`                           |
 | Gemini CLI  | none                               | per-plugin install: `gemini extensions install --path ./plugins/<name>` |
@@ -116,7 +117,7 @@ description: This skill should be used when user asks to "do X", "do Y", or "do 
 ```
 
 - `name`: kebab-case, max 64 chars
-- `description`: start with "This skill should be used when...", max 600 chars, include quoted trigger phrases
+- `description`: start with "This skill should be used when...", max 1024 chars, include quoted trigger phrases
 
 ### Agents Format
 
@@ -240,21 +241,7 @@ Gemini CLI:  gemini extensions install --path ./plugins/<name>
 
 ### Source Types in Claude Code `marketplace.json`
 
-- **Local path**: `"source": "./plugins/my-plugin"` for plugins in this repo
-- **URL source**: `"source": { "source": "url", "url": "https://github.com/owner/repo.git" }` for external repos (use this over `github` source)
-- **Git subdir**: `"source": { "source": "git-subdir", "url": "https://github.com/owner/repo.git", "path": "plugins/subdir" }` for a single plugin inside a monorepo
-
-### Cherry-picking skills from external repos
-
-Use `strict: false` + explicit `skills` array to expose only specific skills from an external repo:
-
-```json
-{
-  "source": { "source": "url", "url": "https://github.com/owner/repo.git" },
-  "strict": false,
-  "skills": ["./skills/skill-a", "./skills/skill-b"]
-}
-```
+All plugins use local sources: `"source": "./plugins/<plugin-name>"`. For external vendor skills, use sync scripts (`.github/scripts/sync-<name>-skills.sh`) to fetch and copy skills locally rather than referencing remote URLs.
 
 ### plugin.json fields
 
@@ -289,11 +276,13 @@ Scripts in `.github/scripts/` for repo maintenance. Run from repo root.
 Per-vendor scripts sync official agent-skills repos into local plugins:
 
 - `_helpers.sh` — shared functions (clone/update, copy, zip)
-- `sync-<name>-skills.sh` — per-vendor: clone repo to ~/dev/, copy SKILL.md + references/, create zip
+- `sync-<name>-skills.sh` — per-vendor: clone repo to ~/dev/, copy SKILL.md + subdirs, create zip
 
 ```bash
-bash .github/scripts/sync-supabase-skills.sh
 bash .github/scripts/sync-mongodb-skills.sh
+bash .github/scripts/sync-supabase-skills.sh
+bash .github/scripts/sync-react-skills.sh
+bash .github/scripts/sync-agent-browser-skills.sh
 ```
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
