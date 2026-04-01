@@ -25,7 +25,7 @@ replacements = [
      'name: livekit-skills'),
     # Title
     ('# LiveKit Agents Development for LiveKit Cloud',
-     '# LiveKit Development'),
+     '# LiveKit Voice Agent Development'),
     # Description frontmatter
     ('Build voice AI agents with LiveKit Cloud and the Agents SDK.',
      'Build voice AI agents with LiveKit Agents SDK.'),

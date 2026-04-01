@@ -7,7 +7,7 @@ metadata:
   version: "0.3.1"
 ---
 
-# LiveKit Development
+# LiveKit Voice Agent Development
 
 This skill provides guidance for building voice AI agents with the LiveKit Agents SDK. It covers both LiveKit Cloud and self-hosted deployments, using the `lk` CLI for documentation access and project management. All factual information about APIs, methods, and configurations must come from live documentation.
 
