@@ -5,6 +5,28 @@
   },
   "plugins": [
     {
+      "name": "anthropic-office-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/anthropic-office-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
+      "name": "openai-office-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/openai-office-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
       "name": "react-skills",
       "source": {
         "source": "local",
@@ -25,6 +47,28 @@
         "installation": "AVAILABLE"
       },
       "category": "development"
+    },
+    {
+      "name": "mongodb-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/mongodb-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
+      "name": "supabase-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/supabase-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
     },
     {
       "name": "github-dev",
@@ -115,17 +159,6 @@
       "category": "development"
     },
     {
-      "name": "mongodb-skills",
-      "source": {
-        "source": "local",
-        "path": "./plugins/mongodb-skills"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "skills"
-    },
-    {
       "name": "paper-search-tools",
       "source": {
         "source": "local",
@@ -135,17 +168,6 @@
         "installation": "AVAILABLE"
       },
       "category": "tools"
-    },
-    {
-      "name": "supabase-skills",
-      "source": {
-        "source": "local",
-        "path": "./plugins/supabase-skills"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "skills"
     },
     {
       "name": "tavily-tools",

@@ -1,0 +1,5 @@
+{
+  "name": "anthropic-office-skills",
+  "version": "1.0.0",
+  "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing."
+}
