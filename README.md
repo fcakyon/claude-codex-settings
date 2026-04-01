@@ -246,6 +246,23 @@ Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports
 </details>
 
 <details>
+<summary><strong>cloudflare-skills</strong> - Official Cloudflare developer platform skill for Workers, R2, D1, KV, AI, and 50+ services</summary>
+
+| Claude Code                                         | Codex CLI                                                | Gemini CLI                                                     |
+| --------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------- |
+| `/plugin install cloudflare-skills@claude-settings` | `codex plugin install cloudflare-skills@claude-settings` | `gemini extensions install --path ./plugins/cloudflare-skills` |
+
+Cloudflare developer platform skill with decision trees for product selection across Workers, Durable Objects, R2, D1, KV, Workers AI, and 50+ services. Synced from [cloudflare/skills](https://github.com/cloudflare/skills).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                | Description                                                     | ZIP                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`cloudflare-deploy`](./plugins/cloudflare-skills/skills/cloudflare-deploy/SKILL.md) | Cloudflare platform: compute, storage, AI, networking, security | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/cloudflare-deploy.zip) |
+
+</details>
+
+<details>
 <summary><strong>anthropic-essentials</strong> - Feature dev, CLAUDE.md management, skill creation</summary>
 
 Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.

@@ -312,6 +312,16 @@
       "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
       "category": "tools",
       "tags": ["search", "mcp", "integration"]
+    },
+    {
+      "name": "cloudflare-skills",
+      "source": "./plugins/cloudflare-skills",
+      "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
+      "category": "skills",
+      "tags": ["cloud", "deploy"]
     }
   ]
 }

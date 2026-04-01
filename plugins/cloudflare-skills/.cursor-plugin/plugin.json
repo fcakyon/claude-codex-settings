@@ -1,0 +1,5 @@
+{
+  "name": "cloudflare-skills",
+  "version": "1.0.0",
+  "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services."
+}

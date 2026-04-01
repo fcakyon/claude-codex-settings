@@ -109,6 +109,12 @@
       "source": "./plugins/tavily-tools",
       "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
       "version": "2.0.2"
+    },
+    {
+      "name": "cloudflare-skills",
+      "source": "./plugins/cloudflare-skills",
+      "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
+      "version": "1.0.0"
     }
   ]
 }

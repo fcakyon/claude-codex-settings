@@ -201,6 +201,17 @@
         "installation": "AVAILABLE"
       },
       "category": "tools"
+    },
+    {
+      "name": "cloudflare-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/cloudflare-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
     }
   ]
 }
