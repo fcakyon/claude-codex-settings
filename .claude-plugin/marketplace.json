@@ -83,6 +83,26 @@
       "tags": ["database", "best-practices"]
     },
     {
+      "name": "stripe-skills",
+      "source": "./plugins/stripe-skills",
+      "description": "Official Stripe agent skills for payments, billing, Connect, and API upgrades.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["stripe", "payments", "billing", "subscriptions", "connect"],
+      "category": "skills",
+      "tags": ["payments", "best-practices"]
+    },
+    {
+      "name": "polar-skills",
+      "source": "./plugins/polar-skills",
+      "description": "Official Polar skills for billing system architecture and local development environment.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["polar", "billing", "subscriptions", "local-dev"],
+      "category": "skills",
+      "tags": ["billing", "best-practices"]
+    },
+    {
       "name": "anthropic-essentials",
       "source": {
         "source": "url",

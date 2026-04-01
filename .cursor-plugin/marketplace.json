@@ -45,6 +45,18 @@
       "version": "1.0.0"
     },
     {
+      "name": "stripe-skills",
+      "source": "./plugins/stripe-skills",
+      "description": "Official Stripe agent skills for payments, billing, Connect, and API upgrades.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "polar-skills",
+      "source": "./plugins/polar-skills",
+      "description": "Official Polar skills for billing system architecture and local development environment.",
+      "version": "1.0.0"
+    },
+    {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
