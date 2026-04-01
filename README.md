@@ -73,7 +73,7 @@ ln -sfn CLAUDE.md GEMINI.md
 ## Plugins
 
 <details>
-<summary><strong>anthropic-office-skills</strong> - PDF, Word, PowerPoint, Excel (Anthropic)</summary>
+<summary><strong>anthropic-office-skills</strong> - Official Anthropic PDF, Word, PowerPoint, Excel skills</summary>
 
 Official office document skills from [anthropics/skills](https://github.com/anthropics/skills). Synced locally via `bash .github/scripts/sync-anthropic-office-skills.sh`.
 
@@ -87,7 +87,7 @@ Official office document skills from [anthropics/skills](https://github.com/anth
 </details>
 
 <details>
-<summary><strong>openai-office-skills</strong> - PDF, Word, PowerPoint, Excel (OpenAI)</summary>
+<summary><strong>openai-office-skills</strong> - Official OpenAI PDF, Word, PowerPoint, Excel skills</summary>
 
 Official office document skills from [openai/skills](https://github.com/openai/skills). Synced locally via `bash .github/scripts/sync-openai-office-skills.sh`.
 
@@ -101,7 +101,7 @@ Official office document skills from [openai/skills](https://github.com/openai/s
 </details>
 
 <details>
-<summary><strong>react-skills</strong> - React, Next.js, and React Native Best Practices</summary>
+<summary><strong>react-skills</strong> - Official React, Next.js, and React Native best practices</summary>
 
 | Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
 | ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
@@ -122,7 +122,7 @@ React and frontend best practices synced from [vercel-labs/agent-skills](https:/
 </details>
 
 <details>
-<summary><strong>agent-browser</strong> - Browser Automation CLI for AI Agents</summary>
+<summary><strong>agent-browser</strong> - Official browser automation CLI for AI agents</summary>
 
 | Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
 | ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
@@ -142,7 +142,7 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 </details>
 
 <details>
-<summary><strong>frontend-design-skills</strong> - Frontend Design (Anthropic + OpenAI)</summary>
+<summary><strong>frontend-design-skills</strong> - Official frontend design skills (Anthropic + OpenAI)</summary>
 
 Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/skills](https://github.com/openai/skills). Synced locally via `bash .github/scripts/sync-frontend-skills.sh`.
 
@@ -154,13 +154,13 @@ Frontend design skills from [anthropics/claude-plugins-official](https://github.
 </details>
 
 <details>
-<summary><strong>mongodb-skills</strong> - Official MongoDB Agent Skills</summary>
+<summary><strong>mongodb-skills</strong> - Official MongoDB agent skills for schema design, query tuning, and Atlas Search</summary>
 
 | Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
 | ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
 | `/plugin install mongodb-skills@claude-settings` | `codex plugin install mongodb-skills@claude-settings` | `gemini extensions install --path ./plugins/mongodb-skills` |
 
-Official MongoDB agent skills for schema design, query tuning, search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
+Official MongoDB agent skills for schema design, query tuning, Atlas Search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -177,19 +177,56 @@ Official MongoDB agent skills for schema design, query tuning, search, and conne
 </details>
 
 <details>
-<summary><strong>supabase-skills</strong> - Official Supabase Postgres Best Practices</summary>
+<summary><strong>supabase-skills</strong> - Official Supabase agent skills for Postgres query and schema best practices</summary>
 
 | Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
 | ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | `/plugin install supabase-skills@claude-settings` | `codex plugin install supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
 
-Official Supabase Postgres best practices for query and schema design. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
+Official Supabase agent skills for Postgres query performance and schema design across 8 categories. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
 | Skill                                                                                                            | Description                                                | ZIP                                                                                                                                                                                      |
 | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) | Postgres performance and schema design across 8 categories | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip) |
+
+</details>
+
+<details>
+<summary><strong>stripe-skills</strong> - Official Stripe agent skills for payments, billing, Connect, and API upgrades</summary>
+
+| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
+| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `/plugin install stripe-skills@claude-settings` | `codex plugin install stripe-skills@claude-settings` | `gemini extensions install --path ./plugins/stripe-skills` |
+
+Official Stripe agent skills for payment integration: API selection, Connect platform setup, billing/subscriptions, Treasury, and SDK upgrades. Synced from [stripe/ai](https://github.com/stripe/ai).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                    | Description                                                     | ZIP                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`stripe-best-practices`](./plugins/stripe-skills/skills/stripe-best-practices/SKILL.md) | Payments, billing, Connect, Treasury integration best practices | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/stripe-best-practices.zip) |
+| [`stripe-projects`](./plugins/stripe-skills/skills/stripe-projects/SKILL.md)             | Stripe Projects CLI setup and stack provisioning                | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/stripe-projects.zip)       |
+| [`upgrade-stripe`](./plugins/stripe-skills/skills/upgrade-stripe/SKILL.md)               | Stripe API version and SDK upgrade guide                        | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/upgrade-stripe.zip)        |
+
+</details>
+
+<details>
+<summary><strong>polar-skills</strong> - Official Polar agent skills for billing, subscriptions, and local dev environment</summary>
+
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
+| `/plugin install polar-skills@claude-settings` | `codex plugin install polar-skills@claude-settings` | `gemini extensions install --path ./plugins/polar-skills` |
+
+Official Polar agent skills for billing system, Stripe integration, subscription lifecycle, and local dev with Docker. Synced from [polarsource/polar](https://github.com/polarsource/polar).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                       | Description                                                                   | ZIP                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`polar-billing`](./plugins/polar-skills/skills/polar-billing/SKILL.md)                     | Polar billing system, Stripe integration, subscriptions, benefit provisioning | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/polar-billing.zip)           |
+| [`polar-local-environment`](./plugins/polar-skills/skills/polar-local-environment/SKILL.md) | Polar local development environment with Docker                               | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/polar-local-environment.zip) |
 
 </details>
 
@@ -541,12 +578,13 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 **New plugins/skills:**
 
-- [ ] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) integration
+- [x] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) billing and local dev
+- [ ] Payments: [Paddle](https://www.paddle.com) billing and checkout skills
 - [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
 - [x] Frontend design: Anthropic + OpenAI frontend design skills (bundled as `frontend-design-skills`)
 - [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form)
 - [ ] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
-- [ ] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (in addition to Anthropic ones)
+- [x] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (bundled as `openai-office-skills`)
 - [ ] Auth: Clerk, Firebase, Supabase Auth patterns
 - [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 

@@ -82,6 +82,28 @@
       "category": "skills"
     },
     {
+      "name": "stripe-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/stripe-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
+      "name": "polar-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/polar-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
       "name": "github-dev",
       "source": {
         "source": "local",
