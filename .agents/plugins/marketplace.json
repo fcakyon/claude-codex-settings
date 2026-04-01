@@ -115,6 +115,28 @@
       "category": "skills"
     },
     {
+      "name": "cloudflare-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/cloudflare-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
+      "name": "web-performance-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/web-performance-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
       "name": "github-dev",
       "source": {
         "source": "local",
@@ -201,17 +223,6 @@
         "installation": "AVAILABLE"
       },
       "category": "tools"
-    },
-    {
-      "name": "cloudflare-skills",
-      "source": {
-        "source": "local",
-        "path": "./plugins/cloudflare-skills"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "skills"
     }
   ]
 }
