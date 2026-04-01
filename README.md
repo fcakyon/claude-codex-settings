@@ -187,19 +187,21 @@ Official MongoDB agent skills for schema design, query tuning, Atlas Search, and
 </details>
 
 <details>
-<summary><strong>supabase-skills</strong> - Official Supabase agent skills for Postgres query and schema best practices</summary>
+<summary><strong>supabase-skills</strong> - Supabase Postgres best practices, JavaScript SDK, and CLI skills</summary>
 
 | Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
 | ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | `/plugin install supabase-skills@claude-settings` | `codex plugin install supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
 
-Official Supabase agent skills for Postgres query performance and schema design across 8 categories. From [supabase/agent-skills](https://github.com/supabase/agent-skills).
+Supabase skills covering Postgres query/schema best practices from [supabase/agent-skills](https://github.com/supabase/agent-skills), JavaScript SDK usage from [supabase/supabase-js](https://github.com/supabase/supabase-js), and CLI workflows from [supabase/cli](https://github.com/supabase/cli).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-| Skill                                                                                                            | Description                                                | ZIP                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) | Postgres performance and schema design across 8 categories | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip) |
+| Skill                                                                                                            | Description                                                          | ZIP                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) | Postgres performance and schema design across 8 categories           | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip) |
+| [`supabase-js`](./plugins/supabase-skills/skills/supabase-js/SKILL.md)                                           | JavaScript SDK for auth, database, storage, realtime, edge functions | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-js.zip)                      |
+| [`supabase-cli`](./plugins/supabase-skills/skills/supabase-cli/SKILL.md)                                         | CLI for local dev, migrations, edge functions, project management    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-cli.zip)                     |
 
 </details>
 
