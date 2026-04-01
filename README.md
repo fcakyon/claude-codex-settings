@@ -11,7 +11,7 @@
 
 My daily battle-tested Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with skills, commands, hooks, subagents and MCP servers.
 
-[Installation](#installation) • [Plugins](#plugins) • [Configuration](#configuration) • [Statusline](#statusline) • [References](#references)
+[Installation](#installation) • [Plugins](#plugins) • [Configuration](#configuration) • [References](#references)
 
 </div>
 
@@ -306,25 +306,6 @@ Git and GitHub automation. Run `/github-dev:setup` after install.
 </details>
 
 <details>
-<summary><strong>statusline-tools</strong> - Session + 5H Usage Statusline</summary>
-
-| Claude Code                                        | Codex CLI                                               | Gemini CLI                                                    |
-| -------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| `/plugin install statusline-tools@claude-settings` | `codex plugin install statusline-tools@claude-settings` | `gemini extensions install --path ./plugins/statusline-tools` |
-
-Cross-platform statusline showing session context %, cost, and account-wide 5H usage with time until reset. Run `/statusline-tools:setup` after install.
-
-**Skills:**
-
-- [`setup`](./plugins/statusline-tools/skills/setup/SKILL.md) - Statusline configuration guide
-
-**Commands:**
-
-- [`/statusline-tools:setup`](./plugins/statusline-tools/commands/setup.md) - Configure statusline
-
-</details>
-
-<details>
 <summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
 
 | Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
@@ -340,21 +321,6 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 - [`prettier_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
 - [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
 - [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
-
-</details>
-
-<details>
-<summary><strong>notification-tools</strong> - OS notifications</summary>
-
-| Claude Code                                          | Codex CLI                                                 | Gemini CLI                                                      |
-| ---------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------- |
-| `/plugin install notification-tools@claude-settings` | `codex plugin install notification-tools@claude-settings` | `gemini extensions install --path ./plugins/notification-tools` |
-
-Desktop notifications when Claude Code completes tasks.
-
-**Hooks:**
-
-- [`notify.sh`](./plugins/notification-tools/hooks/scripts/notify.sh) - OS notifications on task completion
 
 </details>
 
@@ -504,7 +470,6 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Model**: OpusPlan mode (plan: Opus 4.6, execute: Opus 4.6, fast: Sonnet 4.6) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
-- **Statusline**: Custom usage tracking powered by [ccusage](https://ccusage.com/)
 - **Plugins**: All plugins enabled
 
 </details>
@@ -564,33 +529,6 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 </details>
 
-## Statusline
-
-Simple statusline plugin that uses the official usage API to show account-wide block usage and reset time in real-time. Works for both API and subscription users.
-
-<a href="https://github.com/fcakyon/claude-codex-settings?tab=readme-ov-file#statusline" target="_blank" rel="noopener noreferrer">
-  <img src="https://github.com/user-attachments/assets/7bbb8e98-2755-46be-b0a4-cc8367a58fdb" width="600">
-</a>
-
-<details>
-<summary><strong>Setup</strong></summary>
-
-```bash
-/plugin marketplace add fcakyon/claude-codex-settings
-/plugin install statusline-tools@claude-settings
-/statusline-tools:setup
-```
-
-**Color coding:**
-
-- 🟢 <50% usage / <1h until reset
-- 🟡 50-70% usage / 1-3.5h until reset
-- 🔴 70%+ usage / >3.5h until reset
-
-See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) for details.
-
-</details>
-
 ## TODO
 
 **Visual demos:**
@@ -620,7 +558,6 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 
 - [ ] Rename plugins to `mongodb-skills`, `github-skills` etc. for better UX
 - [ ] Add worktree support to github-dev create-pr and commit-staged commands
-- [ ] Add current repo branch and worktree info into statusline-tools
 
 ## References
 
