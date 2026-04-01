@@ -3,9 +3,15 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
-      "name": "web-design-guidelines",
-      "source": "./plugins/web-design-guidelines",
-      "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, forms, animation, performance, and more.",
+      "name": "react-skills",
+      "source": "./plugins/react-skills",
+      "description": "React, Next.js, and React Native best practices with web design guidelines.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "agent-browser",
+      "source": "./plugins/agent-browser",
+      "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps.",
       "version": "1.0.0"
     },
     {
