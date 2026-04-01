@@ -137,6 +137,17 @@
       "category": "skills"
     },
     {
+      "name": "hetzner-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/hetzner-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
       "name": "github-dev",
       "source": {
         "source": "local",
