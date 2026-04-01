@@ -73,7 +73,11 @@ ln -sfn CLAUDE.md GEMINI.md
 <details>
 <summary><strong>anthropic-office-skills</strong> - Official Anthropic PDF, Word, PowerPoint, Excel skills</summary>
 
-Official office document skills from [anthropics/skills](https://github.com/anthropics/skills). Synced locally via `bash .github/scripts/sync-anthropic-office-skills.sh`.
+| Claude Code                                               | Codex CLI                                                      | Gemini CLI                                                           |
+| --------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `/plugin install anthropic-office-skills@claude-settings` | `codex plugin install anthropic-office-skills@claude-settings` | `gemini extensions install --path ./plugins/anthropic-office-skills` |
+
+Official office document skills from [anthropics/skills](https://github.com/anthropics/skills).
 
 | Skill                                                            | Description                                             | Install                                                                                                                                                      |
 | ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -87,7 +91,11 @@ Official office document skills from [anthropics/skills](https://github.com/anth
 <details>
 <summary><strong>openai-office-skills</strong> - Official OpenAI PDF, Word, PowerPoint, Excel skills</summary>
 
-Official office document skills from [openai/skills](https://github.com/openai/skills). Synced locally via `bash .github/scripts/sync-openai-office-skills.sh`.
+| Claude Code                                            | Codex CLI                                                   | Gemini CLI                                                        |
+| ------------------------------------------------------ | ----------------------------------------------------------- | ----------------------------------------------------------------- |
+| `/plugin install openai-office-skills@claude-settings` | `codex plugin install openai-office-skills@claude-settings` | `gemini extensions install --path ./plugins/openai-office-skills` |
+
+Official office document skills from [openai/skills](https://github.com/openai/skills).
 
 | Skill                                                                       | Description                                         | Install                                                                                                                                                             |
 | --------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -105,7 +113,7 @@ Official office document skills from [openai/skills](https://github.com/openai/s
 | ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
 | `/plugin install react-skills@claude-settings` | `codex plugin install react-skills@claude-settings` | `gemini extensions install --path ./plugins/react-skills` |
 
-React and frontend best practices synced from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills).
+React and frontend best practices from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -126,7 +134,7 @@ React and frontend best practices synced from [vercel-labs/agent-skills](https:/
 | ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
 | `/plugin install agent-browser@claude-settings` | `codex plugin install agent-browser@claude-settings` | `gemini extensions install --path ./plugins/agent-browser` |
 
-Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. Synced from [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
+Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. From [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -142,7 +150,11 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 <details>
 <summary><strong>frontend-design-skills</strong> - Official frontend design skills (Anthropic + OpenAI)</summary>
 
-Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/skills](https://github.com/openai/skills). Synced locally via `bash .github/scripts/sync-frontend-skills.sh`.
+| Claude Code                                              | Codex CLI                                                     | Gemini CLI                                                          |
+| -------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `/plugin install frontend-design-skills@claude-settings` | `codex plugin install frontend-design-skills@claude-settings` | `gemini extensions install --path ./plugins/frontend-design-skills` |
+
+Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/skills](https://github.com/openai/skills).
 
 | Skill                                                                                                     | Description                                                                       | Install                                                                                                                                                                           |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -158,7 +170,7 @@ Frontend design skills from [anthropics/claude-plugins-official](https://github.
 | ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
 | `/plugin install mongodb-skills@claude-settings` | `codex plugin install mongodb-skills@claude-settings` | `gemini extensions install --path ./plugins/mongodb-skills` |
 
-Official MongoDB agent skills for schema design, query tuning, Atlas Search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
+Official MongoDB agent skills for schema design, query tuning, Atlas Search, and connections. From [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -181,7 +193,7 @@ Official MongoDB agent skills for schema design, query tuning, Atlas Search, and
 | ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
 | `/plugin install supabase-skills@claude-settings` | `codex plugin install supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
 
-Official Supabase agent skills for Postgres query performance and schema design across 8 categories. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
+Official Supabase agent skills for Postgres query performance and schema design across 8 categories. From [supabase/agent-skills](https://github.com/supabase/agent-skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -198,7 +210,7 @@ Official Supabase agent skills for Postgres query performance and schema design 
 | ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
 | `/plugin install stripe-skills@claude-settings` | `codex plugin install stripe-skills@claude-settings` | `gemini extensions install --path ./plugins/stripe-skills` |
 
-Official Stripe agent skills for payment integration: API selection, Connect platform setup, billing/subscriptions, Treasury, and SDK upgrades. Synced from [stripe/ai](https://github.com/stripe/ai).
+Official Stripe agent skills for payment integration: API selection, Connect platform setup, billing/subscriptions, Treasury, and SDK upgrades. From [stripe/ai](https://github.com/stripe/ai).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -217,7 +229,7 @@ Official Stripe agent skills for payment integration: API selection, Connect pla
 | ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
 | `/plugin install polar-skills@claude-settings` | `codex plugin install polar-skills@claude-settings` | `gemini extensions install --path ./plugins/polar-skills` |
 
-Official Polar agent skills for billing system, Stripe integration, subscription lifecycle, and local dev with Docker. Synced from [polarsource/polar](https://github.com/polarsource/polar).
+Official Polar agent skills for billing system, Stripe integration, subscription lifecycle, and local dev with Docker. From [polarsource/polar](https://github.com/polarsource/polar).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -235,7 +247,7 @@ Official Polar agent skills for billing system, Stripe integration, subscription
 | ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
 | `/plugin install livekit-skills@claude-settings` | `codex plugin install livekit-skills@claude-settings` | `gemini extensions install --path ./plugins/livekit-skills` |
 
-Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports both LiveKit Cloud and self-hosted deployments. Uses `lk` CLI for docs access instead of MCP. Based on [livekit/agent-skills](https://github.com/livekit/agent-skills), patched for CLI workflow and BYOK model providers. Synced via `bash .github/scripts/sync-livekit-skills.sh`.
+Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports both LiveKit Cloud and self-hosted deployments. Uses `lk` CLI for docs access instead of MCP. Based on [livekit/agent-skills](https://github.com/livekit/agent-skills), patched for CLI workflow and BYOK model providers.
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -252,7 +264,7 @@ Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports
 | --------------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------- |
 | `/plugin install cloudflare-skills@claude-settings` | `codex plugin install cloudflare-skills@claude-settings` | `gemini extensions install --path ./plugins/cloudflare-skills` |
 
-Cloudflare developer platform skill with decision trees for product selection across Workers, Durable Objects, R2, D1, KV, Workers AI, and 50+ services. Synced from [cloudflare/skills](https://github.com/cloudflare/skills).
+Cloudflare developer platform skill with decision trees for product selection across Workers, Durable Objects, R2, D1, KV, Workers AI, and 50+ services. From [cloudflare/skills](https://github.com/cloudflare/skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -269,7 +281,7 @@ Cloudflare developer platform skill with decision trees for product selection ac
 | -------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------- |
 | `/plugin install web-performance-skills@claude-settings` | `codex plugin install web-performance-skills@claude-settings` | `gemini extensions install --path ./plugins/web-performance-skills` |
 
-Audit web page performance using Chrome DevTools MCP. Measures Core Web Vitals (FCP, LCP, TBT, CLS, Speed Index), identifies render-blocking resources, network dependency chains, layout shifts, caching issues, and accessibility gaps. Synced from [cloudflare/skills](https://github.com/cloudflare/skills).
+Audit web page performance using Chrome DevTools MCP. Measures Core Web Vitals (FCP, LCP, TBT, CLS, Speed Index), identifies render-blocking resources, network dependency chains, layout shifts, caching issues, and accessibility gaps. From [cloudflare/skills](https://github.com/cloudflare/skills).
 
 Bundles the `chrome-devtools` MCP server (no API key needed).
 
