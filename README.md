@@ -32,7 +32,7 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 /plugin install < plugin-name > @claude-settings
 ```
 
-After installing, run `/plugin-name:setup` for configuration (e.g., `/slack-tools:setup`).
+After installing, run `/plugin-name:setup` for configuration (e.g., `/gcloud-tools:setup`).
 
 </details>
 
@@ -318,25 +318,6 @@ Desktop notifications when Claude Code completes tasks.
 </details>
 
 <details>
-<summary><strong>ccproxy-tools</strong> - Use Claude Code with any LLM</summary>
-
-| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
-| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
-| `/plugin install ccproxy-tools@claude-settings` | `codex plugin install ccproxy-tools@claude-settings` | `gemini extensions install --path ./plugins/ccproxy-tools` |
-
-Configure Claude Code to use ccproxy/LiteLLM with Claude Pro/Max subscription, GitHub Copilot, or other providers. Run `/ccproxy-tools:setup` after install.
-
-**Commands:**
-
-- [`/ccproxy-tools:setup`](./plugins/ccproxy-tools/commands/setup.md) - Configure ccproxy/LiteLLM
-
-**Skills:**
-
-- [`setup`](./plugins/ccproxy-tools/skills/setup/SKILL.md) - Troubleshooting guide
-
-</details>
-
-<details>
 <summary><strong>claude-tools</strong> - Sync CLAUDE.md + allowlist + context refresh</summary>
 
 | Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
@@ -440,28 +421,6 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 - [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Configure Paper Search MCP
 
 **MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json) | [mcp/paper-search](https://hub.docker.com/r/mcp/paper-search)
-
-</details>
-
-<details>
-<summary><strong>slack-tools</strong> - Slack MCP & Skills</summary>
-
-| Claude Code                                   | Codex CLI                                          | Gemini CLI                                               |
-| --------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- |
-| `/plugin install slack-tools@claude-settings` | `codex plugin install slack-tools@claude-settings` | `gemini extensions install --path ./plugins/slack-tools` |
-
-Message search and channel history. Run `/slack-tools:setup` after install.
-
-**Skills:**
-
-- [`slack-usage`](./plugins/slack-tools/skills/slack-usage/SKILL.md) - Best practices for Slack MCP
-- [`setup`](./plugins/slack-tools/skills/setup/SKILL.md) - Troubleshooting guide
-
-**Commands:**
-
-- [`/slack-tools:setup`](./plugins/slack-tools/commands/setup.md) - Configure Slack MCP
-
-**MCP:** [`.mcp.json`](./plugins/slack-tools/.mcp.json) | [ubie-oss/slack-mcp-server](https://github.com/ubie-oss/slack-mcp-server)
 
 </details>
 
@@ -572,18 +531,6 @@ Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 </details>
 
 <details>
-<summary><strong>ccproxy (Use Claude Code with Any LLM)</strong></summary>
-
-Assign any API or model to any task type via [ccproxy](https://github.com/starbased-co/ccproxy):
-
-- **MAX/Pro subscription**: Uses OAuth from your Claude subscription (no API keys)
-- **Any provider**: OpenAI, Gemini, Perplexity, local LLMs, or any OpenAI-compatible API
-- **Fully customizable**: Assign different models to default, thinking, planning, background tasks
-- **SDK support**: Works with Anthropic SDK and LiteLLM SDK beyond Claude Code
-
-</details>
-
-<details>
 <summary><strong>VSCode</strong></summary>
 
 Settings in [`.vscode/settings.json`](./.vscode/settings.json):
@@ -629,7 +576,7 @@ See [Claude Code statusline docs](https://code.claude.com/docs/en/statusline) fo
 
 **Zero-MCP goal:**
 
-- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, slack, tavily, gcloud, azure, linear, supabase, paper-search)
+- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, tavily, gcloud, azure, linear, supabase, paper-search)
 
 **New plugins/skills:**
 

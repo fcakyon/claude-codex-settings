@@ -82,17 +82,6 @@
       "category": "tools"
     },
     {
-      "name": "ccproxy-tools",
-      "source": {
-        "source": "local",
-        "path": "./plugins/ccproxy-tools"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "tools"
-    },
-    {
       "name": "claude-tools",
       "source": {
         "source": "local",
@@ -141,17 +130,6 @@
       "source": {
         "source": "local",
         "path": "./plugins/paper-search-tools"
-      },
-      "policy": {
-        "installation": "AVAILABLE"
-      },
-      "category": "tools"
-    },
-    {
-      "name": "slack-tools",
-      "source": {
-        "source": "local",
-        "path": "./plugins/slack-tools"
       },
       "policy": {
         "installation": "AVAILABLE"
