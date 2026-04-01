@@ -283,6 +283,8 @@ bash .github/scripts/sync-mongodb-skills.sh
 bash .github/scripts/sync-supabase-skills.sh
 bash .github/scripts/sync-react-skills.sh
 bash .github/scripts/sync-agent-browser-skills.sh
+bash .github/scripts/sync-anthropic-office-skills.sh
+bash .github/scripts/sync-openai-office-skills.sh
 ```
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
