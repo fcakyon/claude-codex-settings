@@ -1,0 +1,5 @@
+{
+  "name": "stripe-skills",
+  "version": "1.0.0",
+  "description": "Official Stripe agent skills for payments, billing, Connect, and API upgrades."
+}
