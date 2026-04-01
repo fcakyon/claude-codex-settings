@@ -104,6 +104,17 @@
       "category": "skills"
     },
     {
+      "name": "livekit-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/livekit-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "skills"
+    },
+    {
       "name": "github-dev",
       "source": {
         "source": "local",

@@ -286,6 +286,7 @@ bash .github/scripts/sync-mongodb-skills.sh
 bash .github/scripts/sync-supabase-skills.sh
 bash .github/scripts/sync-stripe-skills.sh
 bash .github/scripts/sync-polar-skills.sh
+bash .github/scripts/sync-livekit-skills.sh
 bash .github/scripts/sync-react-skills.sh
 bash .github/scripts/sync-agent-browser-skills.sh
 bash .github/scripts/sync-anthropic-office-skills.sh

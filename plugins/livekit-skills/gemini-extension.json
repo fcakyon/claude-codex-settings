@@ -1,0 +1,5 @@
+{
+  "name": "livekit-skills",
+  "version": "1.0.0",
+  "description": "LiveKit Agents SDK skills for building voice AI agents with CLI-based workflow, supporting both Cloud and self-hosted deployments."
+}
