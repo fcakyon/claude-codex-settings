@@ -643,12 +643,14 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 - [x] Payments: [Stripe](https://stripe.com) best practices, [Polar](https://polar.sh) billing and local dev
 - [ ] Payments: [Paddle](https://www.paddle.com) billing and checkout skills
+- [x] Deployment: [Cloudflare](https://www.cloudflare.com) platform skill
+- [x] Deployment: [Hetzner Cloud](https://www.hetzner.com/cloud) CLI skill
 - [ ] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
 - [x] Frontend design: Anthropic + OpenAI frontend design skills (bundled as `frontend-design-skills`)
 - [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form)
 - [x] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
 - [x] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (bundled as `openai-office-skills`)
-- [ ] Auth: Clerk, Firebase, Supabase Auth patterns
+- [ ] Auth: Clerk, Firebase patterns
 - [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
 
 **Static website:**
