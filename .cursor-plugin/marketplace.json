@@ -47,13 +47,13 @@
     {
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
-      "description": "Official Stripe agent skills for payments, billing, Connect, and API upgrades.",
+      "description": "Official Stripe payment platform skills for checkout, billing, Connect, and API upgrades.",
       "version": "1.0.0"
     },
     {
       "name": "polar-skills",
       "source": "./plugins/polar-skills",
-      "description": "Official Polar skills for billing system architecture and local development environment.",
+      "description": "Official Polar payment processor skills for billing, subscriptions, and local development.",
       "version": "1.0.0"
     },
     {

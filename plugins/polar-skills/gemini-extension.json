@@ -1,5 +1,5 @@
 {
   "name": "polar-skills",
   "version": "1.0.0",
-  "description": "Official Polar skills for billing system architecture and local development environment."
+  "description": "Official Polar payment processor skills for billing, subscriptions, and local development."
 }
