@@ -6,15 +6,18 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
-# Clone repo to ~/dev/<clone-name> or checkout main + pull if it exists.
+# Clone repo to ~/dev/<clone-name> or checkout <branch> + pull if it exists.
+# Usage: clone_or_update <repo_url> <clone_name> [branch]
+# branch defaults to "main" if not specified.
 clone_or_update() {
   local repo_url="$1"
   local clone_name="$2"
+  local branch="${3:-main}"
   local clone_dir="$HOME/dev/$clone_name"
 
   if [ -d "$clone_dir/.git" ]; then
     echo "Updating $clone_dir..."
-    git -C "$clone_dir" checkout main
+    git -C "$clone_dir" checkout "$branch"
     git -C "$clone_dir" pull
   else
     echo "Cloning $repo_url to $clone_dir..."

@@ -284,6 +284,8 @@ Per-vendor scripts sync official agent-skills repos into local plugins:
 ```bash
 bash .github/scripts/sync-mongodb-skills.sh
 bash .github/scripts/sync-supabase-skills.sh
+bash .github/scripts/sync-supabase-js-skills.sh
+bash .github/scripts/sync-supabase-cli-skills.sh
 bash .github/scripts/sync-stripe-skills.sh
 bash .github/scripts/sync-polar-skills.sh
 bash .github/scripts/sync-livekit-skills.sh
