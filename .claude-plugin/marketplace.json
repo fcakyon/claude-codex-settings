@@ -179,21 +179,6 @@
       "tags": ["git", "workflow", "automation"]
     },
     {
-      "name": "statusline-tools",
-      "source": "./plugins/statusline-tools",
-      "description": "Cross-platform statusline showing session context, cost, and account-wide 5H usage with time until reset.",
-      "version": "1.0.1",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["statusline", "usage", "context", "cost", "monitoring"],
-      "category": "productivity",
-      "tags": ["statusline", "monitoring"]
-    },
-    {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
@@ -207,21 +192,6 @@
       "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
       "category": "productivity",
       "tags": ["formatting", "development"]
-    },
-    {
-      "name": "notification-tools",
-      "source": "./plugins/notification-tools",
-      "description": "Desktop notifications when Claude Code completes tasks. Supports macOS and Linux.",
-      "version": "2.0.2",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["notifications", "desktop", "alerts", "macos", "linux"],
-      "category": "productivity",
-      "tags": ["notifications", "alerts"]
     },
     {
       "name": "azure-tools",
