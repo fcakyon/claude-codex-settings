@@ -9,20 +9,23 @@ clone_or_update https://github.com/livekit/agent-skills livekit-agent-skills
 SRC="$HOME/dev/livekit-agent-skills/skills"
 DST="plugins/livekit-skills/skills"
 
-sync_dir "$SRC/livekit-agents" "$DST/livekit-agents" "SKILL.md"
+sync_dir "$SRC/livekit-agents" "$DST/livekit-skills" "SKILL.md"
 
 # Patch SKILL.md: remove cloud bias, replace MCP with CLI, add self-hosted setup
 python3 -c "
 import sys
 
-p = '$REPO_ROOT/$DST/livekit-agents/SKILL.md'
+p = '$REPO_ROOT/$DST/livekit-skills/SKILL.md'
 c = open(p).read()
 
 # Simple string replacements
 replacements = [
+    # Rename skill
+    ('name: livekit-agents',
+     'name: livekit-skills'),
     # Title
     ('# LiveKit Agents Development for LiveKit Cloud',
-     '# LiveKit Agents Development'),
+     '# LiveKit Development'),
     # Description frontmatter
     ('Build voice AI agents with LiveKit Cloud and the Agents SDK.',
      'Build voice AI agents with LiveKit Agents SDK.'),
@@ -208,7 +211,7 @@ print('Patched SKILL.md')
 "
 
 # Download reference docs via lk CLI (or create placeholder files)
-REF_DIR="$REPO_ROOT/$DST/livekit-agents/references"
+REF_DIR="$REPO_ROOT/$DST/livekit-skills/references"
 mkdir -p "$REF_DIR"
 
 PAGES=(
@@ -230,7 +233,7 @@ for entry in "${PAGES[@]}"; do
   echo "Downloaded reference: $name.md"
 done
 
-ensure_license "$DST/livekit-agents" MIT
-create_zip "$DST/livekit-agents"
+ensure_license "$DST/livekit-skills" MIT
+create_zip "$DST/livekit-skills"
 
 echo "Done syncing livekit-skills."

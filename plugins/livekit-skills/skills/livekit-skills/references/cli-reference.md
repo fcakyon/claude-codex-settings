@@ -48,7 +48,7 @@ Search and browse the LiveKit documentation directly from your terminal. Fetch p
 
 ---
 
-This document was rendered at 2026-04-01T11:01:02.003Z.
+This document was rendered at 2026-04-01T11:24:16.602Z.
 For the latest version of this document, see [https://docs.livekit.io/intro/basics/cli.md](https://docs.livekit.io/intro/basics/cli.md).
 
 To explore all LiveKit documentation, see [llms.txt](https://docs.livekit.io/llms.txt).

@@ -1,5 +1,5 @@
 ---
-name: livekit-agents
+name: livekit-skills
 description: 'Build voice AI agents with LiveKit Agents SDK. Use when the user asks to "build a voice agent", "create a LiveKit agent", "add voice AI", "implement handoffs", "structure agent workflows", or is working with LiveKit Agents SDK. Covers both LiveKit Cloud and self-hosted deployments using lk CLI.'
 license: MIT
 metadata:
@@ -7,7 +7,7 @@ metadata:
   version: "0.3.1"
 ---
 
-# LiveKit Agents Development
+# LiveKit Development
 
 This skill provides guidance for building voice AI agents with the LiveKit Agents SDK. It covers both LiveKit Cloud and self-hosted deployments, using the `lk` CLI for documentation access and project management. All factual information about APIs, methods, and configurations must come from live documentation.
 

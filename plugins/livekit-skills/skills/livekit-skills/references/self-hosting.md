@@ -57,7 +57,7 @@ To customize your setup for production, refer to our [deployment guides](https:/
 
 ---
 
-This document was rendered at 2026-04-01T11:01:04.234Z.
+This document was rendered at 2026-04-01T11:24:18.909Z.
 For the latest version of this document, see [https://docs.livekit.io/transport/self-hosting/local.md](https://docs.livekit.io/transport/self-hosting/local.md).
 
 To explore all LiveKit documentation, see [llms.txt](https://docs.livekit.io/llms.txt).

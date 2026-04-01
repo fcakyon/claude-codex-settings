@@ -241,7 +241,7 @@ Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports
 
 | Skill                                                                       | Description                                                    | ZIP                                                                                                                                                                    |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`livekit-agents`](./plugins/livekit-skills/skills/livekit-agents/SKILL.md) | Voice AI agents: architecture, handoffs, testing, CLI workflow | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/livekit-agents.zip) |
+| [`livekit-skills`](./plugins/livekit-skills/skills/livekit-skills/SKILL.md) | Voice AI agents: architecture, handoffs, testing, CLI workflow | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/livekit-skills.zip) |
 
 </details>
 
