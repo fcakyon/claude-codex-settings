@@ -73,14 +73,14 @@
     {
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
-      "description": "Official Supabase Postgres best practices skill for query and schema design.",
+      "description": "Supabase skills for Postgres best practices, JavaScript SDK (auth, database, storage, realtime), and CLI (migrations, edge functions, local dev).",
       "version": "1.0.0",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
-      "keywords": ["supabase", "postgres", "database", "schema", "query"],
+      "keywords": ["supabase", "postgres", "database", "auth", "storage", "realtime", "cli", "migrations"],
       "category": "skills",
-      "tags": ["database", "best-practices"]
+      "tags": ["database", "backend"]
     },
     {
       "name": "stripe-skills",
