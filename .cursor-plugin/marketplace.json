@@ -63,6 +63,18 @@
       "version": "1.0.0"
     },
     {
+      "name": "cloudflare-skills",
+      "source": "./plugins/cloudflare-skills",
+      "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "web-performance-skills",
+      "source": "./plugins/web-performance-skills",
+      "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
+      "version": "1.0.0"
+    },
+    {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
@@ -109,18 +121,6 @@
       "source": "./plugins/tavily-tools",
       "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
       "version": "2.0.2"
-    },
-    {
-      "name": "cloudflare-skills",
-      "source": "./plugins/cloudflare-skills",
-      "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
-      "version": "1.0.0"
-    },
-    {
-      "name": "web-performance-skills",
-      "source": "./plugins/web-performance-skills",
-      "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
-      "version": "1.0.0"
     }
   ]
 }
