@@ -45,12 +45,6 @@
       "version": "2.0.2"
     },
     {
-      "name": "ccproxy-tools",
-      "source": "./plugins/ccproxy-tools",
-      "description": "Use Claude Code with your GitHub Copilot credits, Gemini API, local ollama models or any LLM.",
-      "version": "2.0.3"
-    },
-    {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
@@ -79,12 +73,6 @@
       "source": "./plugins/paper-search-tools",
       "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
       "version": "2.0.2"
-    },
-    {
-      "name": "slack-tools",
-      "source": "./plugins/slack-tools",
-      "description": "Slack MCP integration for message search and channel operations with best practices skill.",
-      "version": "2.0.3"
     },
     {
       "name": "supabase-skills",
