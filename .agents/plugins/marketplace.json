@@ -5,10 +5,21 @@
   },
   "plugins": [
     {
-      "name": "web-design-guidelines",
+      "name": "react-skills",
       "source": {
         "source": "local",
-        "path": "./plugins/web-design-guidelines"
+        "path": "./plugins/react-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "development"
+    },
+    {
+      "name": "agent-browser",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agent-browser"
       },
       "policy": {
         "installation": "AVAILABLE"

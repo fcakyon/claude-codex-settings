@@ -67,7 +67,11 @@
         "anthropic"
       ],
       "category": "development",
-      "tags": ["development", "design", "anthropic"]
+      "tags": [
+        "development",
+        "design",
+        "anthropic"
+      ]
     },
     {
       "name": "anthropic-creative-suite",
@@ -100,7 +104,11 @@
         "anthropic"
       ],
       "category": "productivity",
-      "tags": ["documents", "creative", "anthropic"]
+      "tags": [
+        "documents",
+        "creative",
+        "anthropic"
+      ]
     },
     {
       "name": "anthropic-plugin-dev",
@@ -111,9 +119,23 @@
       },
       "description": "Plugin development toolkit with skills for hooks, MCP servers, slash commands, subagents, skill creation, and plugin structure from Anthropic.",
       "version": "1.0.0",
-      "keywords": ["plugin", "development", "hooks", "mcp", "skills", "agents", "commands", "structure", "anthropic"],
+      "keywords": [
+        "plugin",
+        "development",
+        "hooks",
+        "mcp",
+        "skills",
+        "agents",
+        "commands",
+        "structure",
+        "anthropic"
+      ],
       "category": "development",
-      "tags": ["plugin", "development", "anthropic"]
+      "tags": [
+        "plugin",
+        "development",
+        "anthropic"
+      ]
     },
     {
       "name": "phd-skills",
@@ -130,51 +152,63 @@
       "homepage": "https://github.com/fcakyon/phd-skills",
       "repository": "https://github.com/fcakyon/phd-skills",
       "license": "MIT",
-      "keywords": ["research", "academic", "phd", "paper-writing", "citations", "experiments", "latex"],
+      "keywords": [
+        "research",
+        "academic",
+        "phd",
+        "paper-writing",
+        "citations",
+        "experiments",
+        "latex"
+      ],
       "category": "productivity",
-      "tags": ["research", "academic", "latex"]
+      "tags": [
+        "research",
+        "academic",
+        "latex"
+      ]
     },
     {
       "name": "react-skills",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/vercel-labs/agent-skills.git"
-      },
-      "description": "React, Next.js, and React Native best practices. 64 React/Next.js rules and 35+ React Native/Expo rules covering performance, rendering, state, animations, and navigation.",
+      "source": "./plugins/react-skills",
+      "description": "React, Next.js, and React Native best practices with web design guidelines.",
       "version": "1.0.0",
-      "strict": false,
-      "skills": ["./skills/react-best-practices", "./skills/react-native-skills"],
       "license": "MIT",
-      "keywords": ["react", "react-native", "nextjs", "expo", "performance", "best-practices"],
+      "keywords": [
+        "react",
+        "react-native",
+        "nextjs",
+        "expo",
+        "web-design",
+        "performance"
+      ],
       "category": "development",
-      "tags": ["react", "frontend", "best-practices"]
+      "tags": [
+        "react",
+        "frontend",
+        "best-practices"
+      ]
     },
     {
       "name": "agent-browser",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/vercel-labs/agent-browser.git"
-      },
-      "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps with minimal token usage via snapshot + element refs.",
+      "source": "./plugins/agent-browser",
+      "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps.",
       "version": "1.0.0",
-      "strict": false,
-      "skills": ["./skills/agent-browser"],
-      "license": "MIT",
-      "keywords": ["browser", "automation", "testing", "agent-browser", "web", "screenshots", "e2e"],
+      "license": "Apache-2.0",
+      "keywords": [
+        "browser",
+        "automation",
+        "testing",
+        "web",
+        "screenshots",
+        "e2e"
+      ],
       "category": "development",
-      "tags": ["browser", "automation", "testing"]
-    },
-    {
-      "name": "web-design-guidelines",
-      "source": "./plugins/web-design-guidelines",
-      "description": "Review UI code for Web Interface Guidelines compliance covering accessibility, forms, animation, performance, and more.",
-      "version": "1.0.0",
-      "homepage": "https://github.com/vercel-labs/web-interface-guidelines",
-      "repository": "https://github.com/vercel-labs/agent-skills",
-      "license": "MIT",
-      "keywords": ["web-design", "ui-review", "accessibility", "a11y", "guidelines", "frontend"],
-      "category": "development",
-      "tags": ["frontend", "design", "guidelines"]
+      "tags": [
+        "browser",
+        "automation",
+        "testing"
+      ]
     },
     {
       "name": "github-dev",
@@ -187,9 +221,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["git", "commit", "pull-request", "github", "workflow", "agents", "commands"],
+      "keywords": [
+        "git",
+        "commit",
+        "pull-request",
+        "github",
+        "workflow",
+        "agents",
+        "commands"
+      ],
       "category": "development",
-      "tags": ["git", "workflow", "automation"]
+      "tags": [
+        "git",
+        "workflow",
+        "automation"
+      ]
     },
     {
       "name": "statusline-tools",
@@ -202,9 +248,18 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["statusline", "usage", "context", "cost", "monitoring"],
+      "keywords": [
+        "statusline",
+        "usage",
+        "context",
+        "cost",
+        "monitoring"
+      ],
       "category": "productivity",
-      "tags": ["statusline", "monitoring"]
+      "tags": [
+        "statusline",
+        "monitoring"
+      ]
     },
     {
       "name": "ultralytics-dev",
@@ -217,9 +272,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
+      "keywords": [
+        "ultralytics",
+        "formatting",
+        "hooks",
+        "python",
+        "code-quality",
+        "docstrings"
+      ],
       "category": "productivity",
-      "tags": ["formatting", "development"]
+      "tags": [
+        "formatting",
+        "development"
+      ]
     },
     {
       "name": "notification-tools",
@@ -232,9 +297,18 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["notifications", "desktop", "alerts", "macos", "linux"],
+      "keywords": [
+        "notifications",
+        "desktop",
+        "alerts",
+        "macos",
+        "linux"
+      ],
       "category": "productivity",
-      "tags": ["notifications", "alerts"]
+      "tags": [
+        "notifications",
+        "alerts"
+      ]
     },
     {
       "name": "azure-tools",
@@ -247,9 +321,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["azure", "mcp", "cloud", "storage", "keyvault", "cosmos", "aks"],
+      "keywords": [
+        "azure",
+        "mcp",
+        "cloud",
+        "storage",
+        "keyvault",
+        "cosmos",
+        "aks"
+      ],
       "category": "tools",
-      "tags": ["azure", "mcp", "integration"]
+      "tags": [
+        "azure",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "ccproxy-tools",
@@ -262,9 +348,20 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["ccproxy", "gemini", "proxy", "copilot", "llm", "configuration"],
+      "keywords": [
+        "ccproxy",
+        "gemini",
+        "proxy",
+        "copilot",
+        "llm",
+        "configuration"
+      ],
       "category": "tools",
-      "tags": ["proxy", "llm", "configuration"]
+      "tags": [
+        "proxy",
+        "llm",
+        "configuration"
+      ]
     },
     {
       "name": "claude-tools",
@@ -277,9 +374,20 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
+      "keywords": [
+        "claude",
+        "settings",
+        "sync",
+        "config",
+        "allowlist",
+        "context"
+      ],
       "category": "productivity",
-      "tags": ["settings", "sync", "config"]
+      "tags": [
+        "settings",
+        "sync",
+        "config"
+      ]
     },
     {
       "name": "gcloud-tools",
@@ -292,9 +400,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["gcloud", "mcp", "observability", "logging", "metrics"],
+      "keywords": [
+        "gcloud",
+        "mcp",
+        "observability",
+        "logging",
+        "metrics"
+      ],
       "category": "tools",
-      "tags": ["gcloud", "mcp", "integration"]
+      "tags": [
+        "gcloud",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "general-dev",
@@ -307,9 +425,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["code-patterns", "simplification", "architecture", "analysis", "code-quality"],
+      "keywords": [
+        "code-patterns",
+        "simplification",
+        "architecture",
+        "analysis",
+        "code-quality"
+      ],
       "category": "development",
-      "tags": ["analysis", "patterns", "quality"]
+      "tags": [
+        "analysis",
+        "patterns",
+        "quality"
+      ]
     },
     {
       "name": "mongodb-skills",
@@ -319,9 +447,18 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["mongodb", "nosql", "database", "schema", "query"],
+      "keywords": [
+        "mongodb",
+        "nosql",
+        "database",
+        "schema",
+        "query"
+      ],
       "category": "skills",
-      "tags": ["database", "best-practices"]
+      "tags": [
+        "database",
+        "best-practices"
+      ]
     },
     {
       "name": "paper-search-tools",
@@ -334,9 +471,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "mcp"],
+      "keywords": [
+        "paper-search",
+        "arxiv",
+        "pubmed",
+        "ieee",
+        "academic",
+        "research",
+        "mcp"
+      ],
       "category": "tools",
-      "tags": ["research", "mcp", "integration"]
+      "tags": [
+        "research",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "slack-tools",
@@ -349,9 +498,18 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["slack", "mcp", "messaging", "search"],
+      "keywords": [
+        "slack",
+        "mcp",
+        "messaging",
+        "search"
+      ],
       "category": "tools",
-      "tags": ["slack", "mcp", "integration"]
+      "tags": [
+        "slack",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "supabase-skills",
@@ -361,9 +519,18 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
-      "keywords": ["supabase", "postgres", "database", "schema", "query"],
+      "keywords": [
+        "supabase",
+        "postgres",
+        "database",
+        "schema",
+        "query"
+      ],
       "category": "skills",
-      "tags": ["database", "best-practices"]
+      "tags": [
+        "database",
+        "best-practices"
+      ]
     },
     {
       "name": "tavily-tools",
@@ -376,9 +543,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
+      "keywords": [
+        "web-search",
+        "tavily",
+        "search",
+        "content-extraction",
+        "mcp"
+      ],
       "category": "tools",
-      "tags": ["search", "mcp", "integration"]
+      "tags": [
+        "search",
+        "mcp",
+        "integration"
+      ]
     }
   ]
 }
