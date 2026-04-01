@@ -3,6 +3,18 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
+      "name": "anthropic-office-skills",
+      "source": "./plugins/anthropic-office-skills",
+      "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "openai-office-skills",
+      "source": "./plugins/openai-office-skills",
+      "description": "Official OpenAI skills for PDF, Word, PowerPoint, and Excel document processing.",
+      "version": "1.0.0"
+    },
+    {
       "name": "react-skills",
       "source": "./plugins/react-skills",
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
@@ -12,6 +24,18 @@
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "mongodb-skills",
+      "source": "./plugins/mongodb-skills",
+      "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "supabase-skills",
+      "source": "./plugins/supabase-skills",
+      "description": "Official Supabase Postgres best practices skill for query and schema design.",
       "version": "1.0.0"
     },
     {
@@ -63,22 +87,10 @@
       "version": "2.0.2"
     },
     {
-      "name": "mongodb-skills",
-      "source": "./plugins/mongodb-skills",
-      "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections.",
-      "version": "1.0.0"
-    },
-    {
       "name": "paper-search-tools",
       "source": "./plugins/paper-search-tools",
       "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
       "version": "2.0.2"
-    },
-    {
-      "name": "supabase-skills",
-      "source": "./plugins/supabase-skills",
-      "description": "Official Supabase Postgres best practices skill for query and schema design.",
-      "version": "1.0.0"
     },
     {
       "name": "tavily-tools",

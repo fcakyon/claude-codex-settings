@@ -73,6 +73,115 @@ ln -sfn CLAUDE.md GEMINI.md
 ## Plugins
 
 <details>
+<summary><strong>anthropic-office-skills</strong> - PDF, Word, PowerPoint, Excel (Anthropic)</summary>
+
+Official office document skills from [anthropics/skills](https://github.com/anthropics/skills). Synced locally via `bash .github/scripts/sync-anthropic-office-skills.sh`.
+
+| Skill                                                            | Description                                             | Install                                                                                                                                                      |
+| ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`pdf`](./plugins/anthropic-office-skills/skills/pdf/SKILL.md)   | PDF processing (read, merge, split, create, OCR, forms) | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pdf.zip)  |
+| [`pptx`](./plugins/anthropic-office-skills/skills/pptx/SKILL.md) | PowerPoint presentation building and editing            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pptx.zip) |
+| [`xlsx`](./plugins/anthropic-office-skills/skills/xlsx/SKILL.md) | Excel spreadsheet processing with formulas              | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/xlsx.zip) |
+| [`docx`](./plugins/anthropic-office-skills/skills/docx/SKILL.md) | Word document creation and editing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/docx.zip) |
+
+</details>
+
+<details>
+<summary><strong>openai-office-skills</strong> - PDF, Word, PowerPoint, Excel (OpenAI)</summary>
+
+Official office document skills from [openai/skills](https://github.com/openai/skills). Synced locally via `bash .github/scripts/sync-openai-office-skills.sh`.
+
+| Skill                                                                       | Description                                         | Install                                                                                                                                                             |
+| --------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`pdf`](./plugins/openai-office-skills/skills/pdf/SKILL.md)                 | PDF generation and extraction with visual review    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pdf.zip)         |
+| [`slides`](./plugins/openai-office-skills/skills/slides/SKILL.md)           | Slide deck creation with PptxGenJS                  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/slides.zip)      |
+| [`spreadsheet`](./plugins/openai-office-skills/skills/spreadsheet/SKILL.md) | Spreadsheet processing with formulas and formatting | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/spreadsheet.zip) |
+| [`doc`](./plugins/openai-office-skills/skills/doc/SKILL.md)                 | Word document creation and editing                  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/doc.zip)         |
+
+</details>
+
+<details>
+<summary><strong>react-skills</strong> - React, Next.js, and React Native Best Practices</summary>
+
+| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
+| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
+| `/plugin install react-skills@claude-settings` | `codex plugin install react-skills@claude-settings` | `gemini extensions install --path ./plugins/react-skills` |
+
+React and frontend best practices synced from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                     | Description                                                            | ZIP                                                                                                                                                                            |
+| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [`composition-patterns`](./plugins/react-skills/skills/composition-patterns/SKILL.md)     | React composition patterns: compound components, render props, context | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/composition-patterns.zip)   |
+| [`react-best-practices`](./plugins/react-skills/skills/react-best-practices/SKILL.md)     | 64 React/Next.js performance rules from Vercel Engineering             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-best-practices.zip)   |
+| [`react-native-skills`](./plugins/react-skills/skills/react-native-skills/SKILL.md)       | 35+ React Native/Expo rules for performance and animations             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-native-skills.zip)    |
+| [`react-view-transitions`](./plugins/react-skills/skills/react-view-transitions/SKILL.md) | View Transition API for page/route animations                          | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-view-transitions.zip) |
+| [`web-design-guidelines`](./plugins/react-skills/skills/web-design-guidelines/SKILL.md)   | UI review against 16 web interface guideline categories                | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/web-design-guidelines.zip)  |
+
+</details>
+
+<details>
+<summary><strong>agent-browser</strong> - Browser Automation CLI for AI Agents</summary>
+
+| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
+| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| `/plugin install agent-browser@claude-settings` | `codex plugin install agent-browser@claude-settings` | `gemini extensions install --path ./plugins/agent-browser` |
+
+Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. Synced from [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                    | Description                                                                  | ZIP                                                                                                                                                                   |
+| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`agent-browser`](./plugins/agent-browser/skills/agent-browser/SKILL.md) | Browser automation: navigation, forms, clicking, screenshots, auth, sessions | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/agent-browser.zip) |
+| [`electron`](./plugins/agent-browser/skills/electron/SKILL.md)           | Automate Electron desktop apps (VS Code, Slack, Discord, Figma, Notion)      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/electron.zip)      |
+
+**CLI Tool:** [agent-browser](https://github.com/vercel-labs/agent-browser) - install via `npm i -g agent-browser && agent-browser install`
+
+</details>
+
+<details>
+<summary><strong>mongodb-skills</strong> - Official MongoDB Agent Skills</summary>
+
+| Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
+| ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
+| `/plugin install mongodb-skills@claude-settings` | `codex plugin install mongodb-skills@claude-settings` | `gemini extensions install --path ./plugins/mongodb-skills` |
+
+Official MongoDB agent skills for schema design, query tuning, search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                                             | Description                      | ZIP                                                                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`atlas-stream-processing`](./plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md)                     | Atlas stream processing patterns | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/atlas-stream-processing.zip)           |
+| [`mongodb-connection`](./plugins/mongodb-skills/skills/mongodb-connection/SKILL.md)                               | Connection management            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-connection.zip)                |
+| [`mongodb-mcp-setup`](./plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md)                                 | MCP server setup                 | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-mcp-setup.zip)                 |
+| [`mongodb-natural-language-querying`](./plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md) | Natural language to queries      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-natural-language-querying.zip) |
+| [`mongodb-query-optimizer`](./plugins/mongodb-skills/skills/mongodb-query-optimizer/SKILL.md)                     | Query performance tuning         | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-query-optimizer.zip)           |
+| [`mongodb-schema-design`](./plugins/mongodb-skills/skills/mongodb-schema-design/SKILL.md)                         | Schema design patterns           | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-schema-design.zip)             |
+| [`mongodb-search-and-ai`](./plugins/mongodb-skills/skills/mongodb-search-and-ai/SKILL.md)                         | Atlas Search and AI integration  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-search-and-ai.zip)             |
+
+</details>
+
+<details>
+<summary><strong>supabase-skills</strong> - Official Supabase Postgres Best Practices</summary>
+
+| Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
+| ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
+| `/plugin install supabase-skills@claude-settings` | `codex plugin install supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
+
+Official Supabase Postgres best practices for query and schema design. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                                            | Description                                                | ZIP                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) | Postgres performance and schema design across 8 categories | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip) |
+
+</details>
+
+<details>
 <summary><strong>anthropic-essentials</strong> - Feature dev, frontend design, CLAUDE.md management, skill creation</summary>
 
 Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official). Cherry-picks skills, agents, and commands from multiple upstream plugins.
@@ -98,22 +207,6 @@ Best-of bundle from [anthropics/claude-plugins-official](https://github.com/anth
 
 - `Stop` (prompt) - Suggest CLAUDE.md updates after significant code changes
 - `SessionEnd` (prompt) - Remind to capture learnings when session ends
-
-</details>
-
-<details>
-<summary><strong>anthropic-creative-suite</strong> - Documents, theming, web artifacts</summary>
-
-Selected skills from [anthropics/skills](https://github.com/anthropics/skills). Document skills are proprietary/source-available; others are Apache 2.0.
-
-**Skills:**
-
-- `pdf` - PDF processing (read, merge, split, create, OCR)
-- `docx` - Word document creation and editing
-- `pptx` - PowerPoint presentation building
-- `xlsx` - Excel spreadsheet processing
-- `theme-factory` - Generate themes and styling systems
-- `web-artifacts-builder` - Build interactive web artifacts
 
 </details>
 
@@ -158,47 +251,6 @@ Academic research toolkit from [fcakyon/phd-skills](https://github.com/fcakyon/p
 - [`/gaps`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/gaps.md) - Find gaps in literature coverage
 - [`/setup`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/setup.md) - Configure phd-skills
 - [`/xray`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/xray.md) - Deep analysis of a paper
-
-</details>
-
-<details>
-<summary><strong>react-skills</strong> - React, Next.js, and React Native Best Practices</summary>
-
-| Claude Code                                    | Codex CLI                                           | Gemini CLI                                                |
-| ---------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------- |
-| `/plugin install react-skills@claude-settings` | `codex plugin install react-skills@claude-settings` | `gemini extensions install --path ./plugins/react-skills` |
-
-React and frontend best practices synced from [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills).
-
-**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
-
-| Skill                                                                                     | Description                                                            | ZIP                                                                                                                                                                            |
-| ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`composition-patterns`](./plugins/react-skills/skills/composition-patterns/SKILL.md)     | React composition patterns: compound components, render props, context | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/composition-patterns.zip)   |
-| [`react-best-practices`](./plugins/react-skills/skills/react-best-practices/SKILL.md)     | 64 React/Next.js performance rules from Vercel Engineering             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-best-practices.zip)   |
-| [`react-native-skills`](./plugins/react-skills/skills/react-native-skills/SKILL.md)       | 35+ React Native/Expo rules for performance and animations             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-native-skills.zip)    |
-| [`react-view-transitions`](./plugins/react-skills/skills/react-view-transitions/SKILL.md) | View Transition API for page/route animations                          | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/react-view-transitions.zip) |
-| [`web-design-guidelines`](./plugins/react-skills/skills/web-design-guidelines/SKILL.md)   | UI review against 16 web interface guideline categories                | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/web-design-guidelines.zip)  |
-
-</details>
-
-<details>
-<summary><strong>agent-browser</strong> - Browser Automation CLI for AI Agents</summary>
-
-| Claude Code                                     | Codex CLI                                            | Gemini CLI                                                 |
-| ----------------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
-| `/plugin install agent-browser@claude-settings` | `codex plugin install agent-browser@claude-settings` | `gemini extensions install --path ./plugins/agent-browser` |
-
-Browser automation via CLI instead of MCP. [93% less context usage](https://medium.com/@richardhightower/agent-browser-ai-first-browser-automation-that-saves-93-of-your-context-window-7a2c52562f8c) than Playwright MCP by using snapshot + element refs instead of full DOM tree dumps. Synced from [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser).
-
-**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
-
-| Skill                                                                    | Description                                                                  | ZIP                                                                                                                                                                   |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`agent-browser`](./plugins/agent-browser/skills/agent-browser/SKILL.md) | Browser automation: navigation, forms, clicking, screenshots, auth, sessions | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/agent-browser.zip) |
-| [`electron`](./plugins/agent-browser/skills/electron/SKILL.md)           | Automate Electron desktop apps (VS Code, Slack, Discord, Figma, Notion)      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/electron.zip)      |
-
-**CLI Tool:** [agent-browser](https://github.com/vercel-labs/agent-browser) - install via `npm i -g agent-browser && agent-browser install`
 
 </details>
 
@@ -380,29 +432,6 @@ Code quality agent and utility hooks.
 </details>
 
 <details>
-<summary><strong>mongodb-skills</strong> - Official MongoDB Agent Skills</summary>
-
-| Claude Code                                      | Codex CLI                                             | Gemini CLI                                                  |
-| ------------------------------------------------ | ----------------------------------------------------- | ----------------------------------------------------------- |
-| `/plugin install mongodb-skills@claude-settings` | `codex plugin install mongodb-skills@claude-settings` | `gemini extensions install --path ./plugins/mongodb-skills` |
-
-Official MongoDB agent skills for schema design, query tuning, search, and connections. Synced from [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
-
-**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
-
-| Skill                                                                                                             | Description                      | ZIP                                                                                                                                                                                       |
-| ----------------------------------------------------------------------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`atlas-stream-processing`](./plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md)                     | Atlas stream processing patterns | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/atlas-stream-processing.zip)           |
-| [`mongodb-connection`](./plugins/mongodb-skills/skills/mongodb-connection/SKILL.md)                               | Connection management            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-connection.zip)                |
-| [`mongodb-mcp-setup`](./plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md)                                 | MCP server setup                 | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-mcp-setup.zip)                 |
-| [`mongodb-natural-language-querying`](./plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md) | Natural language to queries      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-natural-language-querying.zip) |
-| [`mongodb-query-optimizer`](./plugins/mongodb-skills/skills/mongodb-query-optimizer/SKILL.md)                     | Query performance tuning         | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-query-optimizer.zip)           |
-| [`mongodb-schema-design`](./plugins/mongodb-skills/skills/mongodb-schema-design/SKILL.md)                         | Schema design patterns           | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-schema-design.zip)             |
-| [`mongodb-search-and-ai`](./plugins/mongodb-skills/skills/mongodb-search-and-ai/SKILL.md)                         | Atlas Search and AI integration  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-search-and-ai.zip)             |
-
-</details>
-
-<details>
 <summary><strong>paper-search-tools</strong> - Paper Search MCP & Skills</summary>
 
 | Claude Code                                          | Codex CLI                                                 | Gemini CLI                                                      |
@@ -421,23 +450,6 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 - [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Configure Paper Search MCP
 
 **MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json) | [mcp/paper-search](https://hub.docker.com/r/mcp/paper-search)
-
-</details>
-
-<details>
-<summary><strong>supabase-skills</strong> - Official Supabase Postgres Best Practices</summary>
-
-| Claude Code                                       | Codex CLI                                              | Gemini CLI                                                   |
-| ------------------------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------ |
-| `/plugin install supabase-skills@claude-settings` | `codex plugin install supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
-
-Official Supabase Postgres best practices for query and schema design. Synced from [supabase/agent-skills](https://github.com/supabase/agent-skills).
-
-**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
-
-| Skill                                                                                                            | Description                                                | ZIP                                                                                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`supabase-postgres-best-practices`](./plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md) | Postgres performance and schema design across 8 categories | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/supabase-postgres-best-practices.zip) |
 
 </details>
 

@@ -69,25 +69,20 @@ if len(parts) >= 3 and 'license:' not in parts[1]:
 "
 }
 
-# Create a zip of the skill directory with SKILL.md at the top level.
+# Create a zip of all files in the skill directory.
 # The zip is placed inside the skill directory.
 create_zip() {
   local skill_dir="$REPO_ROOT/$1"
   local skill_name
   skill_name="$(basename "$skill_dir")"
-  local zip_path="$skill_dir/$skill_name.zip"
 
   if [ ! -f "$skill_dir/SKILL.md" ]; then
     echo "WARNING: no SKILL.md in $skill_dir, skipping zip" >&2
     return 0
   fi
 
-  rm -f "$zip_path"
-  local zip_contents=("SKILL.md")
-  for dir in "$skill_dir"/*/; do
-    [ -d "$dir" ] && zip_contents+=("$(basename "$dir")/")
-  done
-  (cd "$skill_dir" && zip -r "$skill_name.zip" "${zip_contents[@]}")
+  rm -f "$skill_dir/$skill_name.zip"
+  (cd "$skill_dir" && zip -r "$skill_name.zip" . -x "./$skill_name.zip")
 
   echo "Created $1/$skill_name.zip"
 }
