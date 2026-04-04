@@ -1,14 +1,17 @@
 model = "gpt-5.4"
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 model_provider = "azure"
-# Streamable HTTP requires the experimental rmcp client
-experimental_use_rmcp_client = true
-approval_policy = "untrusted"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "live"
+
+[sandbox_workspace_write]
+network_access = true
 
 [model_providers.azure]
 name = "Azure OpenAI"
 base_url = "https://YOUR-AZURE-OPENAI.openai.azure.com/openai/v1"
-env_key = "..."
+env_key = "AZURE_OPENAI_API_KEY"
 wire_api = "responses"
 
 # MiniMax (OpenAI-compatible, 204K context)
