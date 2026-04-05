@@ -108,5 +108,5 @@
         "announcement": "auto"
     },
     "terminal.integrated.enableVisualBell": true,
-    "window.title": "${dirty}${activeEditorShort}${separator}${rootName}",
+    "window.title": "${dirty}${activeEditorShort}${separator}${rootName}"
 }
