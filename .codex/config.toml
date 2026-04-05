@@ -4,6 +4,7 @@ model_provider = "azure"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 web_search = "live"
+personality = "pragmatic"
 
 [sandbox_workspace_write]
 network_access = true
