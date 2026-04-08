@@ -22,6 +22,7 @@ When explicitly invoked with extra text, treat that text as the PR number or URL
 3. **Generate the updated summary**
    - Follow the `create-pr` skill format for title and body.
    - Start the title with a capital letter and a verb, with no `fix:` or `feat:` prefix.
+   - Use plain language. Avoid jargon and internal shorthand unless an exact command or tool name is needed.
    - Keep the body to a single short section.
    - Include 1-2 sentences, a few bullets, and one usage snippet or before/after example when helpful.
    - Do not include test plans, changed file lists, or line-number links.
