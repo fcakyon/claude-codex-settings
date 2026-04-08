@@ -62,7 +62,7 @@ Docs:
 | Tool        | Path                               | Notes                                                                   |
 | ----------- | ---------------------------------- | ----------------------------------------------------------------------- |
 | Claude Code | `.claude-plugin/marketplace.json`  | local sources only (use sync scripts for external repos)                |
-| Codex CLI   | `.agents/plugins/marketplace.json` | local sources only, needs `policy.installation`                         |
+| Codex CLI   | `.agents/plugins/marketplace.json` | local sources only; use `./`-prefixed `source.path` plus plugin `policy` fields |
 | Cursor      | `.cursor-plugin/marketplace.json`  | local sources, needs `source` + `description`                           |
 | Gemini CLI  | none                               | per-plugin install: `gemini extensions install --path ./plugins/<name>` |
 
@@ -86,12 +86,39 @@ Docs:
 {
   "name": "<plugin-name>",
   "source": { "source": "local", "path": "./plugins/<plugin-name>" },
-  "policy": { "installation": "AVAILABLE" },
+  "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
   "category": "Development"
 }
 ```
 
+`source.path` must point to a local folder with a `./`-prefixed path relative to the marketplace root.
+
 `policy.installation` values: `AVAILABLE`, `INSTALLED_BY_DEFAULT`, `NOT_AVAILABLE`.
+
+`policy.authentication` controls whether auth happens on install or first use.
+
+#### Codex CLI personal marketplace example
+
+Use this only for generic Codex marketplace docs and maintainer examples. User-facing installation docs should stay specific to this repo's bundled marketplace.
+
+```json
+{
+  "name": "personal-plugins",
+  "interface": {
+    "displayName": "Personal Plugins"
+  },
+  "plugins": [
+    {
+      "name": "my-plugin",
+      "source": { "source": "local", "path": "./.codex/plugins/my-plugin" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "development"
+    }
+  ]
+}
+```
+
+Store this at `~/.agents/plugins/marketplace.json`, keep plugin folders under `~/.codex/plugins/`, and keep every `source.path` `./`-prefixed relative to the marketplace root.
 
 #### Cursor marketplace entry
 
@@ -212,7 +239,7 @@ Commands are Claude Code only. Gemini CLI uses TOML commands. Other tools use sk
 
 ```
 Claude Code: /plugin marketplace add fcakyon/claude-codex-settings
-Codex CLI:   codex plugin install <plugin-name>@claude-settings
+Codex CLI:   use .agents/plugins/marketplace.json or ~/.agents/plugins/marketplace.json, restart Codex, then install from /plugins
 Cursor:      import marketplace or /add-plugin
 Gemini CLI:  gemini extensions install --path ./plugins/<name>
 ```

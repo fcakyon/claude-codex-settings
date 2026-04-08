@@ -24,9 +24,9 @@ Regenerate the Plugins section of README.md based on current plugin structure an
 <details>
 <summary><strong>plugin-name</strong> - Short description</summary>
 
-| Claude Code                                   | Codex CLI                                          | Gemini CLI                                               |
-| --------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------- |
-| `/plugin install plugin-name@claude-settings` | `codex plugin install plugin-name@claude-settings` | `gemini extensions install --path ./plugins/plugin-name` |
+| Claude Code                                   | Codex CLI                                                                     | Gemini CLI                                               |
+| --------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `/plugin install plugin-name@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `plugin-name` | `gemini extensions install --path ./plugins/plugin-name` |
 
 One-line description.
 
