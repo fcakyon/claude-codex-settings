@@ -9,6 +9,9 @@ personality = "pragmatic"
 [sandbox_workspace_write]
 network_access = true
 
+[analytics]
+enabled = false
+
 [model_providers.azure]
 name = "Azure OpenAI"
 base_url = "https://YOUR-AZURE-OPENAI.openai.azure.com/openai/v1"
