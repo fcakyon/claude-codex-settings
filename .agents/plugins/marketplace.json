@@ -11,7 +11,8 @@
         "path": "./plugins/anthropic-office-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -22,7 +23,8 @@
         "path": "./plugins/openai-office-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -33,7 +35,8 @@
         "path": "./plugins/react-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "development"
     },
@@ -44,7 +47,8 @@
         "path": "./plugins/agent-browser"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "development"
     },
@@ -55,7 +59,8 @@
         "path": "./plugins/frontend-design-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -66,7 +71,8 @@
         "path": "./plugins/mongodb-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -77,7 +83,8 @@
         "path": "./plugins/supabase-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -88,7 +95,8 @@
         "path": "./plugins/stripe-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -99,7 +107,8 @@
         "path": "./plugins/polar-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -110,7 +119,8 @@
         "path": "./plugins/livekit-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -121,7 +131,8 @@
         "path": "./plugins/cloudflare-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -132,7 +143,8 @@
         "path": "./plugins/web-performance-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -143,7 +155,8 @@
         "path": "./plugins/hetzner-skills"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "skills"
     },
@@ -154,7 +167,8 @@
         "path": "./plugins/github-dev"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "development"
     },
@@ -165,7 +179,8 @@
         "path": "./plugins/ultralytics-dev"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "productivity"
     },
@@ -176,7 +191,8 @@
         "path": "./plugins/azure-tools"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "tools"
     },
@@ -187,7 +203,8 @@
         "path": "./plugins/claude-tools"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "productivity"
     },
@@ -198,7 +215,8 @@
         "path": "./plugins/gcloud-tools"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "tools"
     },
@@ -209,7 +227,8 @@
         "path": "./plugins/general-dev"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "development"
     },
@@ -220,7 +239,8 @@
         "path": "./plugins/paper-search-tools"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "tools"
     },
@@ -231,7 +251,8 @@
         "path": "./plugins/tavily-tools"
       },
       "policy": {
-        "installation": "AVAILABLE"
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
       },
       "category": "tools"
     }
