@@ -7,13 +7,26 @@ description: This skill should be used when the user asks "how to setup GitHub C
 
 Configure `gh` CLI for GitHub access.
 
-## Quick Setup
+## Check Current Status
+
+```bash
+gh auth status
+```
+
+Report one of these states:
+
+- `gh` is not authenticated and needs login
+- `gh` is authenticated, including the current username if available
+
+## Login Flow
+
+If authentication is missing or broken, guide the user through:
 
 ```bash
 gh auth login
 ```
 
-Select: GitHub.com → HTTPS → Login with browser
+Select: GitHub.com -> HTTPS -> Login with browser
 
 ## Verify Authentication
 
@@ -28,5 +41,6 @@ If `gh` commands fail:
 
 1. **Check authentication** - `gh auth status`
 2. **Re-login if needed** - `gh auth login`
-3. **Check scopes** - Ensure token has repo access
-4. **Update gh** - `brew upgrade gh` or equivalent
+3. **Check scopes** - Ensure the token has repo access
+4. **Refresh auth** - `gh auth refresh`
+5. **Update gh** - `brew upgrade gh` or equivalent
