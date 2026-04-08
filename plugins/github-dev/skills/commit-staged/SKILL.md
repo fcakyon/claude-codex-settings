@@ -9,6 +9,8 @@ Complete workflow for creating commits following project standards.
 
 When explicitly invoked with extra text, treat that text as additional context about the
 changes and include it in commit planning and commit messages.
+When session history includes findings, motivation, or rationale, include the strongest
+points in the commit message body instead of relying on the diff alone.
 
 ## Process
 
@@ -25,14 +27,16 @@ changes and include it in commit planning and commit messages.
 3. **Commit message format**
    - First line: `{type}: brief description` (max 50 chars)
    - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
+   - Use plain language. Avoid jargon, buzzwords, and repo shorthand unless an exact command or tool name is needed.
+   - Use findings and motivation from session history when available.
    - Focus on 'why' not 'what'
-   - 1 sentence conventional style + 1 sentence motivation/findings if possible
+   - 1 sentence conventional style + 1-2 short motivation/findings sentences if possible
    - For complex changes, add bullet points after blank line
 
 4. **Message examples**
-   - `feat: implement user authentication system`
-   - `fix: resolve memory leak in data processing pipeline`
-   - `refactor: restructure API handlers to align with project architecture`
+   - `feat: add sign-in flow`
+   - `fix: stop duplicate jobs on save`
+   - `docs: add skills install snippets`
 
 5. **Documentation update**
    - Check README.md for:
@@ -51,6 +55,7 @@ changes and include it in commit planning and commit messages.
 - Analyze staged files before writing message
 - Keep first line under 50 chars
 - Use active voice in message
-- Reference related code if helpful
+- Use simple words that still stay accurate
+- Prefer session findings over repeating raw diff details
 - One logical change per commit
 - Ensure README reflects implementation
