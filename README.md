@@ -392,13 +392,13 @@ Academic research toolkit from [fcakyon/phd-skills](https://github.com/fcakyon/p
 </details>
 
 <details>
-<summary><strong>github-dev</strong> - Git workflow agents + commands</summary>
+<summary><strong>github-dev</strong> - Git workflow agents + skills</summary>
 
 | Claude Code                                  | Codex CLI                                         | Gemini CLI                                              |
 | -------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------- |
 | `/plugin install github-dev@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `github-dev` | `gemini extensions install --path ./plugins/github-dev` |
 
-Git and GitHub automation. Run `/github-dev:setup` after install.
+Git and GitHub automation. Run the `setup` skill after install.
 
 **Agents:**
 
@@ -409,20 +409,13 @@ Git and GitHub automation. Run `/github-dev:setup` after install.
 
 **Skills:**
 
-- [`commit-workflow`](./plugins/github-dev/skills/commit-workflow/SKILL.md) - Commit process and message format
-- [`pr-workflow`](./plugins/github-dev/skills/pr-workflow/SKILL.md) - PR creation workflow
-- [`pr-comment-workflow`](./plugins/github-dev/skills/pr-comment-workflow/SKILL.md) - PR comment style and resolution
-- [`setup`](./plugins/github-dev/skills/setup/SKILL.md) - GitHub CLI troubleshooting
-
-**Commands:**
-
-- [`/commit-staged`](./plugins/github-dev/commands/commit-staged.md) - Commit staged changes
-- [`/create-pr`](./plugins/github-dev/commands/create-pr.md) - Create pull request
-- [`/review-pr`](./plugins/github-dev/commands/review-pr.md) - Review pull request
-- [`/resolve-pr-comments`](./plugins/github-dev/commands/resolve-pr-comments.md) - Address unresolved PR comments
-- [`/update-pr-summary`](./plugins/github-dev/commands/update-pr-summary.md) - Update PR description
-- [`/clean-gone-branches`](./plugins/github-dev/commands/clean-gone-branches.md) - Clean deleted branches
-- [`/github-dev:setup`](./plugins/github-dev/commands/setup.md) - Configure GitHub CLI
+- [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes and write the message
+- [`create-pr`](./plugins/github-dev/skills/create-pr/SKILL.md) - Create a pull request from the full branch diff
+- [`review-pr`](./plugins/github-dev/skills/review-pr/SKILL.md) - Review a pull request for bugs and regressions
+- [`resolve-pr-comments`](./plugins/github-dev/skills/resolve-pr-comments/SKILL.md) - Address unresolved PR review comments
+- [`update-pr-summary`](./plugins/github-dev/skills/update-pr-summary/SKILL.md) - Update the PR title and description
+- [`clean-gone-branches`](./plugins/github-dev/skills/clean-gone-branches/SKILL.md) - Clean local branches deleted from remote
+- [`setup`](./plugins/github-dev/skills/setup/SKILL.md) - Configure GitHub CLI
 
 **Hooks:**
 
@@ -710,7 +703,7 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 **Other:**
 
 - [ ] Rename plugins to `mongodb-skills`, `github-skills` etc. for better UX
-- [ ] Add worktree support to github-dev create-pr and commit-staged commands
+- [ ] Add worktree support to github-dev create-pr and commit-staged skills
 
 ## References
 

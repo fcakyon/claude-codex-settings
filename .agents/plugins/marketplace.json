@@ -14,7 +14,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "documents"
     },
     {
       "name": "openai-office-skills",
@@ -26,7 +26,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "documents"
     },
     {
       "name": "react-skills",
@@ -38,7 +38,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "development"
+      "category": "frontend"
     },
     {
       "name": "agent-browser",
@@ -50,7 +50,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "development"
+      "category": "web-testing"
     },
     {
       "name": "frontend-design-skills",
@@ -62,7 +62,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "frontend"
     },
     {
       "name": "mongodb-skills",
@@ -74,7 +74,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "database"
     },
     {
       "name": "supabase-skills",
@@ -86,7 +86,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "database"
     },
     {
       "name": "stripe-skills",
@@ -98,7 +98,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "payment"
     },
     {
       "name": "polar-skills",
@@ -110,7 +110,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "payment"
     },
     {
       "name": "livekit-skills",
@@ -122,7 +122,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "ai"
     },
     {
       "name": "cloudflare-skills",
@@ -134,7 +134,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "deployment"
     },
     {
       "name": "web-performance-skills",
@@ -146,7 +146,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "web-testing"
     },
     {
       "name": "hetzner-skills",
@@ -158,7 +158,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "skills"
+      "category": "deployment"
     },
     {
       "name": "github-dev",
@@ -170,7 +170,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "development"
+      "category": "developer-tools"
     },
     {
       "name": "ultralytics-dev",
@@ -182,7 +182,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "productivity"
+      "category": "developer-tools"
     },
     {
       "name": "azure-tools",
@@ -194,7 +194,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "tools"
+      "category": "deployment"
     },
     {
       "name": "claude-tools",
@@ -206,7 +206,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "productivity"
+      "category": "developer-tools"
     },
     {
       "name": "gcloud-tools",
@@ -218,7 +218,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "tools"
+      "category": "deployment"
     },
     {
       "name": "general-dev",
@@ -230,7 +230,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "development"
+      "category": "developer-tools"
     },
     {
       "name": "paper-search-tools",
@@ -242,7 +242,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "tools"
+      "category": "research"
     },
     {
       "name": "tavily-tools",
@@ -254,7 +254,7 @@
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
-      "category": "tools"
+      "category": "search"
     }
   ]
 }

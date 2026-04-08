@@ -75,7 +75,7 @@ Docs:
   "description": "...",
   "version": "1.0.0",
   "keywords": ["keyword1", "keyword2"],
-  "category": "development",
+  "category": "<category>",
   "tags": ["tag1", "tag2"]
 }
 ```
@@ -87,7 +87,7 @@ Docs:
   "name": "<plugin-name>",
   "source": { "source": "local", "path": "./plugins/<plugin-name>" },
   "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
-  "category": "Development"
+  "category": "<category>"
 }
 ```
 
@@ -112,7 +112,7 @@ Use this only for generic Codex marketplace docs and maintainer examples. User-f
       "name": "my-plugin",
       "source": { "source": "local", "path": "./.codex/plugins/my-plugin" },
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
-      "category": "development"
+      "category": "<category>"
     }
   ]
 }

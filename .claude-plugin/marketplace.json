@@ -14,9 +14,21 @@
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["pdf", "docx", "word", "pptx", "powerpoint", "xlsx", "excel", "documents"],
-      "category": "skills",
-      "tags": ["documents", "office"]
+      "keywords": [
+        "pdf",
+        "docx",
+        "word",
+        "pptx",
+        "powerpoint",
+        "xlsx",
+        "excel",
+        "documents"
+      ],
+      "category": "documents",
+      "tags": [
+        "documents",
+        "office"
+      ]
     },
     {
       "name": "openai-office-skills",
@@ -24,9 +36,20 @@
       "description": "Official OpenAI skills for PDF, Word, PowerPoint, and Excel document processing.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["pdf", "docx", "word", "slides", "spreadsheet", "excel", "documents"],
-      "category": "skills",
-      "tags": ["documents", "office"]
+      "keywords": [
+        "pdf",
+        "docx",
+        "word",
+        "slides",
+        "spreadsheet",
+        "excel",
+        "documents"
+      ],
+      "category": "documents",
+      "tags": [
+        "documents",
+        "office"
+      ]
     },
     {
       "name": "react-skills",
@@ -34,9 +57,20 @@
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["react", "react-native", "nextjs", "expo", "web-design", "performance"],
-      "category": "development",
-      "tags": ["react", "frontend", "best-practices"]
+      "keywords": [
+        "react",
+        "react-native",
+        "nextjs",
+        "expo",
+        "web-design",
+        "performance"
+      ],
+      "category": "frontend",
+      "tags": [
+        "react",
+        "frontend",
+        "best-practices"
+      ]
     },
     {
       "name": "agent-browser",
@@ -44,9 +78,20 @@
       "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps.",
       "version": "1.0.0",
       "license": "Apache-2.0",
-      "keywords": ["browser", "automation", "testing", "web", "screenshots", "e2e"],
-      "category": "development",
-      "tags": ["browser", "automation", "testing"]
+      "keywords": [
+        "browser",
+        "automation",
+        "testing",
+        "web",
+        "screenshots",
+        "e2e"
+      ],
+      "category": "web-testing",
+      "tags": [
+        "browser",
+        "automation",
+        "testing"
+      ]
     },
     {
       "name": "frontend-design-skills",
@@ -54,9 +99,19 @@
       "description": "Frontend design skills from Anthropic and OpenAI for building visually strong landing pages, websites, and apps.",
       "version": "1.0.0",
       "license": "Apache-2.0",
-      "keywords": ["frontend", "design", "ui", "landing-page", "web-design"],
-      "category": "skills",
-      "tags": ["frontend", "design", "skills"]
+      "keywords": [
+        "frontend",
+        "design",
+        "ui",
+        "landing-page",
+        "web-design"
+      ],
+      "category": "frontend",
+      "tags": [
+        "frontend",
+        "design",
+        "skills"
+      ]
     },
     {
       "name": "mongodb-skills",
@@ -66,9 +121,18 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["mongodb", "nosql", "database", "schema", "query"],
-      "category": "skills",
-      "tags": ["database", "best-practices"]
+      "keywords": [
+        "mongodb",
+        "nosql",
+        "database",
+        "schema",
+        "query"
+      ],
+      "category": "database",
+      "tags": [
+        "database",
+        "best-practices"
+      ]
     },
     {
       "name": "supabase-skills",
@@ -78,9 +142,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
-      "keywords": ["supabase", "postgres", "database", "auth", "storage", "realtime", "cli", "migrations"],
-      "category": "skills",
-      "tags": ["database", "backend"]
+      "keywords": [
+        "supabase",
+        "postgres",
+        "database",
+        "auth",
+        "storage",
+        "realtime",
+        "cli",
+        "migrations"
+      ],
+      "category": "database",
+      "tags": [
+        "database",
+        "backend"
+      ]
     },
     {
       "name": "stripe-skills",
@@ -88,9 +164,18 @@
       "description": "Official Stripe payment platform skills for checkout, billing, Connect, and API upgrades.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["stripe", "payments", "billing", "subscriptions", "connect"],
-      "category": "skills",
-      "tags": ["payments", "best-practices"]
+      "keywords": [
+        "stripe",
+        "payments",
+        "billing",
+        "subscriptions",
+        "connect"
+      ],
+      "category": "payment",
+      "tags": [
+        "payments",
+        "best-practices"
+      ]
     },
     {
       "name": "polar-skills",
@@ -98,9 +183,17 @@
       "description": "Official Polar payment processor skills for billing, subscriptions, and local development.",
       "version": "1.0.0",
       "license": "Apache-2.0",
-      "keywords": ["polar", "billing", "subscriptions", "local-dev"],
-      "category": "skills",
-      "tags": ["billing", "best-practices"]
+      "keywords": [
+        "polar",
+        "billing",
+        "subscriptions",
+        "local-dev"
+      ],
+      "category": "payment",
+      "tags": [
+        "billing",
+        "best-practices"
+      ]
     },
     {
       "name": "livekit-skills",
@@ -108,9 +201,18 @@
       "description": "LiveKit Agents SDK skills for building voice AI agents with CLI-based workflow, supporting both Cloud and self-hosted deployments.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["livekit", "voice-ai", "agents", "webrtc", "realtime"],
-      "category": "skills",
-      "tags": ["voice-ai", "best-practices"]
+      "keywords": [
+        "livekit",
+        "voice-ai",
+        "agents",
+        "webrtc",
+        "realtime"
+      ],
+      "category": "ai",
+      "tags": [
+        "voice-ai",
+        "best-practices"
+      ]
     },
     {
       "name": "cloudflare-skills",
@@ -118,9 +220,21 @@
       "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
       "version": "1.0.0",
       "license": "Apache-2.0",
-      "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
-      "category": "skills",
-      "tags": ["cloud", "deploy"]
+      "keywords": [
+        "cloudflare",
+        "workers",
+        "durable-objects",
+        "r2",
+        "d1",
+        "kv",
+        "wrangler",
+        "deploy"
+      ],
+      "category": "deployment",
+      "tags": [
+        "cloud",
+        "deploy"
+      ]
     },
     {
       "name": "web-performance-skills",
@@ -128,9 +242,18 @@
       "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
       "version": "1.0.0",
       "license": "Apache-2.0",
-      "keywords": ["web-performance", "core-web-vitals", "lighthouse", "chrome-devtools", "accessibility"],
-      "category": "skills",
-      "tags": ["performance", "auditing"]
+      "keywords": [
+        "web-performance",
+        "core-web-vitals",
+        "lighthouse",
+        "chrome-devtools",
+        "accessibility"
+      ],
+      "category": "web-testing",
+      "tags": [
+        "performance",
+        "auditing"
+      ]
     },
     {
       "name": "hetzner-skills",
@@ -138,9 +261,20 @@
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, volumes, and storage.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["hetzner", "hcloud", "server", "cloud", "deploy", "dns", "firewall"],
-      "category": "skills",
-      "tags": ["cloud", "deploy"]
+      "keywords": [
+        "hetzner",
+        "hcloud",
+        "server",
+        "cloud",
+        "deploy",
+        "dns",
+        "firewall"
+      ],
+      "category": "deployment",
+      "tags": [
+        "cloud",
+        "deploy"
+      ]
     },
     {
       "name": "anthropic-essentials",
@@ -187,9 +321,20 @@
         ]
       },
       "license": "Apache-2.0",
-      "keywords": ["feature-dev", "claude-md", "skill-creator", "agents", "code-review", "architecture", "anthropic"],
-      "category": "development",
-      "tags": ["development", "anthropic"]
+      "keywords": [
+        "feature-dev",
+        "claude-md",
+        "skill-creator",
+        "agents",
+        "code-review",
+        "architecture",
+        "anthropic"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "development",
+        "anthropic"
+      ]
     },
     {
       "name": "anthropic-plugin-dev",
@@ -200,9 +345,23 @@
       },
       "description": "Plugin development toolkit with skills for hooks, MCP servers, slash commands, subagents, skill creation, and plugin structure from Anthropic.",
       "version": "1.0.0",
-      "keywords": ["plugin", "development", "hooks", "mcp", "skills", "agents", "commands", "structure", "anthropic"],
-      "category": "development",
-      "tags": ["plugin", "development", "anthropic"]
+      "keywords": [
+        "plugin",
+        "development",
+        "hooks",
+        "mcp",
+        "skills",
+        "agents",
+        "commands",
+        "structure",
+        "anthropic"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "plugin",
+        "development",
+        "anthropic"
+      ]
     },
     {
       "name": "phd-skills",
@@ -211,7 +370,7 @@
         "url": "https://github.com/fcakyon/phd-skills.git",
         "path": "plugin"
       },
-      "description": "Research skills for Claude Code — paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
+      "description": "Research skills for Claude Code \u2014 paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
       "version": "1.1.0",
       "author": {
         "name": "Fatih Cagatay Akyon"
@@ -219,24 +378,48 @@
       "homepage": "https://github.com/fcakyon/phd-skills",
       "repository": "https://github.com/fcakyon/phd-skills",
       "license": "MIT",
-      "keywords": ["research", "academic", "phd", "paper-writing", "citations", "experiments", "latex"],
-      "category": "productivity",
-      "tags": ["research", "academic", "latex"]
+      "keywords": [
+        "research",
+        "academic",
+        "phd",
+        "paper-writing",
+        "citations",
+        "experiments",
+        "latex"
+      ],
+      "category": "research",
+      "tags": [
+        "research",
+        "academic",
+        "latex"
+      ]
     },
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
-      "description": "GitHub and Git workflow tools: commit-creator, pr-creator, pr-reviewer, and pr-comment-resolver agents, slash commands for commits, PRs, and review comment resolution, plus skills for PR/commit workflows.",
-      "version": "2.2.2",
+      "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
+      "version": "2.4.0",
       "author": {
         "name": "Fatih Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["git", "commit", "pull-request", "github", "workflow", "agents", "commands"],
-      "category": "development",
-      "tags": ["git", "workflow", "automation"]
+      "keywords": [
+        "git",
+        "commit",
+        "pull-request",
+        "github",
+        "workflow",
+        "agents",
+        "skills"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "git",
+        "workflow",
+        "automation"
+      ]
     },
     {
       "name": "ultralytics-dev",
@@ -249,9 +432,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
-      "category": "productivity",
-      "tags": ["formatting", "development"]
+      "keywords": [
+        "ultralytics",
+        "formatting",
+        "hooks",
+        "python",
+        "code-quality",
+        "docstrings"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "formatting",
+        "development"
+      ]
     },
     {
       "name": "azure-tools",
@@ -264,9 +457,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["azure", "mcp", "cloud", "storage", "keyvault", "cosmos", "aks"],
-      "category": "tools",
-      "tags": ["azure", "mcp", "integration"]
+      "keywords": [
+        "azure",
+        "mcp",
+        "cloud",
+        "storage",
+        "keyvault",
+        "cosmos",
+        "aks"
+      ],
+      "category": "deployment",
+      "tags": [
+        "azure",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "claude-tools",
@@ -279,9 +484,20 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["claude", "settings", "sync", "config", "allowlist", "context"],
-      "category": "productivity",
-      "tags": ["settings", "sync", "config"]
+      "keywords": [
+        "claude",
+        "settings",
+        "sync",
+        "config",
+        "allowlist",
+        "context"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "settings",
+        "sync",
+        "config"
+      ]
     },
     {
       "name": "gcloud-tools",
@@ -294,9 +510,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["gcloud", "mcp", "observability", "logging", "metrics"],
-      "category": "tools",
-      "tags": ["gcloud", "mcp", "integration"]
+      "keywords": [
+        "gcloud",
+        "mcp",
+        "observability",
+        "logging",
+        "metrics"
+      ],
+      "category": "deployment",
+      "tags": [
+        "gcloud",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "general-dev",
@@ -309,9 +535,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["code-patterns", "simplification", "architecture", "analysis", "code-quality"],
-      "category": "development",
-      "tags": ["analysis", "patterns", "quality"]
+      "keywords": [
+        "code-patterns",
+        "simplification",
+        "architecture",
+        "analysis",
+        "code-quality"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "analysis",
+        "patterns",
+        "quality"
+      ]
     },
     {
       "name": "paper-search-tools",
@@ -324,9 +560,21 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "mcp"],
-      "category": "tools",
-      "tags": ["research", "mcp", "integration"]
+      "keywords": [
+        "paper-search",
+        "arxiv",
+        "pubmed",
+        "ieee",
+        "academic",
+        "research",
+        "mcp"
+      ],
+      "category": "research",
+      "tags": [
+        "research",
+        "mcp",
+        "integration"
+      ]
     },
     {
       "name": "tavily-tools",
@@ -339,9 +587,19 @@
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["web-search", "tavily", "search", "content-extraction", "mcp"],
-      "category": "tools",
-      "tags": ["search", "mcp", "integration"]
+      "keywords": [
+        "web-search",
+        "tavily",
+        "search",
+        "content-extraction",
+        "mcp"
+      ],
+      "category": "search",
+      "tags": [
+        "search",
+        "mcp",
+        "integration"
+      ]
     }
   ]
 }

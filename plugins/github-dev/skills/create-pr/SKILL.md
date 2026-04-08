@@ -1,31 +1,40 @@
 ---
-name: pr-workflow
-description: This skill should be used when user asks to "create a PR", "make a pull request", "open PR for this branch", "submit changes as PR", "push and create PR", or runs /create-pr or /pr-creator commands.
+name: create-pr
+description: This skill should be used when user asks to "create a PR", "make a pull request", "open PR for this branch", "submit changes as PR", "push and create PR", or explicitly invokes "create-pr".
 ---
 
-# Pull Request Workflow
+# Create PR
 
 Complete workflow for creating pull requests following project standards.
 
+When explicitly invoked with extra text, treat that text as additional context for branch
+naming, commit context, and PR title and body generation.
+
 ## Process
 
-1. **Verify staged changes** exist with `git diff --cached --name-only`
+1. **Preferred execution**
+   - If subagents are available, use `github-dev:pr-creator` for the full workflow.
+   - Pass along any extra invocation text as additional context.
+   - Otherwise follow the manual steps below.
 
-2. **Branch setup**
+2. **Verify staged changes** exist with `git diff --cached --name-only`
+
+3. **Branch setup**
    - If on main/master, create feature branch first: `feature/brief-description` or `fix/brief-description`
    - Use `github-dev:commit-creator` subagent to handle staged changes if needed
 
-3. **Documentation check**
+4. **Documentation check**
    - Update README.md or docs based on changes compared to target branch
    - For config/API changes, use `mcp__tavily__tavily_search` to verify info and include sources
 
-4. **Analyze all commits**
+5. **Analyze all commits**
    - Use `git diff <base-branch>...HEAD` to review complete changeset
    - PR message must describe all commits, not just latest
    - Focus on what changed from reviewer perspective
 
-5. **Create PR**
-   - Use `/pr-creator` agent or `gh pr create` with parameters:
+6. **Create PR**
+   - Use `gh` for GitHub operations and `git` only for local branch management
+   - Use `github-dev:pr-creator` or `gh pr create` with parameters:
      - `-t` (title): Start with capital letter, use verb, NO "fix:" or "feat:" prefix
      - `-b` (body): Brief summary + bullet points with inline markdown links
      - `-a @me` (self-assign)
@@ -33,7 +42,7 @@ Complete workflow for creating pull requests following project standards.
        Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
        If recent PRs have no reviewers, skip `-r` entirely.
 
-6. **PR Body Guidelines**
+7. **PR Body Guidelines**
    - Single section, no headers if possible. Very concise
    - Few bullet points + 1 CLI/usage snippet or simple before/after snippet
    - No test plans, no changed file lists, no line-number links

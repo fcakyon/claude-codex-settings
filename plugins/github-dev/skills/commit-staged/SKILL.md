@@ -1,17 +1,21 @@
 ---
-name: commit-workflow
-description: This skill should be used when user asks to "commit these changes", "write commit message", "stage and commit", "create a commit", "commit staged files", or runs /commit-staged or /commit-creator commands.
+name: commit-staged
+description: This skill should be used when user asks to "commit these changes", "write commit message", "stage and commit", "create a commit", "commit staged files", or explicitly invokes "commit-staged".
 ---
 
-# Commit Workflow
+# Commit Staged
 
 Complete workflow for creating commits following project standards.
 
+When explicitly invoked with extra text, treat that text as additional context about the
+changes and include it in commit planning and commit messages.
+
 ## Process
 
-1. **Use commit-creator agent**
-   - Run `/commit-staged [context]` for automated commit handling
-   - Or follow manual steps below
+1. **Preferred execution**
+   - If subagents are available, use `github-dev:commit-creator` for the full workflow.
+   - Pass along any extra invocation text as additional context.
+   - Otherwise follow the manual steps below.
 
 2. **Analyze staged files only**
    - Check all staged files: `git diff --cached --name-only`
