@@ -8,20 +8,23 @@ description: This skill should be used when user asks to "create a PR", "make a 
 Complete workflow for creating pull requests following project standards.
 
 When explicitly invoked with extra text, treat that text as additional context for branch
-naming, commit context, and PR title and body generation.
+naming, commit context, and PR title and body generation. Compress it into a short
+plain-language branch name rather than copying the full text.
 
 ## Process
 
 1. **Preferred execution**
    - If subagents are available, use `github-dev:pr-creator` for the full workflow.
-   - Pass along any extra invocation text as additional context.
+   - Pass along any extra invocation text plus session findings and motivation as additional context.
    - Otherwise follow the manual steps below.
 
 2. **Verify staged changes** exist with `git diff --cached --name-only`
 
 3. **Branch setup**
-   - If on main/master, create feature branch first: `feature/brief-description` or `fix/brief-description`
-   - Use `github-dev:commit-creator` subagent to handle staged changes if needed
+   - If on main/master, create a short branch first: `feature/short-topic`, `fix/short-topic`, or `docs/short-topic`
+   - Keep the branch suffix to 2-4 short words
+   - Avoid long, overly specific, or sentence-like branch names
+   - Use `github-dev:commit-creator` subagent to handle staged changes if needed, and pass session findings and motivation into the commit context
 
 4. **Documentation check**
    - Update README.md or docs based on changes compared to target branch
@@ -36,6 +39,7 @@ naming, commit context, and PR title and body generation.
    - Use `gh` for GitHub operations and `git` only for local branch management
    - Use `github-dev:pr-creator` or `gh pr create` with parameters:
      - `-t` (title): Start with capital letter, use verb, NO "fix:" or "feat:" prefix
+       Use plain language. Avoid jargon and internal shorthand unless a command or tool name is needed.
      - `-b` (body): Brief summary + bullet points with inline markdown links
      - `-a @me` (self-assign)
      - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
@@ -44,6 +48,7 @@ naming, commit context, and PR title and body generation.
 
 7. **PR Body Guidelines**
    - Single section, no headers if possible. Very concise
+   - Use plain language. Avoid jargon and buzzwords unless an exact command or tool name is needed.
    - Few bullet points + 1 CLI/usage snippet or simple before/after snippet
    - No test plans, no changed file lists, no line-number links
 

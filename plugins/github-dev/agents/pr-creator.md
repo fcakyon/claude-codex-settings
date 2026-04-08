@@ -35,11 +35,14 @@ findings in the PR body when available.
 
 2. **Branch Management**:
    - Check current branch with `git branch --show-current`
-   - If on main/master, create feature branch: `feature/brief-description` or `fix/brief-description`
+   - If on main/master, create a short branch: `feature/short-topic`, `fix/short-topic`, or `docs/short-topic`
+   - Keep the branch suffix to 2-4 short words
+   - Avoid long, overly specific, or sentence-like branch names
    - Never commit directly to main
 
 3. **Commit Staged Changes**:
    - Use `github-dev:commit-creator` subagent to handle if any staged changes, skip this step if no staged changes exist, ignore unstaged changes
+   - Pass session findings and motivation into the commit context so commit messages capture why the change happened
    - Ensure commits follow project conventions
 
 4. **Documentation Updates**:
@@ -56,8 +59,10 @@ findings in the PR body when available.
      - PR message must describe the complete changeset across all commits, not just the latest commit
      - Focus on what changed (ignore unstaged changes) from the perspective of someone reviewing the entire branch
    - Create PR with `gh pr create` using:
-     - `-t` or `--title`: Start with capital letter + verb, NO type prefix
+     - `-t` or `--title`: Start with capital letter + verb, NO type prefix.
+       Use plain language. Avoid jargon and repo shorthand unless an exact command or tool name is needed.
      - `-b` or `--body`: Single section (no headers if possible). Very concise.
+       Use plain language and simple words.
        Few bullet points + 1 CLI/usage snippet for easier try,
        or simple before/after snippet if applicable.
        No test plans, no changed file lists, no line-number links.
