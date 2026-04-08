@@ -12,12 +12,11 @@ tools:
     "WebSearch",
     "WebFetch",
     "TodoWrite",
-    "SlashCommand",
     "mcp__tavily__tavily_search",
     "mcp__tavily__tavily_extract",
   ]
 color: cyan
-skills: pr-workflow, commit-workflow
+skills: create-pr, commit-staged
 model: inherit
 ---
 

@@ -88,6 +88,8 @@ def validate_skills(plugin_dir: Path, is_vendor: bool = False) -> list[str]:
                 errors.append(f"{prefix}/SKILL.md: 'name' exceeds 64 chars ({len(name)})")
             elif not re.match(r"^[a-z0-9]+(-[a-z0-9]+)*$", name):
                 errors.append(f"{prefix}/SKILL.md: 'name' must be kebab-case: '{name}'")
+            elif not is_vendor and name != skill_path.name:
+                errors.append(f"{prefix}/SKILL.md: 'name' must match directory name: '{skill_path.name}'")
 
         # Validate description field
         if "description" not in frontmatter:

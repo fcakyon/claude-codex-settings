@@ -23,7 +23,7 @@ description: |-
   </example>
 tools: ["Bash", "BashOutput", "Glob", "Grep", "Read", "Edit", "Write", "TodoWrite"]
 color: yellow
-skills: pr-comment-workflow
+skills: resolve-pr-comments
 model: inherit
 ---
 
