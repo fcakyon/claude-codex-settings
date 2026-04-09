@@ -1,0 +1,211 @@
+---
+title: Going Production
+description: Learn how to deploy your application in production in Dokploy.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+By default, dokploy offer multiple [Builds Types](/docs/core/applications/build-type) to deploy your application, the most common is `nixpacks` and `heroku buildpacks`
+however this also comes with problems, first is the resources that are required to build your application which some times can lead to timeout on your server or even freezeing your server
+and all your application will be down for this reasson, this is mainly problem from `Docker` since the comsumption of resources such as RAM, CPU is very high to build an application.
+
+
+
+## Solution
+
+You have two options to solve this problem:
+
+1. Increase the resources of your server CPU, RAM, Disk (Probably is not a good idea and cheapest solution)
+2. Build & Publish the application in a CI/CD pipeline eg. Github Actions, Gitlab CI, Gitea Actions, etc. (Recommended)
+
+
+### Build & Publish the application in a CI/CD pipeline
+
+We will use Github Actions as an example, but you can use any CI/CD pipeline that you want.
+
+We will use the following configuration:
+
+1. **Use Git Provider in Your Application**:
+   - Repository: `https://github.com/Dokploy/production-example`
+   - Branch: `main`
+   - Build path: `/`
+
+<Callout type="info">
+The repo have everything you need, however you can follow the same idea for your own applications.
+
+</Callout>
+
+
+2. The repository already have a Dockerfile, so we will use that, in the case your application is different create your own Dockerfile is required for this guide.
+3. We will use `Dockerhub` as an example, but you can use any container registry that you want.
+4. Make sure to create the repository in the `Dockerhub` , `namespace` is your username and `repository` is `example`.
+5. Create a new Github Actions workflow in `.github/workflows/deploy.yml`
+6. Add the following code to the workflow:
+
+```yaml
+name: Build Docker images
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-push-dockerfile-image:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }} # Make sure to add the secrets in your repository in -> Settings -> Secrets (Actions) -> New repository secret
+          password: ${{ secrets.DOCKERHUB_TOKEN }}   # Make sure to add the secrets in your repository in -> Settings -> Secrets (Actions) -> New repository secret
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          # Make sure to replace with your own namespace and repository
+          tags: |
+            namespace/example:latest 
+          platforms: linux/amd64     
+```
+7. Create your own Dockerfile, in this case we will use the `Dockerfile` from the repository.
+
+```properties
+FROM node:18-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+FROM base AS build
+WORKDIR /app
+COPY . .
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+ENV NODE_ENV=production
+RUN pnpm run build
+
+FROM base AS dokploy
+WORKDIR /app
+ENV NODE_ENV=production
+
+# Copy only the necessary files
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/node_modules ./node_modules
+
+EXPOSE 3000
+CMD ["pnpm", "start"]
+```
+
+8. Now when you make a commit to your repository, the workflow will be triggered and the application will build and push to `Dockerhub`.
+9. Now let's create application in Dokploy.
+10. In `Source Type` select `Docker`
+11. In the docker image field enter `namespace/example:latest`
+12. Click on `Save`.
+13. Click on `Deploy`.
+14. Go to `Domains` and click `Dices` icon to generate a domain and the port set to `3000`.
+15. Now you can access your application.
+
+### Auto deploy
+
+When using Dockerhub as a registry you can also enable auto deploy, this will automatically deploy your application whenever you push to your repository.
+
+To setup auto deploys for Dockerhub, follow the steps below:
+
+1. Go to your application and select `Deployments` tab.
+2. Copy the `Webhook URL`.
+3. Go to your Dockerhub repository and select `Webhooks` tab.
+4. Set a name for the webhook and paste the `Webhook URL` copied in step 2.
+5. That's it, now every time you push to your repository, your application will trigger a deployment in dokploy.
+
+The deployment will trigger only if the `Tag` matches the one specified in Dokploy.
+
+
+#### External Registry
+
+If you have a registry that is not Dockerhub, you can trigger a deployment after pushing to your repository in Github Actions.
+
+Your workflow will look like this:
+
+This method use the [Api Method](/docs/core/auto-deploy#api-method) to trigger a deployment.
+
+```yaml
+name: Build Docker images
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-and-push-dockerfile-image:
+    runs-on: ubuntu-latest
+
+    steps:
+       ...Same as step 7 from the previous example
+          
+      - name: Trigger Dokploy Deployment
+        uses: dokploy/dokploy-action@v1
+        run: |
+            curl -X 'POST' \
+            'https://<your-dokploy-domain>/api/application.deploy' \
+            -H 'accept: application/json' \
+            -H 'x-api-key: YOUR-GENERATED-API-KEY' \
+            -H 'Content-Type: application/json' \
+            -d '{
+                 "applicationId": "YOUR-APPLICATION-ID"
+            }'
+```
+
+You can also use this Github Action [Action](https://github.com/marketplace/actions/dokploy-deployment) to automate the deployment.
+
+## Healthcheck & Rollbacks
+
+When using Dokploy you can also configure healthchecks and rollbacks, this will allow you to configure your application to be able to recover from failures.
+ 
+In the repo we are using from the `Step 1.` we have a healthcheck endpoint `/health` that returns a 200 status code and running in the port 3000.
+
+Go to `Advanced` Tab and go to Cluster Settings and enter to `Swarm Settings`
+
+There are a couple options that you can use, in this case we will focus on `Health Check` and `Update Config`.
+
+Make sure the API Route exists in your application
+
+```json
+{
+  "Test": [
+    "CMD",
+    "curl",
+    "-f",
+    "http://localhost:3000/health"
+  ],
+  "Interval": 30000000000,
+  "Timeout": 10000000000,
+  "StartPeriod": 30000000000,
+  "Retries": 3
+}
+```
+
+Now in the `Update Config`
+
+Now when the application is getting unhealthy response from the health check, the container will rollback to the previous version.
+
+Paste the following code:
+```json
+{
+  "Parallelism": 1,
+  "Delay": 10000000000,
+  "FailureAction": "rollback",
+  "Order": "start-first"
+}
+```
+
+
+Now you everything a production ready application with automated deployments, zero downtime, rollbacks and healthchecks.
+
+We recommend strongly to use this approach in production since this will make your server never build the application, will only in charge of the deployment keeping your server without any downtime.

@@ -1,0 +1,26 @@
+---
+title: Generated
+description: This section outlines how to configure free HTTP domains for your applications in Dokploy, ensuring that your applications are accessible via custom URLs.
+---
+
+
+Dokploy use https://traefik.me to generate free domains for you.
+Quickly set up a domain for development or testing purposes without needing to register a domain.
+
+
+#### Steps to Generate a Domain
+
+1. Go to the `domains` section.
+2. Click `Create Domain`.
+3. Click on the `Dice` Icon next to `Host` field it will generate a free domain for you.
+4. Path is `/`.
+5. `Container Port`, set the port where your application is running, eg usually for Next.js it is `3000`, for Astro is `4321`
+6. HTTPS is `OFF`.
+7. Certificate is `None`.
+8. Click `Create`.
+9. A free domain will be automatically assigned to your application.
+
+
+### Important Clarification on Container Ports
+
+The "Container Port" specified in the domain settings is exclusively for routing traffic to the correct application container through Traefik, and does not expose the port directly to the internet. This is fundamentally different from the port settings in the "Advanced -> Ports" section, which are used to directly expose application ports. The container port in the domain settings ensures that Traefik can internally direct traffic to the specified port within the container based on the domain configuration.

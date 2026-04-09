@@ -323,6 +323,7 @@ bash .github/scripts/sync-openai-office-skills.sh
 bash .github/scripts/sync-cloudflare-skills.sh
 bash .github/scripts/sync-web-performance-skills.sh
 bash .github/scripts/sync-hetzner-skills.sh
+bash .github/scripts/sync-dokploy-skills.sh
 ```
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
