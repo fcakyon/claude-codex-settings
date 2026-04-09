@@ -1,0 +1,5 @@
+{
+  "name": "dokploy-skills",
+  "version": "1.0.0",
+  "description": "Dokploy deployment skill for Dokploy Cloud, self-hosted dashboard, Docker Compose, databases, domains, remote servers, and Dokploy CLI workflows."
+}

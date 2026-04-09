@@ -1,0 +1,130 @@
+---
+title: Rollbacks
+description: Learn how to rollback your application in Dokploy.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+Rollbacks are a powerful feature that allows you to easily revert changes to your application. This is particularly useful when you encounter issues or want to revert to a previous version of your application.
+
+## Types of Rollbacks
+
+Dokploy supports two types of rollback mechanisms:
+
+1. **Docker Swarm Rollbacks** (Automatic): Based on health checks, automatically reverts to the previous version if a deployment fails health checks
+2. **Registry-based Rollbacks** (Manual): Uses Docker registry to store each deployment's image, allowing you to manually rollback to any specific deployment version
+
+<Callout type="info">
+  The rollback methods described in the first section of this guide are based on **Docker Swarm's automatic rollback feature**. Dokploy also supports **registry-based rollbacks** at the deployment level, which allows you to save each deployment's image to a registry and rollback to any specific version. See the "Rollback to a specific version" section below for more details.
+</Callout>
+
+## Requirements
+
+1. Have a `/health` endpoint in your application.
+2. Have `curl` available in your container (if you use alpine for example, it won't be installed by default).
+
+## Docker Swarm Automatic Rollback
+
+This method uses Docker Swarm's built-in rollback feature, which automatically reverts to the previous version if health checks fail during deployment.
+
+<Callout type="info">
+  This rollback method is **automatic** and based on Docker Swarm's health check system. It only works if the new deployment fails health checks, triggering an automatic rollback to the previous version.
+</Callout>
+
+### Steps to Configure Automatic Rollback
+
+Let's suppose we have a NodeJS application that has a health check route `/health` that returns a 200 status code and running in the port 3000.
+
+1. In your application is necessary to have a `Path` or `Health Route` to be able to achieve zero downtime deployments eg. in the case of a NodeJS app you can have a route `/health` that returns a 200 status code.
+2. Go to `Advanced` Tab and go to Cluster Settings and enter to `Swarm Settings`
+3. There are a couple options that you can use, in this case we will focus on `Health Check` and `Update Config`.
+4. Paste this code in the health check field:
+Make sure the API Route exists in your application
+
+```json
+{
+  "Test": [
+    "CMD",
+    "curl",
+    "-f",
+    "http://localhost:3000/health"
+  ],
+  "Interval": 30000000000,
+  "Timeout": 10000000000,
+  "StartPeriod": 30000000000,
+  "Retries": 3
+}
+```
+5. Now in the `Update Config`
+
+Now when the application is getting unhealthy response from the health check, the container will rollback to the previous version.
+
+Paste the following code:
+```json
+{
+  "Parallelism": 1,
+  "Delay": 10000000000,
+  "FailureAction": "rollback",
+  "Order": "start-first"
+}
+```
+
+## Registry-based Rollback to Specific Versions
+
+The previous section covered Docker Swarm's automatic rollback feature, which only works when health checks fail. Dokploy also supports **registry-based rollbacks** at the deployment level, which provides more control and flexibility.
+
+### How Registry-based Rollbacks Work
+
+When using registry-based rollbacks, Dokploy:
+
+- **Saves each deployment's image to your configured registry**: Every time you deploy, the built image is tagged and pushed to your Docker registry (Docker Hub, GHCR, etc.)
+- **Associates each deployment with its image**: Each deployment record in Dokploy is linked to a specific image tag in your registry
+- **Enables rollback to any deployment**: You can rollback to any previous deployment by using the image that was saved during that deployment
+
+This approach is different from Docker Swarm rollbacks because:
+- ✅ **Works with any deployment**: Not limited to health check failures
+- ✅ **Rollback to any version**: Can rollback to any previous deployment, not just the immediate previous one
+- ✅ **Uses registry storage**: Images are stored in your registry, making them persistent and accessible
+
+<Callout type="info">
+  Registry-based rollbacks require that your application is configured to use a Docker registry. The images are automatically pushed to your registry during each deployment, and Dokploy tracks which image corresponds to each deployment.
+</Callout>
+
+### Prerequisites for Registry-based Rollbacks
+
+To use registry-based rollbacks, you need:
+
+1. **A configured Docker registry** in Dokploy (Docker Hub, GHCR, or custom registry)
+2. **Registry credentials** set up in Dokploy's registry settings
+3. **Application configured to push images** to the registry during deployment
+
+<Callout type="info">
+  When you enable rollbacks, Dokploy will automatically push each deployment's image to your configured registry with a unique tag, allowing you to rollback to any specific deployment version.
+</Callout>
+
+### Enabling Registry-based Rollbacks
+
+To start saving deployment images to your registry for rollbacks:
+
+1. Navigate to your application
+2. Go to **Deployments** → **Rollback Settings**
+3. Enable the **Rollback** option
+4. Select the registry you want to use for rollbacks
+5. Click on **Save**
+
+Once enabled, Dokploy will:
+- **Automatically tag and push images**: Every deployment's image is tagged and pushed to your configured registry
+- **Track deployment associations**: Each deployment is linked to its specific image tag in the registry
+- **Enable rollback buttons**: You'll see a **Rollback** button next to each deployment in the Deployments section
+
+### Performing a Registry-based Rollback
+
+1. Go to your application's **Deployments** section
+2. Find the deployment version you want to rollback to
+3. Click the **Rollback** button next to that deployment
+4. Confirm the rollback action
+
+<Callout type="info">
+  After clicking **Rollback**, you'll need to wait a few seconds for Dokploy to download the image from your registry. The container will not appear in the **Logs** tab immediately - wait a moment for the image download to complete before checking the logs to see the container running.
+</Callout>
+

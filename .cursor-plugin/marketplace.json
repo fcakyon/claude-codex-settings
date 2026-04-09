@@ -81,6 +81,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "dokploy-skills",
+      "source": "./plugins/dokploy-skills",
+      "description": "Dokploy deployment skill for Dokploy Cloud, self-hosted dashboard, Docker Compose, databases, domains, remote servers, and Dokploy CLI workflows.",
+      "version": "1.0.0"
+    },
+    {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
