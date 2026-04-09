@@ -277,6 +277,27 @@
       ]
     },
     {
+      "name": "dokploy-skills",
+      "source": "./plugins/dokploy-skills",
+      "description": "Dokploy deployment skill for Dokploy Cloud, self-hosted dashboard, Docker Compose, databases, domains, remote servers, and Dokploy CLI workflows.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": [
+        "dokploy",
+        "deploy",
+        "cloud",
+        "docker",
+        "compose",
+        "dashboard",
+        "paas"
+      ],
+      "category": "deployment",
+      "tags": [
+        "cloud",
+        "deploy"
+      ]
+    },
+    {
       "name": "anthropic-essentials",
       "source": {
         "source": "url",

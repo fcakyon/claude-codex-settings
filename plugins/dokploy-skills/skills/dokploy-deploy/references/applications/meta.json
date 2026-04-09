@@ -1,0 +1,11 @@
+{
+	"title": "Applications",
+	"pages": [
+		"advanced",
+		"build-type",
+		"preview-deployments",
+		"rollbacks",
+		"zero-downtime",
+		"going-production"
+	]
+}
