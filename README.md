@@ -811,7 +811,7 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 **Zero-MCP goal:**
 
-- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, tavily, gcloud, azure, linear, supabase, paper-search)
+- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, tavily, gcloud, azure, paper-search)
 
 **New plugins/skills:**
 
@@ -829,12 +829,11 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 
 **Static website:**
 
-- [ ] Publish plugin catalog site with search, category filtering, and per-tool install snippets
+- [ ] Publish `agentplugins.net` as a plugin catalog site with search, category filtering, per-tool install snippets, and GitHub Pages hosting
 
 **Other:**
 
-- [ ] Rename plugins to `mongodb-skills`, `github-skills` etc. for better UX
-- [ ] Add worktree support to github-dev create-pr and commit-staged skills
+- [ ] Change marketplace and repo name to Agent Plugins instead of Claude Settings or Claude Codex Settings, and update the repo thumbnail
 
 ## References
 
