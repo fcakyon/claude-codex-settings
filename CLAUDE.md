@@ -297,6 +297,15 @@ When writing README or docs content for this repo:
 - Installation instructions must be copy-paste ready
 - Plan for future before/after GIFs or demos per plugin to show value visually
 
+## Commit and PR Writing Style
+
+This repo contains config files (JSON settings, allowlist rules, hooks) rather than application code. Commit messages and PR descriptions should be written in plain language that anyone can understand, not just Claude Code plugin developers.
+
+- Describe WHAT changed and WHY in everyday terms: "add a safety hook that flags dangerous shell commands for review" not "add PreToolUse command hook with regex matcher on Bash tool"
+- Avoid internal jargon: say "allowlist" not "permissions allowlist entries", say "settings files" not "settings.json/settings-minimax.json/settings-zai.json"
+- When listing affected files, group by purpose: "all 3 settings files" instead of naming each one
+- Keep PR bodies short: 2-3 bullet points explaining the user-visible behavior change
+
 ## Maintenance Scripts
 
 Scripts in `.github/scripts/` for repo maintenance. Run from repo root.

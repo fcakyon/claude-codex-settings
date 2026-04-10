@@ -46,6 +46,8 @@
       "Bash(tmux capture-pane:*)",
       "Bash(tmux list-sessions:*)",
       "Bash(tmux list-windows:*)",
+      "Bash(tmux has-session:*)",
+      "Bash(tmux new-session:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
@@ -61,16 +63,34 @@
       "Bash(git log:*)",
       "Bash(git fetch --prune:*)",
       "Bash(git worktree list:*)",
+      "Bash(git show:*)",
       "Bash(uv run ruff:*)",
       "Bash(python --version:*)",
+      "Bash(python -c:*)",
+      "Bash(python3 -c:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(sleep:*)",
+      "Bash(source .venv/bin/activate:*)",
+      "Bash(mkdir -p:*)",
       "WebSearch",
       "WebFetch(domain:openai.com)",
       "WebFetch(domain:anthropic.com)",
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:ai.google.dev)",
       "WebFetch(domain:github.com)",
+      "WebFetch(domain:gradio.app)",
       "WebFetch(domain:arxiv.org)",
+      "WebFetch(domain:dl.acm.org)",
+      "WebFetch(domain:openaccess.thecvf.com)",
+      "WebFetch(domain:www.semanticscholar.org)",
+      "WebFetch(domain:openreview.net)",
+      "WebFetch(domain:doi.org)",
+      "WebFetch(domain:link.springer.com)",
       "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:docs.ultralytics.com)",
+      "WebFetch(domain:sli.dev)",
+      "WebFetch(domain:docs.vllm.ai)",
+      "WebFetch(domain:developer.themoviedb.org)",
       "mcp__tavily__tavily_extract",
       "mcp__tavily__tavily_search",
       "mcp__context7__resolve-library-id",
@@ -86,6 +106,19 @@
       "mcp__github__search_pull_requests",
       "mcp__github__search_issues",
       "mcp__github__search_code"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CMD=$(jq -r \".tool_input.command\"); if ! echo \"$CMD\" | rg -qP \"(\\brm\\s+-|\\brm\\s+/|\\brmdir\\b|shutil\\.rmtree|os\\.remove|os\\.unlink|\\bsubprocess\\b|os\\.system|\\bopen\\(.*[\\x27\\\"]w|\\bcurl\\s|\\bwget\\s|\\bpip\\s+install|\\bkill\\s|\\bpkill\\b|\\bchmod\\b|\\bchown\\b|\\bmv\\s+|\\bcp\\s+|\\bdd\\s|\\bmkfs\\b|\\bgit\\s+push|\\bgit\\s+reset|\\bgit\\s+checkout\\s+\\.|\\bapt\\s|\\byum\\s|\\bbrew\\s+install|\\bnpm\\s+install|>\\s+/|>>\\s+/)\"; then printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"allow\\\"}}\"; else printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"ask\\\",\\\"permissionDecisionReason\\\":\\\"contains destructive operation, review carefully\\\"}}\"; fi'"
+          }
+        ]
+      }
     ]
   },
   "outputStyle": "Explanatory",
