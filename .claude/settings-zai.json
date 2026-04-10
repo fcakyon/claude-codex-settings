@@ -45,6 +45,8 @@
       "Bash(tmux capture-pane:*)",
       "Bash(tmux list-sessions:*)",
       "Bash(tmux list-windows:*)",
+      "Bash(tmux has-session:*)",
+      "Bash(tmux new-session:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
@@ -66,8 +68,15 @@
       "Bash(git -C :* log:*)",
       "Bash(git fetch --prune:*)",
       "Bash(git worktree list:*)",
+      "Bash(git show:*)",
       "Bash(uv run ruff:*)",
       "Bash(python --version:*)",
+      "Bash(python -c:*)",
+      "Bash(python3 -c:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(sleep:*)",
+      "Bash(source .venv/bin/activate:*)",
+      "Bash(mkdir -p:*)",
       "WebSearch",
       "WebFetch(domain:openai.com)",
       "WebFetch(domain:anthropic.com)",
@@ -117,6 +126,19 @@
       "mcp__mongodb__count",
       "mcp__supabase__list_tables",
       "mcp__gcloud-observability__list_log_entries"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CMD=$(jq -r \".tool_input.command\"); if ! echo \"$CMD\" | rg -qP \"(\\brm\\s+-|\\brm\\s+/|\\brmdir\\b|shutil\\.rmtree|os\\.remove|os\\.unlink|\\bsubprocess\\b|os\\.system|\\bopen\\(.*[\\x27\\\"]w|\\bcurl\\s|\\bwget\\s|\\bpip\\s+install|\\bkill\\s|\\bpkill\\b|\\bchmod\\b|\\bchown\\b|\\bmv\\s+|\\bcp\\s+|\\bdd\\s|\\bmkfs\\b|\\bgit\\s+push|\\bgit\\s+reset|\\bgit\\s+checkout\\s+\\.|\\bapt\\s|\\byum\\s|\\bbrew\\s+install|\\bnpm\\s+install|>\\s+/|>>\\s+/)\"; then printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"allow\\\"}}\"; else printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"ask\\\",\\\"permissionDecisionReason\\\":\\\"contains destructive operation, review carefully\\\"}}\"; fi'"
+          }
+        ]
+      }
     ]
   },
   "outputStyle": "Explanatory",
