@@ -66,6 +66,12 @@
       "Bash(git rev-parse:*)",
       "Bash(git push:*)",
       "Bash(git log:*)",
+      "Bash(git -C :* branch --show-current:*)",
+      "Bash(git -C :* diff:*)",
+      "Bash(git -C :* status:*)",
+      "Bash(git -C :* rev-parse:*)",
+      "Bash(git -C :* push:*)",
+      "Bash(git -C :* log:*)",
       "Bash(git fetch --prune:*)",
       "Bash(git worktree list:*)",
       "Bash(git show:*)",
@@ -103,14 +109,29 @@
       "mcp__github__get_me",
       "mcp__github__pull_request_read",
       "mcp__github__get_file_contents",
+      "mcp__github__get_workflow_run",
+      "mcp__github__get_job_logs",
       "mcp__github__get_pull_request_comments",
       "mcp__github__get_pull_request_reviews",
       "mcp__github__issue_read",
       "mcp__github__list_pull_requests",
       "mcp__github__list_commits",
+      "mcp__github__list_workflows",
+      "mcp__github__list_workflow_runs",
+      "mcp__github__list_workflow_jobs",
       "mcp__github__search_pull_requests",
       "mcp__github__search_issues",
-      "mcp__github__search_code"
+      "mcp__github__search_code",
+      "mcp__wandb__query_wandb_tool",
+      "mcp__wandb__query_wandb_entity_projects",
+      "mcp__mongodb__list_databases",
+      "mcp__mongodb__list_collections",
+      "mcp__mongodb__get_collection_schema",
+      "mcp__mongodb__collection-indexes",
+      "mcp__mongodb__db-stats",
+      "mcp__mongodb__count",
+      "mcp__supabase__list_tables",
+      "mcp__gcloud-observability__list_log_entries"
     ]
   },
   "hooks": {
@@ -120,7 +141,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'CMD=$(jq -r \".tool_input.command\"); if ! echo \"$CMD\" | rg -qP \"(\\brm\\s+-|\\brm\\s+/|\\brmdir\\b|shutil\\.rmtree|os\\.remove|os\\.unlink|\\bsubprocess\\b|os\\.system|\\bopen\\(.*[\\x27\\\"]w|\\bcurl\\s|\\bwget\\s|\\bpip\\s+install|\\bkill\\s|\\bpkill\\b|\\bchmod\\b|\\bchown\\b|\\bmv\\s+|\\bcp\\s+|\\bdd\\s|\\bmkfs\\b|\\bgit\\s+push|\\bgit\\s+reset|\\bgit\\s+checkout\\s+\\.|\\bapt\\s|\\byum\\s|\\bbrew\\s+install|\\bnpm\\s+install|>\\s+/|>>\\s+/)\"; then printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"allow\\\"}}\"; else printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"ask\\\",\\\"permissionDecisionReason\\\":\\\"contains destructive operation, review carefully\\\"}}\"; fi'"
+            "command": "bash -c 'CMD=$(jq -r \".tool_input.command\"); if ! echo \"$CMD\" | rg -qP \"(\\brm\\s+-|\\brm\\s+/|\\brmdir\\b|shutil\\.rmtree|os\\.remove|os\\.unlink|\\bsubprocess\\b|os\\.system|\\bopen\\(.*[\\x27\\\"]w|\\bcurl\\s|\\bwget\\s|\\bpip\\s+install|\\bkill\\s|\\bpkill\\b|\\bchmod\\b|\\bchown\\b|\\bmv\\s+|\\bcp\\s+|\\bdd\\s|\\bmkfs\\b|\\bgit\\s+push|\\bgit\\s+commit|\\bgit\\s+add|\\bgit\\s+stash|\\bgit\\s+rebase|\\bgit\\s+clean|\\bgit\\s+branch\\s+-[dD]|\\bgit\\s+reset|\\bgit\\s+checkout\\s+\\.|\\bapt\\s|\\byum\\s|\\bbrew\\s+install|\\bnpm\\s+install|\\bsudo\\s|\\bdocker\\s|\\bkubectl\\s|>\\s+/|>>\\s+/)\"; then printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"allow\\\"}}\"; else printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"ask\\\",\\\"permissionDecisionReason\\\":\\\"contains destructive operation, review carefully\\\"}}\"; fi'"
           }
         ]
       }
@@ -137,6 +158,7 @@
     }
   },
   "showThinkingSummaries": true,
+  "autoDreamEnabled": true,
   "spinnerTipsEnabled": false,
   "alwaysThinkingEnabled": true,
   "cleanupPeriodDays": 9999,
