@@ -29,6 +29,18 @@
       "category": "documents"
     },
     {
+      "name": "python-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/python-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "development"
+    },
+    {
       "name": "react-skills",
       "source": {
         "source": "local",
@@ -231,18 +243,6 @@
         "authentication": "ON_INSTALL"
       },
       "category": "deployment"
-    },
-    {
-      "name": "general-dev",
-      "source": {
-        "source": "local",
-        "path": "./plugins/general-dev"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "developer-tools"
     },
     {
       "name": "paper-search-tools",

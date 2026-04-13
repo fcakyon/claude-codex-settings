@@ -15,6 +15,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "python-skills",
+      "source": "./plugins/python-skills",
+      "description": "Python best practices grounded in PEP 8, PEP 20 (Zen of Python), Google Python Style Guide, and Effective Python by Brett Slatkin.",
+      "version": "1.0.0"
+    },
+    {
       "name": "react-skills",
       "source": "./plugins/react-skills",
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
@@ -114,12 +120,6 @@
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
       "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
-      "version": "2.0.2"
-    },
-    {
-      "name": "general-dev",
-      "source": "./plugins/general-dev",
-      "description": "General development tools: code-simplifier agent for pattern analysis, rg preference hook.",
       "version": "2.0.2"
     },
     {
