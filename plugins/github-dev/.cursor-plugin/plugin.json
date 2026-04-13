@@ -1,11 +1,5 @@
 {
   "name": "github-dev",
   "version": "2.4.0",
-  "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
-  "author": {
-    "name": "Fatih Akyon"
-  },
-  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-  "repository": "https://github.com/fcakyon/claude-codex-settings",
-  "license": "Apache-2.0"
+  "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution."
 }
