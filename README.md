@@ -835,6 +835,7 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 - [x] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (bundled as `openai-office-skills`)
 - [ ] Auth: Clerk, Firebase patterns
 - [ ] Fullstack: FastAPI, NodeJS backends, Tailwind CSS v4, [shadcn/ui](https://github.com/shadcn-ui/ui), Sentry monitoring, [Web Vitals](https://nextjs.org/docs/app/api-reference/functions/use-report-web-vitals)
+- [ ] Productivity: [Caveman](https://github.com/JuliusBrussee/caveman) compressed output style saving ~75% of tokens
 
 **Static website:**
 
