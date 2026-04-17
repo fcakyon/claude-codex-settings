@@ -3,6 +3,12 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
+      "name": "intelligent-compact",
+      "source": "./plugins/intelligent-compact",
+      "description": "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions, root causes, file paths, metrics, IDs, and subagent findings.",
+      "version": "1.0.0"
+    },
+    {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
