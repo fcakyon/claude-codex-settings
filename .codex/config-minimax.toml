@@ -1,0 +1,25 @@
+# MiniMax recipe for Codex CLI.
+# Copy the blocks below into ~/.codex/config.toml to activate.
+# This file is NOT auto-loaded; Codex only reads config.toml.
+#
+# Compatibility note (as of 2026-04):
+#   Codex CLI no longer accepts wire_api = "chat" (openai/codex PR #10157,
+#   merged 2026-02-03). MiniMax's OpenAI-compatible endpoint exposes only
+#   /v1/chat/completions, so pointing base_url at api.minimax.io directly
+#   will fail at either parse time or runtime.
+#
+#   Workaround: run a Responses API translation proxy locally (LiteLLM,
+#   LM Studio, or llama.cpp server) that forwards to MiniMax, then set
+#   base_url to the proxy URL below.
+#
+# Claude Code users: MiniMax's Anthropic-compatible endpoint works directly
+# without a proxy. See .claude/settings-minimax.json and README.md.
+
+model = "MiniMax-M2.7"
+model_provider = "minimax"
+
+[model_providers.minimax]
+name = "MiniMax"
+base_url = "http://localhost:4000/v1"   # local Responses API proxy, not api.minimax.io
+env_key = "MINIMAX_API_KEY"
+wire_api = "responses"

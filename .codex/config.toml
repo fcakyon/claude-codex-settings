@@ -17,11 +17,3 @@ name = "Azure OpenAI"
 base_url = "https://YOUR-AZURE-OPENAI.openai.azure.com/openai/v1"
 env_key = "AZURE_OPENAI_API_KEY"
 wire_api = "responses"
-
-# MiniMax (OpenAI-compatible, 204K context)
-# To use: set model_provider = "minimax" and model = "MiniMax-M2.7"
-[model_providers.minimax]
-name = "MiniMax"
-base_url = "https://api.minimax.io/v1"
-env_key = "MINIMAX_API_KEY"
-wire_api = "chat"

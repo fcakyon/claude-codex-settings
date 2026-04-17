@@ -788,6 +788,8 @@ export ENABLE_TOOL_SEARCH=false
 
 Or use the settings file: [`.claude/settings-minimax.json`](./.claude/settings-minimax.json)
 
+For Codex CLI, see the recipe at [`.codex/config-minimax.toml`](./.codex/config-minimax.toml). Note that Codex requires a local Responses API proxy since MiniMax only exposes chat completions.
+
 </details>
 
 <details>
