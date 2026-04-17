@@ -5,17 +5,19 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
     "DISABLE_BUG_COMMAND": "1",
     "DISABLE_ERROR_REPORTING": "1",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-6",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-7",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-opus-4-7",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-4-6",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-4-6",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-opus-4-7",
     "MAX_MCP_OUTPUT_TOKENS": "40000",
-    "CLAUDE_CODE_EFFORT_LEVEL": "high",
+    "CLAUDE_CODE_EFFORT_LEVEL": "xhigh",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL": "1",
     "CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING": "1",
     "CLAUDE_CODE_NEW_INIT": "1",
-    "CLAUDE_CODE_NO_FLICKER": "1"
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "ENABLE_PROMPT_CACHING_1H": "1",
+    "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1"
   },
   "attribution": {
     "commit": "",
@@ -144,7 +146,7 @@
     ]
   },
   "outputStyle": "Explanatory",
-  "model": "opus[1m]",
+  "model": "opus",
   "extraKnownMarketplaces": {
     "claude-settings": {
       "source": {
