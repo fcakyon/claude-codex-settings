@@ -9,6 +9,21 @@
   },
   "plugins": [
     {
+      "name": "intelligent-compact",
+      "source": "./plugins/intelligent-compact",
+      "description": "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions, root causes, file paths, metrics, IDs, and subagent findings.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["precompact", "compact", "summary", "context", "hooks"],
+      "category": "development",
+      "tags": ["context", "hooks"]
+    },
+    {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
