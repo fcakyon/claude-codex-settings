@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "intelligent-compact",
+      "source": {
+        "source": "local",
+        "path": "./plugins/intelligent-compact"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "development"
+    },
+    {
       "name": "anthropic-office-skills",
       "source": {
         "source": "local",

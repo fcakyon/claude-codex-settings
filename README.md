@@ -82,6 +82,21 @@ ln -sfn CLAUDE.md GEMINI.md
 ## Plugins
 
 <details>
+<summary><strong>intelligent-compact</strong> - PreCompact hook that preserves high-signal context in auto-compact summaries</summary>
+
+| Claude Code                                           | Codex CLI                                                                     | Gemini CLI                                                       |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `/plugin install intelligent-compact@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `intelligent-compact` | `gemini extensions install --path ./plugins/intelligent-compact` |
+
+Claude Code's auto-compact summarizes long sessions to fit the context window, but the default summary routinely drops the highest-signal facts: file paths under investigation, confirmed root causes, remaining tasks, unanswered questions, metrics and IDs, and findings from expensive subagent runs. This plugin ships a single PreCompact hook that injects A-F fidelity requirements on top of the 9-section default compact prompt, so those categories survive every `/compact` (manual) and every auto compaction. Active on Claude Code only; Codex, Cursor, and Gemini CLI do not yet expose a PreCompact hook.
+
+**Hooks:**
+
+- [`precompact_priorities.sh`](./plugins/intelligent-compact/hooks/scripts/precompact_priorities.sh) - Priority-preservation instructions for the compaction summarizer
+
+</details>
+
+<details>
 <summary><strong>anthropic-office-skills</strong> - Official Anthropic PDF, Word, PowerPoint, Excel skills</summary>
 
 | Claude Code                                               | Codex CLI                                                                         | Gemini CLI                                                           |
