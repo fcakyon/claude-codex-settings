@@ -47,6 +47,10 @@ def sync_marketplace_to_plugins():
 
         # Resolve plugin directory relative to marketplace root
         plugin_dir = (marketplace_dir / source).resolve()
+        # Guard against path traversal if marketplace.json is tampered
+        if not str(plugin_dir).startswith(str(marketplace_dir.resolve())):
+            print(f"⚠ Skipping {source!r}: resolved path escapes plugin root", file=sys.stderr)
+            continue
         plugin_json_dir = plugin_dir / ".claude-plugin"
         plugin_json_path = plugin_json_dir / "plugin.json"
 
