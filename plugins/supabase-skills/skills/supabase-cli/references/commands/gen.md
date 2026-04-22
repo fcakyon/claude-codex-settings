@@ -1,3 +1,8 @@
+---
+name: supabase-gen
+description: Reference for Supabase type generation CLI commands.
+---
+
 ## supabase-gen
 
 Automatically generates type definitions based on your Postgres database schema.

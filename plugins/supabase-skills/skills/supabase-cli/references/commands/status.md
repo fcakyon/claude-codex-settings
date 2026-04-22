@@ -1,3 +1,8 @@
+---
+name: supabase-status
+description: Reference for Supabase local development stack status commands.
+---
+
 ## supabase-status
 
 Shows status of the Supabase local development stack.

@@ -1,3 +1,8 @@
+---
+name: supabase-start
+description: Reference for Supabase local development stack start commands.
+---
+
 ## supabase-start
 
 Starts the Supabase local development stack.

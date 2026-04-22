@@ -1,3 +1,8 @@
+---
+name: supabase-link
+description: Reference for Supabase project linking CLI commands.
+---
+
 ## supabase-link
 
 Link your local development project to a hosted Supabase project.

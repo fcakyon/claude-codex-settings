@@ -1,3 +1,8 @@
+---
+name: supabase-projects
+description: Reference for Supabase project management CLI commands.
+---
+
 ## supabase-projects
 
 Provides tools for creating and managing your Supabase projects.

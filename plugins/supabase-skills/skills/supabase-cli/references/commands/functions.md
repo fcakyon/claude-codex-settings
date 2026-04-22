@@ -1,3 +1,8 @@
+---
+name: supabase-functions
+description: Reference for Supabase Edge Functions CLI commands.
+---
+
 ## supabase-functions
 
 Manage Supabase Edge Functions.

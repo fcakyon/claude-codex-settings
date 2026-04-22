@@ -1,3 +1,8 @@
+---
+name: supabase-stop
+description: Reference for Supabase local development stack stop commands.
+---
+
 ## supabase-stop
 
 Stops the Supabase local development stack.

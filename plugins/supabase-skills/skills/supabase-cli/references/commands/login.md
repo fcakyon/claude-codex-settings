@@ -1,3 +1,8 @@
+---
+name: supabase-login
+description: Reference for Supabase CLI authentication commands.
+---
+
 ## supabase-login
 
 Connect the Supabase CLI to your Supabase account by logging in with your [personal access token](https://supabase.com/dashboard/account/tokens).

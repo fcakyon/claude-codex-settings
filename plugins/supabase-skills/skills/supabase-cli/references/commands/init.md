@@ -1,3 +1,8 @@
+---
+name: supabase-init
+description: Reference for Supabase project initialization CLI commands.
+---
+
 ## supabase-init
 
 Initialize configurations for Supabase local development.

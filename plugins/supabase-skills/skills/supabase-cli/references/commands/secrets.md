@@ -1,3 +1,8 @@
+---
+name: supabase-secrets
+description: Reference for Supabase secrets management CLI commands.
+---
+
 ## supabase-secrets
 
 Provides tools for managing environment variables and secrets for your Supabase project.
