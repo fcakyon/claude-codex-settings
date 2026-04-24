@@ -5,6 +5,7 @@ approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 web_search = "live"
 personality = "pragmatic"
+model_auto_compact_token_limit = 400000
 
 [sandbox_workspace_write]
 network_access = true
