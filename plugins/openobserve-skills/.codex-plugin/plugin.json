@@ -1,0 +1,5 @@
+{
+  "name": "openobserve-skills",
+  "version": "1.0.0",
+  "description": "OpenObserve REST API skill for AI agents. Search logs/metrics/traces, manage streams, and create/edit/inspect dashboards via curl."
+}
