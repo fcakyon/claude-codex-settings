@@ -9,6 +9,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "claude-telemetry-hooks",
+      "source": "./plugins/claude-telemetry-hooks",
+      "description": "Hooks that enrich Claude Code OTel telemetry: sticky chat_id across resumed sessions, and categorized reject-reason feedback events.",
+      "version": "1.0.0"
+    },
+    {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
@@ -84,6 +90,12 @@
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
+      "version": "1.0.0"
+    },
+    {
+      "name": "openobserve-skills",
+      "source": "./plugins/openobserve-skills",
+      "description": "OpenObserve REST API skill for AI agents. Search logs/metrics/traces, manage streams, and create/edit/inspect dashboards via curl.",
       "version": "1.0.0"
     },
     {
