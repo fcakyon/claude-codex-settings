@@ -59,12 +59,12 @@ Docs:
 
 ### Root Marketplace Files
 
-| Tool        | Path                               | Notes                                                                   |
-| ----------- | ---------------------------------- | ----------------------------------------------------------------------- |
-| Claude Code | `.claude-plugin/marketplace.json`  | local sources only (use sync scripts for external repos)                |
+| Tool        | Path                               | Notes                                                                           |
+| ----------- | ---------------------------------- | ------------------------------------------------------------------------------- |
+| Claude Code | `.claude-plugin/marketplace.json`  | local sources only (use sync scripts for external repos)                        |
 | Codex CLI   | `.agents/plugins/marketplace.json` | local sources only; use `./`-prefixed `source.path` plus plugin `policy` fields |
-| Cursor      | `.cursor-plugin/marketplace.json`  | local sources, needs `source` + `description`                           |
-| Gemini CLI  | none                               | per-plugin install: `gemini extensions install --path ./plugins/<name>` |
+| Cursor      | `.cursor-plugin/marketplace.json`  | local sources, needs `source` + `description`                                   |
+| Gemini CLI  | none                               | per-plugin install: `gemini extensions install --path ./plugins/<name>`         |
 
 #### Claude Code marketplace entry
 
@@ -333,6 +333,7 @@ bash .github/scripts/sync-cloudflare-skills.sh
 bash .github/scripts/sync-web-performance-skills.sh
 bash .github/scripts/sync-hetzner-skills.sh
 bash .github/scripts/sync-dokploy-skills.sh
+bash .github/scripts/sync-openobserve-skills.sh
 ```
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.

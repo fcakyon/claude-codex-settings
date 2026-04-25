@@ -418,6 +418,29 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 </details>
 
 <details>
+<summary><strong>openobserve-skills</strong> - OpenObserve REST API skill for AI agents to search logs/metrics/traces and create dashboards via curl</summary>
+
+| Claude Code                                          | Codex CLI                                                                    | Gemini CLI                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `/plugin install openobserve-skills@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `openobserve-skills` | `gemini extensions install --path ./plugins/openobserve-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/openobserve-skills --skill '*'
+```
+
+Programmatic access to OpenObserve (Cloud or self-hosted) via the documented REST API. Covers HTTP Basic auth, the search/SQL endpoint with microsecond timestamps, stream listing/schema, dashboard CRUD, the v8 panel JSON schema, and known pitfalls — including the `customQuery` re-aggregation bug that doubles table rows when `fields.y` carries an `aggregationFunction`. Built specifically for AI agents — uses `curl` only, no SDK or CLI dependency. Reference docs are mirrored from [openobserve/openobserve-docs](https://github.com/openobserve/openobserve-docs).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                             | Description                                                                         | ZIP                                                                                                                                                                     |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`openobserve-api`](./plugins/openobserve-skills/skills/openobserve-api/SKILL.md) | Search SQL, streams, dashboards, panel schema, ingestion endpoints, common pitfalls | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openobserve-api.zip) |
+
+</details>
+
+<details>
 <summary><strong>hetzner-skills</strong> - Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, and storage</summary>
 
 | Claude Code                                      | Codex CLI                                                                | Gemini CLI                                                  |

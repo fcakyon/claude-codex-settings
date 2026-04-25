@@ -87,6 +87,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "openobserve-skills",
+      "source": "./plugins/openobserve-skills",
+      "description": "OpenObserve REST API skill for AI agents. Search logs/metrics/traces, manage streams, and create/edit/inspect dashboards via curl.",
+      "version": "1.0.0"
+    },
+    {
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, volumes, and storage.",

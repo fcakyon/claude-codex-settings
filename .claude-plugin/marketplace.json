@@ -158,6 +158,16 @@
       "tags": ["performance", "auditing"]
     },
     {
+      "name": "openobserve-skills",
+      "source": "./plugins/openobserve-skills",
+      "description": "OpenObserve REST API skill for AI agents. Search logs/metrics/traces, manage streams, and create/edit/inspect dashboards via curl.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["openobserve", "observability", "logs", "metrics", "traces", "dashboards", "otlp", "telemetry"],
+      "category": "observability",
+      "tags": ["observability", "logging", "monitoring"]
+    },
+    {
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, volumes, and storage.",
