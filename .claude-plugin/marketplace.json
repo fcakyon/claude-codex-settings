@@ -24,6 +24,21 @@
       "tags": ["context", "hooks"]
     },
     {
+      "name": "claude-telemetry-hooks",
+      "source": "./plugins/claude-telemetry-hooks",
+      "description": "Hooks that enrich Claude Code OTel telemetry: sticky chat_id across resumed sessions, and categorized reject-reason feedback events.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["telemetry", "otel", "opentelemetry", "hooks", "observability"],
+      "category": "observability",
+      "tags": ["telemetry", "hooks"]
+    },
+    {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",

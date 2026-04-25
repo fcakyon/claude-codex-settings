@@ -17,6 +17,18 @@
       "category": "development"
     },
     {
+      "name": "claude-telemetry-hooks",
+      "source": {
+        "source": "local",
+        "path": "./plugins/claude-telemetry-hooks"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "observability"
+    },
+    {
       "name": "anthropic-office-skills",
       "source": {
         "source": "local",

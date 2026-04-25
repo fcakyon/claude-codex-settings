@@ -97,6 +97,22 @@ Claude Code's auto-compact summarizes long sessions to fit the context window, b
 </details>
 
 <details>
+<summary><strong>claude-telemetry-hooks</strong> - Sticky chat_id and categorized reject feedback for Claude Code OTel telemetry</summary>
+
+| Claude Code                                              | Codex CLI | Gemini CLI                                                          |
+| -------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
+| `/plugin install claude-telemetry-hooks@claude-settings` | n/a       | `gemini extensions install --path ./plugins/claude-telemetry-hooks` |
+
+Claude Code already exports OpenTelemetry logs and metrics, but two pieces are missing for usable dashboards. The OTel `session_id` is reset on every `claude` invocation, so resumed sessions look like brand-new ones. Tool rejections are recorded as a single `tool_decision` event with no reason attached, so you can see *that* the user pushed back but not *why*. This plugin adds two hooks. `session_start_chat_id.py` mints a sticky `chat_id` per project directory and emits a `session_link` log event on every SessionStart so resumed sessions group together. `user_prompt_reject_feedback.py` watches for tool rejections in the prior turn and classifies the user's follow-up prompt into one of 10 reject categories (profanity, factual_challenge, terse_reject, wrong_target, tool_steering, scope_drift, verify_first, rule_setting, why_rhetorical, retry_request), then ships a `reject_feedback` log event. Pairs naturally with `openobserve-skills` for building the receiving dashboards.
+
+**Hooks:**
+
+- [`session_start_chat_id.py`](./plugins/claude-telemetry-hooks/hooks/scripts/session_start_chat_id.py) - SessionStart hook that emits a sticky per-project `chat_id`
+- [`user_prompt_reject_feedback.py`](./plugins/claude-telemetry-hooks/hooks/scripts/user_prompt_reject_feedback.py) - UserPromptSubmit hook that categorizes tool-rejection reasons
+
+</details>
+
+<details>
 <summary><strong>anthropic-office-skills</strong> - Official Anthropic PDF, Word, PowerPoint, Excel skills</summary>
 
 | Claude Code                                               | Codex CLI                                                                         | Gemini CLI                                                           |

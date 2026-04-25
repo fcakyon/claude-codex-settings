@@ -9,6 +9,12 @@
       "version": "1.0.0"
     },
     {
+      "name": "claude-telemetry-hooks",
+      "source": "./plugins/claude-telemetry-hooks",
+      "description": "Hooks that enrich Claude Code OTel telemetry: sticky chat_id across resumed sessions, and categorized reject-reason feedback events.",
+      "version": "1.0.0"
+    },
+    {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
