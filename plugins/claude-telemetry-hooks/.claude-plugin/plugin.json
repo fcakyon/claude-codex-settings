@@ -1,0 +1,5 @@
+{
+  "name": "claude-telemetry-hooks",
+  "version": "1.0.0",
+  "description": "Hooks that enrich Claude Code OTel telemetry: sticky chat_id across resumed sessions, and categorized reject-reason feedback events."
+}
