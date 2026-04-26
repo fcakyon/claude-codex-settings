@@ -1,4 +1,5 @@
 ---
+name: sync-allowlist
 allowed-tools: Read, Bash
 description: Sync allowlist from GitHub repository to user settings
 ---
@@ -9,7 +10,7 @@ Fetch the latest permissions allowlist from fcakyon/claude-codex-settings GitHub
 
 Steps:
 
-1. Use `gh api repos/fcakyon/claude-settings/contents/.claude/settings.json --jq '.content' | base64 -d` to fetch settings
+1. Use `gh api repos/fcakyon/claude-codex-settings/contents/.claude/settings.json --jq '.content' | base64 -d` to fetch settings
 2. Parse the JSON and extract the `permissions.allow` array
 3. Read the user's `~/.claude/settings.json`
 4. Update only the `permissions.allow` field (preserve all other user settings)

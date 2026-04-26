@@ -97,6 +97,22 @@ Claude Code's auto-compact summarizes long sessions to fit the context window, b
 </details>
 
 <details>
+<summary><strong>claude-telemetry-hooks</strong> - Sticky chat_id and categorized reject feedback for Claude Code OTel telemetry</summary>
+
+| Claude Code                                              | Codex CLI | Gemini CLI                                                          |
+| -------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
+| `/plugin install claude-telemetry-hooks@claude-settings` | n/a       | `gemini extensions install --path ./plugins/claude-telemetry-hooks` |
+
+Claude Code already exports OpenTelemetry logs and metrics, but two pieces are missing for usable dashboards. The OTel `session_id` is reset on every `claude` invocation, so resumed sessions look like brand-new ones. Tool rejections are recorded as a single `tool_decision` event with no reason attached, so you can see *that* the user pushed back but not *why*. This plugin adds two hooks. `session_start_chat_id.py` mints a sticky `chat_id` per project directory and emits a `session_link` log event on every SessionStart so resumed sessions group together. `user_prompt_reject_feedback.py` watches for tool rejections in the prior turn and classifies the user's follow-up prompt into one of 10 reject categories (profanity, factual_challenge, terse_reject, wrong_target, tool_steering, scope_drift, verify_first, rule_setting, why_rhetorical, retry_request), then ships a `reject_feedback` log event. Pairs naturally with `openobserve-skills` for building the receiving dashboards.
+
+**Hooks:**
+
+- [`session_start_chat_id.py`](./plugins/claude-telemetry-hooks/hooks/scripts/session_start_chat_id.py) - SessionStart hook that emits a sticky per-project `chat_id`
+- [`user_prompt_reject_feedback.py`](./plugins/claude-telemetry-hooks/hooks/scripts/user_prompt_reject_feedback.py) - UserPromptSubmit hook that categorizes tool-rejection reasons
+
+</details>
+
+<details>
 <summary><strong>anthropic-office-skills</strong> - Official Anthropic PDF, Word, PowerPoint, Excel skills</summary>
 
 | Claude Code                                               | Codex CLI                                                                         | Gemini CLI                                                           |
@@ -414,6 +430,29 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 | Skill                                                                                                           | Description                                                        | ZIP                                                                                                                                                                                  |
 | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | [`web-performance-optimization`](./plugins/web-performance-skills/skills/web-performance-optimization/SKILL.md) | Core Web Vitals, Lighthouse, render-blocking, accessibility audits | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/web-performance-optimization.zip) |
+
+</details>
+
+<details>
+<summary><strong>openobserve-skills</strong> - OpenObserve REST API skill for AI agents to search logs/metrics/traces and create dashboards via curl</summary>
+
+| Claude Code                                          | Codex CLI                                                                    | Gemini CLI                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `/plugin install openobserve-skills@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `openobserve-skills` | `gemini extensions install --path ./plugins/openobserve-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/openobserve-skills --skill '*'
+```
+
+Programmatic access to OpenObserve (Cloud or self-hosted) via the documented REST API. Covers HTTP Basic auth, the search/SQL endpoint with microsecond timestamps, stream listing/schema, dashboard CRUD, the v8 panel JSON schema, and known pitfalls — including the `customQuery` re-aggregation bug that doubles table rows when `fields.y` carries an `aggregationFunction`. Built specifically for AI agents — uses `curl` only, no SDK or CLI dependency. Reference docs are mirrored from [openobserve/openobserve-docs](https://github.com/openobserve/openobserve-docs).
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                             | Description                                                                         | ZIP                                                                                                                                                                     |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`openobserve-api`](./plugins/openobserve-skills/skills/openobserve-api/SKILL.md) | Search SQL, streams, dashboards, panel schema, ingestion endpoints, common pitfalls | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openobserve-api.zip) |
 
 </details>
 
