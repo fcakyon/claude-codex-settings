@@ -20,14 +20,47 @@ from pathlib import Path
 
 CATEGORIES = [
     ("profanity", re.compile(r"\b(fuck(?:ed|ing)?|shit|wtf|bullshit|dumb|idiot|stupid)\b|fuck'?s sake", re.I)),
-    ("factual_challenge", re.compile(r"\b(you (said|did|claimed|fucked|forgot|lied|missed)|lying|hallucin|made up|no such|doesn'?t exist)\b|wtf\?", re.I)),
+    (
+        "factual_challenge",
+        re.compile(
+            r"\b(you (said|did|claimed|fucked|forgot|lied|missed)|lying|hallucin|made up|no such|doesn'?t exist)\b|wtf\?",
+            re.I,
+        ),
+    ),
     ("terse_reject", re.compile(r"^(no|nope|stop|halt|wrong|revert|undo|nah)[!.\s]?$|^no[ ,!]", re.I)),
-    ("wrong_target", re.compile(r"\b(i meant|wrong (file|place|repo|branch|machine|directory)|not that|not the|same (file|place|location))\b|^no,? i\b", re.I)),
-    ("tool_steering", re.compile(r"\b(use|just use|stick to|prefer)\b.*\b(rg|grep|gh|tavily|mcp|slack|bun|uv|pytest|jq)\b|\binstead of\b", re.I)),
-    ("scope_drift", re.compile(r"\b(without breaking|only (do|fix|change|the)|don'?t (touch|change|modify|add|create|put|run)|overengin|bloated|no need (to|for))\b", re.I)),
-    ("verify_first", re.compile(r"\b(check (first|docs|code|source|the)|have you (checked|read|verified)|read (the )?(code|docs|source)|move with evidence)\b", re.I)),
+    (
+        "wrong_target",
+        re.compile(
+            r"\b(i meant|wrong (file|place|repo|branch|machine|directory)|not that|not the|same (file|place|location))\b|^no,? i\b",
+            re.I,
+        ),
+    ),
+    (
+        "tool_steering",
+        re.compile(
+            r"\b(use|just use|stick to|prefer)\b.*\b(rg|grep|gh|tavily|mcp|slack|bun|uv|pytest|jq)\b|\binstead of\b",
+            re.I,
+        ),
+    ),
+    (
+        "scope_drift",
+        re.compile(
+            r"\b(without breaking|only (do|fix|change|the)|don'?t (touch|change|modify|add|create|put|run)|overengin|bloated|no need (to|for))\b",
+            re.I,
+        ),
+    ),
+    (
+        "verify_first",
+        re.compile(
+            r"\b(check (first|docs|code|source|the)|have you (checked|read|verified)|read (the )?(code|docs|source)|move with evidence)\b",
+            re.I,
+        ),
+    ),
     ("rule_setting", re.compile(r"\b(never|always|from now|next time|remember to)\b", re.I)),
-    ("why_rhetorical", re.compile(r"\bwhy (the |are you|did you|don'?t? you|is (it|cladue|claude)|not|no)\b|\?$", re.I)),
+    (
+        "why_rhetorical",
+        re.compile(r"\bwhy (the |are you|did you|don'?t? you|is (it|cladue|claude)|not|no)\b|\?$", re.I),
+    ),
     ("retry_request", re.compile(r"\b(try again|again|once more|redo|retry)\b", re.I)),
 ]
 
@@ -70,12 +103,14 @@ def find_recent_reject(transcript_path: str) -> dict | None:
             continue
         msg = entry.get("message", entry)
         content = msg.get("content")
+        tur = entry.get("toolUseResult")
+        tur = tur if isinstance(tur, dict) else {}
         if isinstance(content, list):
             for block in content:
                 if isinstance(block, dict) and block.get("type") == "tool_result" and block.get("is_error"):
-                    return {"tool_name": entry.get("toolUseResult", {}).get("name", "")}
-        if entry.get("toolUseResult", {}).get("interrupted"):
-            return {"tool_name": entry.get("toolUseResult", {}).get("name", "")}
+                    return {"tool_name": tur.get("name", "")}
+        if tur.get("interrupted"):
+            return {"tool_name": tur.get("name", "")}
     return None
 
 
