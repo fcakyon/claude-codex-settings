@@ -1,0 +1,27 @@
+{
+  "description": "OTel enrichment: sticky chat_id and categorized reject feedback",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session_start_chat_id.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/user_prompt_reject_feedback.py"
+          }
+        ]
+      }
+    ]
+  }
+}
