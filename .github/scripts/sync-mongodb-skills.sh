@@ -19,10 +19,18 @@ SKILLS=(
   mongodb-search-and-ai
 )
 
+# Skills with a references/ dir upstream.
+sync_dir "$SRC/atlas-stream-processing" "plugins/mongodb-skills/skills/atlas-stream-processing" "SKILL.md" "references/"
+sync_dir "$SRC/mongodb-connection" "plugins/mongodb-skills/skills/mongodb-connection" "SKILL.md" "references/"
+sync_dir "$SRC/mongodb-query-optimizer" "plugins/mongodb-skills/skills/mongodb-query-optimizer" "SKILL.md" "references/"
+sync_dir "$SRC/mongodb-schema-design" "plugins/mongodb-skills/skills/mongodb-schema-design" "SKILL.md" "references/"
+sync_dir "$SRC/mongodb-search-and-ai" "plugins/mongodb-skills/skills/mongodb-search-and-ai" "SKILL.md" "references/"
+
+# Skills without references/ upstream.
+sync_dir "$SRC/mongodb-mcp-setup" "plugins/mongodb-skills/skills/mongodb-mcp-setup" "SKILL.md"
+sync_dir "$SRC/mongodb-natural-language-querying" "plugins/mongodb-skills/skills/mongodb-natural-language-querying" "SKILL.md"
+
 for skill in "${SKILLS[@]}"; do
-  sync_dir "$SRC/$skill" \
-    "plugins/mongodb-skills/skills/$skill" \
-    "SKILL.md" "references/"
   ensure_license "plugins/mongodb-skills/skills/$skill" Apache-2.0
   create_zip "plugins/mongodb-skills/skills/$skill"
 done
