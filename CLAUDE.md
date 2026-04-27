@@ -305,6 +305,7 @@ This repo contains config files (JSON settings, allowlist rules, hooks) rather t
 - Avoid internal jargon: say "allowlist" not "permissions allowlist entries", say "settings files" not "settings.json/settings-minimax.json/settings-zai.json"
 - When listing affected files, group by purpose: "all 3 settings files" instead of naming each one
 - Keep PR bodies short: 2-3 bullet points explaining the user-visible behavior change
+- PR titles and bodies must read standalone months later: never reference session shorthand ("PR-cf", "the last orphan content PR"), only real PR numbers (`#176`)
 
 ## Maintenance Scripts
 
