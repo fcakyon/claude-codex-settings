@@ -1,5 +1,6 @@
 {
   "name": "supabase-skills",
   "version": "1.0.0",
-  "description": "Supabase skills for Postgres best practices, JavaScript SDK (auth, database, storage, realtime), and CLI (migrations, edge functions, local dev)."
+  "description": "Supabase skills for Postgres best practices, JavaScript SDK (auth, database, storage, realtime), and CLI (migrations, edge functions, local dev).",
+  "license": "MIT"
 }
