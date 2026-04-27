@@ -8,7 +8,7 @@ clone_or_update https://github.com/Dokploy/website dokploy-website
 clone_or_update https://github.com/Dokploy/cli dokploy-cli
 
 WEBSITE_SRC="$HOME/dev/dokploy-website/apps/docs/content/docs"
-CLI_SRC="$HOME/dev/dokploy-cli/src/commands"
+CLI_SRC="$HOME/dev/dokploy-cli/src"
 DST="plugins/dokploy-skills/skills/dokploy-deploy"
 REF_DIR="$REPO_ROOT/$DST/references"
 
@@ -31,54 +31,59 @@ cp -R "$WEBSITE_SRC/core/databases/." "$REF_DIR/databases/"
 cp -R "$WEBSITE_SRC/core/domains/." "$REF_DIR/domains/"
 cp -R "$WEBSITE_SRC/core/remote-servers/." "$REF_DIR/remote-servers/"
 
-CLI_SRC="$CLI_SRC" REF_DIR="$REF_DIR" python3 - <<'PY'
+CLI_SRC="$CLI_SRC" REF_DIR="$REF_DIR" python3 - << 'PY'
+from collections import defaultdict
 from pathlib import Path
 import os
 import re
 
 cli_src = Path(os.environ["CLI_SRC"])
 out_path = Path(os.environ["REF_DIR"]) / "cli-commands.md"
+groups: dict[str, list[tuple[str, str]]] = defaultdict(list)
 
-group_order = ["Authentication", "Project", "Application", "Environment", "Databases"]
-groups: dict[str, list[tuple[str, str]]] = {name: [] for name in group_order}
-pattern = re.compile(r"static(?:\s+override)?\s+description\s*=\s*([\"'])(.*?)\1", re.S)
+# src/generated/commands.ts: openapi-generated subcommands chained off g_<id> vars.
+generated = (cli_src / "generated/commands.ts").read_text()
+group_by_var = {
+    m.group(1): m.group(2)
+    for m in re.finditer(
+        r"const (g_\w+) = program\.command\(['\"]([^'\"]+)['\"]\)\.description",
+        generated,
+    )
+}
+if not group_by_var:
+    raise SystemExit("No groups parsed from generated/commands.ts; upstream layout may have changed.")
 
-for path in sorted(cli_src.rglob("*.ts")):
-    rel = path.relative_to(cli_src)
-    parts = rel.with_suffix("").parts
-
-    if rel.name in {"authenticate.ts", "verify.ts"}:
-        group = "Authentication"
-    elif parts[0] == "project":
-        group = "Project"
-    elif parts[0] == "app":
-        group = "Application"
-    elif parts[0] in {"env", "environment"}:
-        group = "Environment"
-    elif parts[0] == "database" and len(parts) == 3:
-        group = "Databases"
-    else:
+for m in re.finditer(
+    r"\b(g_\w+)\s*\n\s*\.command\(['\"]([^'\"]+)['\"]\)\s*\n\s*\.description\(['\"]([^'\"]+)['\"]\)",
+    generated,
+):
+    group_name = group_by_var.get(m.group(1))
+    if not group_name:
         continue
+    groups[group_name].append((f"dokploy {group_name} {m.group(2)}", m.group(3)))
 
-    match = pattern.search(path.read_text())
-    if not match:
-        raise SystemExit(f"Missing description in {path}")
+# src/commands/auth.ts: hand-written top-level command using program.command(...).
+auth = (cli_src / "commands/auth.ts").read_text()
+for m in re.finditer(
+    r"\bprogram\s*\n\s*\.command\(['\"]([^'\"]+)['\"]\)\s*\n\s*\.description\(['\"]([^'\"]+)['\"]\)",
+    auth,
+):
+    groups[m.group(1)].append((f"dokploy {m.group(1)}", m.group(2)))
 
-    command = "dokploy " + " ".join(parts)
-    description = " ".join(match.group(2).split())
-    groups[group].append((command, description))
+if "auth" not in groups:
+    raise SystemExit("Auth command not parsed from commands/auth.ts; upstream layout may have changed.")
 
 with out_path.open("w") as handle:
     handle.write("# Dokploy CLI Commands\n\n")
-    handle.write("Generated from `Dokploy/cli` command descriptions.\n\n")
-    for group in group_order:
+    handle.write("Generated from `Dokploy/cli` source files.\n\n")
+    for group in sorted(groups):
         handle.write(f"## {group}\n\n")
-        for command, description in sorted(groups[group], key=lambda item: item[0]):
+        for command, description in sorted(groups[group]):
             handle.write(f"- `{command}` - {description}\n")
         handle.write("\n")
 PY
 
-cat > "$REPO_ROOT/$DST/SKILL.md" <<'SKILL_EOF'
+cat > "$REPO_ROOT/$DST/SKILL.md" << 'SKILL_EOF'
 ---
 name: dokploy-deploy
 description: This skill should be used when user asks to "deploy with Dokploy", "use Dokploy Cloud", "manage self-hosted Dokploy", "deploy Docker Compose on Dokploy", "manage Dokploy databases", "configure Dokploy domains", or "look up Dokploy CLI commands".
@@ -168,12 +173,7 @@ Need remote servers?
 
 ```text
 Need CLI lookup?
-├─ Command index → references/cli-commands.md
-├─ Auth commands → Authentication section
-├─ Project commands → Project section
-├─ App commands → Application section
-├─ Env commands → Environment section
-└─ Database commands → Databases section
+└─ Full command index → references/cli-commands.md
 ```
 
 ## Working Notes
