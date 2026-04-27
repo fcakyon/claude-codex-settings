@@ -54,6 +54,7 @@ Need storage?
 ├─ Key-value (config, sessions, cache) → kv/
 ├─ Relational SQL → d1/ (SQLite) or hyperdrive/ (existing Postgres/MySQL)
 ├─ Object/file storage (S3-compatible) → r2/
+├─ Versioned file trees (repos, build outputs, checkpoints) → artifacts/
 ├─ Message queue (async processing) → queues/
 ├─ Vector embeddings (AI/semantic search) → vectorize/
 ├─ Strongly-consistent per-entity state → durable-objects/ (DO storage)
@@ -148,6 +149,7 @@ Need IaC? → pulumi/ (Pulumi), terraform/ (Terraform), or api/ (REST API)
 | KV | `references/kv/` |
 | D1 | `references/d1/` |
 | R2 | `references/r2/` |
+| Artifacts | `references/artifacts/` |
 | Queues | `references/queues/` |
 | Hyperdrive | `references/hyperdrive/` |
 | DO Storage | `references/do-storage/` |
