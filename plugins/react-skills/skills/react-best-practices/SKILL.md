@@ -9,7 +9,7 @@ metadata:
 
 # Vercel React Best Practices
 
-Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Contains 68 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Contains 70 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -47,6 +47,7 @@ Reference these guidelines when:
 ### 2. Bundle Size Optimization (CRITICAL)
 
 - `bundle-barrel-imports` - Import directly, avoid barrel files
+- `bundle-analyzable-paths` - Prefer statically analyzable import and file-system paths to avoid broad bundles and traces
 - `bundle-dynamic-imports` - Use next/dynamic for heavy components
 - `bundle-defer-third-party` - Load analytics/logging after hydration
 - `bundle-conditional` - Load modules only when feature is activated
@@ -123,6 +124,7 @@ Reference these guidelines when:
 
 ### 8. Advanced Patterns (LOW)
 
+- `advanced-effect-event-deps` - Don't put `useEffectEvent` results in effect deps
 - `advanced-event-handler-refs` - Store event handlers in refs
 - `advanced-init-once` - Initialize app once per app load
 - `advanced-use-latest` - useLatest for stable callback refs
