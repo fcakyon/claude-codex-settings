@@ -3,18 +3,85 @@ title: Dokploy Cloud
 description: "Deploy your apps to multiple servers remotely without worrying about the underlying infrastructure."
 ---
 
+import { Callout } from 'fumadocs-ui/components/callout';
 
-Dokploy Cloud allows you to deploy your apps to a cloud provider of your choice. This means that you can deploy your apps to any cloud provider, such as AWS, GCP, Azure, or DigitalOcean, without having to worry about the underlying infrastructure.
+Dokploy Cloud is the managed version of Dokploy. Instead of installing and maintaining Dokploy on your own server, the **control plane** (UI, database, and management layer) is hosted by us — you just connect your own servers and deploy.
 
+## How it works
 
-By default when you install Dokploy in a Self Hosted version, if you deploy all your applications by default they will be deployed on the same server where Dokploy UI is installed. This means that you will need to build and run your applications where Dokploy 
-UI is installed, which can be a challenge if you don't have the resources to do so, also self hosted support for remote instances.
+With **Self-Hosted** Dokploy, everything runs on a single server: the UI, the database (PostgreSQL), Redis, Traefik, and your applications — all on the same machine. This works well for small setups, but as you scale, your management layer competes for resources with your actual workloads.
 
+**Dokploy Cloud** separates these concerns:
 
-Dokploy cloud starts from $4.50 per month per server, the next is 3.50$, and you can deploy as many applications you want to your remote server connected to a dokploy cloud, multi server feature is recommended for HA and scalability projects.
+```
+┌──────────────────────────────┐       ┌─────────────────────────┐
+│       Dokploy Cloud          │       │    Your Server(s)       │
+│    (managed by Dokploy)      │       │  (any cloud provider)   │
+│                              │       │                         │
+│  ┌────────────┐              │       │  ┌───────────────────┐  │
+│  │  Dashboard  │─── deploy ──┼──────►│  │  Your apps        │  │
+│  │  (UI)       │             │       │  │  Your databases    │  │
+│  ├────────────┤              │       │  │  Your compose      │  │
+│  │ PostgreSQL  │              │       │  │  Traefik (proxy)   │  │
+│  ├────────────┤              │       │  └───────────────────┘  │
+│  │   Redis     │              │       │                         │
+│  └────────────┘              │       │  ┌───────────────────┐  │
+│                              │       │  │  Monitoring agent  │  │
+│  ┌────────────┐              │◄──────┤  │  (metrics → cloud) │  │
+│  │ Monitoring  │              │       │  └───────────────────┘  │
+│  └────────────┘              │       │                         │
+└──────────────────────────────┘       └─────────────────────────┘
+```
 
-You can start by registering on the [Dokploy Cloud](https://app.dokploy.com) website and follow the steps to deploy your apps, see the [Pricing](https://dokploy.com/pricing) page for more information.
+- **Control plane** (Cloud): Dashboard, user management, deployment orchestration, monitoring dashboard, and notifications.
+- **Data plane** (Your servers): Your actual applications, databases, Traefik, and a lightweight monitoring agent.
 
+Your code and data **never leave your servers**. Dokploy Cloud only manages the orchestration.
 
+## Key benefits
 
+| Benefit | Description |
+|---------|-------------|
+| **No management overhead** | No need to maintain the Dokploy instance itself — updates, backups, and uptime are handled for you |
+| **100% server resources for your apps** | The UI and management database don't compete with your workloads |
+| **Multi-server from day one** | Connect as many servers as you need from any provider (AWS, GCP, Azure, DigitalOcean, Hetzner, etc.) |
+| **Automatic updates** | Always on the latest version of Dokploy without manual upgrades |
+| **Support** | Direct support via email/chat (Startup) or priority SLA (Enterprise) |
 
+## Getting started
+
+1. Register on [Dokploy Cloud](https://app.dokploy.com).
+2. Add a server by providing the SSH connection details (IP, port, SSH key).
+3. Dokploy Cloud will set up the server automatically (Docker, Traefik, monitoring agent).
+4. Start deploying your applications, databases, and compose stacks.
+
+<Callout type="info">
+You can connect servers from **any provider** — they just need to be reachable via SSH. You can even mix providers (e.g., Hetzner for production, DigitalOcean for staging).
+</Callout>
+
+## Pricing
+
+Dokploy Cloud offers several plans:
+
+| Plan | Price | Servers included | Additional servers |
+|------|-------|------------------|--------------------|
+| **Hobby** | $4.50/month per server | 1 | $4.50/month each |
+| **Startup** | $15/month | 3 | $4.50/month each |
+| **Enterprise** | Custom | Custom | Contact sales |
+| **Agency** | Custom | Custom | Contact partner team |
+
+All plans include **unlimited deployments, databases, and applications** per server. Annual billing saves 20%.
+
+See the [Pricing](https://dokploy.com/pricing) page for full plan details and feature limits.
+
+## When to use Cloud vs Self-Hosted
+
+| Use Cloud when... | Use Self-Hosted when... |
+|-------------------|------------------------|
+| You don't want to maintain the Dokploy instance | You want full control over everything |
+| You need multi-server from the start | You have a single server and want to keep it simple |
+| You want built-in monitoring without extra config | You already have your own monitoring stack |
+| You prefer automatic updates | You want to control when updates happen |
+| You need HA for the management layer | Budget is the top priority |
+
+For a full feature comparison, see [Cloud vs Self-Hosted Differences](/docs/core/differences).
