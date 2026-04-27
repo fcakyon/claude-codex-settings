@@ -1,5 +1,6 @@
 {
   "name": "tavily-tools",
   "version": "2.0.2",
-  "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection."
+  "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
+  "license": "Apache-2.0"
 }

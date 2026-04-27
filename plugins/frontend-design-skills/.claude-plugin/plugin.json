@@ -1,5 +1,6 @@
 {
   "name": "frontend-design-skills",
   "version": "1.0.0",
-  "description": "Frontend design skills from Anthropic and OpenAI for building visually strong landing pages, websites, and apps."
+  "description": "Frontend design skills from Anthropic and OpenAI for building visually strong landing pages, websites, and apps.",
+  "license": "Apache-2.0"
 }

@@ -1,5 +1,6 @@
 {
   "name": "openai-office-skills",
   "version": "1.0.0",
-  "description": "Official OpenAI skills for PDF, Word, PowerPoint, and Excel document processing."
+  "description": "Official OpenAI skills for PDF, Word, PowerPoint, and Excel document processing.",
+  "license": "MIT"
 }

@@ -1,5 +1,6 @@
 {
   "name": "gcloud-tools",
   "version": "2.0.2",
-  "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill."
+  "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
+  "license": "Apache-2.0"
 }

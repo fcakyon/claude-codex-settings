@@ -6,151 +6,176 @@
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions, root causes, file paths, metrics, IDs, and subagent findings.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Hooks that enrich Claude Code OTel telemetry: sticky chat_id across resumed sessions, and categorized reject-reason feedback events.",
-      "version": "1.0.1"
+      "version": "1.0.1",
+      "license": "Apache-2.0"
     },
     {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel document processing.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "openai-office-skills",
       "source": "./plugins/openai-office-skills",
       "description": "Official OpenAI skills for PDF, Word, PowerPoint, and Excel document processing.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "python-skills",
       "source": "./plugins/python-skills",
       "description": "Python best practices grounded in PEP 8, PEP 20 (Zen of Python), Google Python Style Guide, and Effective Python by Brett Slatkin.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "react-skills",
       "source": "./plugins/react-skills",
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Frontend design skills from Anthropic and OpenAI for building visually strong landing pages, websites, and apps.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
       "description": "Official MongoDB agent skills for schema design, query tuning, search, and connections.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
       "description": "Supabase skills for Postgres best practices, JavaScript SDK (auth, database, storage, realtime), and CLI (migrations, edge functions, local dev).",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe payment platform skills for checkout, billing, Connect, and API upgrades.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "polar-skills",
       "source": "./plugins/polar-skills",
       "description": "Official Polar payment processor skills for billing, subscriptions, and local development.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "livekit-skills",
       "source": "./plugins/livekit-skills",
       "description": "LiveKit Agents SDK skills for building voice AI agents with CLI-based workflow, supporting both Cloud and self-hosted deployments.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
       "description": "Official Cloudflare developer platform skill for Workers, Durable Objects, R2, D1, KV, AI, and 50+ services.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "openobserve-skills",
       "source": "./plugins/openobserve-skills",
       "description": "OpenObserve REST API skill for AI agents. Search logs/metrics/traces, manage streams, and create/edit/inspect dashboards via curl.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, volumes, and storage.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "dokploy-skills",
       "source": "./plugins/dokploy-skills",
       "description": "Dokploy deployment skill for Dokploy Cloud, self-hosted dashboard, Docker Compose, databases, domains, remote servers, and Dokploy CLI workflows.",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "license": "MIT"
     },
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
-      "version": "2.4.0"
+      "version": "2.4.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
-      "version": "2.1.1"
+      "version": "2.1.1",
+      "license": "Apache-2.0"
     },
     {
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
       "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
-      "version": "2.0.2"
+      "version": "2.0.2",
+      "license": "Apache-2.0"
     },
     {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
-      "version": "2.1.0"
+      "version": "2.1.0",
+      "license": "Apache-2.0"
     },
     {
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
       "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
-      "version": "2.0.2"
+      "version": "2.0.2",
+      "license": "Apache-2.0"
     },
     {
       "name": "paper-search-tools",
       "source": "./plugins/paper-search-tools",
       "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
-      "version": "2.0.2"
+      "version": "2.0.2",
+      "license": "Apache-2.0"
     },
     {
       "name": "tavily-tools",
       "source": "./plugins/tavily-tools",
       "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
-      "version": "2.0.2"
+      "version": "2.0.2",
+      "license": "Apache-2.0"
     }
   ]
 }

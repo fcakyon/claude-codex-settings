@@ -1,5 +1,6 @@
 {
   "name": "web-performance-skills",
   "version": "1.0.0",
-  "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility."
+  "description": "Web performance auditing skill for Core Web Vitals, Lighthouse scores, render-blocking resources, and accessibility.",
+  "license": "Apache-2.0"
 }

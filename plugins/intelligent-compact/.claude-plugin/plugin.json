@@ -1,5 +1,6 @@
 {
   "name": "intelligent-compact",
   "version": "1.0.0",
-  "description": "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions, root causes, file paths, metrics, IDs, and subagent findings."
+  "description": "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions, root causes, file paths, metrics, IDs, and subagent findings.",
+  "license": "Apache-2.0"
 }
