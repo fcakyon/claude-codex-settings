@@ -87,12 +87,7 @@ Need remote servers?
 
 ```text
 Need CLI lookup?
-├─ Command index → references/cli-commands.md
-├─ Auth commands → Authentication section
-├─ Project commands → Project section
-├─ App commands → Application section
-├─ Env commands → Environment section
-└─ Database commands → Databases section
+└─ Full command index → references/cli-commands.md
 ```
 
 ## Working Notes
