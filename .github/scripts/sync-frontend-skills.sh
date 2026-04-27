@@ -6,20 +6,20 @@ set -euo pipefail
 source "$(dirname "$0")/_helpers.sh"
 
 # --- OpenAI frontend skill ---
-clone_or_update https://github.com/openai/skills openai-skills
+# No ensure_license: openai/plugins repo has no LICENSE file.
+clone_or_update https://github.com/openai/plugins openai-plugins
 
-sync_dir "$HOME/dev/openai-skills/skills/.curated/frontend-skill" \
+sync_dir "$HOME/dev/openai-plugins/plugins/build-web-apps/skills/frontend-app-builder" \
   "plugins/frontend-design-skills/skills/openai-frontend-design" \
-  "SKILL.md" "LICENSE.txt"
+  "SKILL.md" "agents/" "references/"
 
-# Patch frontmatter name to match directory name
+# Patch frontmatter name to match local directory name (upstream uses frontend-app-builder)
 python3 -c "
 p = '$REPO_ROOT/plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md'
 t = open(p).read()
-open(p, 'w').write(t.replace('name: frontend-skill', 'name: openai-frontend-design'))
+open(p, 'w').write(t.replace('name: frontend-app-builder', 'name: openai-frontend-design'))
 "
 
-ensure_license "plugins/frontend-design-skills/skills/openai-frontend-design" "Apache-2.0"
 create_zip "plugins/frontend-design-skills/skills/openai-frontend-design"
 
 # --- Anthropic frontend skill ---
