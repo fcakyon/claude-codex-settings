@@ -20,7 +20,7 @@ Then classify every navigation and produce a navigation map:
 |-----------------|----------------------|--------------|-----------------------|
 | /               | /detail/[id]         | forward      | directional slide     |
 | /detail/[id]    | /                    | back         | directional slide     |
-| /detail/[id]    | /detail/[other]      | lateral      | key+share crossfade   |
+| /detail/[id]    | /detail/[other]      | sequential   | directional slide (ordered prev/next) or key+share crossfade |
 | /tab/[a]        | /tab/[b]             | lateral      | key+share crossfade   |
 | (Suspense)      | (content loads)      | —            | slide-up reveal       |
 ```
@@ -41,16 +41,7 @@ For every persistent element identified in Step 1, add a `viewTransitionName` st
 <header style={{ viewTransitionName: "site-header" }}>...</header>
 ```
 
-Then add CSS to prevent the element from animating during page transitions:
-
-```css
-::view-transition-group(site-header) {
-  animation: none;
-  z-index: 100;
-}
-```
-
-If the element uses `backdrop-blur` or `backdrop-filter`, use the backdrop-blur workaround from `css-recipes.md` instead (hide old snapshot, disable animation on new).
+Then add the persistent element isolation CSS from `css-recipes.md` (prevents the element from animating during page transitions). If the element uses `backdrop-blur` or `backdrop-filter`, use the backdrop-blur workaround from `css-recipes.md` instead.
 
 If a Suspense fallback mirrors a persistent control (e.g., a skeleton search input), give both the real control and the skeleton the same `viewTransitionName` so they morph in place.
 
@@ -87,11 +78,29 @@ Then wrap each **page component** (not layout) in a type-keyed `<ViewTransition>
 
 The `nav-forward` and `nav-back` CSS classes from `css-recipes.md` produce horizontal slides. For simpler apps where directional motion isn't needed, a bare `<ViewTransition default="none">` wrapper with `enter="fade-in"` / `exit="fade-out"` works too.
 
+Extract this into a reusable component so every page doesn't repeat the verbose type map:
+
+```jsx
+export function DirectionalTransition({ children }: { children: React.ReactNode }) {
+  return (
+    <ViewTransition
+      enter={{ 'nav-forward': 'nav-forward', 'nav-back': 'nav-back', default: 'none' }}
+      exit={{ 'nav-forward': 'nav-forward', 'nav-back': 'nav-back', default: 'none' }}
+      default="none"
+    >
+      {children}
+    </ViewTransition>
+  );
+}
+```
+
+This also becomes the single place to adjust if you add new transition types later.
+
 **Rules:**
 - Always pair `enter` with `exit` — without an exit animation, the old page disappears instantly while the new one animates in.
 - Always include `default: "none"` in type map objects and `default="none"` on the component — otherwise it fires on every transition.
 - Place the directional `<ViewTransition>` in each page component, not in a layout. Layouts persist across navigations and never trigger enter/exit.
-- Only use directional slides for hierarchical navigation. Lateral/sibling navigation (tab-to-tab) should use a bare `<ViewTransition>` (cross-fade) or `default="none"`.
+- Only use directional slides for hierarchical navigation or ordered sequences (prev/next). Lateral/sibling navigation (tab-to-tab) should use a bare `<ViewTransition>` (cross-fade) or `default="none"`.
 
 ## Step 5: Add Suspense Reveals
 
@@ -135,24 +144,11 @@ For every shared visual element identified in Step 1, add matching named `<ViewT
 
 The `share="morph"` class uses the morph recipe from `css-recipes.md` (controlled duration + motion blur). For a simpler cross-fade, use `share="auto"` (browser default).
 
-For list items that should animate individually on enter/exit, add a per-item `<ViewTransition key={id}>` wrapper:
-
-```jsx
-{items.map(item => (
-  <ViewTransition key={item.id}>
-    <Link href={`/detail/${item.id}`}>
-      <ViewTransition name={`item-${item.id}`} share="morph" default="none">
-        <Image src={item.image} ... />
-      </ViewTransition>
-    </Link>
-  </ViewTransition>
-))}
-```
+When list items contain shared elements, compose both patterns with two nested `<ViewTransition>` layers — see "Composing Shared Elements with List Identity" in `SKILL.md`.
 
 **Rules:**
 - Names must be globally unique — use prefixes like `photo-${id}`.
 - Add `default="none"` on list-side shared elements to prevent per-item cross-fades on filter/search updates.
-- Never use a fade-out exit on pages with shared element morphs — the page dissolving conflicts with the morph, causing a flash. Use a directional slide exit instead.
 
 ## Step 7: Verify Each Navigation Path
 
@@ -178,6 +174,8 @@ If any path produces no animation or competing animations, revisit the relevant 
 - **Type maps on Suspense reveals** — Suspense resolves fire as separate transitions with no type. Type-keyed props won't match — use simple string props instead.
 - **Raw `viewTransitionName` CSS to trigger animations** — React only calls `document.startViewTransition` when `<ViewTransition>` components are in the tree. A bare `viewTransitionName` style is for isolating elements from a parent's snapshot, not for triggering animations.
 - **`update` trigger for same-route navigations** — nested VTs inside the content steal the mutation from the parent, so `update` never fires on the outer VT. Use `key` + `name` + `share` instead.
+- **Named VT in a reusable component** — if a component with a named VT is rendered in both a modal/popover *and* a page, both mount simultaneously and break the morph. Make the name conditional or move it to the specific consumer.
+- **`router.back()` for back navigation** — `router.back()` triggers synchronous `popstate`, incompatible with view transitions. Use `router.push()` with an explicit URL.
 
 ---
 

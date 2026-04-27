@@ -136,14 +136,6 @@ Usage:
 }
 ```
 
-Triggering programmatically:
-```jsx
-startTransition(() => {
-  addTransitionType('nav-forward');
-  router.push('/next-page');
-});
-```
-
 ---
 
 ## Shared Element Morph
@@ -163,6 +155,28 @@ startTransition(() => {
 ```
 
 Usage: `<ViewTransition name={`product-${id}`} share="morph" />`
+
+**Note:** Shared element transitions take raster snapshots. For text with significant size differences (e.g., `<h3>` → `<h1>`), the old snapshot gets scaled up, producing a visible ghost artifact. Use `text-morph` for text shared elements.
+
+## Text Morph
+
+Avoids raster scaling artifacts on text by hiding the old snapshot and showing the new text at full resolution:
+
+```css
+::view-transition-group(.text-morph) {
+  animation-duration: var(--duration-move);
+}
+::view-transition-old(.text-morph) {
+  display: none;
+}
+::view-transition-new(.text-morph) {
+  animation: none;
+  object-fit: none;
+  object-position: left top;
+}
+```
+
+Usage: `<ViewTransition name={`title-${id}`} share="text-morph" />`
 
 ---
 
