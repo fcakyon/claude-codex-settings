@@ -1,5 +1,6 @@
 {
   "name": "agent-browser",
   "version": "1.0.0",
-  "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps."
+  "description": "Browser automation CLI for AI agents. Navigate pages, fill forms, click buttons, take screenshots, and test web apps.",
+  "license": "Apache-2.0"
 }
