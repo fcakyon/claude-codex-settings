@@ -7,9 +7,14 @@ source "$(dirname "$0")/_helpers.sh"
 
 clone_or_update https://github.com/vercel-labs/agent-browser agent-browser
 
-SRC="$HOME/dev/agent-browser/skills"
+# Upstream renamed agent-browser to core and moved both skills under skill-data/.
+SRC="$HOME/dev/agent-browser/skill-data"
 
-sync_dir "$SRC/agent-browser" "plugins/agent-browser/skills/agent-browser" "SKILL.md" "references/" "templates/"
+sync_dir "$SRC/core" "plugins/agent-browser/skills/agent-browser" "SKILL.md" "references/" "templates/"
+sed -i '' \
+  -e 's/^name: core$/name: agent-browser/' \
+  -e 's/^description: Core agent-browser /description: Agent-browser /' \
+  "plugins/agent-browser/skills/agent-browser/SKILL.md"
 ensure_license "plugins/agent-browser/skills/agent-browser" Apache-2.0
 create_zip "plugins/agent-browser/skills/agent-browser"
 
