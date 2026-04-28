@@ -5,14 +5,14 @@
     {
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
-      "description": "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions, root causes, file paths, metrics, IDs, and subagent findings.",
+      "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
       "version": "1.0.0",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
-      "description": "Hooks that enrich Claude Code OTel telemetry: sticky chat_id across resumed sessions, and categorized reject-reason feedback events.",
+      "description": "Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard.",
       "version": "1.0.1",
       "license": "Apache-2.0"
     },
