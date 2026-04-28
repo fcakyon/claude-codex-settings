@@ -82,13 +82,20 @@ ln -sfn CLAUDE.md GEMINI.md
 ## Plugins
 
 <details>
-<summary><strong>intelligent-compact</strong> - PreCompact hook that preserves high-signal context in auto-compact summaries</summary>
+<summary><strong>intelligent-compact</strong> - Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions</summary>
 
 | Claude Code                                           | Codex CLI                                                                     | Gemini CLI                                                       |
 | ----------------------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | `/plugin install intelligent-compact@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `intelligent-compact` | `gemini extensions install --path ./plugins/intelligent-compact` |
 
-Claude Code's auto-compact summarizes long sessions to fit the context window, but the default summary routinely drops the highest-signal facts: file paths under investigation, confirmed root causes, remaining tasks, unanswered questions, metrics and IDs, and findings from expensive subagent runs. This plugin ships a single PreCompact hook that injects A-F fidelity requirements on top of the 9-section default compact prompt, so those categories survive every `/compact` (manual) and every auto compaction. Active on Claude Code only; Codex, Cursor, and Gemini CLI do not yet expose a PreCompact hook.
+When Claude Code auto-summarizes a long session, the default summary routinely drops the highest-signal facts. This plugin tells the summarizer to keep them:
+
+- **File paths under investigation** so the next turn doesn't re-discover where you were
+- **Confirmed root causes** so you don't re-debug what's already solved
+- **Open questions, metrics, and IDs** that prose summaries usually round away
+- **Findings from expensive subagent runs** that took minutes to gather
+
+Runs on every `/compact` (manual) and every auto compaction. Claude Code only; Codex, Cursor, and Gemini CLI don't yet expose a comparable summary hook.
 
 **Hooks:**
 
@@ -97,13 +104,18 @@ Claude Code's auto-compact summarizes long sessions to fit the context window, b
 </details>
 
 <details>
-<summary><strong>claude-telemetry-hooks</strong> - Sticky chat_id and categorized reject feedback for Claude Code OTel telemetry</summary>
+<summary><strong>claude-telemetry-hooks</strong> - Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard</summary>
 
 | Claude Code                                              | Codex CLI | Gemini CLI                                                          |
 | -------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
 | `/plugin install claude-telemetry-hooks@claude-settings` | n/a       | `gemini extensions install --path ./plugins/claude-telemetry-hooks` |
 
-Claude Code already exports OpenTelemetry logs and metrics, but two pieces are missing for usable dashboards. The OTel `session_id` is reset on every `claude` invocation, so resumed sessions look like brand-new ones. Tool rejections are recorded as a single `tool_decision` event with no reason attached, so you can see *that* the user pushed back but not *why*. This plugin adds two hooks. `session_start_chat_id.py` mints a sticky `chat_id` per project directory and emits a `session_link` log event on every SessionStart so resumed sessions group together. `user_prompt_reject_feedback.py` watches for tool rejections in the prior turn and classifies the user's follow-up prompt into one of 10 reject categories (profanity, factual_challenge, terse_reject, wrong_target, tool_steering, scope_drift, verify_first, rule_setting, why_rhetorical, retry_request), then ships a `reject_feedback` log event. Pairs naturally with `openobserve-skills` for building the receiving dashboards.
+Adds the two missing pieces Claude Code's telemetry needs to power a usage dashboard:
+
+- **Sticky session ID per project**: resumed conversations stay one session, not dozens
+- **Categorized rejection reasons** (profanity, wrong target, scope drift, retry, and more): chart why Claude pushes back
+
+Per-device data is already in Claude Code's built-in OpenTelemetry stream. Pairs naturally with `openobserve-skills` for the dashboard side.
 
 **Hooks:**
 
@@ -446,7 +458,13 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/openobserve-skills --skill '*'
 ```
 
-Programmatic access to OpenObserve (Cloud or self-hosted) via the documented REST API. Covers HTTP Basic auth, the search/SQL endpoint with microsecond timestamps, stream listing/schema, dashboard CRUD, the v8 panel JSON schema, and known pitfalls — including the `customQuery` re-aggregation bug that doubles table rows when `fields.y` carries an `aggregationFunction`. Built specifically for AI agents — uses `curl` only, no SDK or CLI dependency. Reference docs are mirrored from [openobserve/openobserve-docs](https://github.com/openobserve/openobserve-docs).
+Programmatic access to OpenObserve (Cloud or self-hosted) via the documented REST API. Covers:
+
+- **Auth and search**: HTTP Basic auth, the search/SQL endpoint with microsecond timestamps
+- **Streams and dashboards**: stream listing/schema, dashboard CRUD, the v8 panel JSON schema
+- **Known pitfalls**: the `customQuery` re-aggregation bug that doubles table rows when `fields.y` carries an `aggregationFunction`
+
+Built for AI agents: uses `curl` only, no SDK or CLI dependency. Pairs naturally with `claude-telemetry-hooks` for Claude Code usage dashboards. Reference docs are mirrored from [openobserve/openobserve-docs](https://github.com/openobserve/openobserve-docs).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
