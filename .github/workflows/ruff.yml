@@ -1,0 +1,27 @@
+name: Ruff
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "plugins/**/hooks/scripts/*.py"
+      - ".github/scripts/*.py"
+      - "pyproject.toml"
+      - ".github/workflows/ruff.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "plugins/**/hooks/scripts/*.py"
+      - ".github/scripts/*.py"
+      - "pyproject.toml"
+      - ".github/workflows/ruff.yml"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v4
+        with:
+          src: "plugins .github/scripts"
+          args: "check"
