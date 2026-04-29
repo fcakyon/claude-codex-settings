@@ -284,6 +284,22 @@
       "tags": ["research", "academic", "latex"]
     },
     {
+      "name": "mmx-cli",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/MiniMax-AI/cli.git",
+        "path": "skill"
+      },
+      "description": "MiniMax AI CLI skill for generating text, images, video, speech, and music, plus web search via the MiniMax platform.",
+      "version": "1.0.0",
+      "homepage": "https://github.com/MiniMax-AI/cli",
+      "repository": "https://github.com/MiniMax-AI/cli",
+      "license": "MIT",
+      "keywords": ["minimax", "ai", "image", "video", "speech", "music", "text-generation", "web-search"],
+      "category": "ai",
+      "tags": ["ai", "generation"]
+    },
+    {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
