@@ -260,14 +260,16 @@ Gemini CLI:  gemini extensions install --path ./plugins/<name>
    ```
 3. Copy `.claude-plugin/plugin.json` to `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`
 4. Create `gemini-extension.json` at plugin root with `{name, version, description}` only
-5. Add entry to `.claude-plugin/marketplace.json` (Claude Code)
-6. Add entry to `.agents/plugins/marketplace.json` (Codex CLI)
-7. Add entry to `.cursor-plugin/marketplace.json` (Cursor)
+5. Add entry to `.claude-plugin/marketplace.json` (Claude Code). See "Claude Code marketplace entry" sample above and "Marketplace entry fields" rules below.
+6. Add entry to `.agents/plugins/marketplace.json` (Codex CLI). See "Codex CLI marketplace entry" sample above.
+7. Add entry to `.cursor-plugin/marketplace.json` (Cursor). See "Cursor marketplace entry" sample above.
 8. Run `/claude-tools:update-readme` to regenerate plugin sections and ZIP links in README.md
 9. Add sync script command to `CLAUDE.md` syncing vendor skills section (if synced plugin)
-10. Update `README.md` TODO section if the plugin was listed there
+10. Remove the plugin's row from `README.md` TODO section if it was listed there
 
 ## Marketplace Plugin Conventions
+
+**Marketplace files are sinks, never sources.** Each plugin's `.claude-plugin/plugin.json` is canonical for `name`, `version`, `license`. The three marketplace files (see "Root Marketplace Files" above) are written outward by `sync-versions.sh`. To bump or relicense, edit the source-of-truth manifest and run the sync. Never hand-edit a marketplace entry for those fields.
 
 ### Source Types in Claude Code `marketplace.json`
 
@@ -285,6 +287,14 @@ Two fields: `name` and `description`. Description should start with "This skill 
 
 Rich metadata (`keywords`, `category`, `tags`) lives in `marketplace.json`, not in individual `plugin.json` files. Never use vendor names in tags or keywords.
 
+### Description handling
+
+The `description` field is intentionally NOT auto-synced. Each platform's audience differs (marketplace search, IDE panels, extension catalogs), so descriptions are free to diverge. Today they all match per-plugin by default. When rewriting, update all 6 places by hand: 4 plugin manifests (see "Plugin Manifests" table above) plus 2 marketplace entries.
+
+### Upstream license handling
+
+When a synced plugin's upstream repo declares no LICENSE file (verified via `gh api repos/<owner>/<repo>/license` returning 404), do not fabricate one. Drop the `ensure_license` call from the sync script and omit the `license` field from the marketplace entry.
+
 ## Documentation Rules
 
 When writing README or docs content for this repo:
@@ -295,7 +305,18 @@ When writing README or docs content for this repo:
 - Use behavior-oriented language: "auto-formats your Python code after every edit" instead of "PostToolUse hook running ruff on Write/Edit events"
 - Avoid jargon like "frontmatter", "manifest", "PostToolUse hooks" in user-facing docs
 - Installation instructions must be copy-paste ready
+- README plugin long blocks should be scannable bullets (3-5 max) with a short intro and tail, not paragraph walls
+- When two plugins are designed to be used together, end each plugin's README long block with a "Pairs naturally with `other-plugin`" line on BOTH sides, so the pairing is asserted from both directions
 - Plan for future before/after GIFs or demos per plugin to show value visually
+
+### Plugin descriptions
+
+The `description` field in `plugin.json` and marketplace entries faces non-technical marketplace browsers. Lead with concrete user-visible outcomes, not the mechanism. Drop jargon (OTel, hook event names, internal config field names). Single sentence.
+
+- Bad: "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions."
+- Good: "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions."
+
+See `### Description handling` (Marketplace Plugin Conventions) for the list of files to update.
 
 ## Commit and PR Writing Style
 
@@ -304,12 +325,21 @@ This repo contains config files (JSON settings, allowlist rules, hooks) rather t
 - Describe WHAT changed and WHY in everyday terms: "add a safety hook that flags dangerous shell commands for review" not "add PreToolUse command hook with regex matcher on Bash tool"
 - Avoid internal jargon: say "allowlist" not "permissions allowlist entries", say "settings files" not "settings.json/settings-minimax.json/settings-zai.json"
 - When listing affected files, group by purpose: "all 3 settings files" instead of naming each one
+- Always name the concrete object you're acting on. "fix: add license fields" is useless (to what?). "fix: add license field to plugin manifests" tells the next reader exactly what changed
 - Keep PR bodies short: 2-3 bullet points explaining the user-visible behavior change
 - PR titles and bodies must read standalone months later: never reference session shorthand ("PR-cf", "the last orphan content PR"), only real PR numbers (`#176`)
 
 ## Maintenance Scripts
 
 Scripts in `.github/scripts/` for repo maintenance. Run from repo root.
+
+After editing any `sync-*.sh` script:
+
+1. Run it once and check exit 0 with no `WARNING:` or `ERROR:` output.
+2. Run it AGAIN to confirm idempotency (no further file diffs, "already in sync" output where applicable).
+3. Spot-check the generated diff with `git diff`. Narrow targeted edits only; reject runaway formatter churn.
+
+Same pattern for `sync-versions.sh` and `release.sh` (dry-run).
 
 ### Syncing vendor skills
 
@@ -339,15 +369,24 @@ bash .github/scripts/sync-openobserve-skills.sh
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
 
+#### When a sync script fails
+
+Failures usually mean the upstream repo restructured. Diagnostic steps:
+
+1. Re-read the script's `sync_dir` source paths against the actual upstream tree (`ls $HOME/dev/<vendor>/...`).
+2. Use `git log --oneline -- <removed-path>` inside the upstream clone to find the rename or removal commit.
+3. Decide: (a) repoint the script at the new path, (b) drop the skill block if upstream removed it, or (c) freeze the local copy as vendored content (no further upstream sync) if the skill is still useful but no longer maintained upstream.
+4. Update the script accordingly. Local skill directories that were already synced remain on disk untouched until you explicitly `git rm` them.
+
 ### Version alignment
 
-`.claude-plugin/plugin.json` is the source of truth for each plugin's version. Run after bumping:
+`.claude-plugin/plugin.json` is the source of truth for each plugin's version AND license. Run after bumping or seeding a license:
 
 ```bash
 bash .github/scripts/sync-versions.sh
 ```
 
-Propagates version to `.codex-plugin/`, `.cursor-plugin/`, `gemini-extension.json`, and marketplace entries. CI validates alignment on every PR.
+Propagates `version` everywhere and `license` everywhere except `gemini-extension.json` (spec excludes license). Marketplace files are edited via narrow regex replacements that preserve their hand-tuned JSON formatting (compact arrays, etc.). Re-running on a no-op is zero-write. CI validates alignment on every PR.
 
 ### Releases
 
@@ -355,7 +394,13 @@ Propagates version to `.codex-plugin/`, `.cursor-plugin/`, `gemini-extension.jso
 bash .github/scripts/release.sh <version>
 ```
 
-Updates marketplace version, uploads skill zips as artifacts, generates release notes from README + auto-changelog.
+Updates marketplace version, regenerates all skill zips, uploads them as release assets, generates release notes from README + auto-changelog.
+
+**Pre-flight**: run `bash .github/scripts/sync-versions.sh` and every `sync-*-skills.sh` manually first. `release.sh` re-runs them, but if any has broken on an upstream restructure the release will ship a stale or empty plugin. Surface those breakages BEFORE tagging.
+
+**Versioning**: pass the new semver to `release.sh <version>`. The script bumps `metadata.version` in `.claude-plugin/marketplace.json` and propagates everywhere via `sync-versions.sh`. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
+
+**README zip URLs**: existing zip badges use `releases/latest/download/<skill>.zip` and auto-resolve to the new tag. Do NOT manually bump these URLs after release. New skills introduced in the release need new badge rows added via `/claude-tools:update-readme`.
 
 ### README updates
 
