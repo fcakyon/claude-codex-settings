@@ -143,6 +143,17 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'F=$(jq -r \".tool_input.file_path // empty\"); case \"$F\" in *plugins/*/hooks/scripts/*.py|*.github/scripts/*.py) if command -v ruff >/dev/null 2>&1; then ruff check \"$F\" 2>&1 || true; elif command -v uvx >/dev/null 2>&1; then uvx ruff check \"$F\" 2>&1 || true; fi ;; esac'"
+          }
+        ]
+      }
     ]
   },
   "outputStyle": "Explanatory",
