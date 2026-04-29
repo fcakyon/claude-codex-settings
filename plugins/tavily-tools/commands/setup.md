@@ -1,4 +1,6 @@
 ---
+name: setup
+allowed-tools: Bash, Read, Write
 description: Configure Tavily MCP server credentials
 ---
 
