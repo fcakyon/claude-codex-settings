@@ -1,4 +1,5 @@
 ---
+name: sync-claude-md
 allowed-tools: Read, Bash
 description: Sync CLAUDE.md from GitHub repository
 ---
