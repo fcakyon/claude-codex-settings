@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/ruff-action@v4
+      - uses: astral-sh/ruff-action@v3
         with:
-          src: "plugins .github/scripts"
+          src: "plugins/*/hooks/scripts .github/scripts"
           args: "check"

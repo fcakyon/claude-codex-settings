@@ -1,4 +1,10 @@
 target-version = "py39"
+extend-exclude = [
+    "plugins/*/skills",
+    "plugins/*/agents",
+    "plugins/*/commands",
+    "plugins/*/references",
+]
 
 [lint]
 select = ["FA", "UP", "F"]
