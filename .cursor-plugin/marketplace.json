@@ -13,7 +13,7 @@
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "Apache-2.0"
     },
     {

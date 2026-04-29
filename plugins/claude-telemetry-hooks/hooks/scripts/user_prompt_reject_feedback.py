@@ -8,6 +8,8 @@ prompt into a reject category, and posts a `reject_feedback` log event so the da
 panel can show *why* tools get rejected, not just that they do.
 """
 
+from __future__ import annotations
+
 import hashlib
 import json
 import os
