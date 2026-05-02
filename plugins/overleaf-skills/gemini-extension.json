@@ -1,0 +1,5 @@
+{
+  "name": "overleaf-skills",
+  "version": "1.0.0",
+  "description": "Pull review comments from an Overleaf project, map them to local .tex files, and apply edits in your git-tracked repo."
+}
