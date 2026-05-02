@@ -1,4 +1,5 @@
 ---
+name: load-claude-md
 allowed-tools: Read
 description: Refresh context with CLAUDE.md instructions
 ---

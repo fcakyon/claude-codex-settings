@@ -1,4 +1,5 @@
 ---
+name: update-readme
 allowed-tools: Read, Glob, Grep, Edit
 description: Update README.md plugin sections and download links
 ---
