@@ -789,6 +789,28 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 
 </details>
 
+<details>
+<summary><strong>overleaf-skills</strong> - Pull Overleaf review comments into your local .tex repo and apply the suggested edits</summary>
+
+| Claude Code                                       | Codex CLI                                                                 | Gemini CLI                                                   |
+| ------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `/plugin install overleaf-skills@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `overleaf-skills` | `gemini extensions install --path ./plugins/overleaf-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/overleaf-skills --skill '*'
+```
+
+Pull reviewer comments from an Overleaf project, locate each in your local git-tracked `*.tex` files, and apply edits you review. Run setup once to paste your Overleaf session cookie; sessions slide ~5 days idle. Pairs naturally with `github-dev` for the commit step.
+
+**Skills:**
+
+- [`setup`](./plugins/overleaf-skills/skills/setup/SKILL.md) - Capture and refresh the Overleaf session cookie
+- [`review-overleaf`](./plugins/overleaf-skills/skills/review-overleaf/SKILL.md) - Fetch unresolved review threads and apply edits to local .tex files
+
+</details>
+
 ---
 
 ## Configuration
