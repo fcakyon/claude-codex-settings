@@ -303,6 +303,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "search"
+    },
+    {
+      "name": "overleaf-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/overleaf-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "research"
     }
   ]
 }
