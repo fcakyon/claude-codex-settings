@@ -957,3 +957,9 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 ## Thank you for the support!
 
 [![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-codex-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-codex-settings&Date)
+
+<p align="center">
+    <a href="https://github.com/fcakyon/claude-codex-settings/graphs/contributors">
+      <img src="https://contrib.rocks/image?repo=fcakyon/claude-codex-settings" />
+    </a>
+</p>
