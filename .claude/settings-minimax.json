@@ -19,7 +19,8 @@
     "CLAUDE_CODE_DISABLE_OFFICIAL_MARKETPLACE_AUTOINSTALL": "1",
     "CLAUDE_CODE_ENABLE_FINE_GRAINED_TOOL_STREAMING": "1",
     "CLAUDE_CODE_NEW_INIT": "1",
-    "CLAUDE_CODE_NO_FLICKER": "1"
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "SLASH_COMMAND_TOOL_CHAR_BUDGET": "60000"
   },
   "attribution": {
     "commit": "",
@@ -163,5 +164,6 @@
   "alwaysThinkingEnabled": true,
   "cleanupPeriodDays": 9999,
   "showClearContextOnPlanAccept": false,
-  "autoUpdatesChannel": "latest"
+  "autoUpdatesChannel": "latest",
+  "skillListingBudgetFraction": 0.02
 }

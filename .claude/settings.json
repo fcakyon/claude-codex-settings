@@ -17,7 +17,8 @@
     "CLAUDE_CODE_NEW_INIT": "1",
     "CLAUDE_CODE_NO_FLICKER": "1",
     "ENABLE_PROMPT_CACHING_1H": "1",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000"
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000",
+    "SLASH_COMMAND_TOOL_CHAR_BUDGET": "60000"
   },
   "attribution": {
     "commit": "",
@@ -173,5 +174,6 @@
   "alwaysThinkingEnabled": true,
   "cleanupPeriodDays": 9999,
   "showClearContextOnPlanAccept": false,
-  "autoUpdatesChannel": "latest"
+  "autoUpdatesChannel": "latest",
+  "skillListingBudgetFraction": 0.02
 }
