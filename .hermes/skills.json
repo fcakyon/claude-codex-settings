@@ -1,0 +1,289 @@
+{
+  "name": "claude-codex-settings",
+  "display_name": "Claude & Codex Settings — Hermes Skills",
+  "description": "Battle-tested Claude Code/Codex skills and plugins adapted for Hermes Agent",
+  "version": "1.0.0",
+  "plugins": {
+    "intelligent-compact": {
+      "name": "intelligent-compact",
+      "description": "Stop AI agents from forgetting file paths, root causes, and open questions during long sessions",
+      "skills": ["plugins/intelligent-compact/SKILL.md"],
+      "category": "session-management",
+      "hermes_install": "hermes skills install intelligent-compact@claude-settings"
+    },
+    "claude-telemetry-hooks": {
+      "name": "claude-telemetry-hooks",
+      "description": "Track per-device usage, rejection reasons, and per-session stats",
+      "skills": ["plugins/claude-telemetry-hooks/SKILL.md"],
+      "category": "observability",
+      "hermes_install": "hermes skills install claude-telemetry-hooks@claude-settings"
+    },
+    "anthropic-office-skills": {
+      "name": "anthropic-office-skills",
+      "description": "Official Anthropic PDF, Word, PowerPoint, Excel skills",
+      "skills": [
+        "plugins/anthropic-office-skills/skills/pdf/SKILL.md",
+        "plugins/anthropic-office-skills/skills/pptx/SKILL.md",
+        "plugins/anthropic-office-skills/skills/xlsx/SKILL.md",
+        "plugins/anthropic-office-skills/skills/docx/SKILL.md"
+      ],
+      "category": "documents",
+      "hermes_install": "hermes skills install anthropic-office-skills@claude-settings"
+    },
+    "openai-office-skills": {
+      "name": "openai-office-skills",
+      "description": "Official OpenAI PDF, Word, PowerPoint, Excel skills",
+      "skills": [
+        "plugins/openai-office-skills/skills/pdf/SKILL.md",
+        "plugins/openai-office-skills/skills/slides/SKILL.md",
+        "plugins/openai-office-skills/skills/spreadsheet/SKILL.md",
+        "plugins/openai-office-skills/skills/doc/SKILL.md"
+      ],
+      "category": "documents",
+      "hermes_install": "hermes skills install openai-office-skills@claude-settings"
+    },
+    "python-skills": {
+      "name": "python-skills",
+      "description": "Python best practices from PEP 8, Zen of Python, Google Style Guide, Effective Python",
+      "skills": ["plugins/python-skills/skills/python-guidelines/SKILL.md"],
+      "category": "development",
+      "hermes_install": "hermes skills install python-skills@claude-settings"
+    },
+    "react-skills": {
+      "name": "react-skills",
+      "description": "Official React, Next.js, and React Native best practices",
+      "skills": [
+        "plugins/react-skills/skills/composition-patterns/SKILL.md",
+        "plugins/react-skills/skills/react-best-practices/SKILL.md",
+        "plugins/react-skills/skills/react-native-skills/SKILL.md",
+        "plugins/react-skills/skills/react-view-transitions/SKILL.md",
+        "plugins/react-skills/skills/web-design-guidelines/SKILL.md"
+      ],
+      "category": "frontend",
+      "hermes_install": "hermes skills install react-skills@claude-settings"
+    },
+    "agent-browser": {
+      "name": "agent-browser",
+      "description": "Official browser automation CLI for AI agents (93% less context than Playwright MCP)",
+      "skills": [
+        "plugins/agent-browser/skills/agent-browser/SKILL.md",
+        "plugins/agent-browser/skills/electron/SKILL.md"
+      ],
+      "category": "web-testing",
+      "hermes_install": "hermes skills install agent-browser@claude-settings"
+    },
+    "frontend-design-skills": {
+      "name": "frontend-design-skills",
+      "description": "Official frontend design skills (Anthropic + OpenAI)",
+      "skills": [
+        "plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md",
+        "plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md"
+      ],
+      "category": "frontend",
+      "hermes_install": "hermes skills install frontend-design-skills@claude-settings"
+    },
+    "mongodb-skills": {
+      "name": "mongodb-skills",
+      "description": "Official MongoDB agent skills for schema design, query tuning, and Atlas Search",
+      "skills": [
+        "plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md",
+        "plugins/mongodb-skills/skills/mongodb-connection/SKILL.md",
+        "plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md",
+        "plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md",
+        "plugins/mongodb-skills/skills/mongodb-query-optimizer/SKILL.md",
+        "plugins/mongodb-skills/skills/mongodb-schema-design/SKILL.md",
+        "plugins/mongodb-skills/skills/mongodb-search-and-ai/SKILL.md"
+      ],
+      "category": "database",
+      "hermes_install": "hermes skills install mongodb-skills@claude-settings"
+    },
+    "supabase-skills": {
+      "name": "supabase-skills",
+      "description": "Supabase Postgres best practices, JavaScript SDK, and CLI skills",
+      "skills": [
+        "plugins/supabase-skills/skills/supabase-postgres-best-practices/SKILL.md",
+        "plugins/supabase-skills/skills/supabase-js/SKILL.md",
+        "plugins/supabase-skills/skills/supabase-cli/SKILL.md"
+      ],
+      "category": "database",
+      "hermes_install": "hermes skills install supabase-skills@claude-settings"
+    },
+    "stripe-skills": {
+      "name": "stripe-skills",
+      "description": "Official Stripe agent skills for payments, billing, Connect, and API upgrades",
+      "skills": [
+        "plugins/stripe-skills/skills/stripe-best-practices/SKILL.md",
+        "plugins/stripe-skills/skills/stripe-projects/SKILL.md",
+        "plugins/stripe-skills/skills/upgrade-stripe/SKILL.md"
+      ],
+      "category": "payment",
+      "hermes_install": "hermes skills install stripe-skills@claude-settings"
+    },
+    "polar-skills": {
+      "name": "polar-skills",
+      "description": "Official Polar agent skills for billing, subscriptions, and local dev environment",
+      "skills": [
+        "plugins/polar-skills/skills/polar-billing/SKILL.md",
+        "plugins/polar-skills/skills/polar-local-environment/SKILL.md"
+      ],
+      "category": "payment",
+      "hermes_install": "hermes skills install polar-skills@claude-settings"
+    },
+    "livekit-skills": {
+      "name": "livekit-skills",
+      "description": "LiveKit voice AI agent development (Cloud + self-hosted)",
+      "skills": ["plugins/livekit-skills/skills/livekit-skills/SKILL.md"],
+      "category": "ai",
+      "hermes_install": "hermes skills install livekit-skills@claude-settings"
+    },
+    "cloudflare-skills": {
+      "name": "cloudflare-skills",
+      "description": "Official Cloudflare developer platform skill for Workers, R2, D1, KV, AI, and 50+ services",
+      "skills": ["plugins/cloudflare-skills/skills/cloudflare-deploy/SKILL.md"],
+      "category": "deployment",
+      "hermes_install": "hermes skills install cloudflare-skills@claude-settings"
+    },
+    "web-performance-skills": {
+      "name": "web-performance-skills",
+      "description": "Web performance auditing with Core Web Vitals, Lighthouse, and Chrome DevTools",
+      "skills": ["plugins/web-performance-skills/skills/web-performance-optimization/SKILL.md"],
+      "category": "web-testing",
+      "mcp": ".mcp.json",
+      "hermes_install": "hermes skills install web-performance-skills@claude-settings"
+    },
+    "openobserve-skills": {
+      "name": "openobserve-skills",
+      "description": "OpenObserve REST API skill for AI agents to search logs/metrics/traces and create dashboards via curl",
+      "skills": ["plugins/openobserve-skills/skills/openobserve-api/SKILL.md"],
+      "category": "observability",
+      "hermes_install": "hermes skills install openobserve-skills@claude-settings"
+    },
+    "hetzner-skills": {
+      "name": "hetzner-skills",
+      "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, and storage",
+      "skills": ["plugins/hetzner-skills/skills/hetzner-deploy/SKILL.md"],
+      "category": "deployment",
+      "hermes_install": "hermes skills install hetzner-skills@claude-settings"
+    },
+    "dokploy-skills": {
+      "name": "dokploy-skills",
+      "description": "Dokploy deployment skill for Dokploy Cloud and self-hosted dashboards",
+      "skills": ["plugins/dokploy-skills/skills/dokploy-deploy/SKILL.md"],
+      "category": "deployment",
+      "hermes_install": "hermes skills install dokploy-skills@claude-settings"
+    },
+    "github-dev": {
+      "name": "github-dev",
+      "description": "Git workflow agents + skills",
+      "skills": [
+        "plugins/github-dev/skills/commit-staged/SKILL.md",
+        "plugins/github-dev/skills/create-pr/SKILL.md",
+        "plugins/github-dev/skills/review-pr/SKILL.md",
+        "plugins/github-dev/skills/resolve-pr-comments/SKILL.md",
+        "plugins/github-dev/skills/update-pr-summary/SKILL.md",
+        "plugins/github-dev/skills/clean-gone-branches/SKILL.md",
+        "plugins/github-dev/skills/setup/SKILL.md"
+      ],
+      "category": "developer-tools",
+      "hermes_install": "hermes skills install github-dev@claude-settings"
+    },
+    "ultralytics-dev": {
+      "name": "ultralytics-dev",
+      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash",
+      "skills": [],
+      "category": "developer-tools",
+      "hermes_install": "hermes skills install ultralytics-dev@claude-settings"
+    },
+    "azure-tools": {
+      "name": "azure-tools",
+      "description": "40+ Azure services with Azure CLI authentication",
+      "skills": [
+        "plugins/azure-tools/skills/azure-usage/SKILL.md",
+        "plugins/azure-tools/skills/setup/SKILL.md"
+      ],
+      "category": "deployment",
+      "mcp": ".mcp.json",
+      "hermes_install": "hermes skills install azure-tools@claude-settings"
+    },
+    "claude-tools": {
+      "name": "claude-tools",
+      "description": "Sync CLAUDE.md + allowlist + context refresh",
+      "skills": [],
+      "category": "developer-tools",
+      "hermes_install": "hermes skills install claude-tools@claude-settings"
+    },
+    "gcloud-tools": {
+      "name": "gcloud-tools",
+      "description": "GCloud MCP & Skills for logs, metrics, and traces",
+      "skills": [
+        "plugins/gcloud-tools/skills/gcloud-usage/SKILL.md",
+        "plugins/gcloud-tools/skills/setup/SKILL.md"
+      ],
+      "category": "deployment",
+      "mcp": ".mcp.json",
+      "hermes_install": "hermes skills install gcloud-tools@claude-settings"
+    },
+    "paper-search-tools": {
+      "name": "paper-search-tools",
+      "description": "Paper Search MCP & Skills across arXiv, PubMed, IEEE, Scopus, ACM",
+      "skills": [
+        "plugins/paper-search-tools/skills/paper-search-usage/SKILL.md",
+        "plugins/paper-search-tools/skills/setup/SKILL.md"
+      ],
+      "category": "research",
+      "mcp": ".mcp.json",
+      "hermes_install": "hermes skills install paper-search-tools@claude-settings"
+    },
+    "tavily-tools": {
+      "name": "tavily-tools",
+      "description": "Tavily MCP & Skills for web search and content extraction",
+      "skills": [
+        "plugins/tavily-tools/skills/tavily-usage/SKILL.md",
+        "plugins/tavily-tools/skills/setup/SKILL.md"
+      ],
+      "category": "search",
+      "mcp": ".mcp.json",
+      "hermes_install": "hermes skills install tavily-tools@claude-settings"
+    },
+    "overleaf-skills": {
+      "name": "overleaf-skills",
+      "description": "Pull Overleaf review comments into your local .tex repo and apply the suggested edits",
+      "skills": [
+        "plugins/overleaf-skills/skills/setup/SKILL.md",
+        "plugins/overleaf-skills/skills/review-overleaf/SKILL.md"
+      ],
+      "category": "research",
+      "hermes_install": "hermes skills install overleaf-skills@claude-settings"
+    },
+    "anthropic-essentials": {
+      "name": "anthropic-essentials",
+      "description": "Feature dev, CLAUDE.md management, skill creation from anthropics/claude-plugins-official",
+      "skills": [],
+      "category": "developer-tools",
+      "hermes_install": "hermes skills install anthropic-essentials@claude-settings"
+    },
+    "anthropic-plugin-dev": {
+      "name": "anthropic-plugin-dev",
+      "description": "Plugin development toolkit with 7 skills, 3 agents, and guided plugin creation",
+      "skills": [],
+      "category": "developer-tools",
+      "hermes_install": "hermes skills install anthropic-plugin-dev@claude-settings"
+    },
+    "phd-skills": {
+      "name": "phd-skills",
+      "description": "Hypothesis design, paper review, citation checks for PhD workflows",
+      "skills": [
+        "plugins/phd-skills/skills/dataset-curation/SKILL.md",
+        "plugins/phd-skills/skills/experiment-design/SKILL.md",
+        "plugins/phd-skills/skills/latex-setup/SKILL.md",
+        "plugins/phd-skills/skills/literature-research/SKILL.md",
+        "plugins/phd-skills/skills/paper-verification/SKILL.md",
+        "plugins/phd-skills/skills/paper-writing/SKILL.md",
+        "plugins/phd-skills/skills/research-publishing/SKILL.md",
+        "plugins/phd-skills/skills/reviewer-defense/SKILL.md"
+      ],
+      "category": "research",
+      "hermes_install": "hermes skills install phd-skills@claude-settings"
+    }
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "name": "claude-codex-settings",
+  "display_name": "Claude & Codex Settings for Hermes Agent",
+  "description": "Battle-tested Claude Code/Codex/Cursor/Gemini skills and plugins adapted for Hermes Agent. Install skills directly via hermes skills install.",
+  "version": "1.0.0",
+  "author": "shunfeng8421",
+  "homepage": "https://github.com/shunfeng8421/claude-codex-settings",
+  "plugins": [
+    {
+      "name": "intelligent-compact",
+      "display_name": "Intelligent Compact",
+      "description": "Stop AI agents from forgetting file paths, root causes, and open questions during long sessions",
+      "category": "session-management",
+      "install": "hermes skills install intelligent-compact@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/intelligent-compact"
+    },
+    {
+      "name": "claude-telemetry-hooks",
+      "display_name": "Claude Telemetry Hooks",
+      "description": "Track per-device usage, rejection reasons, and per-session stats",
+      "category": "observability",
+      "install": "hermes skills install claude-telemetry-hooks@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/claude-telemetry-hooks"
+    },
+    {
+      "name": "anthropic-office-skills",
+      "display_name": "Anthropic Office Skills",
+      "description": "Official Anthropic PDF, Word, PowerPoint, Excel skills",
+      "category": "documents",
+      "install": "hermes skills install anthropic-office-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/anthropic-office-skills"
+    },
+    {
+      "name": "openai-office-skills",
+      "display_name": "OpenAI Office Skills",
+      "description": "Official OpenAI PDF, Word, PowerPoint, Excel skills",
+      "category": "documents",
+      "install": "hermes skills install openai-office-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/openai-office-skills"
+    },
+    {
+      "name": "python-skills",
+      "display_name": "Python Skills",
+      "description": "Python best practices from PEP 8, Zen of Python, Google Style Guide, Effective Python",
+      "category": "development",
+      "install": "hermes skills install python-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/python-skills"
+    },
+    {
+      "name": "react-skills",
+      "display_name": "React Skills",
+      "description": "Official React, Next.js, and React Native best practices",
+      "category": "frontend",
+      "install": "hermes skills install react-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/react-skills"
+    },
+    {
+      "name": "agent-browser",
+      "display_name": "Agent Browser",
+      "description": "Official browser automation CLI for AI agents (93% less context than Playwright MCP)",
+      "category": "web-testing",
+      "install": "hermes skills install agent-browser@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/agent-browser"
+    },
+    {
+      "name": "frontend-design-skills",
+      "display_name": "Frontend Design Skills",
+      "description": "Official frontend design skills (Anthropic + OpenAI)",
+      "category": "frontend",
+      "install": "hermes skills install frontend-design-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/frontend-design-skills"
+    },
+    {
+      "name": "mongodb-skills",
+      "display_name": "MongoDB Skills",
+      "description": "Official MongoDB agent skills for schema design, query tuning, and Atlas Search",
+      "category": "database",
+      "install": "hermes skills install mongodb-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/mongodb-skills"
+    },
+    {
+      "name": "supabase-skills",
+      "display_name": "Supabase Skills",
+      "description": "Supabase Postgres best practices, JavaScript SDK, and CLI skills",
+      "category": "database",
+      "install": "hermes skills install supabase-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/supabase-skills"
+    },
+    {
+      "name": "stripe-skills",
+      "display_name": "Stripe Skills",
+      "description": "Official Stripe agent skills for payments, billing, Connect, and API upgrades",
+      "category": "payment",
+      "install": "hermes skills install stripe-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/stripe-skills"
+    },
+    {
+      "name": "polar-skills",
+      "display_name": "Polar Skills",
+      "description": "Official Polar agent skills for billing, subscriptions, and local dev environment",
+      "category": "payment",
+      "install": "hermes skills install polar-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/polar-skills"
+    },
+    {
+      "name": "livekit-skills",
+      "display_name": "LiveKit Skills",
+      "description": "LiveKit voice AI agent development (Cloud + self-hosted)",
+      "category": "ai",
+      "install": "hermes skills install livekit-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/livekit-skills"
+    },
+    {
+      "name": "cloudflare-skills",
+      "display_name": "Cloudflare Skills",
+      "description": "Official Cloudflare developer platform skill for Workers, R2, D1, KV, AI, and 50+ services",
+      "category": "deployment",
+      "install": "hermes skills install cloudflare-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/cloudflare-skills"
+    },
+    {
+      "name": "web-performance-skills",
+      "display_name": "Web Performance Skills",
+      "description": "Web performance auditing with Core Web Vitals, Lighthouse, and Chrome DevTools",
+      "category": "web-testing",
+      "install": "hermes skills install web-performance-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/web-performance-skills"
+    },
+    {
+      "name": "openobserve-skills",
+      "display_name": "OpenObserve Skills",
+      "description": "OpenObserve REST API skill for AI agents to search logs/metrics/traces and create dashboards via curl",
+      "category": "observability",
+      "install": "hermes skills install openobserve-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/openobserve-skills"
+    },
+    {
+      "name": "hetzner-skills",
+      "display_name": "Hetzner Skills",
+      "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, and storage",
+      "category": "deployment",
+      "install": "hermes skills install hetzner-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/hetzner-skills"
+    },
+    {
+      "name": "dokploy-skills",
+      "display_name": "Dokploy Skills",
+      "description": "Dokploy deployment skill for Dokploy Cloud and self-hosted dashboards",
+      "category": "deployment",
+      "install": "hermes skills install dokploy-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/dokploy-skills"
+    },
+    {
+      "name": "github-dev",
+      "display_name": "GitHub Dev",
+      "description": "Git workflow agents + skills for commits, PRs, code review, and branch management",
+      "category": "developer-tools",
+      "install": "hermes skills install github-dev@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/github-dev"
+    },
+    {
+      "name": "ultralytics-dev",
+      "display_name": "Ultralytics Dev",
+      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash",
+      "category": "developer-tools",
+      "install": "hermes skills install ultralytics-dev@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/ultralytics-dev"
+    },
+    {
+      "name": "azure-tools",
+      "display_name": "Azure Tools",
+      "description": "40+ Azure services with Azure CLI authentication and MCP server",
+      "category": "deployment",
+      "install": "hermes skills install azure-tools@claude-settings",
+      "mcp": ".mcp.json",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/azure-tools"
+    },
+    {
+      "name": "claude-tools",
+      "display_name": "Claude Tools",
+      "description": "Sync CLAUDE.md + allowlist + context refresh commands",
+      "category": "developer-tools",
+      "install": "hermes skills install claude-tools@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/claude-tools"
+    },
+    {
+      "name": "gcloud-tools",
+      "display_name": "GCloud Tools",
+      "description": "GCloud MCP & Skills for logs, metrics, and traces",
+      "category": "deployment",
+      "install": "hermes skills install gcloud-tools@claude-settings",
+      "mcp": ".mcp.json",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/gcloud-tools"
+    },
+    {
+      "name": "paper-search-tools",
+      "display_name": "Paper Search Tools",
+      "description": "Paper Search MCP & Skills across arXiv, PubMed, IEEE, Scopus, ACM",
+      "category": "research",
+      "install": "hermes skills install paper-search-tools@claude-settings",
+      "mcp": ".mcp.json",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/paper-search-tools"
+    },
+    {
+      "name": "tavily-tools",
+      "display_name": "Tavily Tools",
+      "description": "Tavily MCP & Skills for web search and content extraction",
+      "category": "search",
+      "install": "hermes skills install tavily-tools@claude-settings",
+      "mcp": ".mcp.json",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/tavily-tools"
+    },
+    {
+      "name": "overleaf-skills",
+      "display_name": "Overleaf Skills",
+      "description": "Pull Overleaf review comments into your local .tex repo and apply the suggested edits",
+      "category": "research",
+      "install": "hermes skills install overleaf-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/overleaf-skills"
+    },
+    {
+      "name": "anthropic-essentials",
+      "display_name": "Anthropic Essentials",
+      "description": "Feature dev, CLAUDE.md management, skill creation from anthropics/claude-plugins-official",
+      "category": "developer-tools",
+      "install": "hermes skills install anthropic-essentials@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/anthropic-essentials"
+    },
+    {
+      "name": "anthropic-plugin-dev",
+      "display_name": "Anthropic Plugin Dev",
+      "description": "Plugin development toolkit with 7 skills, 3 agents, and guided plugin creation",
+      "category": "developer-tools",
+      "install": "hermes skills install anthropic-plugin-dev@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/anthropic-plugin-dev"
+    },
+    {
+      "name": "phd-skills",
+      "display_name": "PhD Skills",
+      "description": "Hypothesis design, paper review, citation checks for PhD workflows",
+      "category": "research",
+      "install": "hermes skills install phd-skills@claude-settings",
+      "source": "https://github.com/shunfeng8421/claude-codex-settings/tree/main/plugins/phd-skills"
+    }
+  ]
+}
