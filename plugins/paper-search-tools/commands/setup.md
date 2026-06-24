@@ -1,4 +1,6 @@
 ---
+name: setup
+allowed-tools: Bash
 description: Configure Paper Search MCP (requires Docker)
 ---
 
