@@ -15,7 +15,7 @@
 # Claude Code users: MiniMax's Anthropic-compatible endpoint works directly
 # without a proxy. See .claude/settings-minimax.json and README.md.
 
-model = "MiniMax-M2.7"
+model = "MiniMax-M3"
 model_provider = "minimax"
 
 [model_providers.minimax]
