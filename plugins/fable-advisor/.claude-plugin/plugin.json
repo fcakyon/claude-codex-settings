@@ -1,6 +1,6 @@
 {
   "name": "fable-advisor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
   "license": "Apache-2.0"
 }
