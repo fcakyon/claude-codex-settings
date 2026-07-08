@@ -861,22 +861,22 @@ export ENABLE_TOOL_SEARCH=false
 </details>
 
 <details>
-<summary><strong>MiniMax M2.7 (204K context)</strong></summary>
+<summary><strong>MiniMax M3 (1M context)</strong></summary>
 
-Run Claude Code with [MiniMax M2.7](https://www.minimax.io) via Anthropic-compatible API - [source](https://api.minimax.io/anthropic):
+Run Claude Code with [MiniMax M3](https://www.minimax.io) via Anthropic-compatible API - [source](https://api.minimax.io/anthropic):
 
-- **Model**: `MiniMax-M2.7` - 204K context window
+- **Model**: `MiniMax-M3[1m]` - 1M context window (512K guaranteed minimum, `[1m]` unlocks the full window)
 - **Fast model**: `MiniMax-M2.7-highspeed` - high-throughput variant
 - **API key**: Get from [minimax.io](https://www.minimax.io)
 
 ```bash
 export ANTHROPIC_BASE_URL=https://api.minimax.io/anthropic
 export ANTHROPIC_AUTH_TOKEN="your-minimax-api-key"
-export ANTHROPIC_MODEL=MiniMax-M2.7
-export ANTHROPIC_DEFAULT_OPUS_MODEL=MiniMax-M2.7
-export ANTHROPIC_DEFAULT_SONNET_MODEL=MiniMax-M2.7
+export ANTHROPIC_MODEL=MiniMax-M3[1m]
+export ANTHROPIC_DEFAULT_OPUS_MODEL=MiniMax-M3[1m]
+export ANTHROPIC_DEFAULT_SONNET_MODEL=MiniMax-M3[1m]
 export ANTHROPIC_DEFAULT_HAIKU_MODEL=MiniMax-M2.7-highspeed
-export CLAUDE_CODE_SUBAGENT_MODEL=MiniMax-M2.7
+export CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000
 export ENABLE_TOOL_SEARCH=false
 ```
 
