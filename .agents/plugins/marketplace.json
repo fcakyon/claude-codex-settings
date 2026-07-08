@@ -221,6 +221,18 @@
       "category": "deployment"
     },
     {
+      "name": "fable-advisor",
+      "source": {
+        "source": "local",
+        "path": "./plugins/fable-advisor"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
+    },
+    {
       "name": "github-dev",
       "source": {
         "source": "local",

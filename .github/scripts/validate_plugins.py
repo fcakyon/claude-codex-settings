@@ -25,6 +25,15 @@ def parse_frontmatter(content: str) -> tuple[dict | None, str]:
         return None, content
 
 
+VALID_MODEL_ALIASES = {"inherit", "sonnet", "opus", "haiku", "fable"}
+VALID_AGENT_COLORS = {"red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan"}
+
+
+def is_valid_model(value: object) -> bool:
+    """Return True if value is an allowed model: a known alias, inherit, or a full claude- model ID."""
+    return isinstance(value, str) and (value in VALID_MODEL_ALIASES or value.startswith("claude-"))
+
+
 def validate_plugin_json(plugin_dir: Path) -> list[str]:
     """Validate .claude-plugin/plugin.json exists and is valid."""
     errors = []
@@ -115,9 +124,6 @@ def validate_agents(plugin_dir: Path) -> list[str]:
     if not agents_dir.exists():
         return errors
 
-    valid_models = {"inherit", "sonnet", "opus", "haiku"}
-    valid_colors = {"blue", "cyan", "green", "yellow", "magenta", "red"}
-
     for agent_file in agents_dir.iterdir():
         if not agent_file.is_file() or agent_file.suffix != ".md":
             continue
@@ -163,14 +169,14 @@ def validate_agents(plugin_dir: Path) -> list[str]:
         # Validate model field
         if "model" not in frontmatter:
             errors.append(f"{prefix}: Missing 'model' field")
-        elif frontmatter["model"] not in valid_models:
-            errors.append(f"{prefix}: 'model' must be one of {valid_models}: '{frontmatter['model']}'")
+        elif not is_valid_model(frontmatter["model"]):
+            errors.append(f"{prefix}: 'model' must be one of {sorted(VALID_MODEL_ALIASES)} or a full model ID: '{frontmatter['model']}'")
 
         # Validate color field
         if "color" not in frontmatter:
             errors.append(f"{prefix}: Missing 'color' field")
-        elif frontmatter["color"] not in valid_colors:
-            errors.append(f"{prefix}: 'color' must be one of {valid_colors}: '{frontmatter['color']}'")
+        elif frontmatter["color"] not in VALID_AGENT_COLORS:
+            errors.append(f"{prefix}: 'color' must be one of {sorted(VALID_AGENT_COLORS)}: '{frontmatter['color']}'")
 
         # Validate tools field if present
         if "tools" in frontmatter:
@@ -194,8 +200,6 @@ def validate_commands(plugin_dir: Path) -> list[str]:
     if not commands_dir.exists():
         return errors
 
-    valid_models = {"sonnet", "opus", "haiku"}
-
     for cmd_file in commands_dir.rglob("*.md"):
         prefix = f"{plugin_dir.name}/commands/{cmd_file.relative_to(commands_dir)}"
         name = cmd_file.stem
@@ -210,8 +214,8 @@ def validate_commands(plugin_dir: Path) -> list[str]:
         # Frontmatter is optional for commands
         if frontmatter:
             # Validate model if present
-            if "model" in frontmatter and frontmatter["model"] not in valid_models:
-                errors.append(f"{prefix}: 'model' must be one of {valid_models}: '{frontmatter['model']}'")
+            if "model" in frontmatter and not is_valid_model(frontmatter["model"]):
+                errors.append(f"{prefix}: 'model' must be one of {sorted(VALID_MODEL_ALIASES)} or a full model ID: '{frontmatter['model']}'")
 
             # Validate disable-model-invocation if present
             if "disable-model-invocation" in frontmatter:

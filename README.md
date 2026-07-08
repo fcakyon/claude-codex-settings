@@ -824,6 +824,7 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
+- **Advisor**: a stronger model reviews key decisions via the [advisor tool](https://code.claude.com/docs/en/advisor), paired as Opus main plus Opus advisor. Fable 5 as advisor currently fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)), so for an on-demand Fable second opinion use the standalone `fable-advisor` plugin
 - **Plugins**: All plugins enabled
 
 </details>
