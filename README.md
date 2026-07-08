@@ -823,6 +823,7 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Model**: OpusPlan mode (plan: Opus 4.8, execute: Opus 4.8, fast: Sonnet 4.6) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
+- **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
 - **Plugins**: All plugins enabled
 
 </details>
@@ -832,8 +833,8 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
 Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/scenario-example/develop-tools/claude):
 
-- **Main model**: GLM-5-Turbo (dialogue, planning, coding, complex reasoning)
-- **Fast model**: GLM-4.7-Flash (file search, syntax checking)
+- **Main model**: GLM-5.2 with 1M context (dialogue, planning, coding, complex reasoning)
+- **Fast model**: GLM-4.7 (file search, syntax checking)
 - **Cost savings**: 85% cheaper than Claude 4.6 - [source](https://z.ai/blog/glm-4.6)
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
@@ -905,6 +906,20 @@ Settings in [`.vscode/settings.json`](./.vscode/settings.json):
 - **GitHub Copilot**: Custom instructions for automated commit messages and PR descriptions
 - **Python**: Ruff formatting with auto-save and format-on-save enabled
 - **Terminal**: Cross-platform compatibility configurations
+- **Thinking display**: point `claudeCode.claudeProcessWrapper` at a small wrapper that forces `--thinking-display summarized`, so thinking tokens still show in the extension (works around 2.1.111+ dropping the flag)
+
+<details>
+<summary><code>~/.local/bin/claude-wrapper</code> (chmod +x)</summary>
+
+```bash
+#!/bin/bash
+# Workaround for VS Code Claude Code extension 2.1.111+ not passing
+# --thinking-display to the binary on Opus 4.7 (API default changed
+# to "omitted", so thinking blocks arrive empty).
+exec "$@" --thinking-display summarized
+```
+
+</details>
 
 </details>
 
