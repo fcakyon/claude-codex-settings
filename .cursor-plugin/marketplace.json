@@ -3,6 +3,13 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
+      "name": "fable-advisor",
+      "source": "./plugins/fable-advisor",
+      "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
@@ -127,13 +134,6 @@
       "description": "Dokploy deployment skill for Dokploy Cloud, self-hosted dashboard, Docker Compose, databases, domains, remote servers, and Dokploy CLI workflows.",
       "version": "1.0.0",
       "license": "MIT"
-    },
-    {
-      "name": "fable-advisor",
-      "source": "./plugins/fable-advisor",
-      "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
-      "version": "1.0.0",
-      "license": "Apache-2.0"
     },
     {
       "name": "github-dev",
