@@ -9,6 +9,21 @@
   },
   "plugins": [
     {
+      "name": "fable-advisor",
+      "source": "./plugins/fable-advisor",
+      "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["advisor", "second-opinion", "review", "agent", "escalation"],
+      "category": "developer-tools",
+      "tags": ["review", "agent"]
+    },
+    {
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
@@ -282,21 +297,6 @@
       "keywords": ["research", "academic", "phd", "paper-writing", "citations", "experiments", "latex"],
       "category": "research",
       "tags": ["research", "academic", "latex"]
-    },
-    {
-      "name": "fable-advisor",
-      "source": "./plugins/fable-advisor",
-      "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
-      "version": "1.0.0",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["advisor", "second-opinion", "review", "agent", "escalation"],
-      "category": "developer-tools",
-      "tags": ["review", "agent"]
     },
     {
       "name": "github-dev",
