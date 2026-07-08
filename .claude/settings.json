@@ -228,7 +228,7 @@
   "enableWorkflows": true,
   "outputStyle": "Explanatory",
   "model": "opus",
-  "advisorModel": "claude-fable-5",
+  "advisorModel": "claude-opus-4-8",
   "autoScrollEnabled": false,
   "extraKnownMarketplaces": {
     "claude-settings": {
