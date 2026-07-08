@@ -82,6 +82,21 @@ ln -sfn CLAUDE.md GEMINI.md
 ## Plugins
 
 <details>
+<summary><strong>fable-advisor</strong> - On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it</summary>
+
+| Claude Code                                     | Codex CLI                                                               | Gemini CLI                                                 |
+| ----------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `/plugin install fable-advisor@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `fable-advisor` | `gemini extensions install --path ./plugins/fable-advisor` |
+
+Spawn a stronger Fable 5 reviewer to pressure-test a plan or conclusion before you commit, a drop-in for the built-in advisor when the Opus-main plus Fable-advisor pairing fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)). It checks your load-bearing claims against the actual files and returns a skeptical review, not a rewrite.
+
+**Agents:**
+
+- [`fable-advisor`](./plugins/fable-advisor/agents/fable-advisor.md) - Fable 5 second-opinion reviewer, pass it the task, your approach, and the evidence
+
+</details>
+
+<details>
 <summary><strong>intelligent-compact</strong> - Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions</summary>
 
 | Claude Code                                           | Codex CLI                                                                     | Gemini CLI                                                       |
@@ -824,7 +839,7 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
-- **Advisor**: a stronger model reviews key decisions via the [advisor tool](https://code.claude.com/docs/en/advisor), paired as Opus main plus Opus advisor. Fable 5 as advisor currently fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)), so for an on-demand Fable second opinion use the standalone `fable-advisor` plugin
+- **Advisor**: a stronger model reviews key decisions via the [advisor tool](https://code.claude.com/docs/en/advisor), paired as Opus main plus Opus advisor. Fable 5 as advisor currently fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)), so for an on-demand Fable second opinion use the standalone [`fable-advisor`](./plugins/fable-advisor) plugin
 - **Plugins**: All plugins enabled
 
 </details>
