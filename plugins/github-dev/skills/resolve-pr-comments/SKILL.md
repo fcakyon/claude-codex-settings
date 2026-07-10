@@ -38,5 +38,5 @@ reference is provided, infer it from the current branch.
 
 5. **Never auto-submit**
    - Present all draft responses before posting them.
-   - Reply comments are posted directly with `gh api repos/{owner}/{repo}/pulls/comments/{comment_id}/replies -f body="..."`.
+   - Reply comments are posted directly with `gh api repos/{owner}/{repo}/pulls/{number}/comments/{comment_id}/replies -f body="..."` (the `{number}` PR number is required, the endpoint 404s without it).
    - Add a random 3-5 second delay between posted replies with `sleep $((RANDOM % 3 + 3))`.
