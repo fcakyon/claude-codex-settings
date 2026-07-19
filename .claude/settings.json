@@ -226,10 +226,15 @@
   },
   "ultracode": false,
   "enableWorkflows": true,
-  "outputStyle": "Explanatory",
+  "outputStyle": "ADHD Explanatory",
   "model": "opus",
   "advisorModel": "claude-opus-4-8",
   "autoScrollEnabled": false,
+  "enabledPlugins": {
+    "adhd-output-style@claude-settings": true,
+    "intelligent-compact@claude-settings": true,
+    "github-dev@claude-settings": true
+  },
   "extraKnownMarketplaces": {
     "claude-settings": {
       "source": {
