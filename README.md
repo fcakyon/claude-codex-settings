@@ -872,21 +872,21 @@ Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) usin
 </details>
 
 <details>
-<summary><strong>Kimi K2.5</strong></summary>
+<summary><strong>Kimi K3</strong></summary>
 
-Run Claude Code with [Kimi K2.5](https://www.kimi.com/blog/kimi-k2-5) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/agent-support):
+Run Claude Code with [Kimi K3](https://www.kimi.com/blog/kimi-k3) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/claude-code-kimi):
 
-- **Model**: `kimi-k2.5` - High-speed thinking, 256K context
+- **Model**: `kimi-k3[1m]` - Native vision, thinking mode, 1M context
 - **API key**: Get from [platform.moonshot.ai](https://platform.moonshot.ai)
 
 ```bash
 export ANTHROPIC_BASE_URL=https://api.moonshot.ai/anthropic
 export ANTHROPIC_AUTH_TOKEN="your-moonshot-api-key"
-export ANTHROPIC_MODEL=kimi-k2.5
-export ANTHROPIC_DEFAULT_OPUS_MODEL=kimi-k2.5
-export ANTHROPIC_DEFAULT_SONNET_MODEL=kimi-k2.5
-export ANTHROPIC_DEFAULT_HAIKU_MODEL=kimi-k2.5
-export CLAUDE_CODE_SUBAGENT_MODEL=kimi-k2.5
+export ANTHROPIC_MODEL="kimi-k3[1m]"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="kimi-k3[1m]"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="kimi-k3[1m]"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="kimi-k3[1m]"
+export CLAUDE_CODE_SUBAGENT_MODEL="kimi-k3[1m]"
 export ENABLE_TOOL_SEARCH=false
 ```
 
