@@ -890,6 +890,8 @@ export CLAUDE_CODE_SUBAGENT_MODEL="kimi-k3[1m]"
 export ENABLE_TOOL_SEARCH=false
 ```
 
+Or use the settings file: [`.claude/settings-kimi.json`](./.claude/settings-kimi.json)
+
 </details>
 
 <details>
