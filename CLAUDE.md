@@ -320,6 +320,8 @@ See `### Description handling` (Marketplace Plugin Conventions) for the list of 
 
 ## Commit and PR Writing Style
 
+**Before every commit, run `/simplify` on the staged diff, apply what it flags, then commit. Invoke the actual skill, not an ad-hoc cleanup pass. For a docs or config-text-only diff with no code or scripts, the code-angle review is a no-op, note that and proceed.**
+
 This repo contains config files (JSON settings, allowlist rules, hooks) rather than application code. Commit messages and PR descriptions should be written in plain language that anyone can understand, not just Claude Code plugin developers.
 
 - Describe WHAT changed and WHY in everyday terms: "add a safety hook that flags dangerous shell commands for review" not "add PreToolUse command hook with regex matcher on Bash tool"
