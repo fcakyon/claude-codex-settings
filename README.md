@@ -860,19 +860,19 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 </details>
 
 <details>
-<summary><strong>Z.ai (85% cheaper)</strong></summary>
+<summary><strong>Z.ai GLM-5.2 (1M context)</strong></summary>
 
 Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/scenario-example/develop-tools/claude):
 
 - **Main model**: GLM-5.2 with 1M context (dialogue, planning, coding, complex reasoning)
 - **Fast model**: GLM-4.7 (file search, syntax checking)
-- **Cost savings**: 85% cheaper than Claude 4.6 - [source](https://z.ai/blog/glm-4.6)
+- **Cost savings**: much cheaper than frontier Claude models
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
 </details>
 
 <details>
-<summary><strong>Kimi K3</strong></summary>
+<summary><strong>Kimi K3 (Fable5-level accuracy)</strong></summary>
 
 Run Claude Code with [Kimi K3](https://www.kimi.com/blog/kimi-k3) via Anthropic-compatible API - [source](https://platform.moonshot.ai/docs/guide/claude-code-kimi):
 
