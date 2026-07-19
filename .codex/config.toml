@@ -1,11 +1,12 @@
-model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
-model_provider = "azure"
+model = "gpt-5.6-terra"
+model_reasoning_effort = "high"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 web_search = "live"
 personality = "pragmatic"
 model_auto_compact_token_limit = 400000
+model_auto_compact_token_limit_scope = "body_after_prefix"
+service_tier = "default"
 
 [sandbox_workspace_write]
 network_access = true
@@ -13,8 +14,23 @@ network_access = true
 [analytics]
 enabled = false
 
-[model_providers.azure]
-name = "Azure OpenAI"
-base_url = "https://YOUR-AZURE-OPENAI.openai.azure.com/openai/v1"
-env_key = "AZURE_OPENAI_API_KEY"
-wire_api = "responses"
+[plugins."github-dev@claude-settings"]
+enabled = true
+
+[plugins."frontend-design-skills@claude-settings"]
+enabled = true
+
+[plugins."openai-office-skills@claude-settings"]
+enabled = true
+
+[plugins."agent-browser@claude-settings"]
+enabled = true
+
+[plugins."python-skills@claude-settings"]
+enabled = true
+
+[plugins."simplify@claude-settings"]
+enabled = true
+
+[plugins."ultralytics-dev@claude-settings"]
+enabled = true
