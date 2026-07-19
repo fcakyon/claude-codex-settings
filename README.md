@@ -826,6 +826,21 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 
 </details>
 
+<details>
+<summary><strong>adhd-output-style</strong> - Answer-first replies with numbered steps, a clear next action, and short teaching notes</summary>
+
+| Claude Code                                         | Codex CLI                                                                   | Gemini CLI                                                     |
+| --------------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `/plugin install adhd-output-style@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `adhd-output-style` | `gemini extensions install --path ./plugins/adhd-output-style` |
+
+Reformats every reply for limited working memory: the answer or next step first, numbered one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Enabling the plugin applies the style automatically. Output styles apply in Claude Code.
+
+**Output styles:**
+
+- [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Answer-first ADHD formatting plus educational Insight blocks while coding
+
+</details>
+
 ---
 
 ## Configuration
