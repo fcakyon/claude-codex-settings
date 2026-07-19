@@ -1,0 +1,5 @@
+{
+  "name": "simplify",
+  "version": "1.0.0",
+  "description": "Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups."
+}
