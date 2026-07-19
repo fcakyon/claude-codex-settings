@@ -62,7 +62,7 @@ Optionally install IDE extension:
 codex plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-codex plugin add <plugin-name>@claude-settings
+codex plugin add simplify@claude-settings
 ```
 
 ### Gemini CLI
@@ -76,7 +76,7 @@ npm install -g @anthropic-ai/gemini-cli
 Install individual plugins:
 
 ```bash
-gemini extensions install --path ./plugins/<plugin-name>
+gemini extensions install --path ./plugins/simplify
 ```
 
 ### Required Tools
