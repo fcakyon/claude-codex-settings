@@ -239,7 +239,7 @@ Commands are Claude Code only. Gemini CLI uses TOML commands. Other tools use sk
 
 ```
 Claude Code: /plugin marketplace add fcakyon/claude-codex-settings
-Codex CLI:   use .agents/plugins/marketplace.json or ~/.agents/plugins/marketplace.json, restart Codex, then install from /plugins
+Codex CLI:   codex plugin marketplace add fcakyon/claude-codex-settings, then codex plugin add <name>@claude-settings
 Cursor:      import marketplace or /add-plugin
 Gemini CLI:  gemini extensions install --path ./plugins/<name>
 ```
