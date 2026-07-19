@@ -202,7 +202,7 @@ Path: `hooks/hooks.json`
 }
 ```
 
-Events: PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification.
+Events: PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification.
 
 Hook types:
 

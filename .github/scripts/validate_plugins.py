@@ -259,6 +259,7 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
         "PreToolUse",
         "PostToolUse",
         "Stop",
+        "SubagentStart",
         "SubagentStop",
         "SessionStart",
         "SessionEnd",
