@@ -299,11 +299,13 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
                                 f"{event}[{i}].hooks[{j}] should use ${{CLAUDE_PLUGIN_ROOT}}"
                             )
 
-                    # Check script exists
-                    if cmd and "${CLAUDE_PLUGIN_ROOT}" in cmd:
-                        script_path = cmd.replace("${CLAUDE_PLUGIN_ROOT}", str(plugin_dir))
-                        if not Path(script_path).exists():
-                            errors.append(f"{plugin_dir.name}/hooks/hooks.json: Script not found: {cmd}")
+                    # Check script exists. Shell form puts it in command, exec form in args.
+                    refs = [cmd, *hook.get("args", [])]
+                    for ref in refs:
+                        if isinstance(ref, str) and "${CLAUDE_PLUGIN_ROOT}" in ref:
+                            script_path = ref.replace("${CLAUDE_PLUGIN_ROOT}", str(plugin_dir))
+                            if not Path(script_path).exists():
+                                errors.append(f"{plugin_dir.name}/hooks/hooks.json: Script not found: {ref}")
 
                 elif hook_type == "prompt":
                     if "prompt" not in hook:
@@ -315,7 +317,7 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
     scripts_dir = hooks_dir / "scripts"
     if scripts_dir.exists():
         for script in scripts_dir.iterdir():
-            if script.is_file() and script.suffix in {".py", ".sh"}:
+            if script.is_file() and script.suffix in {".py", ".sh", ".mjs", ".js"}:
                 name = script.stem
                 if not re.match(r"^[a-z0-9_]+$", name):
                     errors.append(f"{plugin_dir.name}/hooks/scripts/{script.name}: Script name must use snake_case")

@@ -1,19 +1,6 @@
 #!/usr/bin/env node
-// inject_transcript.mjs
-//
-// SubagentStart hook for the fable-advisor agent. The built-in advisor tool
-// auto-forwards the whole conversation to the reviewer model, but a plugin
-// subagent normally sees only the caller's prompt, which the main agent tends
-// to shrink to a few bullet points. That leaves the advisor reviewing missing
-// or wrong context.
-//
-// This reads the SubagentStart payload from stdin, pulls transcript_path,
-// renders the recent turns, and returns them via
-// hookSpecificOutput.additionalContext so the reviewer starts with the real
-// conversation. It uses only Node built-ins (no third-party dependency) and
-// runs the same on macOS, Linux, and Windows via the "node" plus script-path
-// hook pattern. Any failure exits 0 without output, so a missing transcript or
-// unreadable line is a clean no-op rather than an error.
+// SubagentStart hook: feeds the fable-advisor subagent the recent conversation
+// (it otherwise sees only the caller's prompt). Node-only, cross-platform, exits 0 on any failure.
 
 import { readFileSync } from "node:fs";
 
@@ -37,10 +24,6 @@ try {
   process.exit(0);
 }
 
-const pointer =
-  `The full conversation transcript for this session is at:\n${transcriptPath}\n` +
-  `Read it (JSONL, newest turns at the end) to reconstruct the context before reviewing.`;
-
 const clip = (s, n) => (s.length > n ? s.slice(0, n) + " …[truncated]" : s);
 
 const renderBlock = (role, b) => {
@@ -62,12 +45,13 @@ const renderBlock = (role, b) => {
   }
 };
 
+// Scan newest-first and stop at 80 records, so a multi-MB transcript never parses the head it would discard.
 const records = [];
-for (const line of lines) {
-  if (!line) continue;
+for (let i = lines.length - 1; i >= 0 && records.length < 80; i--) {
+  if (!lines[i]) continue;
   let r;
   try {
-    r = JSON.parse(line); // skips a half-written trailing line or any bad record
+    r = JSON.parse(lines[i]); // skip a half-written or malformed line
   } catch {
     continue;
   }
@@ -75,25 +59,23 @@ for (const line of lines) {
   if (r.type !== "user" && r.type !== "assistant") continue;
   const content = r.message?.content;
   let rendered;
-  if (typeof content === "string") {
-    rendered = `${r.type}: ${clip(content, 4000)}`;
-  } else if (Array.isArray(content)) {
-    rendered = content
-      .map((b) => renderBlock(r.type, b))
-      .filter(Boolean)
-      .join("\n");
-  } else continue;
+  if (typeof content === "string") rendered = `${r.type}: ${clip(content, 4000)}`;
+  else if (Array.isArray(content)) rendered = content.map((b) => renderBlock(r.type, b)).filter(Boolean).join("\n");
+  else continue;
   if (rendered) records.push(rendered);
 }
+records.reverse();
 
 if (records.length === 0) {
-  emit(pointer);
+  emit(
+    `The full conversation transcript for this session is at:\n${transcriptPath}\n` +
+      `Read it (JSONL, newest turns at the end) to reconstruct the context before reviewing.`
+  );
   process.exit(0);
 }
 
-// Keep the most recent characters so a very chatty session cannot flood the
-// reviewer's context. The newest turns are at the end, so keep the tail.
-let recent = records.slice(-80).join("\n\n---\n\n");
+// Keep the newest characters so a very chatty session cannot flood the reviewer.
+let recent = records.join("\n\n---\n\n");
 const MAX = 160000;
 if (recent.length > MAX) recent = "…[older turns truncated for length]\n" + recent.slice(-MAX);
 
