@@ -327,6 +327,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "research"
+    },
+    {
+      "name": "adhd-output-style",
+      "source": {
+        "source": "local",
+        "path": "./plugins/adhd-output-style"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
     }
   ]
 }
