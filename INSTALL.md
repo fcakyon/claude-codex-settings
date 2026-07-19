@@ -62,7 +62,7 @@ Optionally install IDE extension:
 codex plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-codex plugin add < plugin-name > @claude-settings
+codex plugin add <plugin-name>@claude-settings
 ```
 
 ### Gemini CLI

@@ -33,7 +33,7 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-/plugin install < plugin-name > @claude-settings
+/plugin install <plugin-name>@claude-settings
 ```
 
 </details>
@@ -46,7 +46,7 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 codex plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-codex plugin add < plugin-name > @claude-settings
+codex plugin add <plugin-name>@claude-settings
 ```
 
 </details>
@@ -64,7 +64,7 @@ gemini extensions install --path ./plugins/<plugin-name>
 <summary><strong>Cursor</strong></summary>
 
 ```bash
-cursor plugin install < plugin-name > @claude-settings
+cursor plugin install <plugin-name>@claude-settings
 ```
 
 </details>

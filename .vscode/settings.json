@@ -66,6 +66,9 @@
     "[latex]": {
         "editor.wordWrap": "on"
     },
+    "[markdown]": {
+        "editor.formatOnSave": false
+    },
     "telemetry.telemetryLevel": "off",
     "git.autofetch": true,
     "diffEditor.ignoreTrimWhitespace": false,
