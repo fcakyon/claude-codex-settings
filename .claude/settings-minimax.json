@@ -11,6 +11,7 @@
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "MiniMax-M3[1m]",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "MiniMax-M3[1m]",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "MiniMax-M2.7-highspeed",
+    "ANTHROPIC_DEFAULT_FABLE_MODEL": "MiniMax-M3[1m]",
     "MAX_MCP_OUTPUT_TOKENS": "40000",
     "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000",
     "CLAUDE_CODE_EFFORT_LEVEL": "xhigh",
@@ -157,8 +158,13 @@
       }
     ]
   },
-  "outputStyle": "Explanatory",
+  "outputStyle": "ADHD Explanatory",
   "model": "opus",
+  "enabledPlugins": {
+    "adhd-output-style@claude-settings": true,
+    "intelligent-compact@claude-settings": true,
+    "github-dev@claude-settings": true
+  },
   "extraKnownMarketplaces": {
     "claude-settings": {
       "source": {
