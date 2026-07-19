@@ -1,0 +1,17 @@
+{
+  "description": "Gives the fable-advisor reviewer the real conversation context instead of only the caller's prompt",
+  "hooks": {
+    "SubagentStart": [
+      {
+        "matcher": "^(fable-advisor:)?fable-advisor$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/inject_transcript.mjs"]
+          }
+        ]
+      }
+    ]
+  }
+}

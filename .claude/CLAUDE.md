@@ -58,6 +58,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ### Commit Messages
 
+- Before committing, run `/simplify` on the staged diff (the actual skill, not an ad-hoc pass), apply findings, then commit. For a docs or config-text-only diff, the code-angle review is a no-op, note that and proceed
 - Format: `{type}: brief description` (max 50 chars first line)
 - Optional second line: 1 sentence with findings/motivation
 - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`

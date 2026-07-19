@@ -88,11 +88,11 @@ ln -sfn CLAUDE.md GEMINI.md
 | ----------------------------------------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------- |
 | `/plugin install fable-advisor@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `fable-advisor` | `gemini extensions install --path ./plugins/fable-advisor` |
 
-Spawn a stronger Fable 5 reviewer to pressure-test a plan or conclusion before you commit, a drop-in for the built-in advisor when the Opus-main plus Fable-advisor pairing fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)). It checks your load-bearing claims against the actual files and returns a skeptical review, not a rewrite.
+Spawn a stronger Fable 5 reviewer to pressure-test a plan or conclusion before you commit, a drop-in for the built-in advisor when the Opus-main plus Fable-advisor pairing fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)). It automatically receives the recent conversation, the same history the built-in advisor sees, so it reviews the real context instead of a hand-picked summary, and returns a skeptical review, not a rewrite.
 
 **Agents:**
 
-- [`fable-advisor`](./plugins/fable-advisor/agents/fable-advisor.md) - Fable 5 second-opinion reviewer, pass it the task, your approach, and the evidence
+- [`fable-advisor`](./plugins/fable-advisor/agents/fable-advisor.md) - Fable 5 second-opinion reviewer that already sees the recent conversation, so you just name the decision to pressure-test
 
 </details>
 

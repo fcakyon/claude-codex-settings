@@ -202,7 +202,7 @@ Path: `hooks/hooks.json`
 }
 ```
 
-Events: PreToolUse, PostToolUse, Stop, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification.
+Events: PreToolUse, PostToolUse, Stop, SubagentStart, SubagentStop, SessionStart, SessionEnd, UserPromptSubmit, PreCompact, Notification.
 
 Hook types:
 
@@ -319,6 +319,8 @@ The `description` field in `plugin.json` and marketplace entries faces non-techn
 See `### Description handling` (Marketplace Plugin Conventions) for the list of files to update.
 
 ## Commit and PR Writing Style
+
+**Before every commit, run `/simplify` on the staged diff, apply what it flags, then commit. Invoke the actual skill, not an ad-hoc cleanup pass. For a docs or config-text-only diff with no code or scripts, the code-angle review is a no-op, note that and proceed.**
 
 This repo contains config files (JSON settings, allowlist rules, hooks) rather than application code. Commit messages and PR descriptions should be written in plain language that anyone can understand, not just Claude Code plugin developers.
 
