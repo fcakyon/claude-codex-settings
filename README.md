@@ -88,7 +88,7 @@ ln -sfn CLAUDE.md GEMINI.md
 | ------------------------------------------ | ------------------------------------------------------------------ | ----------------------------------------------------- |
 | `/plugin install simplify@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `simplify` | `gemini extensions install --path ./plugins/simplify` |
 
-Run `/simplify` to review your staged or committed diff across four angles (reuse, simplification, efficiency, altitude) with parallel agents, then apply the cleanups. It reviews changed-code quality, not correctness bugs, and gives Codex and Cursor the same review and apply flow that Claude Code has built in.
+Run `/simplify` to review your staged or committed diff across four angles (reuse, simplification, efficiency, altitude) with parallel agents, then apply the cleanups. It reviews changed-code quality, not correctness bugs. It brings [Claude Code's built-in `/simplify`](https://code.claude.com/docs/en/code-review#review-a-diff-locally) to Codex, Cursor, and Gemini, which don't ship it natively, so all three get the same review and apply flow.
 
 **Skills:**
 
