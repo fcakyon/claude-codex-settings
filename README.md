@@ -82,6 +82,21 @@ ln -sfn CLAUDE.md GEMINI.md
 ## Plugins
 
 <details>
+<summary><strong>simplify</strong> - Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups</summary>
+
+| Claude Code                                | Codex CLI                                                          | Gemini CLI                                            |
+| ------------------------------------------ | ------------------------------------------------------------------ | ----------------------------------------------------- |
+| `/plugin install simplify@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `simplify` | `gemini extensions install --path ./plugins/simplify` |
+
+Run `/simplify` to review your staged or committed diff across four angles (reuse, simplification, efficiency, altitude) with parallel agents, then apply the cleanups. It reviews changed-code quality, not correctness bugs. It brings [Claude Code's built-in `/simplify`](https://code.claude.com/docs/en/code-review#review-a-diff-locally) to Codex, Cursor, and Gemini, which don't ship it natively, so all three get the same review and apply flow.
+
+**Skills:**
+
+- [`simplify`](./plugins/simplify/skills/simplify/SKILL.md) - review the changed diff across four angles and apply the fixes
+
+</details>
+
+<details>
 <summary><strong>fable-advisor</strong> - On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it</summary>
 
 | Claude Code                                     | Codex CLI                                                               | Gemini CLI                                                 |

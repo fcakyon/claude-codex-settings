@@ -13,6 +13,8 @@ plain-language branch name rather than copying the full text.
 
 ## Process
 
+**First, run the `/simplify` skill on the staged diff and apply its findings before committing. Docs-only diffs are a no-op.**
+
 1. **Preferred execution**
    - If subagents are available, use `github-dev:pr-creator` for the full workflow.
    - Pass along any extra invocation text plus session findings and motivation as additional context.

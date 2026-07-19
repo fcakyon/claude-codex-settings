@@ -3,6 +3,13 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
+      "name": "simplify",
+      "source": "./plugins/simplify",
+      "description": "Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "fable-advisor",
       "source": "./plugins/fable-advisor",
       "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
@@ -139,7 +146,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
-      "version": "2.4.1",
+      "version": "2.4.2",
       "license": "Apache-2.0"
     },
     {
