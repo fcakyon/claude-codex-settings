@@ -26,6 +26,7 @@ hcloud config add <key> <value>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -67,6 +68,7 @@ hcloud config get <key>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -106,6 +108,7 @@ hcloud config list
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -146,6 +149,7 @@ hcloud config remove <key> <value>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -186,6 +190,7 @@ hcloud config set <key> <value>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -226,6 +231,7 @@ hcloud config unset <key>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -261,6 +267,7 @@ hcloud context active
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -297,6 +304,7 @@ hcloud context create [--token-from-env] <name>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -332,6 +340,7 @@ hcloud context delete <context>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -381,6 +390,7 @@ hcloud context list [options]
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -416,6 +426,7 @@ hcloud context rename <context> <name>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -451,6 +462,7 @@ hcloud context unset
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -486,6 +498,7 @@ hcloud context use <context>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages

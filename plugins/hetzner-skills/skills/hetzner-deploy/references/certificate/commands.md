@@ -22,6 +22,7 @@ hcloud certificate add-label [--overwrite] <certificate> <label>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -64,6 +65,7 @@ hcloud certificate create [options] --name <name> (--type managed --domain <doma
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -99,6 +101,7 @@ hcloud certificate delete <certificate>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -135,6 +138,7 @@ hcloud certificate describe [options] <certificate>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -195,6 +199,7 @@ hcloud certificate list [options]
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -231,6 +236,7 @@ hcloud certificate remove-label <certificate> (--all | <label>...)
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -266,6 +272,7 @@ hcloud certificate retry <certificate>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -302,6 +309,7 @@ hcloud certificate update [options] <certificate>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages

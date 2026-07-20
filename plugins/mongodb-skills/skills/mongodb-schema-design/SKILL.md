@@ -2,6 +2,8 @@
 name: mongodb-schema-design
 description: MongoDB schema design patterns and anti-patterns. Use when designing data models, reviewing schemas, migrating from SQL, or troubleshooting performance issues caused by schema problems. Triggers on "design schema", "embed vs reference", "MongoDB data model", "schema review", "unbounded arrays", "one-to-many", "tree structure", "16MB limit", "schema validation", "JSON Schema", "time series", "schema migration", "polymorphic", "TTL", "data lifecycle", "archive", "index explosion", "unnecessary indexes", "approximation pattern", "document versioning".
 license: Apache-2.0
+metadata:
+  version: "1.0.0"
 ---
 
 # MongoDB Schema Design
@@ -50,6 +52,44 @@ Reference these guidelines when:
 - [pattern-polymorphic](references/pattern-polymorphic.md) - Store different types of entities in the same collection, often when they are different types of the same base entity (e.g. different types of users or different types of products)
 - [pattern-schema-versioning](references/pattern-schema-versioning.md) - Schema evolution, preventing drift, and safe online migrations. Consult when encountering inconsistent document structures, or when planning a schema change that cannot be applied atomically.
 - [pattern-time-series-collections](references/pattern-time-series-collections.md) - Use native time series collections for high-frequency time series data
+
+### Access Pattern Analysis
+
+Do not immediately recommend a pattern or schema change without understanding the broader context. Together with the user, analyze access patterns to identify pain points and opportunities for optimization.
+
+#### Workflow
+
+**Step 1: Assess the environment**
+Ask the user:
+  - Is this a new design or is there a production database with existing access patterns to analyze?
+  - If there is production data, is it on Atlas? If yes, what tier? (M0/M2/M5 vs M10+)
+
+**Step 2: Determine workload type**
+Is the workload read-heavy, write-heavy, or balanced? This will influence which diagnostic sources are most relevant.
+Ask the user:
+- What's the primary workload for these collections — read-heavy (analytics, reports, searches), write-heavy (logging, IoT ingestion, frequent updates), or balanced?
+
+Verify with `db.serverStatus().opcounters`.
+
+**Step 3: Work with the user to choose the best source(s)**
+  Recommend the best source(s) for their situation, explaining the tradeoffs. For schema design decisions, we often need to combine multiple sources for a complete picture.
+
+**Step 4: Proceed with analysis**
+  Only after source selection, fetch data or guide the user through analysis.
+
+#### Sources
+
+- [Query statistics](references/source-query-stats.md) - Returns runtime statistics for recorded queries showing query shapes and frequency. **Limitation**: Currently only captures read operations (pair with other sources for write patterns). Requires Atlas M10+ tier.
+- [Atlas Slow Query Logs](references/source-slow-query-logs.md) - Review slow queries (actual queries, not shapes) to identify performance bottlenecks. Captures all reads and writes. Requires Atlas M10+ tier.
+- Codebase - Examine actual queries in application code to understand access patterns, especially for new applications or with changing workloads. Can be used in conjunction with query stats for a more complete picture.
+- Natural language input - Ask the user to describe their typical queries and access patterns in natural language. Can be used as the only source or to supplement and validate other sources - the user might have contextual knowledge that is not reflected in the data or codebase.
+
+**Combining Query Stats and Slow Query Logs:**
+
+Use both together for comprehensive analysis:
+1. Query Stats → identify frequent access patterns (which queries run most often)
+2. Slow Query Logs → identify performance bottlenecks (which queries are slow)
+3. Focus schema optimization on queries that are both frequent AND slow (highest impact)
 
 ## Key Principle
 
@@ -100,7 +140,7 @@ Each reference file contains:
 
 For automatic verification, connect the [MongoDB MCP Server](https://github.com/mongodb-js/mongodb-mcp-server).
 
-If the MCP server is running and connected, I can automatically run verification commands to check your actual schema, document sizes, array lengths, index usage, and more. This allows me to provide tailored recommendations based on your real data, not just code patterns.
+If the MCP server is running and connected, I can automatically run verification commands to check your actual schema, document sizes, array lengths, index usage, slow query logs, and more. This allows me to provide tailored recommendations based on your real data, not just code patterns.
 
 **⚠️ Security**: Use `--readOnly` for safety. Remove only if you need write operations.
 

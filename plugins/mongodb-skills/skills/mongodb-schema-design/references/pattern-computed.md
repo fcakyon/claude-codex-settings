@@ -147,25 +147,16 @@ On-demand materialized views are not automatically refreshed—you control when 
 
 ## Verify with
 
-```javascript
-// Find expensive aggregations that should be pre-computed
-db.setProfilingLevel(1, { slowms: 100 }) // Disable afterwards
-db.system.profile.find({
-  "command.aggregate": { $exists: true },
-  millis: { $gt: 100 }
-}).sort({ millis: -1 })
+### Find expensive aggregations that should be pre-computed
 
-// Check if same aggregation runs repeatedly
-db.system.profile.aggregate([
-  { $match: { "command.aggregate": { $exists: true } } },
-  { $group: {
-    _id: "$command.pipeline",
-    count: { $sum: 1 },
-    avgMs: { $avg: "$millis" }
-  }},
-  { $match: { count: { $gt: 100 } } }  // Repeated 100+ times
-])
-// High count + high avgMs = candidate for computed pattern
-```
+For Atlas M10+ use slow query logs to find the slowest aggregations. See [Slow query logs](references/source-slow-query-logs.md). 
+Use codebase if available, ask the user.
+
+### Check if same aggregation runs repeatedly
+
+For Atlas M10+ use $queryStats. See [Query Stats](references/source-query-stats.md)
+Use codebase if available, ask the user.
+
+High count + high avgMs on an aggregation that computes a result = candidate for computed pattern
 
 Reference: [Computed Schema Pattern](https://mongodb.com/docs/manual/data-modeling/design-patterns/computed-values/computed-schema-pattern/)

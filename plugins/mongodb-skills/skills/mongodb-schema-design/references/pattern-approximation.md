@@ -56,25 +56,23 @@ Use Approximation when staleness is acceptable. Use Computed when exact values a
 
 ## Verify with
 
-```javascript
-// Check write frequency on counter fields
-db.setProfilingLevel(1, { slowms: 0 })
-db.system.profile.find({
-  "command.update": "articles",
-  "command.updates.u.$inc.viewCount": { $exists: true }
-}).count()
-// High count relative to read count suggests approximation would help
+### Check write frequency on counter fields
 
+Use codebase if available, ask the user.
+
+High count relative to read count on a specific field suggests approximation would help
+
+```javascript
 // Compare counter staleness
 db.articles.aggregate([
+  { $sort: { lastSyncedAt: 1 } },
+  { $limit: 10 },
   { $project: {
     title: 1,
     viewCount: 1,
     lastSyncedAt: 1,
     staleness: { $subtract: ["$$NOW", "$lastSyncedAt"] }
-  }},
-  { $sort: { staleness: -1 } },
-  { $limit: 10 }
+  }}
 ])
 // Verify staleness is within acceptable bounds for your use case
 ```

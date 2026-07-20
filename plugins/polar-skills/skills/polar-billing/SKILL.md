@@ -55,6 +55,22 @@ Shopping cart/payment session before order confirmation.
 
 ---
 
+### CheckoutLink
+**File:** `server/polar/models/checkout_link.py`
+
+Persistent URL that creates Checkout Sessions on visit.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `client_secret` | str | Unique identifier for the URL |
+| `seats` | int \| None | Preconfigured seat count for seat-based pricing |
+| `discount_id` | UUID \| None | Preset discount to apply |
+| `trial_interval`, `trial_interval_count` | Trial config | Override product trial settings |
+
+**Relationships:** organization, products, discount
+
+---
+
 ### Order
 **File:** `server/polar/models/order.py`
 
@@ -88,7 +104,9 @@ Recurring billing relationship.
 | Field | Type | Description |
 |-------|------|-------------|
 | `status` | SubscriptionStatus | incomplete, trialing, active, past_due, canceled, unpaid |
-| `amount`, `currency` | int, str | Subscription price |
+| `amount`, `currency` | int, str | Subscription gross price |
+| `net_amount` | int | Net amount (gross minus inclusive tax, equal to gross if tax-exclusive) |
+| `tax_behavior` | TaxBehavior \| None | Inclusive, exclusive, or null (set at creation) |
 | `recurring_interval` | Interval | month, year |
 | `current_period_start/end` | datetime | Billing period |
 | `trial_start/end` | datetime | Trial period |
@@ -97,7 +115,7 @@ Recurring billing relationship.
 | `past_due_at` | datetime | When payment failed |
 | `seats` | int | For seat-based pricing |
 
-**Relationships:** customer, product, payment_method, discount, meters, grants (benefits)
+**Relationships:** organization, customer, product, payment_method, discount, meters, grants (benefits)
 
 ---
 
@@ -127,6 +145,7 @@ Individual payment transaction.
 | `status` | PaymentStatus | pending, succeeded, failed |
 | `processor_id` | str | Stripe charge ID |
 | `method` | str | card, bank_transfer, etc. |
+| `trigger` | PaymentTrigger \| None | What initiated payment: purchase, subscription_cycle, retry_dunning, retry_customer, retry_payment_method_update, retry_admin |
 | `decline_reason` | str | Why payment failed |
 | `risk_level`, `risk_score` | str, int | Fraud assessment |
 
@@ -150,6 +169,7 @@ Individual payment transaction.
 | Field | Type | Description |
 |-------|------|-------------|
 | `email`, `name` | str | Contact info |
+| `billing_name` | str | Name for invoices (falls back to `name`) |
 | `stripe_customer_id` | str | Stripe link |
 | `billing_address` | Address | Stored address |
 | `tax_id` | str | For tax compliance |
@@ -161,9 +181,8 @@ Individual payment transaction.
 
 | ProductPrice Types | Description |
 |-------------------|-------------|
-| `ProductPriceFixed` | Fixed amount |
+| `ProductPriceFixed` | Fixed amount (set `price_amount=0` for free) |
 | `ProductPriceCustom` | Merchant sets at checkout |
-| `ProductPriceFree` | Zero cost |
 | `ProductPriceMeteredUnit` | Pay-per-unit |
 | `ProductPriceSeatUnit` | Per-seat with tiers |
 
@@ -190,7 +209,7 @@ Organization
 │   ├── ProductPrice (multiple per product)
 │   └── ProductBenefit → Benefit
 ├── Customer
-│   ├── Subscription → Product, Discount
+│   ├── Subscription → Organization, Product, Discount
 │   │   ├── SubscriptionProductPrice
 │   │   ├── SubscriptionMeter
 │   │   └── BenefitGrant
@@ -226,9 +245,9 @@ Core subscription operations:
 create_or_update_from_checkout(checkout, payment_method) → (Subscription, created)
 
 # Updates
-update_product(subscription, product_id, proration_behavior)
+update_product(subscription, product_id, proration_behavior, discount=None)
 update_seats(subscription, seats, proration_behavior)
-update_discount(subscription, discount_id)
+update_discount(subscription, discount)  # discount: UUID | Literal["unset"]
 update_trial(subscription, trial_end)
 
 # Lifecycle
@@ -276,6 +295,7 @@ handle_failure(payment)  # Update order status
 ```python
 create(order, amount, reason, revoke_benefits)
 upsert_from_stripe(stripe_refund)
+# Also enqueues chargeback prevention notice for dispute_prevention refunds
 ```
 
 ### BenefitGrantService
@@ -298,7 +318,7 @@ revoke_benefit(customer, benefit)
 |------|---------|--------|
 | `subscription.cycle` | Scheduler at period end | Renew subscription, create order |
 | `subscription.update_product_benefits_grants` | Product benefits changed | Update all grants |
-| `subscription.cancel_customer` | Customer deleted | Cancel all subscriptions |
+| `subscription.cancel_customer` | Customer deleted | Cancel all billable subscriptions (trialing, active, past_due) |
 
 ### Order Tasks
 **File:** `server/polar/order/tasks.py`
@@ -348,6 +368,18 @@ revoke_benefit(customer, benefit)
 | Task | Trigger | Action |
 |------|---------|--------|
 | `payout.trigger_stripe_payouts` | **Daily 00:15 UTC** | Initiate pending payouts |
+| `payout.created` | Payout created | Event hook (fires for held payouts too) |
+| `payout.transfer` | After payout.created | Stripe transfer (skipped for held) |
+| `payout.release_held_payouts` | Org approved | Move held → pending, enqueue transfers |
+| `payout.cancel_account_payouts` | Org denied/blocked/offboarding | Cancel held+pending payouts |
+| `payout.cancel_held_payouts` | Payout account swap | Cancel only held payouts on old account |
+
+### Refund Tasks
+**File:** `server/polar/refund/tasks.py`
+
+| Task | Trigger | Action |
+|------|---------|--------|
+| `refund.send_chargeback_prevention_notice` | Dispute prevention refund created | Email org owners/admins about refund |
 
 ---
 
@@ -545,7 +577,9 @@ BillingEntry(
 | `discord` | Server role | Assign Discord role |
 | `license_keys` | License distribution | Generate key |
 | `downloadables` | File access | Grant download permission |
-| `custom` | Webhook-based | Call external URL |
+| `slack_shared_channel` | Slack Connect channel | Create/invite to shared channel |
+| `feature_flag` | Feature toggle (API-only) | None — merchant reads via API |
+| `custom` | Customer-visible note | None — displayed in customer portal |
 
 ### Benefit Grant Flow
 
@@ -678,9 +712,16 @@ payment fails → status=past_due, past_due_at=now
 2. payout.trigger_stripe_payouts (daily)
 3. Calculate available balance
 4. Create Payout record
-5. stripe_service.transfer() to Connect account
+   - ACTIVE/OFFBOARDED org: status=pending, enqueue payout.created + payout.transfer
+   - REVIEW/SNOOZED org: status=held, enqueue payout.created only
+5. stripe_service.transfer() to Connect account (skipped for held)
 6. stripe_service.create_payout() to bank
 7. payout.paid webhook → update status
+
+Held payout lifecycle:
+- When org approved: payout.release_held_payouts → status=pending, enqueue transfer
+- When org denied/blocked/offboarding: payout.cancel_account_payouts → cancel + refund
+- When payout account swapped: payout.cancel_held_payouts (old account only)
 ```
 
 ---
@@ -741,6 +782,7 @@ server/polar/
 ├── checkout/tasks.py
 ├── benefit/tasks.py
 ├── payout/tasks.py
+├── refund/tasks.py
 └── integrations/stripe/tasks.py
 ```
 

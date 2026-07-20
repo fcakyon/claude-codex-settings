@@ -22,6 +22,7 @@ hcloud storage-box add-label [--overwrite] <storage-box> <label>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -62,6 +63,7 @@ hcloud storage-box change-type <storage-box> <storage-box-type>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -110,6 +112,7 @@ hcloud storage-box create [options] --name <name> --type <type> --location <loca
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -145,6 +148,7 @@ hcloud storage-box delete <storage-box>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -181,6 +185,7 @@ hcloud storage-box describe [options] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -216,6 +221,7 @@ hcloud storage-box disable-protection <storage-box> delete
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -251,6 +257,7 @@ hcloud storage-box disable-snapshot-plan <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -286,6 +293,7 @@ hcloud storage-box enable-protection <storage-box> delete
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -339,6 +347,7 @@ hcloud storage-box enable-snapshot-plan [options] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -376,6 +385,7 @@ hcloud storage-box folders <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -436,6 +446,7 @@ hcloud storage-box list [options]
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -472,6 +483,7 @@ hcloud storage-box remove-label <storage-box> (--all | <label>...)
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -508,6 +520,7 @@ hcloud storage-box reset-password --password <password> <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -544,6 +557,7 @@ hcloud storage-box rollback-snapshot --snapshot <snapshot> <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -575,6 +589,7 @@ Manage Storage Box Snapshots
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -618,6 +633,7 @@ hcloud storage-box snapshot add-label [--overwrite] <storage-box> <snapshot> <la
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -656,6 +672,7 @@ hcloud storage-box snapshot create [--description <description>] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -691,6 +708,7 @@ hcloud storage-box snapshot delete <storage-box> <snapshot>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -727,6 +745,7 @@ hcloud storage-box snapshot describe [options] <storage-box> <snapshot>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -785,6 +804,7 @@ hcloud storage-box snapshot list [options] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -821,6 +841,7 @@ hcloud storage-box snapshot remove-label <storage-box> <snapshot> (--all | <labe
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -857,6 +878,7 @@ hcloud storage-box snapshot update [options] <storage-box> <snapshot>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -888,6 +910,7 @@ Manage Storage Box Subaccounts
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -932,6 +955,7 @@ hcloud storage-box subaccount change-home-directory --home-directory <home-direc
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -978,6 +1002,7 @@ hcloud storage-box subaccount create [options] --password <password> --home-dire
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1013,6 +1038,7 @@ hcloud storage-box subaccount delete <storage-box> <subaccount>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1049,6 +1075,7 @@ hcloud storage-box subaccount describe [options] <storage-box> <subaccount>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1106,6 +1133,7 @@ hcloud storage-box subaccount list [options] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1142,6 +1170,7 @@ hcloud storage-box subaccount reset-password --password <password> <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1182,6 +1211,7 @@ hcloud storage-box subaccount update-access-settings [options] <storage-box> <su
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1219,6 +1249,7 @@ hcloud storage-box subaccount update [options] <storage-box> <subaccount>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1259,6 +1290,7 @@ hcloud storage-box update-access-settings [options] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -1295,6 +1327,7 @@ hcloud storage-box update [options] <storage-box>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages

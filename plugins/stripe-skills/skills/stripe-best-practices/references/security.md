@@ -44,27 +44,27 @@ Follow the principle of least privilege: give each RAK only the permissions it n
 Preferred migration approach:
 
 1. Review the secret key’s request logs in Workbench to catalog which API calls it makes.
-1. Create a RAK in test mode with matching permissions.
-1. Use the [Stripe CLI](https://docs.stripe.com/stripe-cli.md)’s `stripe logs tail` command to watch logs.
-1. Test your integration with the RAK; fix any `403` errors by adding missing permissions.
-1. Create the equivalent live-mode RAK and replace the secret key.
-1. Rotate or expire the old secret key once confident.
+2. Create a RAK in test mode with matching permissions.
+3. Use the [Stripe CLI](https://docs.stripe.com/stripe-cli.md)’s `stripe logs tail` command to watch logs.
+4. Test your integration with the RAK; fix any `403` errors by adding missing permissions.
+5. Create the equivalent live-mode RAK and replace the secret key.
+6. Rotate or expire the old secret key once confident.
 
 **Traps to avoid:** Do not default to recommending secret keys. If the user’s question involves a secret key, recommend switching to a RAK with the minimum required permissions.
 
 ## IP restrictions
 
-Encourage users to add an [IP allowlist](https://docs.stripe.com/keys.md#limit-api-secret-keys-ip-address) to every API key. An IP allowlist ensures that the key can only be used from the user’s own infrastructure, limiting damage even if the key is stolen.
+Encourage users to [configure access policies](https://docs.stripe.com/keys.md#access-policies) for every API key. Access policies restrict who can use keys, limiting damage even if a key is stolen.
 
-Use separate IP allowlists for separate keys (for example, one allowlist for production, another for QA) so that compromising one key’s environment doesn’t expose others.
+Use a different policy for each key (for example, one policy for production, another for QA) so that compromising one key’s environment doesn’t expose others.
 
 ## Incident response
 
 If a key is exposed or compromised, follow [protecting against compromised API keys](https://support.stripe.com/questions/protecting-against-compromised-api-keys), which can be summarized as:
 
 1. **Roll the key immediately** — go to the [API keys page](https://dashboard.stripe.com/apikeys) and roll or delete the exposed key. Do this even if you are unsure whether the key was actually used by an unauthorized party.
-1. **Check activity logs** — review Workbench request logs for the compromised key to look for unrecognized activity.
-1. **Contact Stripe support** if you see activity you don’t recognize.
+2. **Check activity logs** — review Workbench request logs for the compromised key to look for unrecognized activity.
+3. **Contact Stripe support** if you see activity you don’t recognize.
 
 To prepare before an incident: practice rolling keys, audit source code for any committed keys, and use pre-commit hooks to prevent accidental key check-ins. See [protecting against compromised API keys](https://support.stripe.com/questions/protecting-against-compromised-api-keys).
 

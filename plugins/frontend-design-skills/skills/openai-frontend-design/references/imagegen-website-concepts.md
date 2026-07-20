@@ -1,114 +1,132 @@
-# Imagegen Interface Concept Prompts
+# Imagegen Interface Concept Briefing Guidance
 
-Use this reference with the installed @imagegen skill when Frontend App Builder needs an overall visual concept before implementation. For new apps, dashboards, product interfaces, tools, games, websites, redesigns, and visually driven UI work from scratch, generate this concept unless the user explicitly says not to use Image Gen for concepting or asks you to follow existing code/design/art instead.
+Use this reference with the installed @imagegen skill when Frontend App Builder needs an overall visual concept. This is guidance, not a prompt template. Write a natural design-director brief tailored to the task.
 
-If the user asks to generate a concept ahead of time, review concept options, or wait for approval before implementation, stop after showing the generated concept and iterate with the user. Do not implement until the user approves the concept or asks to implement it. Once implementation starts, the approved concept becomes the active spec and must be implemented faithfully with browser verification.
+## Must Include
+
+Copy concrete details from the user request, screenshots, existing app, or plan. Do not reduce them to a generic category like "modern landing page" or "clean dashboard."
+
+- Scope: complete page, complete app screen, multi-state product surface, dashboard, game screen, or coordinated section/state concepts. For multi-section pages, name the section set and ask for a large readable concept screenshot for each major section.
+- Purpose and audience: what the page/product helps the user do, and who it is for.
+- Exact visible content: headlines, labels, CTAs, section names, nav items, table fields, sample entities, dates, prices, statuses, media requirements, and required copy. After a concept is accepted, this becomes the visible-copy lock.
+- Structure: first viewport composition, downstream section order, sidebars, rails, drawers, grids, tables, charts, media areas, forms, footer/status regions, and responsive continuation.
+- Interaction model: selected state, hover/focus affordances, filters, tabs, mode switches, creation/editing flow, success state, playback state, game HUD, or other local-state behavior the implementation must support.
+- Visual system: palette mood, typography personality, content text scale, UI chrome/control text scale, density, spacing rhythm, radii, shadows, borders, container model, card usage, icon style, image treatment, brand mark direction, and reference style.
+- Implementation constraints: code-native app UI text and controls, fully rendered product/background assets with their own text and branding when appropriate, separable assets, reusable component families, clear design-system tokens, accessible/responsive layout, and practical production design-spec handoff. For complex dashboards, tools, editors, or multi-panel product surfaces, assume a React + Vite implementation unless the user or repo specifies otherwise, with a component structure a strong front-end engineer would recognize.
+- Negative constraints: no header-only crops for full-surface work, no extra product areas, no fake metrics, no decorative filler, no default card grids, no hero eyebrow/kicker/pretitle/badge/pill above the main heading unless explicitly requested or present in the reference, no gradients that conflict with the design direction, no pasted-in images that fail to blend with the background, no unrelated sections, no new claims, and no moving true app UI text into images.
 
 ## Quality Bar
 
-Every interface concept should optimize for high-taste restraint:
+Every concept should feel like a professional product mockup by a senior product designer:
 
-- Agency-quality, minimal, polished, and intentional.
-- One clear focal idea per viewport.
-- Generous whitespace and strong hierarchy.
-- Restrained color system with one or two purposeful accents.
-- Elegant, readable typography with tasteful contrast.
-- Fewer components, better executed.
-- Clean UI with restrained content density by default.
-- No extra content, sections, cards, metrics, labels, or decorative UI unless they directly support the user's request.
-- Landing pages should make the offer, product signal, and primary action obvious without cramming the first viewport.
-- Product interfaces and dashboards should feel useful and believable, with clear workflows, readable states, intentional density, and controls that can become clickable local-state interactions in the implementation.
-- The concept must be implementable as a product surface, not just attractive art: show the primary workflow anatomy, real media/product area when relevant, and enough layout detail for faithful code translation.
-- Game interfaces should establish the play surface, HUD/control placement, visual mood, and interaction affordances without cluttering the player's focus.
+- Clean, airy, distinctive, and not repetitive by default.
+- One clear creative idea or visual point of view.
+- Full requested surface, not just a hero, unless the user only asked for a hero.
+- Strong first viewport with clear offer, product signal, and primary action.
+- Coherent full-page rhythm across sections, states, and responsive continuation, without repetitive card stacks or repeated section formulas.
+- Cohesive section-to-section flow: connect sections with shared spacing, palette, type rhythm, media treatment, and subtle transitions, not by inventing major new UI components.
+- Excellent typography and intentional whitespace, including buttons, tabs, inputs, sidebars, table cells, labels, and other control chrome.
+- Simpler by default: fewer, stronger visual elements instead of filling the page with illustrations, iconography, decorative widgets, or complex UI chrome.
+- Consistent visual system: palette, gradients, spacing, components, icon style, imagery, shadows, borders, and container model.
+- Icon fidelity matters when icons are present: preserve metaphor, stroke weight, filled vs outline style, corner shape, size, color, alignment, spacing, and states.
+- Color fidelity is mandatory: the implementation must match the generated design's actual background, surface, text, border, shadow, and accent colors. If the concept uses a white background, it must stay white, not cream, ivory, beige, warm gray, or softened off-white.
+- Hero media treatment must be preserved. If the hero image has no color overlay or tint in the concept, do not add one in implementation. Edge fades, masks, or background gradients may blend image edges into the page, but they must not wash the image with a color overlay.
+- Clear design-system signal: typography scale, control text styles, reusable component families, variants, spacing rhythm, and tokens that can be extracted before coding.
+- High-quality assets for logos, brand marks, hero imagery, product renders, background scenes, illustrations, textures, thumbnails, posters, avatars, or empty states. Product/background assets should be fully rendered with consistent branding and in-image text when that text belongs to the asset.
+- Purposeful motion/interaction cues that can be implemented later.
+- Specific, non-generic copy when the user has not supplied exact copy.
 
-Avoid over-designed output unless the user explicitly asks for it:
+Default to roughly 7/10 creativity: distinctive and art-directed, but still implementable. "Clean" means airy, edited, legible, not cluttered, and not repetitive.
 
-- Busy sci-fi dashboards, cyberpunk HUD overlays, neon grids, excessive glow, and floating metric panels.
-- Crammed feature-card walls, unnecessary badges, redundant icon rows, fake charts, and fake metrics.
-- Decorative elements that do not clarify the product, action, or story.
-- Generic stock-style layouts, placeholder gray boxes, unreadable UI text, fake brand names, and watermarks.
-- Filling whitespace with content just because the canvas has room.
-- Dense first screens unless the user specifically requested an operational dashboard, data-heavy interface, or game HUD that genuinely needs that density.
+Avoid: unnecessary cards, hero eyebrow/kicker labels, pills, badges, stats, icon rows, excessive illustrations, decorative iconography, overcomplicated header UI, fake charts, fake metrics, fake jargon, generic brand names, bokeh/orb decoration, neon grids, excessive glow, mismatched gradients, pasted-looking images, unreadable text, and filling whitespace just because it exists.
 
-## Full Page Or App Concept
+## Visual Direction Defaults
 
-Use for new creative websites, landing pages, product pages, portfolios, microsites, dashboards, app screens, tools, game UIs, and visually distinctive app surfaces.
+Before writing the Image Gen brief, choose a compact visual direction that fits the product and audience. Do not expose this as a rigid template; use it to make the brief more specific.
 
-```text
-Use case: ui-mockup
-Asset type: full-page or app interface concept for implementation reference
-Primary request: <user request>
-Page purpose: <what the page must help the user do or understand>
-Audience: <target visitor or operator>
-Content priorities: <must-show sections, states, workflow steps, or information, in order>
-Style/medium: high-taste agency-quality web UI mockup, minimal polished production-ready interface
-Composition/framing: <desktop/mobile/wide hero/section stack/dashboard canvas/game screen/viewport or aspect ratio>; one clear focal idea, generous whitespace, restrained section count, no visual crowding
-Typography direction: elegant readable web typography; <sans/serif/mono/display notes>
-Color palette: <brand colors or tasteful palette>; restrained with one or two purposeful accents
-Imagery: <product, people, environment, abstract, none>
-Interaction feel: <quiet utility, editorial, premium product, playful, game-like, technical, etc.>
-Motion/interaction direction: <subtle page-load choreography, hover/focus behavior, animated product preview, simulated interactive demo, scroll reveal, core app workflow, etc.>
-Constraints: keep UI clean, intentional, and uncluttered; embrace whitespace; use less content unless the user explicitly asks for more or the dashboard/game requires intentional density; fewer elements, better hierarchy; include enough visual language to extend the rest of the page if the concept only shows one viewport; make app controls and workflow states implementable with local state; avoid unnecessary badges, cards, charts, icons, stats, HUD elements, controls, or decorative sections; keep exact copy and controls for code implementation
-Avoid: busy dashboards, cyberpunk HUD overlays, neon grids, excessive glow, floating metric panels, crammed feature grids, overbuilt game HUDs, placeholder gray boxes, unreadable dense text, fake brand names, watermarks
-```
+- Baseline settings: roughly 7/10 creativity, low-to-medium visual density, generous spacing, high implementation clarity, strong typography discipline, and image-led moments when real visuals improve the page.
+- Choose one theme paradigm, one background character, one typography character, one hero or primary-screen architecture, one section rhythm, 2-4 signature component motifs, and 1-2 motion cues. Keep every generated section/state/detail concept inside that same design world.
+- For heroes and first viewports, ask for one clear focal point, a short headline or primary task, restrained supporting copy, a visible primary CTA or control, and enough breathing room for a small laptop viewport. Avoid stuffing the first screen with proof chips, badges, fake stats, or multiple competing panels.
+- Default headers should stay quiet: brand mark, essential navigation, and one primary action or control. Avoid icon-heavy nav, extra buttons, search bars, status widgets, segmented controls, decorative illustrations, or dense product chrome in the header unless explicitly requested or required by the workflow.
+- Prefer one or two high-quality image or illustration moments over many small decorative visuals. Use iconography only when it clarifies navigation, controls, or product meaning.
+- Prefer open layouts, strong bands, rails, lists, tables, canvases, and purposeful single frames over nested cards, giant rounded section wrappers, default bento grids, or overcompartmentalized dashboards.
+- Long pages should vary rhythm across sections: density, image-to-text ratio, alignment, scale, whitespace, and visual tempo should change deliberately while preserving one palette, typography system, component family, and spacing logic.
+- Multi-section pages should feel like one cohesive website through shared gutters, background bands, alignment, typography rhythm, recurring media frames, color cadence, and restrained transitions. Do not add major new carousels, accordions, pricing cards, dashboards, forms, tab systems, feature grids, or other component families unless the user requested them or the accepted concepts show them.
+- Ask for media and generated imagery in implementation-friendly frames: stable aspect ratios, consistent crop/radius/shadow logic, and clear placement in the layout. Avoid random image sizes, pasted-looking crops, or uncontrolled collage systems unless the user requests that style.
+- UI restraints: small labels, utility pills, pseudo-system markers, fake metrics, and decorative dashboard jargon should appear only when they communicate real structure or product meaning.
 
-## Redesign From Screenshot
+## Image Count And Clarity
 
-Use when an existing site or app should be refreshed, restyled, modernized, or adapted to a new visual style.
+Inside Codex, readability and extraction quality outrank compact presentation.
 
-```text
-Use case: style-transfer
-Asset type: website redesign concept for implementation reference
-Input images: Image 1: edit target or visual reference screenshot of the existing website
-Primary request: redesign the existing page with <requested style or goal>
-Preserve: information architecture, core content hierarchy, navigation meaning, product/brand cues, and page purpose
-Improve: visual hierarchy, spacing, typography, color, imagery, component polish, and overall composition through simplification, restraint, and better whitespace
-Typography direction: <requested or inferred direction>
-Color palette: <brand palette or tasteful modernization>; calmer, fewer accents
-Motion/interaction direction: <how important visual elements should move, respond, or demonstrate product state and core workflow>
-Constraints: change the visual treatment only; make it more minimal, premium, whitespace-forward, and agency-quality; reduce clutter rather than adding content; preserve the real workflow and controls so the implementation can be interactive; do not invent unrelated sections, fake metrics, fake logos, or new product claims; keep exact production copy for code implementation
-Avoid: clutter, excessive decoration, cyberpunk HUD elements, neon grid overlays, floating metric cards, unreadable text, watermarks
-```
+- For a 1-section request, generate 1 primary section concept. For 2-10 requested or implied sections, default to 2-10 coordinated primary section concepts, one fresh image per major section, when that improves readability.
+- Use an optional full-page overview only for overall rhythm, section order, and transition logic. Do not treat the overview as the only implementation spec if it compresses text, buttons, cards, or spacing.
+- Generate extra extraction-oriented detail concepts when a section's text, button style, card anatomy, pricing/testimonial details, typography, palette, image treatment, or spacing is not clearly readable.
+- For dashboards, tools, editors, and dense app screens, generate the full primary screen plus focused state/detail concepts for dense areas such as sidebars, tables, inspector panels, modals, charts, toolbars, forms, and selected states.
+- Never crop, slice, zoom, or reuse part of an older full-page image as the main section/detail reference. Ask Image Gen for a fresh standalone section or detail image that keeps the same palette, typography mood, component family, density, asset treatment, and brand world.
+- Do not reduce image count for convenience when doing so makes the later implementation rely on guesswork.
 
-If the screenshot is only a loose reference, label it as a reference image rather than an edit target and generate a new `ui-mockup` concept.
+## Surface Guidance
 
-## Hero Or Section Concept
+Full page or app:
 
-Use when the user asks mainly for a beautiful hero, above-the-fold treatment, pricing section, feature section, or other visually defined page slice.
+- Ask for enough structure to implement the whole requested surface: first viewport, section rhythm, product/workflow anatomy, downstream sections or states, and responsive continuation.
+- Marketing/product pages need a strong hero and clear CTA before proof or feature density. Do not put an eyebrow, kicker, pretitle, badge, or pill above the hero heading unless the user asked for it or the reference already uses it. Use interactive hero UI only for SaaS/software previews, product demos, or purposeful interactive animation; otherwise prefer faithful branded product/background imagery.
+- App screens, dashboards, and tools need the real interaction model: sidebars, panels, tables, timelines, charts, controls, modes, selected states, and primary workflow.
+- For complex app screens, dashboards, editors, and tools, make the generated concept clear enough to break into a real component architecture: app shell, navigation, major feature regions, reusable controls, table/chart/form modules, sample data/state boundaries, and responsive layout behavior. Do not design a surface that can only be implemented as one giant static component.
+- Games need the play surface, HUD/control placement, art direction, reward/hazard language, interaction affordances, and a follow-on production asset pass for sprites, tiles/platforms, collectibles, hazards, goals, props, and background/parallax layers.
 
-```text
-Use case: ui-mockup
-Asset type: website section concept for implementation reference
-Primary request: <requested section>
-Section role: <what this section needs to communicate or let the user do>
-Surrounding page context: <product/category/brand and adjacent sections if known>
-Composition/framing: <full-width hero, split composition, editorial stack, product-led layout, etc.>
-Typography direction: <clear type direction>
-Imagery/materials: <raster imagery, product render, texture, or no generated asset>
-Motion/interaction direction: <hover state, animated product state, scroll reveal, toggle, draggable comparison, etc.>
-Constraints: design the section as implementable HTML/CSS UI; use one strong focal point; embrace whitespace; keep controls, labels, and final text in code; avoid unnecessary UI elements or excess content
-Avoid: generic gradients, decorative filler, excessive cards, floating panels, unreadable UI text, watermarks
-```
+Redesign from screenshot:
+
+- Use the screenshot as the edit target when preserving information architecture matters.
+- Preserve navigation meaning, product/brand cues, content hierarchy, controls, and page purpose.
+- Improve spacing, typography, visual hierarchy, color, image treatment, and component polish without inventing unrelated sections, fake metrics, new claims, or new product areas.
+
+Hero or section:
+
+- Only use this path when the user asks for a section, hero, pricing block, feature section, or other page slice.
+- Include surrounding context and enough visual language to continue the page consistently.
+
+Content-heavy pages:
+
+- For multi-section websites and long landing pages, default to coordinated section concepts: one fresh, large, readable image per major section, with an optional overview only for full-page rhythm.
+- Avoid one huge full-page screenshot when it would reduce section detail, make text/buttons/cards too small, weaken hierarchy, or make implementation matching harder.
+- Keep one accepted layout concept responsible for overall structure and section order.
+- All supporting concepts must share brand language, typography, palette, component geometry, asset style, spacing, and density.
+
+## Asset Planning
+
+- Keep real app UI text, form fields, nav, metrics, and controls in code.
+- Product images, background assets, posters, packaging, signage, hero photos, and brand scenes should be rendered completely by Image Gen with the text, logos, marks, labels, and branding that belong in the asset. Quote exact asset text and require verbatim rendering when text matters.
+- If the concept includes a logo, brand mark, product label, package, poster, sign, product render, or branded background object, use Image Gen editing to create standalone matching assets before coding so the implementation keeps coherent branding.
+- Request transparent backgrounds or clean cutouts when assets need to layer into code-native UI.
+- For games, generate transparent character/state sprites or sprite sheets, terrain/platform tiles, collectibles, hazards, goal/checkpoint objects, props, and 2-3 parallax/background layers when the concept calls for depth. Keep HUD text, score, controls, collision boxes, physics, and game state code-native.
+- Use generated assets for logos, brand marks, hero imagery, product renders, editorial imagery, background scenes, cutouts, textures, posters, thumbnails, avatars, empty-state art, and illustrated objects.
+- Do not crop a full-page concept into production UI as a shortcut. Recreate or isolate needed assets with Image Gen.
+- SVG is fine for faithful icons. Use Image Gen for logos, brand marks, and non-icon visual assets.
+- Supporting asset concepts must match the accepted layout concept; they must not introduce a new visual direction.
 
 ## After Generation
 
-- Inspect the concept before coding. Extract the exact content, information architecture, and design system choices instead of treating the generated image as loose inspiration.
-- Reject busy concepts before implementation. If it looks crammed, ask imagegen for a calmer version with fewer elements, more whitespace, a stronger focal point, and a more restrained palette.
-- List the concrete implementation decisions: exact copy, nav items, CTA labels, section order, brand mark treatment, hero composition, layout, color tokens, type scale, spacing, radius, borders, shadows, image treatment, motion behavior, interactivity, core workflow, and responsive changes.
-- Capture a concept-to-implementation inventory before coding: native concept size/aspect, first-viewport composition, headline line breaks, nav/header geometry, brand mark, panel/card topology, row counts, chart axes, drawers/rails, footer/status regions, data/copy values, asset roles, and visible control states.
-- Treat the accepted concept as the visual specification for implementation. The coded result should match the concept's composition, hierarchy, proportions, palette, typography direction, and asset treatment as closely as possible.
-- If the concept does not show the full requested page, extend the rest of the implementation in the same design language: spacing, type scale, palette, component geometry, imagery style, density, and interaction model.
-- Generate individual raster assets after the overall concept is accepted when they are needed for fidelity: logos, brand marks, hero imagery, product mockups, editorial imagery, cutouts, textures, posters, thumbnails, avatars, or illustrations that are visible in the concept.
-- Additional image generation should reproduce or isolate assets from the accepted concept. Do not create a second hero, character, product mockup, dashboard, or visual motif that changes the design direction.
-- Do not use SVGs as stand-ins for generated visual assets. Use SVG only for icons, and recreate those icons faithfully or use an existing icon system only when it matches the concept accurately. Use imagegen for logos and brand marks unless the user provided an existing vector asset.
-- Bring concept elements to life when they imply product behavior. Dashboards, charts, cards, maps, timelines, device frames, canvases, product mockups, or process flows should get believable hover states, animated state changes, lightweight controls, or simulated interactive demos when feasible.
-- For app interfaces, implement the main user journey so the user can click through the product idea with believable local state, not just inspect a static composition. Controls shown in the concept should work against real local UI state.
-- For media concepts, ensure posters and generated imagery do not hide required real video/audio playback. The implementation must verify the real media loads, plays, seeks, and changes visible frames.
-- For clone-like UI concepts, preserve the recognizable skeleton and designed mock state before adding polish or live data.
-- Keep final UI text, form fields, navigation, and interactive controls in code.
-- Move only project-consumed final assets into the workspace. Preview concepts can stay in imagegen's default generated image location unless the user asks to keep them.
-- Verify the implemented page in the Browser plugin / built-in app browser first. Load the app, inspect the first viewport, scroll, and click through the core workflow before falling back to Playwright.
-- Use Playwright with Chromium only when Browser/IAB is unavailable, cannot access the page, cannot perform the needed interaction, or produces unreliable captures. State the fallback reason.
-- Verify the implemented page against the concept before finishing. Compare the running UI, using transient screenshots when helpful, for layout, spacing, typography, color, image crops, motion, interactivity, and overall polish, then iterate on the code or assets until the result would pass a professional design-agency inspection. Keep going through this loop; do not stop at a partial implementation, a build that merely compiles, or a page that only captures the general vibe.
-- Perform an agency pass before final: compare the concept-native aspect when practical, desktop, and mobile; name at least five concrete mismatches and fix them, or explicitly state that no material mismatches remain. Structural mismatches in topology, branding, copy, density, media behavior, or primary workflow block completion.
-- Remove temporary QA-only screenshots, reports, scratch notes, and intermediate generated assets before handoff unless the user or benchmark explicitly requires them. The accepted concept image may remain available for user iteration.
+- Reject concepts that are header-only for full-surface asks, cluttered, generic, repetitive, under-specified, unreadable, over-decorated, or impractical to implement.
+- For every generated section/state/detail image, extract the section purpose, visual priority, readable text, typography relationships, spacing, button/control styling, component/container logic, colors, image treatment, and unclear details.
+- Extract an icon inventory before coding: every visible icon, glyph, chevron, logo-like mark, toolbar symbol, status symbol, and empty-state symbol, including meaning, outline vs filled style, stroke width, size, color, container, alignment, spacing, and state treatment.
+- If any required detail is still unclear, generate a new standalone section/state/detail image before coding. Do not crop the previous image as a shortcut.
+- Extract a design system before coding: native aspect, layout, section order, copy, nav, CTAs, palette, spacing scale, content typography, UI chrome typography, reusable component families, variants, container model, assets, state, and responsive continuation. Explicitly identify whether each background is true white, off-white, cream, gray, dark, or tinted.
+- Treat the accepted concept as the visual spec. Match composition, hierarchy, palette, gradients, typography, spacing, imagery, components, container model, and asset treatment. Do not strip text or branding out of generated product/background assets just because app UI text should stay code-native.
+- Do not reinterpret the palette for taste. Do not replace white backgrounds with cream/off-white, warm up neutral backgrounds, cool down surfaces, or shift accent colors unless the accepted concept visibly does that.
+- Do not add a color overlay, tint, or translucent wash over a hero image unless the accepted concept clearly has one. If a hero image needs help blending into the surrounding page, prefer a matching generated asset, transparent cutout, edge fade, mask, or background gradient around the image instead of an overlay on top of the image.
+- Do not substitute generic nearby icons for the accepted design's icons. Use the repo's existing icon set or lucide only when it matches the concept; otherwise create a small custom SVG/icon variant that preserves the icon metaphor, fill/stroke style, optical weight, size, color, alignment, and state behavior. Custom SVG icons must be production-quality vector assets with a clear `viewBox`, clean geometry, consistent stroke widths, aligned joins/caps, balanced negative space, optical centering, scalable paths, no jagged or placeholder-looking shapes, and `currentColor` or explicit fills only when they match the design system.
+- For multi-section pages, implement and verify one section or contiguous viewport at a time. Compare the browser screenshot to that section's concept, fix visible drift, then move to the next section. Use the relevant section image as evidence, not only the overview.
+- When stitching section concepts together, use existing design-system continuity instead of inventing major new UI. New component families are allowed only when present in the accepted concept, requested by the user, or needed for a concrete functional requirement that is recorded as an intentional deviation.
+- Build an allowed above-the-fold copy list from the accepted concept and user-provided copy. Do not add new hero, nav, eyebrow/kicker, CTA, label, subtitle, category, or proof text unless it is recorded as an intentional deviation. Semantic H1 or heading-level changes must not invent visible explanatory copy.
+- Do not add decorative hero eyebrows, pills, badges, gradients, or overlays that were not in the accepted design. Images must blend with the surrounding background through matching color, lighting, crop, transparency, edges, and shadow.
+- Do not add UI that does not exist in the design. Generate missing section/state concepts when visual consistency is uncertain.
+- For games, do not replace the accepted art direction with code-drawn placeholder shapes for characters, terrain, collectibles, hazards, goals, or backgrounds. Use Image Gen assets unless a concrete blocker or approved deviation is recorded.
+- Preserve the accepted container model. Do not add cards, floating panels, bordered tiles, or card grids where the spec uses open layout, bands, lists, tables, rails, canvases, or full-bleed composition.
+- Use Browser/IAB first for verification; use Playwright Chromium only when Browser/IAB is unavailable or unreliable.
+- Before final handoff, use `view_image` on the accepted concept and latest browser screenshot in the same QA pass. This cannot be skipped or replaced with browser inspection or functional testing alone.
+- Capture the implementation at the accepted concept's native dimensions when practical; otherwise record the blocker and also verify the current browser viewport.
+- Write a fidelity ledger before final: mismatch, concept evidence, render evidence, and fix made or reason not fixed. Inspect at least five concrete comparison points before claiming fidelity.
+- Judge whether the implementation is agency-signoff faithful and whether a great, highly skilled design agency would sign off on it; include type-scale drift and default-looking control text in that judgment. If not, keep iterating until it would sign off or a concrete blocker remains.
+- Remove temporary QA screenshots, reports, scratch notes, and unused generated assets unless the task requires keeping them.

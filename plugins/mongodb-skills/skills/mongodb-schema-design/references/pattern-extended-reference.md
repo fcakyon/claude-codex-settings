@@ -64,26 +64,9 @@ Keep both a bare reference (`customerId`) and an optional cache subdocument (`cu
 
 ## Verify with
 
-```javascript
-// Find $lookup-heavy aggregations in profile
-db.setProfilingLevel(1, { slowms: 20 }) // Disable afterwards
-db.system.profile.find({
-  "command.aggregate": { $exists: true },
-  "command.pipeline.$lookup": {
-    $exists: true
-  }
-}).sort({ millis: -1 }).limit(10)
+Find lookup-heavy aggregations. See how often lookups hit the same collection. High count = candidate for extended reference
 
-// Check how often lookups hit same collections
-db.system.profile.aggregate([
-  { $match: { "command.pipeline.$lookup": { $exists: true } } },
-  { $project: { pipeline: "$command.pipeline" } },
-  { $unwind: "$pipeline" },
-  { $project: { lookup: { $getField: { field: { $literal: '$lookup' }, input: '$pipeline' } } } },
-  { $match: { "lookup": { $exists: true } } },
-  { $group: { _id: "$lookup.from", count: { $sum: 1 } } }
-])
-// High count = candidate for extended reference
-```
+For Atlas M10+ use $queryStats. See [Query Stats](references/source-query-stats.md) and [Slow query logs](references/source-slow-query-logs.md)
+Use codebase if available, ask the user.
 
 Reference: [Reduce $lookup Operations](https://mongodb.com/docs/manual/data-modeling/design-antipatterns/reduce-lookup-operations/)

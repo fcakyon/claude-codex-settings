@@ -22,6 +22,7 @@ hcloud primary-ip add-label [--overwrite] <primary-ip> <label>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -58,6 +59,7 @@ hcloud primary-ip assign --server <server> <primary-ip>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -80,6 +82,14 @@ Create a Primary IP.
 
 The --datacenter flag is deprecated. Use --location or --assignee-id instead.
 See https://docs.hetzner.cloud/changelog#2025-12-16-phasing-out-datacenters.
+
+The --assignee-type flag will be required together with the --assignee-id flag. Using 
+the default value (server) for the --assignee-type flag is deprecated. Consider 
+explicitly setting the --assignee-type flag.
+
+See https://docs.hetzner.cloud/changelog#2026-04-27-primary-ips-will-return-unassigned
+and https://docs.hetzner.cloud/changelog#2026-04-27-primary-ips-make-assignee_type-optional.
+
 
 ```
 hcloud primary-ip create [options] --type <ipv4|ipv6> --name <name>
@@ -110,6 +120,7 @@ hcloud primary-ip create [options] --type <ipv4|ipv6> --name <name>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -145,6 +156,7 @@ hcloud primary-ip delete <primary-ip>...
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -181,6 +193,7 @@ hcloud primary-ip describe [options] <primary-ip>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -216,6 +229,7 @@ hcloud primary-ip disable-protection <primary-ip> [delete]
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -251,6 +265,7 @@ hcloud primary-ip enable-protection <primary-ip> [delete]
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -313,6 +328,7 @@ hcloud primary-ip list [options]
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -349,6 +365,7 @@ hcloud primary-ip remove-label <primary-ip> (--all | <label>...)
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -387,6 +404,7 @@ hcloud primary-ip set-rdns [--ip <ip>] (--hostname <hostname> | --reset) <primar
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -422,6 +440,7 @@ hcloud primary-ip unassign <primary-ip>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages
@@ -459,6 +478,7 @@ hcloud primary-ip update [options] <primary-ip>
       --debug-file string          File to write debug output to
       --endpoint string            Hetzner Cloud API endpoint (default "https://api.hetzner.cloud/v1")
       --hetzner-endpoint string    Hetzner API endpoint (default "https://api.hetzner.com/v1")
+      --http-timeout duration      Timeout for HTTP requests (default 0 = no timeout)
       --no-experimental-warnings   If true, experimental warnings are not shown
       --poll-interval duration     Interval at which to poll information, for example action progress (default 500ms)
       --quiet                      If true, only print error messages

@@ -190,12 +190,12 @@ npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugin
 
 Official office document skills from [anthropics/skills](https://github.com/anthropics/skills).
 
-| Skill                                                            | Description                                             | Install                                                                                                                                                      |
-| ---------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`pdf`](./plugins/anthropic-office-skills/skills/pdf/SKILL.md)   | PDF processing (read, merge, split, create, OCR, forms) | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pdf.zip)  |
-| [`pptx`](./plugins/anthropic-office-skills/skills/pptx/SKILL.md) | PowerPoint presentation building and editing            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pptx.zip) |
-| [`xlsx`](./plugins/anthropic-office-skills/skills/xlsx/SKILL.md) | Excel spreadsheet processing with formulas              | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/xlsx.zip) |
-| [`docx`](./plugins/anthropic-office-skills/skills/docx/SKILL.md) | Word document creation and editing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/docx.zip) |
+| Skill                                                            | Description                                             | Install                                                                                                                                                               |
+| ---------------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`pdf`](./plugins/anthropic-office-skills/skills/pdf/SKILL.md)   | PDF processing (read, merge, split, create, OCR, forms) | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/anthropic-pdf.zip) |
+| [`pptx`](./plugins/anthropic-office-skills/skills/pptx/SKILL.md) | PowerPoint presentation building and editing            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pptx.zip)          |
+| [`xlsx`](./plugins/anthropic-office-skills/skills/xlsx/SKILL.md) | Excel spreadsheet processing with formulas              | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/xlsx.zip)          |
+| [`docx`](./plugins/anthropic-office-skills/skills/docx/SKILL.md) | Word document creation and editing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/docx.zip)          |
 
 </details>
 
@@ -212,11 +212,11 @@ Official office document skills from [anthropics/skills](https://github.com/anth
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/openai-office-skills --skill '*'
 ```
 
-Official office document skills from [openai/skills](https://github.com/openai/skills).
+Office document skills for creating and editing PDFs, Word documents, slide decks, and spreadsheets.
 
 | Skill                                                                       | Description                                         | Install                                                                                                                                                             |
 | --------------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`pdf`](./plugins/openai-office-skills/skills/pdf/SKILL.md)                 | PDF generation and extraction with visual review    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/pdf.zip)         |
+| [`pdf`](./plugins/openai-office-skills/skills/pdf/SKILL.md)                 | PDF generation and extraction with visual review    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openai-pdf.zip)  |
 | [`slides`](./plugins/openai-office-skills/skills/slides/SKILL.md)           | Slide deck creation with PptxGenJS                  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/slides.zip)      |
 | [`spreadsheet`](./plugins/openai-office-skills/skills/spreadsheet/SKILL.md) | Spreadsheet processing with formulas and formatting | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/spreadsheet.zip) |
 | [`doc`](./plugins/openai-office-skills/skills/doc/SKILL.md)                 | Word document creation and editing                  | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/doc.zip)         |
@@ -313,7 +313,7 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/frontend-design-skills --skill '*'
 ```
 
-Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/skills](https://github.com/openai/skills).
+Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/plugins](https://github.com/openai/plugins).
 
 | Skill                                                                                                     | Description                                                                       | Install                                                                                                                                                                           |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -341,7 +341,7 @@ Official MongoDB agent skills for schema design, query tuning, Atlas Search, and
 
 | Skill                                                                                                             | Description                      | ZIP                                                                                                                                                                                       |
 | ----------------------------------------------------------------------------------------------------------------- | -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`atlas-stream-processing`](./plugins/mongodb-skills/skills/atlas-stream-processing/SKILL.md)                     | Atlas stream processing patterns | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/atlas-stream-processing.zip)           |
+| [`mongodb-atlas-stream-processing`](./plugins/mongodb-skills/skills/mongodb-atlas-stream-processing/SKILL.md)     | Atlas stream processing patterns | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-atlas-stream-processing.zip)   |
 | [`mongodb-connection`](./plugins/mongodb-skills/skills/mongodb-connection/SKILL.md)                               | Connection management            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-connection.zip)                |
 | [`mongodb-mcp-setup`](./plugins/mongodb-skills/skills/mongodb-mcp-setup/SKILL.md)                                 | MCP server setup                 | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-mcp-setup.zip)                 |
 | [`mongodb-natural-language-querying`](./plugins/mongodb-skills/skills/mongodb-natural-language-querying/SKILL.md) | Natural language to queries      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/mongodb-natural-language-querying.zip) |

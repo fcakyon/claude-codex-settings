@@ -11,8 +11,7 @@ If you wish to customize the Dokploy installation on your server, you can modify
 4. **ADVERTISE_ADDR** - Set to another IP address if you want to use a different IP address for Swarm.
 5. **RELEASE_TAG** - Set to a dokploy docker hub tag(latest, canary, feature, etc)
 6. **DATABASE_URL** - Set to another database url if you want to use a different database.
-7. **REDIS_HOST** - Set to another redis url if you want to use a different redis.
-8. **TZ** - Set to another timezone if you want to use a different timezone.
+7. **TZ** - Set to another timezone if you want to use a different timezone.
 
 ## Installation Script
 
@@ -153,13 +152,6 @@ install_dokploy() {
     --mount type=volume,source=dokploy-postgres,target=/var/lib/postgresql/data \
     postgres:16
 
-    docker service create \
-    --name dokploy-redis \
-    --constraint 'node.role==manager' \
-    --network dokploy-network \
-    --mount type=volume,source=dokploy-redis,target=/data \
-    redis:7
-
     # Installation
     docker service create \
       --name dokploy \
@@ -173,7 +165,6 @@ install_dokploy() {
       --update-parallelism 1 \
       --update-order stop-first \
       --constraint 'node.role == manager' \
-      -e ADVERTISE_ADDR=$advertise_addr \
       -e POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password \
       dokploy/dokploy:latest
 
@@ -258,10 +249,13 @@ This structured format clearly lays out the prerequisites, steps, and post-insta
 
 The --advertise-addr parameter in the docker swarm init command specifies the IP address or interface that the Docker Swarm manager node should advertise to other nodes in the Swarm. This address is used by other nodes to communicate with the manager.
 
-By default, this script uses the external IP address of the server, obtained using the `curl -s ifconfig.me` command. However, you might need to customize this address based on your network configuration, especially if your server has multiple network interfaces or if you're setting up Swarm in a private network.
+By default, the script auto-detects the server IP address (the installer at `dokploy.com/install.sh` prefers a private RFC1918 address and falls back to the public IP). However, you might need to customize this address based on your network configuration, especially if your server has multiple network interfaces or if you're setting up Swarm in a private network.
 
-To customize the --advertise-addr parameter, replace the line: `advertise_addr=$(curl -s ifconfig.me)` with your desired IP address or interface, for example:
-`advertise_addr="192.168.1.100"`
+To customize it, set the `ADVERTISE_ADDR` environment variable when running the script:
+
+```bash
+curl -sSL https://dokploy.com/install.sh | sudo ADVERTISE_ADDR=192.168.1.100 sh
+```
 
 :warning: This IP address should be accessible to all nodes that will join the Swarm.
 
@@ -283,32 +277,82 @@ docker service create \
   **Note:** The `--endpoint-mode dnsrr` flag is required for Docker services to work properly in Proxmox LXC containers due to networking limitations.
 </Callout>
 
-## Existing Docker swarm
+## Existing Docker Swarm
 
-If you already have a Docker swarm running on your server and you want to use dokploy, you can use the following command to join it:
+If you already have a Docker Swarm running on your server, do **not** use the installation script — it forces the node to leave the current swarm (`docker swarm leave --force`) and re-initializes it, which would disrupt your existing services.
 
+Instead, run the following steps on a **manager** node. They replicate exactly what the install script does, minus the swarm initialization:
 
 ```bash
+# 1. Create the network
 docker network create --driver overlay --attachable dokploy-network
 
+# 2. Create the config directory
 mkdir -p /etc/dokploy
+chmod 777 /etc/dokploy
 
-chmod -R 777 /etc/dokploy
+# 3. Create the secrets (Postgres password + auth secret)
+openssl rand -base64 32 | tr -d "=+/" | cut -c1-32 | docker secret create dokploy_postgres_password -
+openssl rand -hex 32 | docker secret create dokploy_auth_secret -
 
-docker pull dokploy/dokploy:latest
+# 4. Create the Postgres service
+docker service create \
+  --name dokploy-postgres \
+  --constraint 'node.role==manager' \
+  --network dokploy-network \
+  --env POSTGRES_USER=dokploy \
+  --env POSTGRES_DB=dokploy \
+  --secret source=dokploy_postgres_password,target=/run/secrets/postgres_password \
+  --env POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password \
+  --mount type=volume,source=dokploy-postgres,target=/var/lib/postgresql/data \
+  postgres:16
 
-# Installation
+# 5. Create the Dokploy service
 docker service create \
   --name dokploy \
   --replicas 1 \
   --network dokploy-network \
   --mount type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
   --mount type=bind,source=/etc/dokploy,target=/etc/dokploy \
+  --mount type=volume,source=dokploy,target=/root/.docker \
+  --secret source=dokploy_postgres_password,target=/run/secrets/postgres_password \
+  --secret source=dokploy_auth_secret,target=/run/secrets/dokploy_auth_secret \
   --publish published=3000,target=3000,mode=host \
   --update-parallelism 1 \
   --update-order stop-first \
+  --constraint 'node.role == manager' \
+  -e POSTGRES_PASSWORD_FILE=/run/secrets/postgres_password \
+  -e BETTER_AUTH_SECRET_FILE=/run/secrets/dokploy_auth_secret \
   dokploy/dokploy:latest
+
+# 6. Create the Traefik container
+# Dokploy generates the Traefik configuration in /etc/dokploy/traefik
+# on first boot, so give it a few seconds to start
+sleep 10
+
+docker run -d \
+  --name dokploy-traefik \
+  --restart always \
+  -v /etc/dokploy/traefik/traefik.yml:/etc/traefik/traefik.yml \
+  -v /etc/dokploy/traefik/dynamic:/etc/dokploy/traefik/dynamic \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -p 80:80/tcp \
+  -p 443:443/tcp \
+  -p 443:443/udp \
+  traefik:v3.6.7
+
+docker network connect dokploy-network dokploy-traefik
 ```
+
+Once everything is running, open `http://<your-server-ip>:3000` to access the Dokploy UI.
+
+<Callout type='warn'>
+  Ports **80**, **443**, and **3000** must be free. If your existing swarm already runs a reverse proxy bound to 80/443, you will need to free those ports or adjust the published ports of the `dokploy-traefik` container — Dokploy manages its own Traefik instance to route the domains of the applications you deploy.
+</Callout>
+
+<Callout type='info'>
+  **Using your own Postgres?** You can skip step 4 and point Dokploy to an existing database instead: replace the `POSTGRES_PASSWORD_FILE` env var (and the `dokploy_postgres_password` secret) on the `dokploy` service with `-e DATABASE_URL=postgres://user:password@host:5432/dbname`. By default Dokploy connects to `dokploy-postgres:5432` with user and database `dokploy`; these defaults can also be overridden individually with `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, and `POSTGRES_DB`.
+</Callout>
 
 ## Setup Dokploy Timezone
 
@@ -331,6 +375,18 @@ curl -sSL https://dokploy.com/install.sh | sh -s update
 ### Version-Specific Installation & Updates
 
 The installation script automatically detects the latest stable version from GitHub. You can also specify a particular version:
+
+**Install a Specific Version (Recommended):**
+
+Every [Dokploy release](https://github.com/Dokploy/dokploy/releases) includes its own `install.sh` as a release asset, which installs exactly that version with the setup it expects. Just replace the version tag in the URL with the one you want:
+
+```bash
+curl -sL https://github.com/Dokploy/dokploy/releases/download/v0.15.0/install.sh | sh
+```
+
+<Callout type='info'>
+  This is the recommended way to install older versions of Dokploy. The main script at `dokploy.com/install.sh` always targets the latest release, so its setup may not be compatible with older versions.
+</Callout>
 
 **Install/Update to Canary (Development):**
 ```bash
@@ -369,9 +425,10 @@ curl -sSL https://dokploy.com/install.sh | sh
 
 **Manual Advertise Address:**
 ```bash
-export ADVERTISE_ADDR=192.168.1.100
-curl -sSL https://dokploy.com/install.sh | sh
+curl -sSL https://dokploy.com/install.sh | sudo ADVERTISE_ADDR=192.168.1.100 sh
 ```
+
+Note: if you run the installer with `sudo`, pass the variable inline as shown above. Using `export` beforehand won't work because `sudo` resets the environment before executing the script.
 
 ## Updating Traefik Manually
 

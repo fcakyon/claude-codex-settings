@@ -10,7 +10,7 @@ clone_or_update https://github.com/mongodb/agent-skills mongodb-agent-skills
 SRC="$HOME/dev/mongodb-agent-skills/skills"
 
 SKILLS=(
-  atlas-stream-processing
+  mongodb-atlas-stream-processing
   mongodb-connection
   mongodb-mcp-setup
   mongodb-natural-language-querying
@@ -20,7 +20,7 @@ SKILLS=(
 )
 
 # Skills with a references/ dir upstream.
-sync_dir "$SRC/atlas-stream-processing" "plugins/mongodb-skills/skills/atlas-stream-processing" "SKILL.md" "references/"
+sync_dir "$SRC/mongodb-atlas-stream-processing" "plugins/mongodb-skills/skills/mongodb-atlas-stream-processing" "SKILL.md" "references/"
 sync_dir "$SRC/mongodb-connection" "plugins/mongodb-skills/skills/mongodb-connection" "SKILL.md" "references/"
 sync_dir "$SRC/mongodb-query-optimizer" "plugins/mongodb-skills/skills/mongodb-query-optimizer" "SKILL.md" "references/"
 sync_dir "$SRC/mongodb-schema-design" "plugins/mongodb-skills/skills/mongodb-schema-design" "SKILL.md" "references/"

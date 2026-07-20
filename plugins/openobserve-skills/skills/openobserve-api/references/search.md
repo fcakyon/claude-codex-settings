@@ -1,4 +1,5 @@
 ---
+title: Search API | OpenObserve
 description: >-
   Search logs with SQL using POST /api/{org}/_search. Filter by time, size, and
   conditions. Supports full text, aggregations, and custom functions.
@@ -6,6 +7,8 @@ description: >-
 # Search
 
 Endpoint: `POST /api/{organization}/_search`
+
+Replace `{stream}` in the SQL examples below with your stream name (e.g. `default`).
 
 ## Request
 
@@ -99,7 +102,7 @@ Description
 
 Please refer to [PostgreSQL](https://www.postgresql.org/docs/current/sql-syntax.html) for SQL Syntax.
 
-Something need highlighted:
+Notes:
 
 - We have a build-in time field, `_timestamp` you can use it to do time range filter.
 - Field name can not start with `@`.
@@ -115,20 +118,6 @@ Something need highlighted:
 ## Examples
 
 Here list some common examples, if you want more example please create a issue tell us, we will add it.
-
-### Query latest 10 record logs with histogram aggregation
-
-```json
-{
-    "query": {
-        "sql": "SELECT * FROM {stream}",
-        "start_time": 1674789786006000,
-        "end_time": 1674789786006000,
-        "from": 0,
-        "size": 10
-    }
-}
-```
 
 ### Query latest 10 record logs
 
@@ -172,7 +161,7 @@ Here list some common examples, if you want more example please create a issue t
 }
 ```
 
-### Match on a filed (log)
+### Match on a field (log)
 
 ```json
 {
@@ -223,3 +212,15 @@ Here list some common examples, if you want more example please create a issue t
     }
 }
 ```
+
+## Next steps
+
+- [Example queries](../../../user-guide/data-exploration/example-queries.md): copy-paste SQL examples to try.
+- [Full-text search functions](../../sql-functions/full-text-search.md): `match_all`, `str_match`, `re_match`, and friends.
+- [Logs UI](../../../user-guide/data-exploration/logs/logs.md): run these queries interactively.
+
+**Need some help?**
+
+- Join our [Community Slack](https://short.openobserve.ai/community) 
+- Or [Contact support](https://openobserve.ai/contactus/)
+

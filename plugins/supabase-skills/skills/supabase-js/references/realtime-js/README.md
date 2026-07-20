@@ -178,6 +178,13 @@ channel.subscribe(async (status) => {
 })
 ```
 
+> `config.presence.enabled` (set automatically if you add an `.on('presence', ...)` listener)
+> controls whether _this_ client receives presence state and updates from other clients —
+> without it, `presenceState()` stays empty for you. It does not affect whether other clients
+> see you: calling `track()` always makes you visible to subscribers that do have presence
+> enabled. On RLS-protected channels, receiving presence updates additionally requires the
+> `presence.read` policy to authorize this client.
+
 ## Postgres CDC
 
 Receive database changes on the client.
@@ -212,6 +219,120 @@ channel.subscribe(async (status) => {
     console.log('Ready to receive database changes!')
   }
 })
+```
+
+### Filters
+
+The `filter` option accepts **either** a raw string **or** a
+`postgresChangesFilter()` builder — both produce the exact same wire format, so
+you can mix and match and existing string filters keep working unchanged:
+
+```js
+// Raw string — always supported, fully backward compatible
+{ event: 'UPDATE', schema: 'public', table: 'users', filter: 'id=eq.1' }
+
+// Builder — type-checked, ergonomic; the SDK serializes it for you
+{ event: 'UPDATE', schema: 'public', table: 'users', filter: postgresChangesFilter().eq('id', 1) }
+```
+
+A filter is a `column=operator.value` expression evaluated server-side. The
+following operators are supported:
+
+| Operator              | String form                  | Builder                                | Meaning                           |
+| --------------------- | ---------------------------- | -------------------------------------- | --------------------------------- |
+| `eq`                  | `id=eq.1`                    | `.eq('id', 1)`                         | equal                             |
+| `neq`                 | `id=neq.1`                   | `.neq('id', 1)`                        | not equal                         |
+| `lt` `lte` `gt` `gte` | `age=gte.18`                 | `.gte('age', 18)`                      | comparison                        |
+| `in`                  | `status=in.(active,pending)` | `.in('status', ['active', 'pending'])` | in list                           |
+| `like` `ilike`        | `title=like.%foo%`           | `.like('title', '%foo%')`              | pattern match (case in/sensitive) |
+| `is`                  | `deleted_at=is.null`         | `.is('deleted_at', null)`              | `IS null/true/false/unknown`      |
+| `match` `imatch`      | `title=match.^foo`           | `.match('title', '^foo')`              | POSIX regex match (`~` / `~*`)    |
+| `isdistinct`          | `value=isdistinct.1`         | `.isDistinct('value', 1)`              | NULL-safe inequality              |
+
+**Negation** — prefix any operator with `not.` (string) or use
+`.not(column, operator, value)` (builder):
+
+```js
+// String
+{ event: '*', schema: 'public', table: 'posts', filter: 'status=not.in.(draft,archived)' }
+
+// Builder
+{
+  event: '*',
+  schema: 'public',
+  table: 'posts',
+  filter: postgresChangesFilter().not('status', 'in', ['draft', 'archived']),
+}
+```
+
+**AND composition** — multiple conditions are combined with commas and applied
+as an `AND`. With the builder you just chain calls:
+
+```js
+// String
+{ event: 'UPDATE', schema: 'public', table: 'orders', filter: 'amount=gt.100,status=in.(open,pending)' }
+
+// Builder — equivalent, chained
+{
+  event: 'UPDATE',
+  schema: 'public',
+  table: 'orders',
+  filter: postgresChangesFilter().gt('amount', 100).in('status', ['open', 'pending']),
+}
+```
+
+#### Building filters with `postgresChangesFilter()`
+
+The builder (modeled on the `postgrest-js` filter methods) is the recommended,
+type-checked way to compose filters — but it is entirely optional; raw strings
+remain fully supported.
+
+```js
+import { postgresChangesFilter } from '@supabase/realtime-js'
+
+channel.on(
+  'postgres_changes',
+  {
+    event: 'UPDATE',
+    schema: 'public',
+    table: 'orders',
+    // → 'amount=gt.100,status=not.in.(draft,archived)'
+    filter: postgresChangesFilter().gt('amount', 100).not('status', 'in', ['draft', 'archived']),
+  },
+  (payload) => console.log(payload)
+)
+```
+
+The builder exposes `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `in`, `like`,
+`ilike`, `match`, `imatch`, `is`, `isDistinct` and `not`. Call `.build()` if you
+need the raw string yourself (e.g. to log it or store it).
+
+**Values are sent verbatim** — the server has no quoting/escaping, so spaces and
+quotes are preserved as-is. The server separates conditions by commas outside
+parentheses, so a literal comma in a scalar value can't be expressed (commas
+inside `in.(…)` are fine); the builder throws on such values rather than
+silently producing a broken filter.
+
+> **Note for PostgREST users:** Realtime evaluates filters server-side over a
+> single table's WAL — there is no resource embedding (`!inner`, embedded
+> filters) and no `or()` grouping. Use `%` (not `*`) for `like`/`ilike`
+> wildcards, since filters travel in the WebSocket payload rather than a URL.
+
+### Selecting columns
+
+Use `select` to receive only a subset of columns instead of the full row. This
+reduces payload size (helpful for large `bytea`/`jsonb` columns). The selected
+columns must be selectable by the subscribing role:
+
+```js
+channel.on(
+  'postgres_changes',
+  { event: '*', schema: 'public', table: 'users', select: ['id', 'first_name'] },
+  (payload) => {
+    // payload.new only contains { id, first_name }
+    console.log(payload)
+  }
+)
 ```
 
 ## Get All Channels
@@ -256,19 +377,19 @@ This package is part of the [Supabase JavaScript monorepo](https://github.com/su
 
 ```bash
 # Complete build (from monorepo root)
-npx nx build realtime-js
+pnpm nx build realtime-js
 
 # Build with watch mode for development
-npx nx build realtime-js --watch
+pnpm nx build realtime-js --watch
 
 # Individual build targets
-npx nx build:main realtime-js    # CommonJS build (dist/main/)
-npx nx build:module realtime-js  # ES Modules build (dist/module/)
+pnpm nx build:main realtime-js    # CommonJS build (dist/main/)
+pnpm nx build:module realtime-js  # ES Modules build (dist/module/)
 
 # Other useful commands
-npx nx clean realtime-js         # Clean build artifacts
-npx nx lint realtime-js          # Run ESLint
-npx nx typecheck realtime-js     # TypeScript type checking
+pnpm nx clean realtime-js         # Clean build artifacts
+pnpm nx lint realtime-js          # Run ESLint
+pnpm nx typecheck realtime-js     # TypeScript type checking
 ```
 
 #### Build Outputs
@@ -283,7 +404,7 @@ Note: Unlike some other packages, realtime-js doesn't include a UMD build since 
 
 ```bash
 # Check if package exports are correctly configured
-npx nx check-exports realtime-js
+pnpm nx check-exports realtime-js
 ```
 
 This command uses ["Are the types wrong?"](https://github.com/arethetypeswrong/arethetypeswrong.github.io) to verify that the package exports work correctly in different environments. Run this before publishing to ensure your package can be imported correctly by all consumers.
@@ -294,13 +415,13 @@ This command uses ["Are the types wrong?"](https://github.com/arethetypeswrong/a
 
 ```bash
 # Run unit tests (from monorepo root)
-npx nx test realtime-js
+pnpm nx test realtime-js
 
 # Run tests with coverage report
-npx nx test:coverage realtime-js
+pnpm nx test:coverage realtime-js
 
 # Run tests in watch mode during development
-npx nx test:watch realtime-js
+pnpm nx test:watch realtime-js
 ```
 
 #### Test Scripts Explained
