@@ -59,39 +59,41 @@ findings in the PR body when available.
      - PR message must describe the complete changeset across all commits, not just the latest commit
      - Focus on what changed (ignore unstaged changes) from the perspective of someone reviewing the entire branch
    - Create PR with `gh pr create` using:
-     - `-t` or `--title`: Start with capital letter + verb, NO type prefix.
-       Use plain language. Avoid jargon and repo shorthand unless an exact command or tool name is needed.
-     - `-b` or `--body`: Single section (no headers if possible). Very concise.
-       Use plain language and simple words.
-       Few bullet points + 1 CLI/usage snippet for easier try,
-       or simple before/after snippet if applicable.
-       No test plans, no changed file lists, no line-number links.
+     - `-t` or `--title`: a short human headline, capital first letter, no type prefix.
+       Lead with the outcome in plain words, one idea not a list of everything the branch touched.
+       Punchy beats exhaustive. Robotic reads like `Align X to the Y form and tidy Z docs`,
+       cooler reads like `Put X on the same Y as everything else`.
+     - `-b` or `--body`: write it like a sharp teammate would, not a changelog.
+       Open on why it exists, not "This PR...".
+       Show, don't list: a `diff`, a before/after, or a CLI snippet they can run.
+       Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
+       One read, one section. No headers, no bullet dump. No test plans, file lists, or line links.
      - `-a @me`: Self-assign (confirmation hook will show actual username)
      - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
        Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
        If recent PRs have no reviewers, skip `-r` entirely.
-   - Example 1 — CLI snippet:
+       Example, why-first with a diff:
 
-     ```
-     Add compare command for side-by-side model comparison
+````
+Codex, Cursor, and Gemini each install from their own CLI. Claude Code was the odd one out on the in-REPL slash form, so this lines everyone up.
 
-     - Run multiple models on same images with `--models` and `--phrases` flags
-     - Horizontal panel concatenation with model name headers
+```diff
+- /plugin install fable-advisor@claude-settings
++ claude plugin install fable-advisor@claude-settings
+```
 
-     `ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
-     ```
+Same swap across all 30 plugin tables. No behavior change, just one house style everywhere.
+````
 
-   - Example 2 — before/after:
+Example, CLI snippet:
 
-     ```
-     Inline single-use variables in compare_models
+```
+Add a compare command for side-by-side model runs
 
-     - xyxy2xywhn handles empty arrays, guard unnecessary
-     - Use function reference for draw dispatch
+Point it at a folder and a few models and it stitches the panels together, so you can eyeball which one wins without juggling tabs.
 
-     Before: `boxes = result.get(...); ops.xyxy2xywhn(boxes, ...)`
-     After: `ops.xyxy2xywhn(result.get(...), ...)`
-     ```
+`ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
+```
 
 ## Tool Usage:
 
