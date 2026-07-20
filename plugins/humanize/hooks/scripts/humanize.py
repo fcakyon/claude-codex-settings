@@ -5,6 +5,9 @@ Checks markdown files whole, and in code files only the comment and docstring li
 never real code. Always blocks a few marks and stock words, each with a plain swap, and
 flags a wider set of common words only when they pile up. En-dash is allowed. The pile-up
 count sees one write at a time, so it is exact on a whole-file Write and partial on an Edit.
+
+Word choices draw on Wikipedia "Signs of AI writing":
+https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing
 """
 import json
 import re
@@ -12,7 +15,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
-# always blocked on any hit, each mapped to a plain replacement
+# TODO: build a companion guidance skill from that page's pitfalls, not only its word list
+
+# always blocked on any hit, each mapped to a plain swap or a short "drop it" note
 SWAP = {
     "leverage": "use", "utilize": "use", "plethora": "many", "myriad": "many",
     "delve": "look at", "paradigm": "model", "tapestry": "mix", "showcase": "show",
@@ -20,6 +25,14 @@ SWAP = {
     "transformative": "major", "unprecedented": "new", "consolidate": "merge",
     "modernize": "update", "streamline": "simplify", "flexible": "adjustable",
     "establish": "set up", "enhanced": "better", "comprehensive": "full", "optimize": "improve",
+    "unequivocally": "clearly", "symphony": "mix", "delicate": "fragile", "begrudgingly": "reluctantly",
+    "merit": "worth", "albeit": "though", "reverent": "respectful", "revolutionizing": "changing",
+    "revolutionize": "change", "crucially": "drop it", "remarkably": "drop it", "seamlessly": "drop it",
+    "manifestation": "sign", "testament": "sign", "prominent": "clear", "underscoring": "showing",
+    "symbolizing": "showing", "cultivating": "building", "fostering": "building", "encompassing": "covering",
+    "facilitating": "helping", "emphasizing": "showing", "embodying": "showing", "underlies": "drives",
+    "evoke": "stir", "enduring": "lasting", "nestled": "in", "fascinating": "notable",
+    "vibrant": "lively", "game-changing": "big", "cutting-edge": "latest",
 }
 
 # always blocked cliches and filler openers, each mapped to a short fix note
@@ -29,6 +42,11 @@ PHRASES = [
     (r"a testament to", "say what it shows"),
     (r"vibrant tapestry", "drop the cliche"),
     (r"aims to explore", "say 'covers'"),
+    (r"aims to bridge", "say what it connects"),
+    (r"foster innovation", "say what gets built"),
+    (r"measured steps", "drop the cliche"),
+    (r"practiced efficiency", "drop the cliche"),
+    (r"stark reminder", "drop the cliche"),
     (r"it is important to note", "state the point"),
     (r"as an ai language model", "drop it"),
     (r"in conclusion", "drop it"),
@@ -38,8 +56,9 @@ PHRASES = [
 ]
 
 # fine once, an AI-tell when repeated, flagged at LIMIT or more
+# 'prompted' sits here on purpose, LLM comments and docstrings use it a lot
 LIMIT = 3
-OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermore", "additionally", "aligns", "explore"]
+OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermore", "additionally", "aligns", "explore", "prompted"]
 
 MARKS = {"—": "em-dash, use commas or periods", "§": "section sign", ";": "semicolon, use a period or comma"}
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
@@ -90,7 +109,7 @@ chunks += [e.get("new_string", "") for e in tool_input.get("edits", []) if isins
 text = checked(tool_input.get("file_path", ""), "\n".join(c for c in chunks if c))
 
 notes = [f"remove {label}" for ch, label in MARKS.items() if ch in text]
-notes += [f"'{w}' to '{SWAP[w]}'" for w in dict.fromkeys(m.group(1).lower() for m in SWAP_RE.finditer(text))]
+notes += [f"'{w}' -> {SWAP[w]}" for w in dict.fromkeys(m.group(1).lower() for m in SWAP_RE.finditer(text))]
 notes += [note for pat, note in PHRASES if re.search(pat, text, re.IGNORECASE)]
 counts = Counter(m.group(1).lower() for m in OFTEN_RE.finditer(text))
 notes += [f"'{w}' used {n} times, vary it" for w, n in counts.items() if n >= LIMIT]

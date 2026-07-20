@@ -96,6 +96,28 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 </details>
 
 <details>
+<summary><strong>humanize</strong> - Flag AI-tell wording in your markdown, comments, and docstrings before a write lands, with plain-word swaps</summary>
+
+| Claude Code                                | Codex CLI | Gemini CLI                                            |
+| ------------------------------------------ | --------- | ----------------------------------------------------- |
+| `/plugin install humanize@claude-settings` | n/a       | `gemini extensions install --path ./plugins/humanize` |
+
+Before a Write or Edit saves, humanize scans the text and blocks the parts that read like a machine wrote them, each with a shorter human word to use instead. It only reads markdown files and, inside code, the comments and docstrings, never the code itself:
+
+- **Marks** the em-dash, section sign, and stray semicolons in prose (the en-dash stays)
+- **Stock words** like `leverage`, `seamlessly`, `vibrant`, or `game-changing`, each mapped to a plain swap
+- **Tired openers and cliches** like `in conclusion`, `a testament to`, or `aims to bridge`
+- **Filler that only grates in bulk** like `crucial` or `significant`, flagged when it piles up in one write
+
+Runs on Claude Code and Gemini, which fire a hook before a file is written. Word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+
+**Hooks:**
+
+- [`humanize.py`](./plugins/humanize/hooks/scripts/humanize.py) - flags AI-tell marks, words, and cliches before a Write or Edit lands
+
+</details>
+
+<details>
 <summary><strong>fable-advisor</strong> - On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it</summary>
 
 | Claude Code                                     | Codex CLI                                        | Gemini CLI                                                 |
