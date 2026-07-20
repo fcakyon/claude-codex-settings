@@ -40,41 +40,45 @@ plain-language branch name rather than copying the full text.
 6. **Create PR**
    - Use `gh` for GitHub operations and `git` only for local branch management
    - Use `github-dev:pr-creator` or `gh pr create` with parameters:
-     - `-t` (title): Start with capital letter, use verb, NO "fix:" or "feat:" prefix
-       Use plain language. Avoid jargon and internal shorthand unless a command or tool name is needed.
-     - `-b` (body): Brief summary + bullet points with inline markdown links
+     - `-t` (title): a short human headline, capital first letter, no `fix:` or `feat:` prefix.
+       Lead with the outcome in plain words, one idea not a list of everything the branch touched.
+       Punchy beats exhaustive. A title is a headline, not a summary.
+       Robotic: `Align Claude Code install commands to the CLI form and tidy humanize docs`
+       Cooler: `Put Claude Code on the same install CLI as everything else`
+     - `-b` (body): write it like a sharp teammate would, not a changelog. See PR Body Guidelines below.
      - `-a @me` (self-assign)
      - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
        Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
        If recent PRs have no reviewers, skip `-r` entirely.
 
 7. **PR Body Guidelines**
-   - Single section, no headers if possible. Very concise
-   - Use plain language. Avoid jargon and buzzwords unless an exact command or tool name is needed.
-   - Few bullet points + 1 CLI/usage snippet or simple before/after snippet
-   - No test plans, no changed file lists, no line-number links
+   - Open on why it exists, not "This PR...".
+   - Show, don't list: a `diff`, a before/after, or a CLI snippet they can run.
+   - Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
+   - One read, one section. No headers, no bullet dump.
+   - Plain words, no buzzwords. No test plans, file lists, or line links.
 
 ## Examples
 
-### CLI snippet:
+### Why-first with a diff
+
+````
+Codex, Cursor, and Gemini each install from their own CLI. Claude Code was the odd one out on the in-REPL slash form, so this lines everyone up.
+
+```diff
+- /plugin install fable-advisor@claude-settings
++ claude plugin install fable-advisor@claude-settings
+```
+
+Same swap across all 30 plugin tables. No behavior change, just one house style everywhere.
+````
+
+### CLI snippet
 
 ```
-Add compare command for side-by-side model comparison
+Add a compare command for side-by-side model runs
 
-- Run multiple models on same images with `--models` and `--phrases` flags
-- Horizontal panel concatenation with model name headers
+Point it at a folder and a few models and it stitches the panels together, so you can eyeball which one wins without juggling tabs.
 
 `ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
-```
-
-### Before/after:
-
-```
-Inline single-use variables in compare_models
-
-- xyxy2xywhn handles empty arrays, guard unnecessary
-- Use function reference for draw dispatch
-
-Before: `boxes = result.get(...); ops.xyxy2xywhn(boxes, ...)`
-After: `ops.xyxy2xywhn(result.get(...), ...)`
 ```

@@ -21,11 +21,11 @@ When explicitly invoked with extra text, treat that text as the PR number or URL
 
 3. **Generate the updated summary**
    - Follow the `create-pr` skill format for title and body.
-   - Start the title with a capital letter and a verb, with no `fix:` or `feat:` prefix.
-   - Use plain language. Avoid jargon and internal shorthand unless an exact command or tool name is needed.
-   - Keep the body to a single short section.
-   - Include 1-2 sentences, a few bullets, and one usage snippet or before/after example when helpful.
-   - Do not include test plans, changed file lists, or line-number links.
+   - Title: a short human headline, capital first letter, no `fix:` or `feat:` prefix. Lead with the outcome, punchy over exhaustive.
+   - Body: open on why it exists, then show it with a `diff`, a before/after, or a runnable CLI snippet.
+   - Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
+   - One read, one section. No headers, no bullet dump. Plain words, no buzzwords.
+   - No test plans, file lists, or line links.
 
 4. **Apply the update**
    - Use `gh pr edit <pr> --title "..." --body "..."`.
