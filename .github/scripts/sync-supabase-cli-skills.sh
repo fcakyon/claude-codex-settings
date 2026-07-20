@@ -7,6 +7,7 @@ source "$(dirname "$0")/_helpers.sh"
 
 clone_or_update https://github.com/supabase/cli supabase-cli develop
 SRC="$HOME/dev/supabase-cli"
+DOCS="$SRC/apps/cli-go/docs"
 DST="plugins/supabase-skills/skills/supabase-cli"
 
 # Clean target
@@ -16,22 +17,22 @@ mkdir -p "$REPO_ROOT/$DST/references"
 # Copy extended command descriptions grouped by category
 CATEGORIES=(db migration functions inspect config domains test)
 for cat in "${CATEGORIES[@]}"; do
-  if [ -d "$SRC/docs/supabase/$cat" ]; then
+  if [ -d "$DOCS/supabase/$cat" ]; then
     mkdir -p "$REPO_ROOT/$DST/references/$cat"
-    cp "$SRC/docs/supabase/$cat/"*.md "$REPO_ROOT/$DST/references/$cat/"
+    cp "$DOCS/supabase/$cat/"*.md "$REPO_ROOT/$DST/references/$cat/"
     echo "  Copied $cat/ docs"
   fi
 done
 
 # Copy top-level command docs into a "commands" reference dir
 mkdir -p "$REPO_ROOT/$DST/references/commands"
-for f in "$SRC/docs/supabase/"*.md; do
+for f in "$DOCS/supabase/"*.md; do
   [ -f "$f" ] && cp "$f" "$REPO_ROOT/$DST/references/commands/"
 done
 echo "  Copied top-level command docs"
 
 # Copy examples
-cp "$SRC/docs/templates/examples.yaml" "$REPO_ROOT/$DST/references/examples.yaml"
+cp "$DOCS/templates/examples.yaml" "$REPO_ROOT/$DST/references/examples.yaml"
 echo "  Copied examples.yaml"
 
 # Copy CLI README

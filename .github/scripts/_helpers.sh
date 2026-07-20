@@ -73,19 +73,20 @@ if len(parts) >= 3 and 'license:' not in parts[1]:
 }
 
 # Create a zip of all files in the skill directory.
-# The zip is placed inside the skill directory.
+# The zip is placed inside the skill directory. Pass an optional asset basename
+# (without .zip) when two skills share a directory name and need distinct
+# release asset names (e.g. the anthropic and openai "pdf" skills).
 create_zip() {
   local skill_dir="$REPO_ROOT/$1"
-  local skill_name
-  skill_name="$(basename "$skill_dir")"
+  local zip_name="${2:-$(basename "$skill_dir")}.zip"
 
   if [ ! -f "$skill_dir/SKILL.md" ]; then
     echo "WARNING: no SKILL.md in $skill_dir, skipping zip" >&2
     return 0
   fi
 
-  rm -f "$skill_dir/$skill_name.zip"
-  (cd "$skill_dir" && zip -r "$skill_name.zip" . -x "./$skill_name.zip")
+  rm -f "$skill_dir/$zip_name"
+  (cd "$skill_dir" && zip -r "$zip_name" . -x '*.zip')
 
-  echo "Created $1/$skill_name.zip"
+  echo "Created $1/$zip_name"
 }

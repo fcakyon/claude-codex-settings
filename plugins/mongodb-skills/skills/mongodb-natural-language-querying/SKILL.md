@@ -1,13 +1,15 @@
 ---
 name: mongodb-natural-language-querying
 description: Generate read-only MongoDB queries (find) or aggregation pipelines using natural language, with collection schema context and sample documents. Use this skill whenever the user asks to write, create, or generate MongoDB queries, wants to filter/query/aggregate data in MongoDB, asks "how do I query...", needs help with query syntax, or discusses finding/filtering/grouping MongoDB documents. Also use for translating SQL-like requests to MongoDB syntax. Does NOT handle Atlas Search ($search operator), vector/semantic search ($vectorSearch operator), fuzzy matching, autocomplete indexes, or relevance scoring - use search-and-ai for those. Does NOT analyze or optimize existing queries - use mongodb-query-optimizer for that. Does NOT handle aggregation pipelines that involve write operations. Requires MongoDB MCP server.
-allowed-tools: mcp__mongodb__*
 license: Apache-2.0
+metadata:
+  version: "1.0.0"
+allowed-tools: mcp__mongodb__*
 ---
 
 # MongoDB Natural Language Querying
 
-You are an expert MongoDB read-only query generator. When a user requests a MongoDB query or aggregation pipeline, follow these guidelines based on the Compass query generation patterns.
+You are an expert MongoDB read-only query and aggregation pipeline generator.
 
 ## Query Generation Process
 
@@ -16,7 +18,6 @@ You are an expert MongoDB read-only query generator. When a user requests a Mong
 **Required Information:**
 - Database name and collection name (use `mcp__mongodb__list-databases` and `mcp__mongodb__list-collections` if not provided)
 - User's natural language description of the query
-- Current date context: ${currentDate} (for date-relative queries)
 
 **Fetch in this order:**
 
@@ -49,19 +50,10 @@ Also review the available indexes to understand which query patterns will perfor
 
 Prefer find queries over aggregation pipelines because find queries are simpler and easier for other developers to understand.
 
-**For Find Queries**, generate responses with these fields:
-- `filter` - The query filter (required)
-- `project` - Field projection (optional)
-- `sort` - Sort specification (optional)
-- `skip` - Number of documents to skip (optional)
-- `limit` - Number of documents to return (optional)
-- `collation` - Collation specification (optional)
-
 **Use Find Query when:**
 - Simple filtering on one or more fields
-- Basic sorting and limiting
-
-**For Aggregation Pipelines**, generate an array of stage objects.
+- Basic sorting, limiting, or projecting specific fields
+- No need for grouping, complex transformations, or multi-stage processing
 
 **Use Aggregation Pipeline when the request requires:**
 - Grouping or aggregation functions (sum, count, average, etc.)
@@ -71,14 +63,14 @@ Prefer find queries over aggregation pipelines because find queries are simpler 
 
 ### 4. Format Your Response
 
-Always output queries in a JSON response structure with stringified MongoDB query syntax. The outer response must be valid JSON, while the query strings inside use MongoDB shell/Extended JSON syntax (with unquoted keys and single quotes) for readability and compatibility with MongoDB tools.
+Output queries using the user-requested language or driver syntax; if no language or expected format is supplied, always use MongoDB shell syntax (with unquoted keys and single quotes) for readability and compatibility with MongoDB tools.
 
 **Find Query Response:**
 ```json
 {
   "query": {
     "filter": "{ age: { $gte: 25 } }",
-    "project": "{ name: 1, age: 1, _id: 0 }",
+    "projection": "{ name: 1, age: 1, _id: 0 }",
     "sort": "{ age: -1 }",
     "limit": "10"
   }
@@ -93,14 +85,6 @@ Always output queries in a JSON response structure with stringified MongoDB quer
   }
 }
 ```
-
-Note the stringified format:
-- ✅ `"{ age: { $gte: 25 } }"` (string)
-- ❌ `{ age: { $gte: 25 } }` (object)
-
-For aggregation pipelines:
-- ✅ `"[{ $match: { status: 'active' } }]"` (string)
-- ❌ `[{ $match: { status: 'active' } }]` (array)
 
 ## Best Practices
 
@@ -123,11 +107,11 @@ For aggregation pipelines:
    - `$eq`, `$ne`, `$gt`, `$gte`, `$lt`, `$lte` for comparisons
    - `$in`, `$nin` for matching against a list of possible values (equivalent to multiple $eq/$ne conditions OR'ed together)
    - `$and`, `$or`, `$not`, `$nor` for logical operations
-   - `$regex` for case sensitive text pattern matching (prefer left-anchored patterns like `/^prefix/` when possible, as they can use indexes efficiently)
+   - `$regex` for case-sensitive text pattern matching (prefer left-anchored patterns like `/^prefix/` when possible, as they can use indexes efficiently)
    - `$exists` for field existence checks (prefer `a: {$ne: null}` to `a: {$exists: true}` to leverage available indexes)
    - `$type` for type matching
 6. **Optimize array field checks** - Use efficient patterns for array operations:
-   - To check if array is non-empty: use `"arrayField.0": {$exists: true}` instead of `arrayField: {$exists: true, $type: "array", $ne: []}`
+   - To check if an array is non-empty: use `"arrayField.0": {$exists: true}` instead of `arrayField: {$exists: true, $type: "array", $ne: []}`
    - Checking for the first element's existence is simpler, more readable, and more efficient than combining existence, type, and inequality checks
    - For matching array elements with multiple conditions, use `$elemMatch`
    - For array length checks, use `$size` when you need an exact count
@@ -197,11 +181,15 @@ If you cannot generate a query:
 }
 ```
 
-## Size Limits
+## Managing Context Size
 
-Keep requests under 5MB:
-- If sample documents are too large, use fewer samples (minimum 1)
-- Limit to 4 sample documents by default
-- For very large documents, project only essential fields when sampling
+Fetching large or numerous sample documents wastes context and can degrade query quality.
 
----
+**Adjust sample count by schema width:**
+- < 30 fields: `limit: 4` (default)
+- 30–80 fields: `limit: 2`
+- 80–150 fields: `limit: 1`
+- 150+ fields: `limit: 1` with a projection of only the fields relevant to the user's query
+
+**Preview large array fields and strings:**
+- If schema documents contains arrays, use `$slice: 3` in the sample projection to cap array size. Limit string fields to 100 characters with `$substr` in the sample projection to prevent excessively long values from consuming context.

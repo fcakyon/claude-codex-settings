@@ -112,12 +112,25 @@ curl -sSL https://dokploy.com/install.sh | sh
 
 #### Manual Advertise Address
 
-If the script cannot detect your server's IP automatically, specify it manually:
+If the script cannot detect your server's IP automatically, or you want the Swarm to use a specific interface (e.g. a VPN/WireGuard IP), specify it manually:
 
 ```bash
-export ADVERTISE_ADDR=192.168.1.100
-curl -sSL https://dokploy.com/install.sh | sh
+curl -sSL https://dokploy.com/install.sh | sudo ADVERTISE_ADDR=192.168.1.100 sh
 ```
+
+<Callout type='warn'>
+  If you run the installer with `sudo`, don't rely on `export ADVERTISE_ADDR=...` from your user shell — `sudo` resets the environment, so the variable never reaches the script and it falls back to auto-detection. Pass the variable inline as shown above, or use `sudo -E sh` to preserve your environment. The same applies to `DOKPLOY_VERSION`, `DOCKER_SWARM_INIT_ARGS`, and `ENDPOINT_MODE`.
+</Callout>
+
+#### Kernels Without IPVS Support
+
+Docker Swarm's default service discovery requires IPVS support in the kernel. Some minimal or appliance-style distributions (e.g. ZimaOS and other Buildroot-based images) ship kernels without it. On those systems, install with DNSRR endpoint mode:
+
+```bash
+curl -sSL https://dokploy.com/install.sh | sudo ENDPOINT_MODE=dnsrr sh
+```
+
+See [Services Can't Reach Each Other (Missing IPVS Kernel Modules)](/docs/core/troubleshooting#services-cant-reach-each-other-missing-ipvs-kernel-modules) for how to detect this situation and its trade-offs.
 
 ### Proxmox LXC Support
 

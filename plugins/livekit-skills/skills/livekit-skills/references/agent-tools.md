@@ -10,7 +10,7 @@ LiveKit docs › Logic & Structure › Tool definition & use › Overview
 
 ## Overview
 
-LiveKit Agents has full support for LLM tool use. This feature allows you to create a custom library of tools to extend your agent's context, create interactive experiences, and overcome LLM limitations.
+LiveKit Agents has full support for LLM tool use. This feature allows you to create a custom library of tools to extend your agent's context, create interactive experiences, and overcome LLM limitations. Tools can run synchronously or [in the background](https://docs.livekit.io/agents/logic/tools/async.md), letting the agent keep talking while long-running work completes.
 
 Within a tool, you can:
 
@@ -31,10 +31,14 @@ Two types of tools are supported:
 ### Provider tools
 
 Available in:
-- [ ] Node.js
+- [x] Node.js
 - [x] Python
 
-Many LLM providers, including OpenAI, Gemini, and xAI, include built-in server-side tools that are executed entirely within a single API call. Examples include web search, code execution, and file search. These tools, called "provider tools" in LiveKit Agents, can be added to any agent that uses a supported LLM. You can mix and match provider tools with function tools by passing them to the `tools` parameter on your `Agent`.
+Many LLM providers, including OpenAI, Gemini, and xAI, include built-in server-side tools that are executed entirely within a single API call. Examples include web search, code execution, and file search. These tools, called "provider tools" in LiveKit Agents, can be added to any agent that uses a supported LLM. Where the underlying provider supports it, you can mix provider tools with function tools by passing them to the `tools` parameter on your `Agent`.
+
+Node.js provider tools are currently available for OpenAI and Gemini.
+
+**Python**:
 
 ```python
 from livekit.plugins import openai  # replace with any supported provider
@@ -46,20 +50,36 @@ agent = MyAgent(
 
 ```
 
-Refer to the documentation for each model provider for supported tools and usage details:
+---
 
-- [OpenAI](https://docs.livekit.io/agents/models/llm/openai.md#provider-tools): `WebSearch`, `FileSearch`, `CodeInterpreter`.
-- [Gemini](https://docs.livekit.io/agents/models/llm/gemini.md#provider-tools): `GoogleSearch`, `GoogleMaps`, `URLContext`, `FileSearch`, `ToolCodeExecution`.
-- [Anthropic](https://docs.livekit.io/agents/models/llm/anthropic.md#provider-tools): `ComputerUse`.
-- [xAI](https://docs.livekit.io/agents/models/llm/xai.md#provider-tools): `WebSearch`, `XSearch`, `FileSearch`.
+**Node.js**:
+
+```typescript
+import { voice } from '@livekit/agents';
+import * as openai from '@livekit/agents-plugin-openai';
+
+const agent = voice.Agent.create({
+  instructions: 'You are a helpful assistant.',
+  llm: new openai.responses.LLM({ model: 'gpt-4.1' }),
+  tools: [new openai.WebSearch()],
+});
+
+```
+
+Refer to the documentation for each model provider for usage details.
+
+| Provider | Supported tools |
+| [Anthropic](https://docs.livekit.io/agents/models/llm/anthropic.md#provider-tools) | `ComputerUse` |
+| [Gemini](https://docs.livekit.io/agents/models/llm/gemini.md#provider-tools) | `GoogleSearch`, `GoogleMaps`, `URLContext`, `FileSearch`, `ToolCodeExecution` |
+| [Mistral AI](https://docs.livekit.io/agents/models/llm/mistralai.md#provider-tools) | `WebSearch`, `DocumentLibrary`, `CodeInterpreter` |
+| [OpenAI](https://docs.livekit.io/agents/models/llm/openai.md#provider-tools) | `WebSearch`, `FileSearch`, `CodeInterpreter` |
+| [xAI](https://docs.livekit.io/agents/models/llm/xai.md#provider-tools) | `WebSearch`, `XSearch`, `FileSearch` |
 
 ### Examples
 
 The following additional examples show how to use tools in different ways:
 
-- **[Use of enum](https://github.com/livekit/agents/blob/main/examples/voice_agents/annotated_tool_args.py)**: Example showing how to annotate arguments with enum.
-
-- **[Dynamic tool creation](https://github.com/livekit/agents/blob/main/examples/voice_agents/dynamic_tool_creation.py)**: Complete example with dynamic tool lists.
+- **[Dynamic tool creation](https://docs.livekit.io/agents/logic/tools/definition.md#adding-tools-dynamically)**: Set the tools list directly and share tools between agents.
 
 - **[MCP Agent](https://docs.livekit.io/reference/recipes/http_mcp_client.md)**: A voice AI agent with an integrated Model Context Protocol (MCP) client for the LiveKit API.
 
@@ -68,7 +88,9 @@ The following additional examples show how to use tools in different ways:
 Read more about each topic.
 
 | Topic | Description |
-| [Function tool definition](https://docs.livekit.io/agents/logic/tools/definition.md) | Define function tools with decorators, RunContext, speech in tools, interruptions, dynamic tools, toolsets, and error handling. |
+| [Function tools](https://docs.livekit.io/agents/logic/tools/definition.md) | Define function tools with decorators, RunContext, speech in tools, interruptions, dynamic tools, and error handling. |
+| [Toolsets](https://docs.livekit.io/agents/logic/tools/toolsets.md) | Group related tools and add or remove them as a unit. |
+| [Async tools](https://docs.livekit.io/agents/logic/tools/async.md) | Run long-running tools in the background so the agent can keep talking. |
 | [Model Context Protocol (MCP)](https://docs.livekit.io/agents/logic/tools/mcp.md) | Expose tools from MCP servers to your agent (Python only). |
 | [Forwarding to the frontend](https://docs.livekit.io/agents/logic/tools/forwarding.md) | Fulfill tool calls via RPC from the client. |
 

@@ -9,7 +9,7 @@ Endpoint: `POST /api/{organization}/loki/api/v1/push`
 
 OpenObserve is compatible with the Grafana Loki push API. You can send logs using any Loki-compatible client (e.g. Promtail, Grafana Agent, Alloy) by pointing it at OpenObserve.
 
-> we use `o2_stream_name` label for custom stream name, default will push into `default` stream.
+> we use the `o2_stream_name` label (or the legacy `stream_name` label) for custom stream name, default will push into `default` stream.
 
 ## Request
 
@@ -47,7 +47,7 @@ Content-Type: `application/json`
 | Field | Type | Description |
 |-------|------|-------------|
 | `streams` | array | List of log streams to push. |
-| `streams[].stream` | object | Key-value label pairs that identify the stream. Labels are indexed and can be used for filtering. |
+| `streams[].stream` | object | Key-value label pairs that identify the stream. Labels are indexed and can be used for filtering. Use the `o2_stream_name` label (or the legacy `stream_name` label) to set a custom target stream; if neither is present, logs are pushed into the `default` stream. |
 | `streams[].values` | array | List of log entries. Each entry is a two-element array: `[timestamp, line]`. |
 | `streams[].values[][0]` | string | Unix timestamp in **nanoseconds** as a string. |
 | `streams[].values[][1]` | string | Log line content. |

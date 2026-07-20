@@ -42,7 +42,8 @@ Use the `StreamSettings` schema. All fields are optional.
   "approx_partition": false,
   "extended_retention_days": [],
   "index_original_data": false,
-  "index_all_values": false
+  "index_all_values": false,
+  "storage_type": "compliance"
 }
 
 ```
@@ -100,7 +101,8 @@ Use the `UpdateStreamSettings` schema. Fields that support `add`, `remove`, or `
     "add": []
   },
   "index_original_data": false,
-  "index_all_values": false
+  "index_all_values": false,
+  "storage_type": "compliance"
 }
 
 ```
@@ -121,7 +123,7 @@ Use the `UpdateStreamSettings` schema. Fields that support `add`, `remove`, or `
 | `index_fields`            | Fields to create secondary indexes for exact-match filters. Improves query performance on `field = value`.                                                                        |
 | `full_text_search_keys`   | Fields tokenized for full-text search. Required for substring or `match_all` queries. Defaults to common log fields if not set.                                                   |
 | `bloom_filter_fields`     | Fields with high-cardinality values to optimize rare value searches. Improves performance by skipping non-matching data blocks.                                                   |
-| `data_retention`          | Number of days to retain data in the stream. Minimum is 3 days. Overrides the global retention setting.                                                                           |
+| `data_retention`          | Number of days to retain data in the stream. Minimum is 3 days. Overrides the global retention setting. Compliance streams require a 30-day minimum.                              |
 | `flatten_level`           | Maximum depth for flattening nested JSON objects into fields. Helps expose nested keys for querying.                                                                              |
 | `defined_schema_fields`   | Fields to retain in the user-defined schema. Others are excluded or stored as raw if `store_original_data` is true.                                                               |
 | `max_query_range`         | Maximum time range in hours for a single query. Prevents resource-heavy long-range queries.                                                                                       |
@@ -130,3 +132,4 @@ Use the `UpdateStreamSettings` schema. Fields that support `add`, `remove`, or `
 | `extended_retention_days` | List of time ranges to retain data beyond `data_retention`. Must be applied before data expires.                                                                                  |
 | `index_original_data`     | Enables full-text indexing on the raw log body. Allows search across fields not part of the schema.                                                                               |
 | `index_all_values`        | Indexes all fields for exact-match lookups. Increases ingestion and index size. Best for fixed schemas.                                                                           |
+| `storage_type`            | Storage class for the stream: `normal` (default) or `compliance`. When `compliance`, compacted files are written to the infrequent-access storage class (requires `ZO_S3_FEATURE_FORCE_INFREQUENT_ACCESS=true`), and `data_retention` must be at least 30 days. |

@@ -50,7 +50,7 @@ The following sections describe the minimum requirements to get started with Liv
 
 This guide assumes you have signed up for a free [LiveKit Cloud](https://cloud.livekit.io/) account. LiveKit Cloud includes agent deployment, model inference, and realtime media transport. Create a free project and use the API keys in the following steps to get started.
 
-While this guide assumes LiveKit Cloud, the instructions can be adapted for [self-hosting](https://docs.livekit.io/transport/self-hosting/local.md) the open-source LiveKit server instead. For self-hosting in production, set up a [custom deployment](https://docs.livekit.io/deploy/custom/deployments.md) environment, and make the following changes: remove the [enhanced noise cancellation](https://docs.livekit.io/transport/media/noise-cancellation.md) plugin from the agent code, and use [plugins](https://docs.livekit.io/agents/models.md#plugins) for your own AI providers.
+While this guide assumes LiveKit Cloud, the instructions can be adapted for [self-hosting](https://docs.livekit.io/transport/self-hosting/local.md) the open source LiveKit server instead. For self-hosting in production, set up a [custom deployment](https://docs.livekit.io/deploy/custom/deployments.md) environment, and make the following changes: remove the [enhanced noise cancellation](https://docs.livekit.io/transport/media/noise-cancellation.md) plugin from the agent code, and use [plugins](https://docs.livekit.io/agents/models.md#plugins) for your own AI providers.
 
 ### LiveKit CLI
 
@@ -143,15 +143,18 @@ The CLI clones the template into the `my-agent` directory, creates an `.env.loca
 
 > 💡 **Save the chat link**
 > 
-> Save the link provided by the CLI after the line "To chat with your running agent, visit" for later use.
+> Open the link provided by the CLI after the line `"To try your new agent in the web console, visit:"` to speak to your agent in the following step.
 
 Follow the instructions it prints, which guide you through the following steps:
 
 1. **Select a project to use** — If you don't have a default project set, the CLI prompts you to select a project to use.
 2. **Change into the project directory** — The project directory is named after your agent.
 
-`cd my-agent`
-3. **Install dependencies** — Install the agent's runtime and plugin dependencies.
+```shell
+cd my-agent
+
+```
+3. **Install dependencies** — Install the agent's runtime and plugin dependencies if you did not electo have them automatically installed during template setup.
 
 **Python**:
 
@@ -168,44 +171,16 @@ uv sync
 pnpm install
 
 ```
-4. **Download model files** — Required for the Silero VAD, turn detector, and noise cancellation plugins.
-
-**Python**:
+4. **Run your agent** — Run your agent in development mode.
 
 ```shell
-uv run src/agent.py download-files
-
-```
-
----
-
-**Node.js**:
-
-```shell
-pnpm download-files
-
-```
-5. **Run your agent** — Run your agent in development mode.
-
-**Python**:
-
-```shell
-uv run src/agent.py dev
-
-```
-
----
-
-**Node.js**:
-
-```shell
-pnpm dev
+lk agent dev
 
 ```
 
 ### Speak to your agent
 
-Open a browser and visit the link you saved earlier from the CLI output to speak to your agent.
+If you opened the Console link provided by the CLI in the previous step, return to your browser and click **Start a session**. Otherwise, you can always find the Console on your project's [Agents dashboard](https://cloud.livekit.io/projects/p_/agents). Use the microphone button to speak to your agent and see its responses in real time, and explore the tool panes to measure your agent's behavior and performance in detail.
 
 ## Other options
 
@@ -213,7 +188,7 @@ You can customize your agent by choosing different AI models and by exploring te
 
 ### AI models
 
-Voice agents require one or more [AI models](https://docs.livekit.io/agents/models.md) to provide understanding, intelligence, and speech. LiveKit Agents supports both high-performance STT-LLM-TTS voice pipelines constructed from multiple specialized models, as well as realtime models with direct speech-to-speech capabilities.
+Voice agents require one or more [AI models](https://docs.livekit.io/agents/models.md) to provide understanding, intelligence, and speech. LiveKit Agents supports both high-performance STT-LLM-TTS voice pipelines constructed from multiple specialized models, as well as realtime models with direct speech-to-speech capabilities. For help deciding which pipeline fits your use case, see [Pipeline types](https://docs.livekit.io/agents/models/pipelines.md).
 
 **STT-LLM-TTS pipeline**:
 
@@ -223,7 +198,7 @@ Your agent strings together three specialized providers into a high-performance 
 
 | Component | Model | Alternatives |
 | STT | Deepgram Nova-3 | [STT models](https://docs.livekit.io/agents/models/stt.md) |
-| LLM | OpenAI GPT-4.1 mini | [LLM models](https://docs.livekit.io/agents/models/llm.md) |
+| LLM | Gemma 4 31B | [LLM models](https://docs.livekit.io/agents/models/llm.md) |
 | TTS | Cartesia Sonic-3 | [TTS models](https://docs.livekit.io/agents/models/tts.md) |
 
 ---
@@ -235,7 +210,7 @@ Your agent uses a single realtime model to provide an expressive and lifelike vo
 ![Diagram showing realtime model.](/images/agents/realtime-model.svg)
 
 | Model | Required Key | Alternatives |
-| [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime) | `OPENAI_API_KEY` | [Realtime models](https://docs.livekit.io/agents/models/realtime.md) |
+| [OpenAI Realtime API](https://developers.openai.com/docs/guides/realtime) | `OPENAI_API_KEY` | [Realtime models](https://docs.livekit.io/agents/models/realtime.md) |
 
 You can change the AI models used by editing your agent file. Full agent files for STT-LLM-TTS and Realtime models can be found in the [Agent code](#agent-code) section.
 
@@ -258,7 +233,7 @@ To learn more about these modes, see the [Server startup modes](https://docs.liv
 For Python agents, run the following command to start your agent in production mode:
 
 ```shell
-uv run agent.py start
+uv run src/agent.py start
 
 ```
 
@@ -274,33 +249,22 @@ pnpm start
 
 ```
 
-#### Connect to playground
+#### Connect to Agent Console
 
 Start your agent in `dev` mode to connect it to LiveKit and make it available from anywhere on the internet:
 
-**Python**:
-
 ```shell
-uv run src/agent.py dev
+lk agent dev
 
 ```
 
----
-
-**Node.js**:
-
-```shell
-pnpm dev
-
-```
-
-Use the [Agents playground](https://docs.livekit.io/agents/start/playground.md) to speak with your agent and explore its full range of multimodal capabilities. Note that you'll need to set the **Agent name**, which should be `my-agent` for this quickstart.
+Use the [Agent Console](https://docs.livekit.io/agents/start/console.md) to interact with and debug your agent in realtime. Note that you'll need to set the **Agent name**, which should be `my-agent` for this quickstart.
 
 #### Deploy to LiveKit Cloud
 
 Run `lk agent create` from the project directory to register and deploy.
 
-After the deployment completes, you can access your agent in the playground, or continue to use the `console` mode as you build and test your agent locally.
+After the deployment completes, you can access your agent in [Agent Console](https://docs.livekit.io/agents/start/console.md), or continue to use the `console` mode as you build and test your agent locally.
 
 ## Agent code
 
@@ -313,10 +277,9 @@ Once you have the quickstart running, you can dig into the agent code. For the d
 ```python
 from dotenv import load_dotenv
 
-from livekit import agents, rtc
-from livekit.agents import AgentServer, AgentSession, Agent, room_io, TurnHandlingOptions
-from livekit.plugins import noise_cancellation, silero
-from livekit.plugins.turn_detector.multilingual import MultilingualModel
+from livekit import agents
+from livekit.agents import AgentServer, AgentSession, Agent, inference, room_io, TurnHandlingOptions
+from livekit.plugins import ai_coustics
 
 load_dotenv(".env.local")
 
@@ -335,12 +298,14 @@ server = AgentServer()
 @server.rtc_session(agent_name="my-agent")
 async def my_agent(ctx: agents.JobContext):
     session = AgentSession(
-        stt="deepgram/nova-3:multi",
-        llm="openai/gpt-4.1-mini",
-        tts="cartesia/sonic-3:9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
-        vad=silero.VAD.load(),
+        stt=inference.STT(model="deepgram/nova-3", language="multi"),
+        llm=inference.LLM(model="google/gemma-4-31b-it"),
+        tts=inference.TTS(
+            model="cartesia/sonic-3",
+            voice="9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
+        ),
         turn_handling=TurnHandlingOptions(
-            turn_detection=MultilingualModel(),
+            turn_detection=inference.TurnDetector(),
         ),
     )
 
@@ -349,7 +314,7 @@ async def my_agent(ctx: agents.JobContext):
         agent=Assistant(),
         room_options=room_io.RoomOptions(
             audio_input=room_io.AudioInputOptions(
-                noise_cancellation=lambda params: noise_cancellation.BVCTelephony() if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP else noise_cancellation.BVC(),
+                noise_cancellation=ai_coustics.audio_enhancement(model=ai_coustics.EnhancerModel.QUAIL_VF_S),
             ),
         ),
     )
@@ -370,44 +335,38 @@ if __name__ == "__main__":
 ```typescript
 import {
   type JobContext,
-  type JobProcess,
   ServerOptions,
   cli,
   defineAgent,
+  inference,
   voice,
 } from '@livekit/agents';
-import * as livekit from '@livekit/agents-plugin-livekit';
-import * as silero from '@livekit/agents-plugin-silero';
-import { BackgroundVoiceCancellation } from '@livekit/noise-cancellation-node';
+import * as aiCoustics from '@livekit/plugins-ai-coustics';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
-import { Agent } from './agent';
+import { createAgent } from './agent';
 
 dotenv.config({ path: '.env.local' });
 
 export default defineAgent({
-  prewarm: async (proc: JobProcess) => {
-    proc.userData.vad = await silero.VAD.load();
-  },
   entry: async (ctx: JobContext) => {
-    const vad = ctx.proc.userData.vad! as silero.VAD;
-
     const session = new voice.AgentSession({
-      vad,
-      stt: "deepgram/nova-3:multi",
-      llm: "openai/gpt-4.1-mini",
-      tts: "cartesia/sonic-3:9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
+      stt: new inference.STT({ model: 'deepgram/nova-3', language: 'multi' }),
+      llm: new inference.LLM({ model: 'google/gemma-4-31b-it' }),
+      tts: new inference.TTS({
+        model: 'cartesia/sonic-3',
+        voice: '9626c31c-bec5-4cca-baa8-f8ba9e84c8bc',
+      }),
       turnHandling: {
-        turnDetection: new livekit.turnDetector.MultilingualModel(),
+        turnDetection: new inference.TurnDetector(),
       },
     });
 
     await session.start({
-      agent: new Agent(),
+      agent: createAgent(),
       room: ctx.room,
       inputOptions: {
-        // For telephony applications, use `TelephonyBackgroundVoiceCancellation` for best results
-        noiseCancellation: BackgroundVoiceCancellation(),
+        noiseCancellation: aiCoustics.audioEnhancement({ model: 'quailVfS' }),
       },
     });
 
@@ -428,12 +387,13 @@ cli.runApp(new ServerOptions({ agent: fileURLToPath(import.meta.url), agentName:
 ```typescript
 import { voice } from '@livekit/agents';
 
-export class Agent extends voice.Agent {
-  constructor() {
-    super({
-      instructions: 'You are a helpful voice AI assistant.',
-    });
-  }
+export function createAgent() {
+  return voice.Agent.create({
+    instructions: `You are a helpful voice AI assistant.
+      You eagerly assist users with their questions by providing information from your extensive knowledge.
+      Your responses are concise, to the point, and without any complex formatting or punctuation including emojis, asterisks, or other symbols.
+      You are curious, friendly, and have a sense of humor.`,
+  });
 }
 
 ```
@@ -447,11 +407,11 @@ export class Agent extends voice.Agent {
 ```python
 from dotenv import load_dotenv
 
-from livekit import agents, rtc
+from livekit import agents
 from livekit.agents import AgentServer, AgentSession, Agent, room_io
 from livekit.plugins import (
     openai,
-    noise_cancellation,
+    ai_coustics,
 )
 
 load_dotenv(".env.local")
@@ -475,7 +435,7 @@ async def my_agent(ctx: agents.JobContext):
         agent=Assistant(),
         room_options=room_io.RoomOptions(
             audio_input=room_io.AudioInputOptions(
-                noise_cancellation=lambda params: noise_cancellation.BVCTelephony() if params.participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP else noise_cancellation.BVC(),
+                noise_cancellation=ai_coustics.audio_enhancement(model=ai_coustics.EnhancerModel.QUAIL_VF_S),
             ),
         ),
     )
@@ -502,10 +462,10 @@ import {
   voice,
 } from '@livekit/agents';
 import * as openai from '@livekit/agents-plugin-openai';
-import { BackgroundVoiceCancellation } from '@livekit/noise-cancellation-node';
+import * as aiCoustics from '@livekit/plugins-ai-coustics';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
-import { Agent } from './agent';
+import { createAgent } from './agent';
 
 dotenv.config({ path: '.env.local' });
 
@@ -518,20 +478,18 @@ export default defineAgent({
     });
 
     await session.start({
-      agent: new Agent(),
+      agent: createAgent(),
       room: ctx.room,
       inputOptions: {
-        // For telephony applications, use `TelephonyBackgroundVoiceCancellation` for best results
-        noiseCancellation: BackgroundVoiceCancellation(),
+        noiseCancellation: aiCoustics.audioEnhancement({ model: 'quailVfS' }),
       },
     });
 
     await ctx.connect();
 
-    const handle = session.generateReply({
+    await session.generateReply({
       instructions: 'Greet the user and offer your assistance. You should start by speaking in English.',
     });
-    await handle.waitForPlayout();
   },
 });
 
@@ -544,12 +502,10 @@ cli.runApp(new ServerOptions({ agent: fileURLToPath(import.meta.url), agentName:
 ```typescript
 import { voice } from '@livekit/agents';
 
-export class Agent extends voice.Agent {
-  constructor() {
-    super({
-      instructions: 'You are a helpful voice AI assistant.',
-    });
-  }
+export function createAgent() {
+  return voice.Agent.create({
+    instructions: 'You are a helpful voice AI assistant.',
+  });
 }
 
 ```

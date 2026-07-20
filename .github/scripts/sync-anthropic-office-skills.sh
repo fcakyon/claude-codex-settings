@@ -14,12 +14,12 @@ sync_dir "$SRC/pdf" \
   "plugins/anthropic-office-skills/skills/pdf" \
   "SKILL.md" "scripts/" "forms.md" "reference.md" "LICENSE.txt"
 ensure_license "plugins/anthropic-office-skills/skills/pdf" MIT
-create_zip "plugins/anthropic-office-skills/skills/pdf"
+create_zip "plugins/anthropic-office-skills/skills/pdf" anthropic-pdf
 
-# pptx (has extra md files: editing.md, pptxgenjs.md)
+# pptx
 sync_dir "$SRC/pptx" \
   "plugins/anthropic-office-skills/skills/pptx" \
-  "SKILL.md" "scripts/" "editing.md" "pptxgenjs.md" "LICENSE.txt"
+  "SKILL.md" "scripts/" "LICENSE.txt"
 ensure_license "plugins/anthropic-office-skills/skills/pptx" MIT
 create_zip "plugins/anthropic-office-skills/skills/pptx"
 
