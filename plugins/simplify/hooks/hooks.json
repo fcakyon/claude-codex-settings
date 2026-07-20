@@ -1,0 +1,17 @@
+{
+  "description": "simplify-guard: require /simplify before git commit (per session)",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [{ "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/guard.py\"" }]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/guard.py\"" }]
+      }
+    ]
+  }
+}

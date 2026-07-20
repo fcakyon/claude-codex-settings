@@ -12,7 +12,7 @@
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups.",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "Fatih Akyon"
       },
