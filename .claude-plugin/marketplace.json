@@ -447,6 +447,21 @@
       "keywords": ["output-style", "adhd", "formatting", "accessibility", "productivity"],
       "category": "developer-tools",
       "tags": ["output-style", "productivity", "accessibility"]
+    },
+    {
+      "name": "humanize",
+      "source": "./plugins/humanize",
+      "description": "Keep AI-tell wording out of your markdown, comments, and docstrings by flagging em-dashes, section signs, semicolons, filler words, and cliches, with plain-word suggestions.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["humanize", "writing", "markdown", "docstring", "lint"],
+      "category": "developer-tools",
+      "tags": ["writing", "lint"]
     }
   ]
 }
