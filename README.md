@@ -33,7 +33,7 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 /plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-/plugin install simplify@claude-settings
+/plugin install fable-advisor@claude-settings
 ```
 
 </details>
@@ -98,16 +98,16 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 <details>
 <summary><strong>humanize</strong> - Flag AI-tell wording in your markdown, comments, and docstrings before a write lands, with plain-word swaps</summary>
 
-| Claude Code                                | Codex CLI | Gemini CLI                                            |
-| ------------------------------------------ | --------- | ----------------------------------------------------- |
-| `/plugin install humanize@claude-settings` | n/a       | `gemini extensions install --path ./plugins/humanize` |
+| Claude Code                                | Codex CLI                                   | Gemini CLI                                            |
+| ------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
+| `/plugin install humanize@claude-settings` | `codex plugin add humanize@claude-settings` | `gemini extensions install --path ./plugins/humanize` |
 
-Before a Write or Edit saves, humanize scans the text and blocks the parts that read like a machine wrote them, each with a shorter human word to use instead. It only reads markdown files and, inside code, the comments and docstrings, never the code itself:
+Before a Write or Edit saves, humanize scans the new text and blocks whatever reads like a machine wrote it, each hit paired with a plain-word swap. It reads markdown files whole and, in code, only the comments and docstrings, never the code:
 
-- **Marks** the em-dash, section sign, and stray semicolons in prose (the en-dash stays)
-- **Stock words** like `leverage`, `seamlessly`, `vibrant`, or `game-changing`, each mapped to a plain swap
-- **Tired openers and cliches** like `in conclusion`, `a testament to`, or `aims to bridge`
-- **Filler that only grates in bulk** like `crucial` or `significant`, flagged when it piles up in one write
+- **3 marks**: the em-dash, section sign, and stray semicolon (the en-dash stays)
+- **53 stock words** like `leverage`, `seamlessly`, `vibrant`, `game-changing`, each mapped to a plain swap
+- **16 openers and cliches** like `in conclusion`, `a testament to`, `aims to bridge`
+- **10 pile-up words** like `crucial` or `significant`, flagged at 3+ uses in one write
 
 Runs on Claude Code and Gemini, which fire a hook before a file is written. Word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
 
