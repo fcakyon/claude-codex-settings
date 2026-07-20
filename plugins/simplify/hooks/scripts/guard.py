@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Block `git commit` until /simplify ran this session.
+"""Block `git commit` until /simplify runs. Each commit spends one /simplify.
 
-Per-session marker under TMPDIR (keyed by session_id), so a new session re-requires /simplify.
+Per-session marker under TMPDIR (keyed by session_id) is a one-shot token: /simplify mints it,
+the next commit consumes it, so every commit re-requires a fresh /simplify.
 Harness-agnostic hook contract, so Codex, which installs this plugin's /simplify, is guarded too.
 """
 import json
@@ -16,12 +17,15 @@ session_id = data.get("session_id") or "nosession"
 marker = Path(os.environ.get("TMPDIR", "/tmp")) / "simplify-guard" / f"{session_id}.ok"
 tool_input = data.get("tool_input") or {}
 
-if event == "PostToolUse":  # matcher scopes to the Skill tool; confirm it was /simplify
+if event == "PostToolUse":  # matcher scopes to the Skill tool, confirm it was /simplify
     if tool_input.get("skill") == "simplify" or tool_input.get("name") == "simplify":
         marker.parent.mkdir(parents=True, exist_ok=True)
         marker.touch()
-elif event == "PreToolUse":  # matcher scopes to Bash; self-filter to `git commit` (not commit-graph/-tree)
-    if re.search(r"git\s+commit(?![\w-])", tool_input.get("command", "")) and not marker.exists():
+elif event == "PreToolUse" and re.search(r"git\s+commit(?![\w-])", tool_input.get("command", "")):
+    # matcher scopes to Bash, self-filter to `git commit` (not commit-graph/-tree)
+    if marker.exists():
+        marker.unlink()  # spend the token: this commit uses up the pending /simplify
+    else:
         print(
             json.dumps(
                 {
