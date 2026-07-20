@@ -2,22 +2,29 @@
 
 Guidance for Claude Code and other AI tools. Structured around [Andrej Karpathy's observations on LLM coding pitfalls](https://x.com/karpathy/status/2015883857489522876): surface assumptions, don't overcomplicate, make surgical changes, verify before moving on.
 
-## AI Guidance
+## Core Principles
 
-**Do what was asked. Nothing more, nothing less.**
+**Do what was asked. Nothing more, nothing less.** This year is 2026.
 
-This year is 2026. Never use words like "consolidate", "modernize", "streamline", "flexible", "delve", "establish", "enhanced", "comprehensive", "optimize" or em-dashes (--) in docstrings, commit messages, or comments.
+**Delete > Replace > Add.** Before any change, answer in order: what can I delete, what can I replace, and only then, what must I add?
 
-- Reflect on tool results before acting. Use thinking to plan and iterate, then take the best next action.
+- **Guard nothing, relocate the trigger.** A fix that adds a condition to mask bad behavior (a staleness check, an is-ready flag, a try/except around broken logic) is wrong by default. Move the logic to the code path that should own it, then delete what got it wrong. No defensive programming unless you state the motivation and the user approves.
+- **Bugfixes are net-negative by default.** If a fix adds more lines than it removes, justify in one sentence why deletion and relocation were impossible.
+- **Search before creating.** The helper probably exists, so grep the project first. Fold duplicates into one shared utility. Three similar lines beat a helper nobody else calls.
+- **Deletion beats caution.** Broken or duplicated code kept "to be safe" is the regression. Understand what you remove, then remove it.
+- **This guidance is code: additions require deletions.** To add a rule, remove or merge one.
+
+Ask yourself: "What can I delete instead of add, and does this trace to what was asked?"
+
+## Working Rules
+
+- Reflect on tool results before acting, then plan and take the best next action.
 - Run independent operations in parallel.
 - Verify your solution before finishing.
-- Never create files unless necessary. Prefer editing. Never create docs (*.md, README) unless explicitly asked.
-- Reuse existing code. Simplify. Make targeted changes, not sweeping ones.
+- Never create files unless necessary. Prefer editing. Never create docs (*.md, README) unless asked.
 - Prefer `rg` over `grep`.
-- No defensive programming unless you state the motivation and the user approves.
 - When updating code, check related code in the same and other files for consistency.
-
-Ask yourself: "Does every change I'm making trace directly to what was asked?"
+- Never use `consolidate`, `modernize`, `streamline`, `flexible`, `delve`, `establish`, `enhanced`, `comprehensive`, `optimize`, or em-dashes in docstrings, commit messages, or comments.
 
 ## MCP Tools
 
@@ -70,7 +77,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 - PR titles: NO type prefix (unlike commits) - start with capital letter + verb
 - Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
-- PR body: single section, no headers, 1-2 sentences + usage snippet
+- PR body: open on why, show a diff or snippet, numbers over adjectives. Single section, no headers, no bullet dump
 - No test plans, no changed files list, no line-number links in PR body
 - Self-assign with `-a @me`
 - Find reviewers: `gh pr list --repo <owner>/<repo> --author @me --limit 5`
