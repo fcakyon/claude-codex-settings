@@ -9,7 +9,7 @@
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
 [![llms.txt](https://img.shields.io/badge/llms.txt-✓-brightgreen)](https://context7.com/fcakyon/claude-codex-settings/llms.txt)
 
-My daily battle-tested Claude [Code](https://github.com/anthropics/claude-code)/[Desktop](https://claude.ai/download) and [OpenAI Codex](https://developers.openai.com/codex) setup with skills, commands, hooks, subagents and MCP servers.
+Battle-tested [Claude Code](https://github.com/anthropics/claude-code), [Claude Desktop](https://claude.ai/download), [OpenAI Codex](https://developers.openai.com/codex), and [Cursor](https://cursor.com) setup with skills, commands, hooks, subagents, and MCP servers, plus Kimi, MiniMax, and GLM API support.
 
 > _"They make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, they don't seek clarifications, they don't surface inconsistencies, they don't present tradeoffs. They really like to overcomplicate code and APIs, they bloat abstractions, they don't clean up dead code after themselves."_ -- [Andrej Karpathy](https://x.com/karpathy/status/2015883857489522876)
 
