@@ -1,0 +1,19 @@
+{
+  "description": "humanize: flag AI-tell wording in markdown, comments, and docstrings before a Write or Edit lands",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
