@@ -328,7 +328,7 @@ This repo contains config files (JSON settings, allowlist rules, hooks) rather t
 - Avoid internal jargon: say "allowlist" not "permissions allowlist entries", say "settings files" not "settings.json/settings-minimax.json/settings-zai.json"
 - When listing affected files, group by purpose: "all 3 settings files" instead of naming each one
 - Always name the concrete object you're acting on. "fix: add license fields" is useless (to what?). "fix: add license field to plugin manifests" tells the next reader exactly what changed
-- Keep PR bodies short: lead with why, show a diff or snippet, numbers over adjectives, no bullet dump
+- Keep PR bodies short: lead with why, short scannable bullets (one point each), a diff or snippet, numbers over adjectives
 - PR titles and bodies must read standalone months later: never reference session shorthand ("PR-cf", "the last orphan content PR"), only real PR numbers (`#176`)
 
 ## Maintenance Scripts

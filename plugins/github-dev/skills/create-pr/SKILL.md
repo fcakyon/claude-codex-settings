@@ -53,10 +53,10 @@ plain-language branch name rather than copying the full text.
 
 7. **PR Body Guidelines**
    - Open on why it exists, not "This PR...".
-   - Show, don't list: a `diff`, a before/after, or a CLI snippet they can run.
+   - Short scannable bullets, one point each, a few words, not verbose sentences.
+   - Show it too: a `diff`, a before/after, or a CLI snippet they can run.
    - Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
-   - One read, one section. No headers, no bullet dump.
-   - Plain words, no buzzwords. No test plans, file lists, or line links.
+   - One read, one section, no headers. Plain words, no buzzwords, no test plans or file lists.
 
 ## Examples
 
