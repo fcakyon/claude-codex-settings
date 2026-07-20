@@ -1,28 +1,15 @@
 #!/bin/bash
-# Sync official OpenAI office skills into plugins/openai-office-skills.
+# Rebuild release zips for the openai-office skills, which are frozen local
+# copies (upstream is deprecated). pdf gets a distinct asset name so it does not
+# collide with the anthropic-office pdf.
 # Usage: bash .github/scripts/sync-openai-office-skills.sh
 
 set -euo pipefail
 source "$(dirname "$0")/_helpers.sh"
 
-clone_or_update https://github.com/openai/skills openai-skills
+create_zip "plugins/openai-office-skills/skills/pdf" openai-pdf
+for skill in doc slides spreadsheet; do
+  create_zip "plugins/openai-office-skills/skills/$skill"
+done
 
-SRC="$HOME/dev/openai-skills/skills/.curated"
-
-# slides and spreadsheet are vendored locally (upstream removed them in openai/skills#350).
-
-# pdf
-sync_dir "$SRC/pdf" \
-  "plugins/openai-office-skills/skills/pdf" \
-  "SKILL.md" "LICENSE.txt"
-ensure_license "plugins/openai-office-skills/skills/pdf" MIT
-create_zip "plugins/openai-office-skills/skills/pdf"
-
-# doc (has scripts/)
-sync_dir "$SRC/doc" \
-  "plugins/openai-office-skills/skills/doc" \
-  "SKILL.md" "scripts/" "LICENSE.txt"
-ensure_license "plugins/openai-office-skills/skills/doc" MIT
-create_zip "plugins/openai-office-skills/skills/doc"
-
-echo "Done syncing openai-office-skills."
+echo "Done packaging openai-office-skills."

@@ -44,7 +44,7 @@ Then you're able to import the library and establish the connection with the dat
 import { createClient } from '@supabase/supabase-js'
 
 // Create a single supabase client for interacting with your database
-const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+const supabase = createClient('https://xyzcompany.supabase.co', 'your-publishable-key')
 ```
 
 ### UMD
@@ -66,7 +66,7 @@ Then you can use it from a global `supabase` variable:
 ```html
 <script>
   const { createClient } = supabase
-  const _supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+  const _supabase = createClient('https://xyzcompany.supabase.co', 'your-publishable-key')
 
   console.log('Supabase Instance: ', _supabase)
   // ...
@@ -80,7 +80,7 @@ You can use `<script type="module">` to import supabase-js from CDNs, like:
 ```html
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-  const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key')
+  const supabase = createClient('https://xyzcompany.supabase.co', 'your-publishable-key')
 
   console.log('Supabase Instance: ', supabase)
   // ...
@@ -97,16 +97,62 @@ import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 ### Custom `fetch` implementation
 
-`supabase-js` uses the [`cross-fetch`](https://www.npmjs.com/package/cross-fetch) library to make HTTP requests, but an alternative `fetch` implementation can be provided as an option. This is most useful in environments where `cross-fetch` is not compatible, for instance Cloudflare Workers:
+`supabase-js` uses the runtime's global `fetch` to make HTTP requests, but an alternative `fetch` implementation can be provided as an option. This is useful in environments where the global `fetch` is unavailable or where you want to customize request behavior:
 
 ```js
 import { createClient } from '@supabase/supabase-js'
 
 // Provide a custom `fetch` implementation as an option
-const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key', {
+const supabase = createClient('https://xyzcompany.supabase.co', 'your-publishable-key', {
   global: {
     fetch: (...args) => fetch(...args),
   },
+})
+```
+
+### Distributed Tracing with OpenTelemetry
+
+The Supabase JS SDK can attach W3C/OpenTelemetry trace context headers (`traceparent`, `tracestate`, `baggage`) to outgoing requests, enabling end-to-end request tracing from your client application through Supabase services.
+
+Trace propagation is **opt-in** and disabled by default. When enabled, headers are only attached to requests targeting Supabase domains (`*.supabase.co`, `*.supabase.in`, `localhost`).
+
+#### Enable trace propagation
+
+```js
+import { createClient } from '@supabase/supabase-js'
+import { trace } from '@opentelemetry/api'
+
+const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key', {
+  tracePropagation: true,
+})
+
+const tracer = trace.getTracer('my-app')
+await tracer.startActiveSpan('fetch-users', async (span) => {
+  // This request now includes the active trace context.
+  const { data, error } = await supabase.from('users').select('*')
+  span.end()
+})
+```
+
+If `@opentelemetry/api` is not installed or no active context exists, the SDK silently no-ops.
+
+#### Advanced configuration
+
+```typescript
+interface TracePropagationOptions {
+  // Enable trace propagation (default: false).
+  enabled?: boolean
+
+  // Respect upstream sampling decisions (default: true).
+  // When true, headers are skipped if the upstream trace is not sampled.
+  respectSamplingDecision?: boolean
+}
+```
+
+```js
+// Always propagate, even for non-sampled traces.
+const supabase = createClient('https://xyzcompany.supabase.co', 'public-anon-key', {
+  tracePropagation: { enabled: true, respectSamplingDecision: false },
 })
 ```
 
@@ -125,6 +171,12 @@ When a Node.js version reaches end-of-life and is no longer in Active LTS or Mai
 > Node.js 18 reached end-of-life on April 30, 2025. As announced in [our deprecation notice](https://github.com/orgs/supabase/discussions/37217), support for Node.js 18 was dropped in version `2.79.0`.
 >
 > If you must use Node.js 18, please use version `2.78.0`, which is the last version that supported Node.js 18.
+
+> ⚠️ **Node.js 20 Deprecation Notice**
+>
+> Node.js 20 reached end-of-life on April 30, 2026. As announced in [our deprecation notice](https://github.com/orgs/supabase/discussions/45715), support for Node.js 20 was dropped in version `2.110.0`.
+>
+> If you must use Node.js 20, please use version `2.109.0`, which is the last version that supported Node.js 20.
 
 ### Deno
 
@@ -223,10 +275,10 @@ For major changes or if you're unsure about something, please open an issue firs
 
 ```bash
 # From the monorepo root
-npx nx build supabase-js
+pnpm nx build supabase-js
 
 # Or with watch mode for development
-npx nx build supabase-js --watch
+pnpm nx build supabase-js --watch
 ```
 
 ### Testing

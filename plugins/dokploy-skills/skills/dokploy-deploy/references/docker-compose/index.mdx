@@ -65,7 +65,7 @@ We provide a webhook so that you can trigger your own deployments by pushing to 
 
 This section provides advanced configuration options for experienced users. It includes tools for custom commands within the container and volumes.
 
-- **Command**: Dokploy has a defined command to run the Docker Compose file, ensuring complete control through the UI. However, you can append flags or options to the command.
+- **Command**: Dokploy has a defined command to run the Docker Compose file, ensuring complete control through the UI. However, you can override it with a custom command. Note that the custom command fully replaces the default one (it does not append to it), so if you only need extra flags like `--force-recreate`, you must write the full command based on the default shown in the UI. The command always starts with `docker`, so a custom command like `compose -p <app-name> -f <compose-path> up -d --build --remove-orphans --force-recreate` will run as `docker compose ...`.
   
   <Callout type="info" title="Using Private Registries with Docker Stack">
   If you're deploying with **Docker Stack** (Docker Swarm mode) using **replicas** and a **private registry**, you need to add the `--with-registry-auth` flag to ensure that registry credentials are properly distributed to all nodes in your swarm.

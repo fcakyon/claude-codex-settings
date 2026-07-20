@@ -5,6 +5,8 @@ description: >-
 compatibility: >-
   Best with MongoDB MCP server. Uses collection-indexes and explain when the connection string works; uses Atlas Performance Advisor when Atlas API is configured. Without either, suggest indexes from query shape only. User creates indexes in Atlas or migrations unless tooling allows otherwise.
 license: Apache-2.0
+metadata:
+  version: "1.0.0"
 ---
 
 # MongoDB Query Optimizer

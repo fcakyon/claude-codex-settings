@@ -32,12 +32,16 @@
 
 ## Requirements
 
-- **Node.js 20 or later** (Node.js 18 support dropped as of October 31, 2025)
+- **Node.js 22 or later** (Node.js 20 support dropped in v2.110.0)
 - For browser support, all modern browsers are supported
 
 > ⚠️ **Node.js 18 Deprecation Notice**
 >
 > Node.js 18 reached end-of-life on April 30, 2025. As announced in [our deprecation notice](https://github.com/orgs/supabase/discussions/37217), support for Node.js 18 was dropped on October 31, 2025.
+
+> ⚠️ **Node.js 20 Deprecation Notice**
+>
+> Node.js 20 reached end-of-life on April 30, 2026. As announced in [our deprecation notice](https://github.com/orgs/supabase/discussions/45715), support for Node.js 20 was dropped in v2.110.0.
 
 ## Quick start
 
@@ -63,7 +67,7 @@ const auth = new AuthClient({ url: GOTRUE_URL })
 
 ### Custom `fetch` implementation
 
-`auth-js` uses the [`cross-fetch`](https://www.npmjs.com/package/cross-fetch) library to make HTTP requests, but an alternative `fetch` implementation can be provided as an option. This is most useful in environments where `cross-fetch` is not compatible, for instance Cloudflare Workers:
+`auth-js` uses the runtime's global `fetch` to make HTTP requests, but an alternative `fetch` implementation can be provided as an option. This is useful in environments where the global `fetch` is unavailable or where you want to customize request behavior:
 
 ```js
 import { AuthClient } from '@supabase/auth-js'
@@ -81,19 +85,19 @@ This package is part of the [Supabase JavaScript monorepo](https://github.com/su
 
 ```bash
 # Complete build (from monorepo root)
-npx nx build auth-js
+pnpm nx build auth-js
 
 # Build with watch mode for development
-npx nx build auth-js --watch
+pnpm nx build auth-js --watch
 
 # Individual build targets
-npx nx build:main auth-js    # CommonJS build (dist/main/)
-npx nx build:module auth-js  # ES Modules build (dist/module/)
+pnpm nx build:main auth-js    # CommonJS build (dist/main/)
+pnpm nx build:module auth-js  # ES Modules build (dist/module/)
 
 # Other useful commands
-npx nx lint auth-js          # Run ESLint
-npx nx typecheck auth-js     # TypeScript type checking
-npx nx docs auth-js          # Generate documentation
+pnpm nx lint auth-js          # Run ESLint
+pnpm nx typecheck auth-js     # TypeScript type checking
+pnpm nx docs auth-js          # Generate documentation
 ```
 
 #### Build Outputs
@@ -118,13 +122,13 @@ The auth-js package has two test suites:
 
 ```bash
 # Run main test suite with Supabase CLI (recommended)
-npx nx test:auth auth-js
+pnpm nx test:auth auth-js
 
 # Run Docker-only edge case tests
-npx nx test:docker auth-js
+pnpm nx test:docker auth-js
 
 # Run both test suites
-npx nx test:auth auth-js && npx nx test:docker auth-js
+pnpm nx test:auth auth-js && pnpm nx test:docker auth-js
 ```
 
 #### Main Test Suite (Supabase CLI)
@@ -138,9 +142,9 @@ The `test:auth` command automatically:
 
 ```bash
 # Individual commands for manual control
-npx nx test:infra auth-js    # Start Supabase CLI
-npx nx test:suite auth-js    # Run tests only
-npx nx test:clean-post auth-js  # Stop Supabase CLI
+pnpm nx test:infra auth-js    # Start Supabase CLI
+pnpm nx test:suite auth-js    # Run tests only
+pnpm nx test:clean-post auth-js  # Stop Supabase CLI
 ```
 
 #### Docker Tests (Edge Cases)
@@ -156,9 +160,9 @@ These tests are located in `test/docker-tests/` and use the Docker Compose setup
 
 ```bash
 # Individual commands for manual control
-npx nx test:docker:infra auth-js    # Start Docker containers
-npx nx test:docker:suite auth-js    # Run Docker tests only
-npx nx test:docker:clean-post auth-js  # Stop Docker containers
+pnpm nx test:docker:infra auth-js    # Start Docker containers
+pnpm nx test:docker:suite auth-js    # Run Docker tests only
+pnpm nx test:docker:clean-post auth-js  # Stop Docker containers
 ```
 
 #### Development Testing
@@ -167,13 +171,13 @@ For actively developing and debugging tests:
 
 ```bash
 # Start Supabase CLI once
-npx nx test:infra auth-js
+pnpm nx test:infra auth-js
 
 # Run tests multiple times (faster since instance stays up)
-npx nx test:suite auth-js
+pnpm nx test:suite auth-js
 
 # Clean up when done
-npx nx test:clean-post auth-js
+pnpm nx test:clean-post auth-js
 ```
 
 #### Test Infrastructure
