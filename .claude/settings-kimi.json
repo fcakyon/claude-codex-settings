@@ -161,7 +161,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 -c 'import json,os,re,sys,pathlib; d=json.load(sys.stdin); c=(d.get(\"tool_input\") or {}).get(\"command\",\"\"); s=d.get(\"session_id\") or \"nosession\"; m=pathlib.Path(os.environ.get(\"TMPDIR\",\"/tmp\"))/\"simplify-guard\"/(s+\".ok\"); (re.search(r\"git\\s+commit(?![\\w-])\",c) and not m.exists()) and print(json.dumps({\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"simplify-guard: run /simplify on the staged diff first, then retry the commit.\"}}))'"
+            "command": "python3 -c 'import json,os,re,sys,pathlib; d=json.load(sys.stdin); c=(d.get(\"tool_input\") or {}).get(\"command\",\"\"); s=d.get(\"session_id\") or \"nosession\"; m=pathlib.Path(os.environ.get(\"TMPDIR\",\"/tmp\"))/\"simplify-guard\"/(s+\".ok\"); re.search(r\"git\\s+commit(?![\\w-])\",c) and (m.unlink() if m.exists() else print(json.dumps({\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"simplify-guard: run /simplify on the staged diff first, then retry the commit.\"}})))'"
           }
         ]
       }
