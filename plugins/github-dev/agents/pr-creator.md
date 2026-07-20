@@ -65,9 +65,10 @@ findings in the PR body when available.
        cooler reads like `Put X on the same Y as everything else`.
      - `-b` or `--body`: write it like a sharp teammate would, not a changelog.
        Open on why it exists, not "This PR...".
-       Show, don't list: a `diff`, a before/after, or a CLI snippet they can run.
+       Short scannable bullets, one point each, a few words, not verbose sentences.
+       Show it too: a `diff`, a before/after, or a CLI snippet they can run.
        Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
-       One read, one section. No headers, no bullet dump. No test plans, file lists, or line links.
+       One read, one section, no headers. No test plans, file lists, or line links.
      - `-a @me`: Self-assign (confirmation hook will show actual username)
      - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
        Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
