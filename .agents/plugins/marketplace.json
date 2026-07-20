@@ -17,6 +17,18 @@
       "category": "developer-tools"
     },
     {
+      "name": "humanize",
+      "source": {
+        "source": "local",
+        "path": "./plugins/humanize"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
+    },
+    {
       "name": "fable-advisor",
       "source": {
         "source": "local",

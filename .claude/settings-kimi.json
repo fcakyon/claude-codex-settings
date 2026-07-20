@@ -183,7 +183,8 @@
   "enabledPlugins": {
     "adhd-output-style@claude-settings": true,
     "intelligent-compact@claude-settings": true,
-    "github-dev@claude-settings": true
+    "github-dev@claude-settings": true,
+    "humanize@claude-settings": true
   },
   "extraKnownMarketplaces": {
     "claude-settings": {

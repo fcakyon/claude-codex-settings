@@ -32,5 +32,8 @@ enabled = true
 [plugins."simplify@claude-settings"]
 enabled = true
 
+[plugins."humanize@claude-settings"]
+enabled = true
+
 [plugins."ultralytics-dev@claude-settings"]
 enabled = true
