@@ -1050,7 +1050,7 @@ exec "$@" --thinking-display summarized
 
 ## Thank you for the support!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=fcakyon/claude-codex-settings&type=Date)](https://www.star-history.com/#fcakyon/claude-codex-settings&Date)
+[![Star History Chart](https://api.star-history.com/chart?repos=fcakyon/claude-codex-settings&type=date&legend=top-left&sealed_token=XUyolbkBvYr4r7i8K4yp7jzmFirpgK9P7VrIyfc0zXE5Lcwa5nRzf05tsD04MmQnagSYiVhl0k8nnC8itdsne9RObHgzNpCsQUaChDLQhWYZ91aNHYgHmMofaa_ErKs0SST2uheeqNPROwHsU_LdEvIYHyYbVL9YZYg5aRfVHM0oZZ4DKWSlgwaRsQ3b)](https://www.star-history.com/?repos=fcakyon%2Fclaude-codex-settings&type=date&legend=top-left)
 
 <h3 align="center">Contributors</h3>
 
