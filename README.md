@@ -93,6 +93,10 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 
 - [`simplify`](./plugins/simplify/skills/simplify/SKILL.md) - review the changed diff across four angles and apply the fixes
 
+**Hooks:**
+
+- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a /simplify run before each git commit
+
 </details>
 
 <details>
@@ -702,17 +706,18 @@ Git and GitHub automation. Run the `setup` skill after install.
 
 - [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation before git commit
 - [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation before gh pr create
+- [`block_ai_attribution.py`](./plugins/github-dev/hooks/scripts/block_ai_attribution.py) - Block AI attribution lines in commits and PRs
 
 </details>
 
 <details>
-<summary><strong>ultralytics-dev</strong> - Auto-formatting hooks</summary>
+<summary><strong>ultralytics-dev</strong> - Auto-formatting hooks + force-push guard</summary>
 
 | Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
 | `claude plugin install ultralytics-dev@claude-settings` | `codex plugin add ultralytics-dev@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-dev` |
 
-Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
+Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase.
 
 **Hooks:**
 
@@ -721,6 +726,7 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash.
 - [`prettier_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
 - [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
 - [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
+- [`block_force_push.py`](./plugins/ultralytics-dev/hooks/scripts/block_force_push.py) - Block force-push and rebase
 
 </details>
 

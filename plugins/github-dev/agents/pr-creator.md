@@ -64,8 +64,8 @@ findings in the PR body when available.
        Punchy beats exhaustive. Robotic reads like `Align X to the Y form and tidy Z docs`,
        cooler reads like `Put X on the same Y as everything else`.
      - `-b` or `--body`: write it like a sharp teammate would, not a changelog.
-       Open on why it exists, not "This PR...".
-       Short scannable bullets, one point each, a few words, not verbose sentences.
+       One-line why it exists, not "This PR...". No second intro paragraph.
+       Three bullets max, one point each, under ~12 words. A fourth means you are over-explaining, cut it.
        Lead with the most visual proof, don't just describe it: a screenshot for UI or output changes,
        a benchmark table for results, else a `diff`, before/after, or runnable CLI snippet.
        Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table.

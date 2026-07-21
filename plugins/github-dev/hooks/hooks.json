@@ -1,10 +1,14 @@
 {
-  "description": "Git workflow confirmation hooks for GitHub operations",
+  "description": "Git workflow hooks: block AI attribution in commits and PRs, then confirm them",
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/block_ai_attribution.py"
+          },
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/git_commit_confirm.py"

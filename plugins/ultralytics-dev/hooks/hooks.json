@@ -1,6 +1,17 @@
 {
-  "description": "Code formatting and quality hooks for Ultralytics development",
+  "description": "Code formatting and quality hooks plus a force-push and rebase guard for Ultralytics development",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/block_force_push.py"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|MultiEdit|Write",
