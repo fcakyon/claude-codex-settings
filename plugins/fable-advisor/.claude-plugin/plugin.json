@@ -1,6 +1,6 @@
 {
   "name": "fable-advisor",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Get a second opinion from Claude Fable 5 before big decisions.",
   "agents": "./claude-agents/fable-advisor.md",
   "hooks": "./claude-hooks/hooks.json",

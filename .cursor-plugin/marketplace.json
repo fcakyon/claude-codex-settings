@@ -20,7 +20,7 @@
       "name": "fable-advisor",
       "source": "./plugins/fable-advisor",
       "description": "Get a second opinion from Claude Fable 5 before big decisions.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "license": "Apache-2.0"
     },
     {
