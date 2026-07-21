@@ -256,6 +256,12 @@ Cursor:      import marketplace or /add-plugin
 Gemini CLI:  gemini extensions install --path ./plugins/<name>
 ```
 
+### Updating
+
+- Claude Code: `claude plugin marketplace update`, then `claude plugin update <name>@claude-settings` per plugin (no bulk flag), then restart to apply
+- Codex CLI: `codex plugin marketplace upgrade` updates installed plugins directly since they read the git snapshot, no per-plugin step
+- Same-version edits will not ship, so bump the plugin `version` first (see Version alignment)
+
 ## Adding a New Plugin
 
 1. Create `plugins/<name>/` with at minimum `skills/<skill-name>/SKILL.md`
