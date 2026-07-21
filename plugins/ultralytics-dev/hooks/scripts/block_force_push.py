@@ -15,7 +15,8 @@ text = " ".join(map(str, command)) if isinstance(command, list) else str(command
 # drop quoted argument bodies so a force flag inside a message or body is not matched
 bare = re.sub(r"'[^']*'|\"[^\"]*\"", "", text)
 
-force_push = re.search(r"\bgit\s+push\b", bare) and re.search(r"--force(?:-with-lease|-if-includes)?\b|(?<![\w-])-\w*f(?![\w-])", bare)
+# keep the force flag scoped to the same clause as `git push`, so a -f on another command does not trip it
+force_push = re.search(r"\bgit\s+push\b[^|&;\n]*(?:--force(?:-with-lease|-if-includes)?\b|(?<![\w-])-\w*f(?![\w-]))", bare)
 rebase = re.search(r"\bgit\s+rebase\b", bare)
 if force_push or rebase:
     reason = (
