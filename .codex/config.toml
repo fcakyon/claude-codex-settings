@@ -1,4 +1,4 @@
-model = "gpt-5.6-terra"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
@@ -14,25 +14,25 @@ network_access = true
 [analytics]
 enabled = false
 
-[plugins."github-dev@claude-settings"]
+[plugins."simplify@claude-settings"]
 enabled = true
 
-[plugins."frontend-design-skills@claude-settings"]
+[plugins."humanize@claude-settings"]
 enabled = true
 
 [plugins."openai-office-skills@claude-settings"]
 enabled = true
 
-[plugins."agent-browser@claude-settings"]
-enabled = true
-
 [plugins."python-skills@claude-settings"]
 enabled = true
 
-[plugins."simplify@claude-settings"]
+[plugins."agent-browser@claude-settings"]
 enabled = true
 
-[plugins."humanize@claude-settings"]
+[plugins."frontend-design-skills@claude-settings"]
+enabled = true
+
+[plugins."github-dev@claude-settings"]
 enabled = true
 
 [plugins."ultralytics-dev@claude-settings"]

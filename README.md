@@ -139,11 +139,15 @@ Spawn a stronger Fable 5 reviewer to pressure-test a plan or conclusion before y
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
 | `claude plugin install adhd-output-style@claude-settings` | `codex plugin add adhd-output-style@claude-settings` | `gemini extensions install --path ./plugins/adhd-output-style` |
 
-Reformats every reply for limited working memory: the answer or next step first, numbered one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Enabling the plugin applies the style automatically. Output styles apply in Claude Code.
+Reformats replies for limited working memory: the answer or next step first, numbered one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Claude Code applies the output style automatically. Codex, Cursor, and Gemini CLI expose the same instructions as an `adhd-output-style` skill because they do not support plugin output styles.
 
 **Output styles:**
 
 - [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Answer-first ADHD formatting plus educational Insight blocks while coding
+
+**Skills:**
+
+- [`adhd-output-style`](./plugins/adhd-output-style/skills/adhd-output-style/SKILL.md) - Apply the same reply format in Codex, Cursor, and Gemini CLI
 
 </details>
 
@@ -963,7 +967,7 @@ For Codex CLI, see the recipe at [`.codex/config-minimax.toml`](./.codex/config-
 
 Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 
-- **Model**: `gpt-5.6-terra` with `model_reasoning_effort` set to "high"
+- **Model**: `gpt-5.6-sol` with `model_reasoning_effort` set to "high"
 - **Sandbox**: `workspace-write` with network access enabled
 - **Plugins**: a curated set enabled from this marketplace (`simplify`, `github-dev`, `python-skills`, and more)
 

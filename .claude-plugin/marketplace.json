@@ -54,6 +54,21 @@
       "tags": ["review", "agent"]
     },
     {
+      "name": "adhd-output-style",
+      "source": "./plugins/adhd-output-style",
+      "description": "Answer-first replies for limited working memory: numbered steps, time estimates, a clear next action, and short teaching notes while coding.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["output-style", "adhd", "formatting", "accessibility", "productivity"],
+      "category": "developer-tools",
+      "tags": ["output-style", "productivity", "accessibility"]
+    },
+    {
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
@@ -447,21 +462,6 @@
       "keywords": ["overleaf", "latex", "review", "comments", "academic", "writing"],
       "category": "research",
       "tags": ["research", "academic", "latex"]
-    },
-    {
-      "name": "adhd-output-style",
-      "source": "./plugins/adhd-output-style",
-      "description": "Answer-first replies for limited working memory: numbered steps, time estimates, a clear next action, and short teaching notes while coding.",
-      "version": "1.0.0",
-      "author": {
-        "name": "Fatih Akyon"
-      },
-      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
-      "repository": "https://github.com/fcakyon/claude-codex-settings",
-      "license": "Apache-2.0",
-      "keywords": ["output-style", "adhd", "formatting", "accessibility", "productivity"],
-      "category": "developer-tools",
-      "tags": ["output-style", "productivity", "accessibility"]
     }
   ]
 }
