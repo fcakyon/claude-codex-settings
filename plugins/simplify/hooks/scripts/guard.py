@@ -32,8 +32,9 @@ def marker():
 if event == "PostToolUse" and tool_input.get("skill") == "simplify" and (m := marker()):
     m.touch()
 elif event == "PreToolUse" and os.environ.get("CLAUDECODE") == "1":
-    # matcher scopes to Bash, self-filter to `git commit` (not commit-graph/-tree)
-    if re.search(r"git\s+commit(?![\w-])", tool_input.get("command", "")) and (m := marker()):
+    # match a real `git commit` (not commit-graph/-tree) with quoted args stripped
+    bare = re.sub(r"'[^']*'|\"[^\"]*\"", "", tool_input.get("command", ""))
+    if re.search(r"git\s+commit(?![\w-])", bare) and (m := marker()):
         if m.exists():
             m.unlink()  # spend the token: this commit uses up the pending /simplify
         else:

@@ -12,7 +12,7 @@
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups.",
-      "version": "1.1.2",
+      "version": "1.1.3",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -361,8 +361,8 @@
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
-      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash with Google-style docstrings and code quality checks.",
-      "version": "2.1.2",
+      "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase.",
+      "version": "2.2.0",
       "author": {
         "name": "Fatih Akyon"
       },

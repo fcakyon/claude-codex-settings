@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """PreToolUse hook: show confirmation modal before creating git commit."""
 import json
+import os
 import re
 import subprocess
 import sys
@@ -136,8 +137,8 @@ tool_name = input_data.get("tool_name", "")
 tool_input = input_data.get("tool_input", {})
 command = tool_input.get("command", "")
 
-# Only handle git commit commands
-if tool_name != "Bash" or not command.strip().startswith("git commit"):
+# ask is Claude Code only. Skipping elsewhere also avoids .strip() on a Codex argv list
+if os.environ.get("CLAUDECODE") != "1" or tool_name != "Bash" or not command.strip().startswith("git commit"):
     sys.exit(0)
 
 # Parse commit message
