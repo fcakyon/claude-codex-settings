@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -450,6 +452,51 @@ def validate_marketplace_alignment() -> list[str]:
     return errors
 
 
+def _git(*args: str) -> subprocess.CompletedProcess:
+    """Run a git command in the repo root and capture its output."""
+    return subprocess.run(["git", *args], capture_output=True, text=True, cwd=REPO_ROOT)
+
+
+def validate_version_bumps() -> list[str]:
+    """Fail when a plugin's files changed vs the PR base but its version did not bump.
+
+    Runs only in pull_request CI, where PR_BASE_SHA holds the base commit and full history is fetched. Skips in any
+    other context so local and push runs never false-fail. A brand new plugin (no manifest at base) needs no bump.
+    """
+    base = os.environ.get("PR_BASE_SHA")
+    if not base:
+        return []
+    diff = _git("diff", "--name-only", base, "HEAD")
+    if diff.returncode != 0:
+        print(f"warning: version-bump check skipped, cannot diff against {base}")
+        return []
+
+    touched = set()
+    for f in diff.stdout.splitlines():
+        parts = f.split("/")
+        if len(parts) >= 2 and parts[0] == "plugins":
+            touched.add(parts[1])
+
+    errors = []
+    for name in sorted(touched):
+        head = load_json(REPO_ROOT / "plugins" / name / ".claude-plugin" / "plugin.json")
+        if not head:
+            continue
+        shown = _git("show", f"{base}:plugins/{name}/.claude-plugin/plugin.json")
+        if shown.returncode != 0:
+            continue
+        try:
+            base_version = json.loads(shown.stdout).get("version")
+        except json.JSONDecodeError:
+            continue
+        if head.get("version") == base_version:
+            errors.append(
+                f"{name}: files changed but version still {base_version}. "
+                f"Bump plugins/{name}/.claude-plugin/plugin.json and run sync-versions.sh"
+            )
+    return errors
+
+
 def main():
     """Validate all plugins and return exit code."""
     plugins_dir = Path("plugins")
@@ -480,6 +527,7 @@ def main():
 
     all_errors.extend(validate_symlinks())
     all_errors.extend(validate_marketplace_alignment())
+    all_errors.extend(validate_version_bumps())
 
     if all_errors:
         print("Plugin Validation Failed:")
