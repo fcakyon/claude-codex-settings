@@ -33,6 +33,7 @@ claude-settings/
       agents/<agent>.md                  # Claude Code + Gemini + Cursor
       hooks/hooks.json + scripts/        # Claude Code + Gemini only
       commands/<cmd>.md                  # Claude Code only
+      output-styles/<style>.md           # Claude Code only
 ```
 
 ## Cross-Tool Plugin Format Reference
@@ -234,6 +235,7 @@ Commands are Claude Code only. Gemini CLI uses TOML commands. Other tools use sk
 | Agents (`agents/<name>.md`)       | native      | config.toml | preview     | native  |
 | Hooks (`hooks/hooks.json`)        | native      | no          | native      | partial |
 | Commands (`commands/<name>.md`)   | native (MD) | no          | TOML format | no      |
+| Output styles (`output-styles/`)  | native      | no          | no          | no      |
 
 ### Installation
 
