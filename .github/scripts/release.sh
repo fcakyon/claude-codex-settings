@@ -43,6 +43,12 @@ for sync_script in "$SCRIPTS_DIR"/sync-*-skills.sh; do
   [ -f "$sync_script" ] && bash "$sync_script"
 done
 
+# Local skill-only plugins have no vendor sync script, so zip their skills here for download assets
+source "$SCRIPTS_DIR/_helpers.sh"
+for skill_dir in plugins/{python-skills,adhd-output-style}/skills/*/; do
+  create_zip "$skill_dir"
+done
+
 # Collect zip files from skill directories
 ZIP_FILES=()
 while IFS= read -r -d '' f; do
