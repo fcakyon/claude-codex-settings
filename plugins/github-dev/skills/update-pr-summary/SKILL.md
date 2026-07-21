@@ -22,8 +22,8 @@ When explicitly invoked with extra text, treat that text as the PR number or URL
 3. **Generate the updated summary**
    - Follow the `create-pr` skill format for title and body.
    - Title: a short human headline, capital first letter, no `fix:` or `feat:` prefix. Lead with the outcome, punchy over exhaustive.
-   - Body: open on why, then short scannable bullets (one point each) plus a `diff`, before/after, or runnable CLI snippet.
-   - Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
+   - Body: open on why, then short scannable bullets (one point each). Lead with the most visual proof: a screenshot for UI or output changes, a benchmark table for results, else a `diff`, before/after, or runnable CLI snippet. See the `create-pr` skill for embedding images with a commit-pinned raw URL.
+   - Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table.
    - One read, one section, no headers. Plain words, no buzzwords.
    - No test plans, file lists, or line links.
 

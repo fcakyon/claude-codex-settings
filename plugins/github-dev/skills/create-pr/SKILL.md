@@ -54,9 +54,10 @@ plain-language branch name rather than copying the full text.
 7. **PR Body Guidelines**
    - Open on why it exists, not "This PR...".
    - Short scannable bullets, one point each, a few words, not verbose sentences.
-   - Show it too: a `diff`, a before/after, or a CLI snippet they can run.
-   - Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
+   - Lead with the most visual proof, don't just describe it: a screenshot for UI or output changes, a benchmark table for results, else a `diff`, before/after, or runnable CLI snippet.
+   - Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table, not a paragraph.
    - One read, one section, no headers. Plain words, no buzzwords, no test plans or file lists.
+   - **Embedding images**: you can't drag-drop, so commit the image and reference it with a commit-pinned raw URL that survives the branch being deleted: `https://raw.githubusercontent.com/OWNER/REPO/COMMIT_SHA/path/to/shot.webp` (full commit SHA, never the branch name). Confirm it returns `200 image/*` with `curl -sI` before embedding, then put a before/after pair side by side in a two-column table.
 
 ## Examples
 
@@ -81,4 +82,19 @@ Add a compare command for side-by-side model runs
 Point it at a folder and a few models and it stitches the panels together, so you can eyeball which one wins without juggling tabs.
 
 `ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
+```
+
+### Screenshot and benchmark table
+
+```
+Link shares showed no thumbnail because the preview image had expired. Each site now serves its own screenshot.
+
+| before | after |
+|---|---|
+| no preview, redirect to an expired URL | ![new preview](https://raw.githubusercontent.com/fcakyon/claude-codex-settings/9bedce4/site/public/og-settings.webp) |
+
+| format | size | shows in whatsapp |
+|---|---|---|
+| png | 1.8 MB | no |
+| webp lossless | 87 KB | yes |
 ```
