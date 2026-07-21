@@ -149,9 +149,11 @@ Cuts filler and keeps output token use down with the answer or next step first, 
 
 - [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Low-token ADHD formatting plus educational Insight blocks while coding
 
-**Skills:**
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-- [`adhd-output-style`](./plugins/adhd-output-style/skills/adhd-output-style/SKILL.md) - Apply the same reply format in Codex, Cursor, and Gemini CLI
+| Skill                                                                                | Description                                                  | ZIP                                                                                                                                                                       |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`adhd-output-style`](./plugins/adhd-output-style/skills/adhd-output-style/SKILL.md) | Apply the same reply format in Codex, Cursor, and Gemini CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/adhd-output-style.zip) |
 
 </details>
 
@@ -255,11 +257,11 @@ Office document skills for creating and editing PDFs, Word documents, slide deck
 
 Python coding guidelines grounded in authoritative sources: PEP 8, PEP 20 (Zen of Python), Google Python Style Guide, and Brett Slatkin's "Effective Python" (3rd ed.). Covers code integration, idiomatic patterns, YAGNI anti-abstraction rules, Google-style docstrings, and 18 before/after code examples.
 
-**Skills:**
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-| Skill                                                                            | Description                                 |
-| -------------------------------------------------------------------------------- | ------------------------------------------- |
-| [`python-guidelines`](./plugins/python-skills/skills/python-guidelines/SKILL.md) | Core rules, self-tests, and reference index |
+| Skill                                                                            | Description                                 | ZIP                                                                                                                                                                       |
+| -------------------------------------------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`python-guidelines`](./plugins/python-skills/skills/python-guidelines/SKILL.md) | Core rules, self-tests, and reference index | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/python-guidelines.zip) |
 
 **Reference files:**
 
