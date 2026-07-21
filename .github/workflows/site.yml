@@ -1,0 +1,42 @@
+name: Website
+
+on:
+  push:
+    branches: [main]
+    paths: &site-paths
+      - "site/**"
+      - ".claude/CLAUDE.md"
+      - ".claude/settings.json"
+      - ".claude-plugin/marketplace.json"
+      - ".agents/plugins/marketplace.json"
+      - ".cursor-plugin/marketplace.json"
+      - "plugins/**/.claude-plugin/plugin.json"
+      - "plugins/**/gemini-extension.json"
+      - "AGENTS.md"
+      - "INSTALL.md"
+      - ".github/workflows/site.yml"
+  pull_request:
+    branches: [main]
+    paths: *site-paths
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build websites
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci --prefix site
+      - run: npm run build --prefix site
+        env:
+          SITE_VARIANT: settings
+      - run: npm run build --prefix site
+        env:
+          SITE_VARIANT: plugins

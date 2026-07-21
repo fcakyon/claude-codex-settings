@@ -1,0 +1,52 @@
+---
+import Editor from "./Editor.astro";
+import Icon from "./Icon.astro";
+import { plugins, repositoryUrl } from "../lib/content";
+---
+
+<section class="settings-hero">
+  <div class="hero-copy">
+    <h1>Battle-tested settings for Claude Code, Codex and Cursor</h1>
+    <p>One practical setup for skills, commands, hooks, agents and MCP servers across your AI coding tools.</p>
+    <div class="hero-actions">
+      <a class="button primary" href={repositoryUrl} target="_blank" rel="noreferrer"><Icon name="github" size={23} />View the repository</a>
+      <a class="button secondary" href="#install">Read the install guide <Icon name="arrow" size={19} /></a>
+    </div>
+  </div>
+  <Editor />
+</section>
+
+<section class="section tool-section" id="configuration">
+  <div class="section-intro">
+    <h2>One setup, four coding tools</h2>
+    <p>A single, practical configuration that works across the tools you already use.</p>
+  </div>
+  <div class="tool-rail">
+    <div><strong>Claude Code</strong><span>Settings, hooks, commands and agents</span></div>
+    <div><strong>Codex CLI</strong><span>Plugins, skills and shared guidance</span></div>
+    <div><strong>Cursor</strong><span>Portable plugins and project rules</span></div>
+    <div><strong>Gemini CLI</strong><span>Extensions, skills and shared guidance</span></div>
+  </div>
+</section>
+
+<section class="section install-section" id="install">
+  <div>
+    <h2>Start with one command</h2>
+    <p>Add the marketplace once, then install only the plugins you need.</p>
+  </div>
+  <div class="install-steps">
+    <div><span>Claude Code</span><code>claude plugin marketplace add fcakyon/claude-codex-settings</code></div>
+    <div><span>Codex CLI</span><code>codex plugin marketplace add fcakyon/claude-codex-settings</code></div>
+  </div>
+</section>
+
+<section class="section settings-plugins" id="plugins">
+  <div class="section-intro">
+    <h2>Plugins with a clear job</h2>
+    <p>Descriptions and links come from the repository manifests on every build.</p>
+  </div>
+  <div class="plugin-rail">
+    {plugins.slice(0, 4).map((plugin) => <a href={plugin.href}><strong>{plugin.name}</strong><span>{plugin.description}</span><Icon name="arrow" size={18} /></a>)}
+  </div>
+  <a class="text-link" href="https://agentplugins.net">Browse every plugin <Icon name="arrow" size={18} /></a>
+</section>
