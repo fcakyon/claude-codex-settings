@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { variant, title, description, canonical } = Astro.props;
-const image = "https://github.com/user-attachments/assets/a978cb0a-785d-4a7d-aff2-7e962edd3120";
+const image = new URL(`/og-${variant}.webp`, Astro.site).href;
 const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
 const structuredData = {
   "@context": "https://schema.org",
@@ -46,6 +46,10 @@ const structuredData = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:site_name" content={variant === "settings" ? "Claude Settings" : "Agent Plugins"} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
