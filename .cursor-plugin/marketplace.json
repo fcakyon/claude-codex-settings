@@ -160,7 +160,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
-      "version": "2.4.3",
+      "version": "2.5.0",
       "license": "Apache-2.0"
     },
     {
