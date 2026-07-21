@@ -133,6 +133,21 @@ Spawn a stronger Fable 5 reviewer to pressure-test a plan or conclusion before y
 </details>
 
 <details>
+<summary><strong>adhd-output-style</strong> - Answer-first replies with numbered steps, a clear next action, and short teaching notes</summary>
+
+| Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
+| --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
+| `claude plugin install adhd-output-style@claude-settings` | `codex plugin add adhd-output-style@claude-settings` | `gemini extensions install --path ./plugins/adhd-output-style` |
+
+Reformats every reply for limited working memory: the answer or next step first, numbered one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Enabling the plugin applies the style automatically. Output styles apply in Claude Code.
+
+**Output styles:**
+
+- [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Answer-first ADHD formatting plus educational Insight blocks while coding
+
+</details>
+
+<details>
 <summary><strong>intelligent-compact</strong> - Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions</summary>
 
 | Claude Code                                                 | Codex CLI                                              | Gemini CLI                                                       |
@@ -859,21 +874,6 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 
 - [`setup`](./plugins/overleaf-skills/skills/setup/SKILL.md) - Capture and refresh the Overleaf session cookie
 - [`review-overleaf`](./plugins/overleaf-skills/skills/review-overleaf/SKILL.md) - Fetch unresolved review threads and apply edits to local .tex files
-
-</details>
-
-<details>
-<summary><strong>adhd-output-style</strong> - Answer-first replies with numbered steps, a clear next action, and short teaching notes</summary>
-
-| Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
-| --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
-| `claude plugin install adhd-output-style@claude-settings` | `codex plugin add adhd-output-style@claude-settings` | `gemini extensions install --path ./plugins/adhd-output-style` |
-
-Reformats every reply for limited working memory: the answer or next step first, numbered one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Enabling the plugin applies the style automatically. Output styles apply in Claude Code.
-
-**Output styles:**
-
-- [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Answer-first ADHD formatting plus educational Insight blocks while coding
 
 </details>
 
