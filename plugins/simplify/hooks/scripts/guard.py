@@ -1,39 +1,50 @@
 #!/usr/bin/env python3
 """Block `git commit` until /simplify runs. Each commit spends one /simplify.
 
-Per-session marker under TMPDIR (keyed by session_id) is a one-shot token: /simplify mints it,
-the next commit consumes it, so every commit re-requires a fresh /simplify.
-Harness-agnostic hook contract, so Codex, which installs this plugin's /simplify, is guarded too.
+The marker lives in the per-worktree git dir (`git rev-parse --git-dir`): /simplify reviews the
+staged diff and the index is per-worktree, so the token is minted and spent in the same worktree
+any session or subagent commits from. /simplify mints via the Skill tool, which only Claude Code
+fires, so the commit deny is scoped to Claude Code, other harnesses that can never mint are not
+blocked.
 """
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 data = json.load(sys.stdin)
 event = data.get("hook_event_name", "")
-session_id = data.get("session_id") or "nosession"
-marker = Path(os.environ.get("TMPDIR", "/tmp")) / "simplify-guard" / f"{session_id}.ok"
 tool_input = data.get("tool_input") or {}
 
-if event == "PostToolUse":  # matcher scopes to the Skill tool, confirm it was /simplify
-    if tool_input.get("skill") == "simplify" or tool_input.get("name") == "simplify":
-        marker.parent.mkdir(parents=True, exist_ok=True)
-        marker.touch()
-elif event == "PreToolUse" and re.search(r"git\s+commit(?![\w-])", tool_input.get("command", "")):
+
+def marker():
+    git_dir = subprocess.run(
+        ["git", "-C", data.get("cwd") or ".", "rev-parse", "--path-format=absolute", "--git-dir"],
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    return Path(git_dir) / "simplify-guard.ok" if git_dir else None
+
+
+# PostToolUse matcher scopes to the Skill tool, confirm it was /simplify
+if event == "PostToolUse" and tool_input.get("skill") == "simplify" and (m := marker()):
+    m.touch()
+elif event == "PreToolUse" and os.environ.get("CLAUDECODE") == "1":
     # matcher scopes to Bash, self-filter to `git commit` (not commit-graph/-tree)
-    if marker.exists():
-        marker.unlink()  # spend the token: this commit uses up the pending /simplify
-    else:
-        print(
-            json.dumps(
-                {
-                    "hookSpecificOutput": {
-                        "hookEventName": "PreToolUse",
-                        "permissionDecision": "deny",
-                        "permissionDecisionReason": "simplify-guard: run /simplify on the staged diff first, then retry the commit.",
+    if re.search(r"git\s+commit(?![\w-])", tool_input.get("command", "")) and (m := marker()):
+        if m.exists():
+            m.unlink()  # spend the token: this commit uses up the pending /simplify
+        else:
+            print(
+                json.dumps(
+                    {
+                        "hookSpecificOutput": {
+                            "hookEventName": "PreToolUse",
+                            "permissionDecision": "deny",
+                            "permissionDecisionReason": "simplify-guard: run /simplify on the staged diff first, then retry the commit.",
+                        }
                     }
-                }
+                )
             )
-        )
