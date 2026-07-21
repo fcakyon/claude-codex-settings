@@ -1,0 +1,25 @@
+---
+import Icon from "./Icon.astro";
+import { repositoryUrl, type SiteVariant } from "../lib/content";
+
+interface Props {
+  variant: SiteVariant;
+}
+
+const { variant } = Astro.props;
+const settings = variant === "settings";
+const nav = settings
+  ? [["Install", "#install"], ["Plugins", "#plugins"], ["Configuration", "#configuration"], ["GitHub", repositoryUrl]]
+  : [["Browse", "#browse"], ["Install", "#install"], ["Compatibility", "#compatibility"], ["GitHub", repositoryUrl]];
+---
+
+<header class="site-header">
+  <a class="brand" href="/">{settings ? "Claude Settings" : "Agent Plugins"}</a>
+  <nav aria-label="Primary navigation">
+    {nav.map(([label, href]) => <a href={href}>{label}</a>)}
+  </nav>
+  <a class="button primary header-cta" href={repositoryUrl} target="_blank" rel="noreferrer">
+    <Icon name="github" size={21} />
+    <span>View on GitHub</span>
+  </a>
+</header>

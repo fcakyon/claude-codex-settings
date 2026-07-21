@@ -1,0 +1,24 @@
+---
+import PluginDirectory from "./PluginDirectory.astro";
+---
+
+<section class="plugins-hero">
+  <div class="plugins-intro">
+    <h1>Agent plugins that do real work</h1>
+    <p>Browse installable skills, hooks and agents for Claude Code, Codex, Cursor and Gemini.</p>
+  </div>
+  <PluginDirectory />
+</section>
+
+<section class="section compatibility" id="compatibility">
+  <div class="section-intro">
+    <h2>Use the same skills across tools</h2>
+    <p>Support labels are derived from the manifest files present in each plugin directory.</p>
+  </div>
+  <div class="compatibility-rail">
+    <div><strong>Claude Code</strong><span>Plugins, skills, agents, hooks and commands</span></div>
+    <div><strong>Codex CLI</strong><span>Plugins, skills and shared agent guidance</span></div>
+    <div><strong>Cursor</strong><span>Plugins, skills and project guidance</span></div>
+    <div><strong>Gemini CLI</strong><span>Extensions, skills, agents and hooks</span></div>
+  </div>
+</section>

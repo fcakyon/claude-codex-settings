@@ -1,0 +1,121 @@
+---
+import Icon from "./Icon.astro";
+import { editorFiles, repositoryUrl } from "../lib/content";
+
+const lines = editorFiles.map((file) => {
+  const fileLines = file.content.split("\n");
+  return {
+    ...file,
+    lines: fileLines,
+    focusLine: Math.max(fileLines.findIndex((line) => line.includes(file.focus)), 0),
+  };
+});
+---
+
+<div class="editor" data-editor>
+  <div class="editor-topbar" aria-hidden="true">
+    <span></span><span></span><span></span>
+  </div>
+  <aside class="file-tree" aria-label="Repository files">
+    <p>Project</p>
+    <div class="tree-row root-row"><Icon name="folder" size={18} /><span>claude-codex-settings</span></div>
+    <div class="tree-row folder-row"><span class="tree-caret">⌄</span><Icon name="folder" size={18} /><span>.claude</span></div>
+    <button class="tree-row tree-file is-active" type="button" data-file="claude"><Icon name="file" size={17} /><span>CLAUDE.md</span></button>
+    <button class="tree-row tree-file" type="button" data-file="settings"><Icon name="file" size={17} /><span>settings.json</span></button>
+    <div class="tree-row folder-row"><span class="tree-caret">›</span><Icon name="folder" size={18} /><span>.codex</span></div>
+    <div class="tree-row folder-row"><span class="tree-caret">›</span><Icon name="folder" size={18} /><span>.vscode</span></div>
+    <button class="tree-row tree-file root-file" type="button" data-file="agents"><Icon name="file" size={17} /><span>AGENTS.md</span></button>
+  </aside>
+  <div class="editor-main">
+    <div class="tabs" role="tablist" aria-label="Configuration files">
+      {lines.map((file, index) => (
+        <button
+          id={`tab-${file.id}`}
+          class:list={["editor-tab", { "is-active": index === 0 }]}
+          type="button"
+          role="tab"
+          aria-selected={index === 0 ? "true" : "false"}
+          aria-controls={`panel-${file.id}`}
+          tabindex={index === 0 ? 0 : -1}
+          data-tab={file.id}
+        >
+          {file.label}<span aria-hidden="true">×</span>
+        </button>
+      ))}
+    </div>
+    {lines.map((file, index) => (
+      <div
+        id={`panel-${file.id}`}
+        class="code-panel"
+        role="tabpanel"
+        aria-labelledby={`tab-${file.id}`}
+        data-panel={file.id}
+        data-focus-line={file.focusLine}
+        hidden={index !== 0}
+      >
+        <code>
+          {file.lines.map((line, lineIndex) => (
+            <span class="code-line"><span class="line-number">{lineIndex + 1}</span><span>{line || " "}</span></span>
+          ))}
+        </code>
+      </div>
+    ))}
+  </div>
+  <div class="terminal">
+    <div class="terminal-label">Terminal</div>
+    <div class="terminal-body">
+      <span class="prompt">→</span>
+      <code>git clone {repositoryUrl}.git</code>
+      <button class="icon-button" type="button" data-copy={`${repositoryUrl}.git`} aria-label="Copy clone URL">
+        <Icon name="copy" size={18} />
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const editor = document.querySelector<HTMLElement>("[data-editor]");
+
+  if (editor) {
+    const activate = (id: string) => {
+      editor.querySelectorAll<HTMLElement>("[data-tab]").forEach((tab) => {
+        const active = tab.dataset.tab === id;
+        tab.classList.toggle("is-active", active);
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      editor.querySelectorAll<HTMLElement>("[data-file]").forEach((file) =>
+        file.classList.toggle("is-active", file.dataset.file === id),
+      );
+      editor.querySelectorAll<HTMLElement>("[data-panel]").forEach((panel) => {
+        panel.hidden = panel.dataset.panel !== id;
+        if (!panel.hidden) {
+          const line = Number(panel.dataset.focusLine || 0);
+          panel.scrollTop = line * 24;
+        }
+      });
+    };
+
+    editor.querySelectorAll<HTMLElement>("[data-tab], [data-file]").forEach((control) =>
+      control.addEventListener("click", () => activate(control.dataset.tab || control.dataset.file || "claude")),
+    );
+    editor.querySelectorAll<HTMLElement>("[data-tab]").forEach((tab, index, tabs) =>
+      tab.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        const next = event.key === "ArrowRight" ? index + 1 : index - 1;
+        const target = tabs[(next + tabs.length) % tabs.length];
+        target.focus();
+        activate(target.dataset.tab || "claude");
+      }),
+    );
+    activate("claude");
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-copy]").forEach((button) =>
+    button.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(button.dataset.copy || "");
+      button.classList.add("is-copied");
+      setTimeout(() => button.classList.remove("is-copied"), 1200);
+    }),
+  );
+</script>

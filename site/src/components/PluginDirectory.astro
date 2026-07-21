@@ -1,0 +1,99 @@
+---
+import Icon from "./Icon.astro";
+import { plugins } from "../lib/content";
+
+const initialCommand = plugins[0].codexCommand;
+---
+
+<div class="plugin-browser" id="browse" data-plugin-browser>
+  <label class="plugin-search">
+    <Icon name="search" size={27} />
+    <span class="sr-only">Search plugins and skills</span>
+    <input type="search" placeholder="Search plugins and skills" autocomplete="off" data-plugin-search />
+    <kbd>/</kbd>
+  </label>
+
+  <div class="plugin-layout">
+    <div class="plugin-list" role="list" aria-label="Available plugins">
+      <div class="plugin-head" aria-hidden="true">
+        <span>#</span><span>Plugin</span><span>Description</span><span>Supported tools</span><span>Link</span>
+      </div>
+      {plugins.map((plugin, index) => (
+        <article
+          class:list={["plugin-row", { "is-selected": index === 0 }]}
+          role="listitem"
+          data-plugin-row
+          data-plugin={plugin.name}
+          data-command={plugin.codexCommand}
+          data-search={`${plugin.name} ${plugin.description} ${plugin.keywords?.join(" ") || ""}`.toLowerCase()}
+        >
+          <span class="plugin-number">{String(index + 1).padStart(2, "0")}</span>
+          <button class="plugin-name" type="button" data-plugin-select>{plugin.name}</button>
+          <p>{plugin.description}</p>
+          <span class="plugin-tools">{plugin.tools.join(", ")}</span>
+          <a href={plugin.href} target="_blank" rel="noreferrer">View plugin <Icon name="arrow" size={18} /></a>
+        </article>
+      ))}
+      <p class="empty-state" data-empty hidden>No plugins match that search.</p>
+    </div>
+
+    <aside class="install-panel" id="install">
+      <div class="install-heading">
+        <strong>Install via Codex CLI</strong>
+        <span aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+      <div class="install-content">
+        <p>Run this command in your terminal to install the selected plugin.</p>
+        <div class="command-line">
+          <code data-install-command>{initialCommand}</code>
+          <button class="icon-button" type="button" data-copy-command aria-label="Copy install command"><Icon name="copy" size={19} /></button>
+        </div>
+        <p class="install-note">Select any plugin name to update the command.</p>
+      </div>
+    </aside>
+  </div>
+  <span class="sr-only" aria-live="polite" data-result-count></span>
+</div>
+
+<script>
+  const browser = document.querySelector<HTMLElement>("[data-plugin-browser]");
+
+  if (browser) {
+    const search = browser.querySelector<HTMLInputElement>("[data-plugin-search]");
+    const rows = [...browser.querySelectorAll<HTMLElement>("[data-plugin-row]")];
+    const command = browser.querySelector<HTMLElement>("[data-install-command]");
+    const count = browser.querySelector<HTMLElement>("[data-result-count]");
+    const empty = browser.querySelector<HTMLElement>("[data-empty]");
+
+    search?.addEventListener("input", () => {
+      const query = search.value.trim().toLowerCase();
+      let visible = 0;
+      rows.forEach((row) => {
+        row.hidden = !row.dataset.search?.includes(query);
+        if (!row.hidden) visible += 1;
+      });
+      if (empty) empty.hidden = visible > 0;
+      if (count) count.textContent = `${visible} plugins shown`;
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "/" && document.activeElement !== search) {
+        event.preventDefault();
+        search?.focus();
+      }
+    });
+
+    rows.forEach((row) =>
+      row.querySelector("[data-plugin-select]")?.addEventListener("click", () => {
+        rows.forEach((item) => item.classList.toggle("is-selected", item === row));
+        if (command) command.textContent = row.dataset.command || `${row.dataset.plugin} is not available for Codex`;
+      }),
+    );
+
+    browser.querySelector("[data-copy-command]")?.addEventListener("click", async (event) => {
+      await navigator.clipboard.writeText(command?.textContent || "");
+      (event.currentTarget as HTMLElement).classList.add("is-copied");
+      setTimeout(() => (event.currentTarget as HTMLElement).classList.remove("is-copied"), 1200);
+    });
+  }
+</script>

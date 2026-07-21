@@ -1,0 +1,70 @@
+---
+import Header from "../components/Header.astro";
+import { repositoryUrl, type SiteVariant } from "../lib/content";
+import "../styles/global.css";
+
+interface Props {
+  variant: SiteVariant;
+  title: string;
+  description: string;
+  canonical: string;
+}
+
+const { variant, title, description, canonical } = Astro.props;
+const image = "https://github.com/user-attachments/assets/a978cb0a-785d-4a7d-aff2-7e962edd3120";
+const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "WebSite", name: variant === "settings" ? "Claude Settings" : "Agent Plugins", url: canonical, description },
+    {
+      "@type": "SoftwareSourceCode",
+      name: "Claude Codex Settings",
+      codeRepository: repositoryUrl,
+      license: "https://www.apache.org/licenses/LICENSE-2.0",
+      description,
+      programmingLanguage: ["Markdown", "JSON", "Python", "Shell"],
+      author: { "@type": "Person", name: "Fatih Akyon", url: "https://github.com/fcakyon" },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" data-site={variant}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={variant === "settings" ? "#ffffff" : "#070b10"} />
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:site_name" content={variant === "settings" ? "Claude Settings" : "Agent Plugins"} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    {googleAnalyticsId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />}
+    {googleAnalyticsId && (
+      <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${googleAnalyticsId}');`} />
+    )}
+  </head>
+  <body>
+    <div class="page-shell">
+      <Header variant={variant} />
+      <main><slot /></main>
+      <footer>
+        <span>{variant === "settings" ? "Claude Settings" : "Agent Plugins"}</span>
+        <div><a href="/llms.txt">llms.txt</a><a href="/sitemap.xml">Sitemap</a><a href={repositoryUrl}>GitHub</a></div>
+      </footer>
+    </div>
+  </body>
+</html>
