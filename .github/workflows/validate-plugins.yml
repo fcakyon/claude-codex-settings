@@ -9,6 +9,8 @@ on:
       - ".codex-plugin/**"
       - ".cursor-plugin/**"
       - ".agents/**"
+      - ".github/scripts/**"
+      - ".github/workflows/validate-plugins.yml"
       - "CLAUDE.md"
       - "AGENTS.md"
       - "GEMINI.md"
@@ -20,6 +22,8 @@ on:
       - ".codex-plugin/**"
       - ".cursor-plugin/**"
       - ".agents/**"
+      - ".github/scripts/**"
+      - ".github/workflows/validate-plugins.yml"
       - "CLAUDE.md"
       - "AGENTS.md"
       - "GEMINI.md"
@@ -29,6 +33,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,4 +45,6 @@ jobs:
         run: pip install pyyaml
 
       - name: Validate plugins
+        env:
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: python .github/scripts/validate_plugins.py
