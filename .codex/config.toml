@@ -14,6 +14,9 @@ network_access = true
 [analytics]
 enabled = false
 
+[agents]
+max_threads = 8
+
 [plugins."simplify@claude-settings"]
 enabled = true
 
