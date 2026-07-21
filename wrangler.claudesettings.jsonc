@@ -1,4 +1,7 @@
 {
   "name": "claudesettingscom",
-  "compatibility_date": "2026-07-21"
+  "compatibility_date": "2026-07-21",
+  "assets": {
+    "directory": "./site/dist"
+  }
 }
