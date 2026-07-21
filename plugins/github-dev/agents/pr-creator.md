@@ -66,8 +66,12 @@ findings in the PR body when available.
      - `-b` or `--body`: write it like a sharp teammate would, not a changelog.
        Open on why it exists, not "This PR...".
        Short scannable bullets, one point each, a few words, not verbose sentences.
-       Show it too: a `diff`, a before/after, or a CLI snippet they can run.
-       Numbers win: benchmarks, counts, speedups, comparisons over adjectives.
+       Lead with the most visual proof, don't just describe it: a screenshot for UI or output changes,
+       a benchmark table for results, else a `diff`, before/after, or runnable CLI snippet.
+       Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table.
+       To embed an image you can't drag-drop, commit it and link a commit-pinned raw URL that survives
+       branch deletion: `https://raw.githubusercontent.com/OWNER/REPO/COMMIT_SHA/path/to/shot.webp`
+       (full commit SHA, not the branch). Confirm `200 image/*` with `curl -sI` before embedding.
        One read, one section, no headers. No test plans, file lists, or line links.
      - `-a @me`: Self-assign (confirmation hook will show actual username)
      - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
