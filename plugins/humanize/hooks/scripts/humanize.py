@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Block matched AI buzzwords before a Write or Edit lands, so drafted text reads human.
+"""Block AI buzzwords before a write, shell, or tool call lands, so text reads human.
 
-Checks markdown files whole, and in code files only the comment and docstring lines,
-never real code. Always blocks a few marks and stock words, each with a plain swap, and
-flags a wider set of common words only when they pile up. En-dash is allowed. The pile-up
-count sees one write at a time, so it is exact on a whole-file Write and partial on an Edit.
+Scans markdown whole, code files only in comments and docstrings, Bash and gh only in commit,
+PR, and comment text, patches only in added lines, and MCP calls only in message fields. Always
+blocks a few marks and stock words with a plain swap, and flags common words only when they pile
+up. En-dash is allowed.
 
-Word choices draw on Wikipedia "Signs of AI writing":
-https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing
+Words draw on Wikipedia "Signs of AI writing": https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing
 """
 import json
 import re
+import shlex
 import sys
 from collections import Counter
 from pathlib import Path
@@ -64,6 +64,13 @@ MARKS = {"—": "em-dash, use commas or periods", "§": "section sign", ";": "se
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
 OFTEN_RE = re.compile(r"\b(" + "|".join(OFTEN) + r")\b", re.IGNORECASE)
 
+HEREDOC = re.compile(r"<<-?\s*[\"']?([A-Za-z_]\w*)[\"']?\r?\n(.*?)\r?\n[ \t]*\1\b", re.DOTALL)
+FIELD_FLAGS = {"-f", "-F", "--field", "--raw-field"}
+
+# MCP input keys that carry human-facing message text, checked as markdown
+TEXT_KEYS = {"body", "text", "markdown_text", "content", "description", "title",
+             "comment", "message", "subject", "note", "summary", "richtext", "rich_text"}
+
 MD_EXT = {".md", ".markdown", ".mdx", ".txt"}
 HASH_EXT = {".py", ".sh", ".bash", ".zsh", ".rb", ".yaml", ".yml", ".toml"}
 C_EXT = {".js", ".ts", ".jsx", ".tsx", ".c", ".cc", ".cpp", ".h", ".hpp", ".java", ".go", ".rs", ".css", ".scss", ".swift", ".kt", ".php"}
@@ -102,11 +109,72 @@ def checked(path, text):
     return ""
 
 
+def bash_text(command):
+    """Return commit, PR, and comment message text from a git-commit or gh command, else empty."""
+    git_commit = re.search(r"\bgit\b[^|&]*\bcommit\b", command)
+    gh = re.search(r"\bgh\b", command)
+    if not (git_commit or gh):
+        return ""
+    parts = [m.group(2) for m in HEREDOC.finditer(command)]
+    stripped = HEREDOC.sub(" ", command)
+    flags = {"-m", "--message"} if git_commit else set()
+    if gh:
+        flags |= {"-b", "--body", "-t", "--title"}
+    try:
+        tokens = shlex.split(stripped, comments=False)
+    except ValueError:
+        tokens = stripped.split()
+    for i, tok in enumerate(tokens):
+        key, sep, val = tok.partition("=")
+        if tok in flags and i + 1 < len(tokens):
+            parts.append(tokens[i + 1])
+        elif sep and key in flags:
+            parts.append(val)
+        elif gh and tok in FIELD_FLAGS and i + 1 < len(tokens):
+            field, _, value = tokens[i + 1].partition("=")
+            if field in {"body", "title"} and not value.startswith("@"):
+                parts.append(value)
+    return "\n".join(parts)
+
+
+def patch_text(patch):
+    """Return checkable text from a Codex apply_patch envelope, split by file type."""
+    out = []
+    for path, block in re.findall(r"^\*\*\* (?:Add|Update) File: (.+?)\s*$(.*?)(?=^\*\*\* |\Z)", patch, re.DOTALL | re.MULTILINE):
+        added = "\n".join(ln[1:] for ln in block.splitlines() if ln.startswith("+") and not ln.startswith("+++"))
+        out.append(checked(path, added))
+    return "\n".join(p for p in out if p)
+
+
+def mcp_text(obj):
+    """Return human-facing field values pulled from an MCP tool input, walked in full."""
+    if isinstance(obj, dict):
+        items = [v if k.lower() in TEXT_KEYS and isinstance(v, str) else mcp_text(v) for k, v in obj.items()]
+    elif isinstance(obj, list):
+        items = [mcp_text(v) for v in obj]
+    else:
+        return ""
+    return "\n".join(p for p in items if p)
+
+
+def extract(tool, tool_input):
+    """Return the checkable text for a tool call, routed by tool type."""
+    command = tool_input.get("command", "")
+    if isinstance(command, list):  # Codex sends the shell tool an argv array, Claude Code a string
+        command = " ".join(str(c) for c in command)
+    if tool.startswith("mcp__"):
+        return md_text(mcp_text(tool_input))
+    if tool == "Bash":
+        return md_text(bash_text(command))
+    if tool == "apply_patch":
+        return patch_text(command)
+    chunks = [tool_input.get("content", ""), tool_input.get("new_string", "")]
+    chunks += [e.get("new_string", "") for e in tool_input.get("edits", []) if isinstance(e, dict)]
+    return checked(tool_input.get("file_path", ""), "\n".join(c for c in chunks if c))
+
+
 data = json.load(sys.stdin)
-tool_input = data.get("tool_input") or {}
-chunks = [tool_input.get("content", ""), tool_input.get("new_string", "")]
-chunks += [e.get("new_string", "") for e in tool_input.get("edits", []) if isinstance(e, dict)]
-text = checked(tool_input.get("file_path", ""), "\n".join(c for c in chunks if c))
+text = extract(data.get("tool_name", ""), data.get("tool_input") or {})
 
 notes = [f"remove {label}" for ch, label in MARKS.items() if ch in text]
 notes += [f"'{w}' -> {SWAP[w]}" for w in dict.fromkeys(m.group(1).lower() for m in SWAP_RE.finditer(text))]
@@ -115,5 +183,5 @@ counts = Counter(m.group(1).lower() for m in OFTEN_RE.finditer(text))
 notes += [f"'{w}' used {n} times, vary it" for w, n in counts.items() if n >= LIMIT]
 
 if notes:
-    reason = "humanize: " + ", ".join(notes) + ". Applies to markdown, comments, and docstrings."
+    reason = "humanize: " + ", ".join(notes) + ". Applies to markdown, code comments, and message text."
     print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": reason}}))

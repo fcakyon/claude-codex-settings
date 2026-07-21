@@ -1,16 +1,31 @@
 {
-  "description": "humanize: block matched AI buzzwords before a Write or Edit lands",
+  "description": "humanize: block AI buzzwords before a file write, commit, PR, or Slack/Linear post lands",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit|MultiEdit|apply_patch|Slack__slack_(send|schedule|create_canvas|update_canvas)|Linear__save_",
         "hooks": [
           {
             "type": "command",
             "command": "python3",
-            "args": [
-              "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"
-            ]
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"]
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"],
+            "if": "Bash(git commit *)"
+          },
+          {
+            "type": "command",
+            "command": "python3",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"],
+            "if": "Bash(gh *)"
           }
         ]
       }
