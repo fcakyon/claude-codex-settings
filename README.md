@@ -96,7 +96,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 </details>
 
 <details>
-<summary><strong>humanize</strong> - Flag AI-tell wording in your markdown, comments, and docstrings before a write lands, with plain-word swaps</summary>
+<summary><strong>humanize</strong> - Block a curated list of AI buzzwords on every write with a hook</summary>
 
 | Claude Code                                      | Codex CLI                                   | Gemini CLI                                            |
 | ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
@@ -109,41 +109,45 @@ Before a Write or Edit saves, humanize scans the new text and blocks whatever re
 - **16 openers and cliches** like `in conclusion`, `a testament to`, `aims to bridge`
 - **10 pile-up words** like `crucial` or `significant`, flagged at 3+ uses in one write
 
-Runs on Claude Code and Gemini, which fire a hook before a file is written. Word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+Runs on Claude Code and Gemini. Unlike a markdown rule the model can ignore, the hook checks every Write or Edit and blocks each match until it is replaced. The word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
 
 **Hooks:**
 
-- [`humanize.py`](./plugins/humanize/hooks/scripts/humanize.py) - flags AI-tell marks, words, and cliches before a Write or Edit lands
+- [`humanize.py`](./plugins/humanize/hooks/scripts/humanize.py) - blocks matched marks, buzzwords, and cliches before a Write or Edit lands
 
 </details>
 
 <details>
-<summary><strong>fable-advisor</strong> - On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it</summary>
+<summary><strong>fable-advisor</strong> - Get a second opinion from Claude Fable 5 before big decisions</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
 | `claude plugin install fable-advisor@claude-settings` | `codex plugin add fable-advisor@claude-settings` | `gemini extensions install --path ./plugins/fable-advisor` |
 
-Spawn a stronger Fable 5 reviewer to pressure-test a plan or conclusion before you commit, a drop-in for the built-in advisor when the Opus-main plus Fable-advisor pairing fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)). It automatically receives the recent conversation, the same history the built-in advisor sees, so it reviews the real context instead of a hand-picked summary, and returns a skeptical review, not a rewrite.
+Ask a Fable 5 reviewer to challenge a plan or conclusion before you commit, a drop-in for the built-in advisor when the Opus-main plus Fable-advisor pairing fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)). Claude Code uses a native Fable agent with the recent conversation attached. Codex, Cursor, and Gemini call the same model through an authenticated Claude Code CLI with `claude -p --model fable`.
 
 **Agents:**
 
-- [`fable-advisor`](./plugins/fable-advisor/agents/fable-advisor.md) - Fable 5 second-opinion reviewer that already sees the recent conversation, so you just name the decision to pressure-test
+- [`fable-advisor`](./plugins/fable-advisor/claude-agents/fable-advisor.md) - Native Claude Code reviewer with recent conversation context
+
+**Skills:**
+
+- [`fable-advisor`](./plugins/fable-advisor/skills/fable-advisor/SKILL.md) - Routes Claude Code to its native agent and other tools to `claude -p`
 
 </details>
 
 <details>
-<summary><strong>adhd-output-style</strong> - Answer-first replies with numbered steps, a clear next action, and short teaching notes</summary>
+<summary><strong>adhd-output-style</strong> - Use fewer output tokens with short steps, quick insights, and clear next actions</summary>
 
 | Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
 | `claude plugin install adhd-output-style@claude-settings` | `codex plugin add adhd-output-style@claude-settings` | `gemini extensions install --path ./plugins/adhd-output-style` |
 
-Reformats replies for limited working memory: the answer or next step first, numbered one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Claude Code applies the output style automatically. Codex, Cursor, and Gemini CLI expose the same instructions as an `adhd-output-style` skill because they do not support plugin output styles.
+Cuts filler and keeps output token use down with the answer or next step first, one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Claude Code applies the output style automatically. Codex, Cursor, and Gemini CLI expose the same instructions as an `adhd-output-style` skill because they do not support plugin output styles.
 
 **Output styles:**
 
-- [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Answer-first ADHD formatting plus educational Insight blocks while coding
+- [`ADHD Explanatory`](./plugins/adhd-output-style/output-styles/adhd-explanatory.md) - Low-token ADHD formatting plus educational Insight blocks while coding
 
 **Skills:**
 

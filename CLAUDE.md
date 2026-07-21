@@ -170,6 +170,11 @@ color: blue
 - `tools`: array of allowed tool names
 - `skills`: optional, skill name(s) to load
 
+If an agent selects a Claude-only model, keep it outside the shared `agents/`
+directory and point to it with the Claude manifest's `agents` field. Cursor only
+accepts `name` and `description` for plugin agents, while Gemini agent models
+must be Gemini models. Give other tools a skill that calls the provider CLI.
+
 ### Hooks Format
 
 Path: `hooks/hooks.json`

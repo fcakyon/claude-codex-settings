@@ -14,8 +14,8 @@ Regenerate the Plugins section of README.md based on current plugin structure an
 2. For each plugin, scan `plugins/<name>/` to discover:
    - Skills: `plugins/<name>/skills/*/SKILL.md`
    - Commands: `plugins/<name>/commands/*.md`
-   - Agents: `plugins/<name>/agents/*.md`
-   - Hooks: `plugins/<name>/hooks/hooks.json`
+   - Agents: use `.claude-plugin/plugin.json` `agents` paths when set, otherwise `plugins/<name>/agents/*.md`
+   - Hooks: use `.claude-plugin/plugin.json` `hooks` paths when set, otherwise `plugins/<name>/hooks/hooks.json`
    - MCP: `plugins/<name>/.mcp.json`
 
 3. Update each plugin's `<details>` block in README.md. Use this format:

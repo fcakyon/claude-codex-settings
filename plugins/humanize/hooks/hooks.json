@@ -1,5 +1,5 @@
 {
-  "description": "humanize: flag AI-tell wording in markdown, comments, and docstrings before a Write or Edit lands",
+  "description": "humanize: block matched AI buzzwords before a Write or Edit lands",
   "hooks": {
     "PreToolUse": [
       {

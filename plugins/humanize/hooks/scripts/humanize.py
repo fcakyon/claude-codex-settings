@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flag AI-tell wording before a Write or Edit lands, so drafted text reads human.
+"""Block matched AI buzzwords before a Write or Edit lands, so drafted text reads human.
 
 Checks markdown files whole, and in code files only the comment and docstring lines,
 never real code. Always blocks a few marks and stock words, each with a plain swap, and
@@ -55,7 +55,7 @@ PHRASES = [
     (r"plays? a \w+ role in shaping", "say what it does"),
 ]
 
-# fine once, an AI-tell when repeated, flagged at LIMIT or more
+# fine once, suspicious when repeated, flagged at LIMIT or more
 # 'prompted' sits here on purpose, LLM comments and docstrings use it a lot
 LIMIT = 3
 OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermore", "additionally", "aligns", "explore", "prompted"]

@@ -1,6 +1,6 @@
 ---
 name: ADHD Explanatory
-description: Answer-first ADHD formatting plus educational Insight blocks while coding
+description: Low-token ADHD formatting plus educational Insight blocks while coding
 keep-coding-instructions: true
 force-for-plugin: true
 ---
