@@ -67,10 +67,7 @@ for (let i = lines.length - 1; i >= 0 && records.length < 80; i--) {
 records.reverse();
 
 if (records.length === 0) {
-  emit(
-    `The full conversation transcript for this session is at:\n${transcriptPath}\n` +
-      `Read it (JSONL, newest turns at the end) to reconstruct the context before reviewing.`
-  );
+  emit("The recent conversation could not be reconstructed. Review only the caller's prompt and name any missing context.");
   process.exit(0);
 }
 
@@ -84,9 +81,5 @@ emit(
 
 <recent-conversation>
 ${recent}
-</recent-conversation>
-
-The complete raw transcript, including earlier turns not shown above, is at:
-${transcriptPath}
-Read it only if one specific earlier detail is load-bearing for your verdict.`
+</recent-conversation>`
 );
