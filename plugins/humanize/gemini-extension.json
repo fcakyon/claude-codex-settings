@@ -1,5 +1,5 @@
 {
   "name": "humanize",
   "version": "1.0.0",
-  "description": "Keep AI-tell wording out of your markdown, comments, and docstrings by flagging em-dashes, section signs, semicolons, filler words, and cliches, with plain-word suggestions."
+  "description": "Block a curated list of AI buzzwords on every write with a hook."
 }

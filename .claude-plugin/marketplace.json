@@ -26,7 +26,7 @@
     {
       "name": "humanize",
       "source": "./plugins/humanize",
-      "description": "Keep AI-tell wording out of your markdown, comments, and docstrings by flagging em-dashes, section signs, semicolons, filler words, and cliches, with plain-word suggestions.",
+      "description": "Block a curated list of AI buzzwords on every write with a hook.",
       "version": "1.0.0",
       "author": {
         "name": "Fatih Akyon"
@@ -41,8 +41,8 @@
     {
       "name": "fable-advisor",
       "source": "./plugins/fable-advisor",
-      "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
-      "version": "1.1.0",
+      "description": "Get a second opinion from Claude Fable 5 before big decisions.",
+      "version": "1.2.0",
       "author": {
         "name": "Fatih Akyon"
       },
@@ -56,7 +56,7 @@
     {
       "name": "adhd-output-style",
       "source": "./plugins/adhd-output-style",
-      "description": "Answer-first replies for limited working memory: numbered steps, time estimates, a clear next action, and short teaching notes while coding.",
+      "description": "Use fewer output tokens with short steps, quick insights, and clear next actions.",
       "version": "1.0.0",
       "author": {
         "name": "Fatih Akyon"

@@ -1,6 +1,6 @@
 ---
 name: adhd-output-style
-description: This skill should be used when the user asks for "ADHD output", "answer-first replies", "short numbered steps", "limited working memory formatting", or explicitly invokes "adhd-output-style".
+description: This skill should be used when the user asks for "ADHD output", "fewer output tokens", "short numbered steps", "limited working memory formatting", or explicitly invokes "adhd-output-style".
 ---
 
 Format every response for a reader with limited working memory who needs

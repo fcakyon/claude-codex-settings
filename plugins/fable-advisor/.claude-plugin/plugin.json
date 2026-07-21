@@ -1,6 +1,8 @@
 {
   "name": "fable-advisor",
-  "version": "1.1.0",
-  "description": "On-demand second opinion from Claude Fable 5 to pressure-test a plan, interpretation, or risky change before you commit to it.",
+  "version": "1.2.0",
+  "description": "Get a second opinion from Claude Fable 5 before big decisions.",
+  "agents": "./claude-agents/fable-advisor.md",
+  "hooks": "./claude-hooks/hooks.json",
   "license": "Apache-2.0"
 }
