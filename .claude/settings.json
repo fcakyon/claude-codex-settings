@@ -143,15 +143,6 @@
             "command": "bash -c 'CMD=$(jq -r \".tool_input.command\"); S=$(printf \"%s\" \"$CMD\" | sed -e \"s/'\\''[^'\\'']*'\\''//g\" -e \"s/\\\"[^\\\"]*\\\"//g\"); if printf \"%s\" \"$S\" | grep -qE \"(^|[;&|(){}]|[[:space:]]do|[[:space:]]then|[[:space:]]else)[[:space:]]*timeout[[:space:]]\"; then printf \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PreToolUse\\\",\\\"permissionDecision\\\":\\\"deny\\\",\\\"permissionDecisionReason\\\":\\\"macOS has no timeout command on this host, so timeout N ... exits 127 with empty output and silently hides the real result (a remote ssh sweep can look idle when it is not). Use ssh -o ConnectTimeout=N, or gtimeout N (brew coreutils), or for a remote Linux host put timeout inside the ssh quotes.\\\"}}\"; fi'"
           }
         ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 -c 'import json,os,re,sys,pathlib; d=json.load(sys.stdin); c=(d.get(\"tool_input\") or {}).get(\"command\",\"\"); s=d.get(\"session_id\") or \"nosession\"; m=pathlib.Path(os.environ.get(\"TMPDIR\",\"/tmp\"))/\"simplify-guard\"/(s+\".ok\"); re.search(r\"git\\s+commit(?![\\w-])\",c) and (m.unlink() if m.exists() else print(json.dumps({\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"simplify-guard: run /simplify on the staged diff first, then retry the commit.\"}})))'"
-          }
-        ]
       }
     ],
     "PostToolUse": [
@@ -161,15 +152,6 @@
           {
             "type": "command",
             "command": "bash -c 'F=$(jq -r \".tool_input.file_path // empty\"); case \"$F\" in *plugins/*/hooks/scripts/*.py|*.github/scripts/*.py) if command -v ruff >/dev/null 2>&1; then ruff check \"$F\" 2>&1 || true; elif command -v uvx >/dev/null 2>&1; then uvx ruff check \"$F\" 2>&1 || true; fi ;; esac'"
-          }
-        ]
-      },
-      {
-        "matcher": "Skill",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 -c 'import json,os,sys,pathlib; d=json.load(sys.stdin); ti=d.get(\"tool_input\") or {}; s=d.get(\"session_id\") or \"nosession\"; p=pathlib.Path(os.environ.get(\"TMPDIR\",\"/tmp\"))/\"simplify-guard\"; (ti.get(\"skill\")==\"simplify\" or ti.get(\"name\")==\"simplify\") and (p.mkdir(parents=True,exist_ok=True) or (p/(s+\".ok\")).touch())'"
           }
         ]
       }
@@ -253,7 +235,8 @@
     "adhd-output-style@claude-settings": true,
     "intelligent-compact@claude-settings": true,
     "github-dev@claude-settings": true,
-    "humanize@claude-settings": true
+    "humanize@claude-settings": true,
+    "simplify@claude-settings": true
   },
   "extraKnownMarketplaces": {
     "claude-settings": {
