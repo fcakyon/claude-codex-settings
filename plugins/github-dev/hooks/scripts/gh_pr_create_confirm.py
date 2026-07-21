@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """PreToolUse hook: show confirmation modal before creating GitHub PR via gh CLI."""
 import json
+import os
 import re
 import subprocess
 import sys
@@ -112,8 +113,8 @@ tool_name = input_data.get("tool_name", "")
 tool_input = input_data.get("tool_input", {})
 command = tool_input.get("command", "")
 
-# Only handle gh pr create commands
-if tool_name != "Bash" or not command.strip().startswith("gh pr create"):
+# ask is Claude Code only. Skipping elsewhere also avoids .strip() on a Codex argv list
+if os.environ.get("CLAUDECODE") != "1" or tool_name != "Bash" or not command.strip().startswith("gh pr create"):
     sys.exit(0)
 
 # Parse PR parameters
