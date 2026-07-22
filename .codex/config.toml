@@ -14,6 +14,9 @@ network_access = true
 [analytics]
 enabled = false
 
+[tui]
+status_line = ["model-with-reasoning", "context-used", "weekly-limit", "task-progress"]
+
 [agents]
 max_threads = 8
 
