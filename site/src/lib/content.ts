@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { basename, extname, resolve } from "node:path";
 
 export type SiteVariant = "settings" | "plugins";
 
@@ -7,7 +7,11 @@ interface MarketplacePlugin {
   name: string;
   source: string | { path?: string; url: string };
   description: string;
+  version: string;
+  license?: string;
   keywords?: string[];
+  category?: string;
+  tags?: string[];
 }
 
 interface Marketplace {
@@ -19,6 +23,7 @@ const read = (path: string) => readFileSync(resolve(root, path), "utf8");
 const variant = (process.env.SITE_VARIANT || "settings") as SiteVariant;
 
 export const repositoryUrl = "https://github.com/fcakyon/claude-codex-settings";
+export const rawRepositoryUrl = `${repositoryUrl.replace("github.com", "raw.githubusercontent.com")}/main`;
 export const marketplaceName = "claude-settings";
 export const site = {
   settings: {
@@ -65,27 +70,54 @@ const marketplace = JSON.parse(read(".claude-plugin/marketplace.json")) as Marke
 const codexPlugins = new Set((JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
 const cursorPlugins = new Set((JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
 const featured = ["simplify", "humanize", "fable-advisor", "adhd-output-style"];
+const componentNames = (directory: string, folder: string, skill = false) => {
+  const path = resolve(directory, folder);
+  if (!existsSync(path)) return [];
+  return readdirSync(path, { withFileTypes: true })
+    .filter((entry) => skill
+      ? entry.isDirectory() && existsSync(resolve(path, entry.name, "SKILL.md"))
+      : entry.isFile() && extname(entry.name) === ".md")
+    .map((entry) => skill ? entry.name : basename(entry.name, ".md"))
+    .sort();
+};
 
 export const plugins = marketplace.plugins
   .map((plugin, index) => {
     const localSource = typeof plugin.source === "string" ? plugin.source : undefined;
     const directory = localSource ? resolve(root, localSource) : undefined;
+    const hasCodex = codexPlugins.has(plugin.name);
+    const hasCursor = cursorPlugins.has(plugin.name);
+    const hasGemini = Boolean(directory && existsSync(resolve(directory, "gemini-extension.json")));
     const tools = [
       "Claude Code",
-      ...(codexPlugins.has(plugin.name) ? ["Codex"] : []),
-      ...(cursorPlugins.has(plugin.name) ? ["Cursor"] : []),
-      ...(directory && existsSync(resolve(directory, "gemini-extension.json")) ? ["Gemini"] : []),
+      ...(hasCodex ? ["Codex"] : []),
+      ...(hasCursor ? ["Cursor"] : []),
+      ...(hasGemini ? ["Gemini"] : []),
     ];
     const externalUrl = typeof plugin.source === "object"
       ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
+      : undefined;
+    const components = directory
+      ? {
+          skills: componentNames(directory, "skills", true),
+          commands: componentNames(directory, "commands"),
+          agents: [...componentNames(directory, "agents"), ...componentNames(directory, "claude-agents")].sort(),
+          hooks: existsSync(resolve(directory, "hooks")) || existsSync(resolve(directory, "claude-hooks")),
+          mcp: existsSync(resolve(directory, ".mcp.json")),
+          outputStyles: componentNames(directory, "output-styles"),
+        }
       : undefined;
 
     return {
       ...plugin,
       index,
       tools,
+      components,
       href: localSource ? `${repositoryUrl}/tree/main/${localSource.replace(/^\.\//, "")}` : externalUrl,
-      codexCommand: codexPlugins.has(plugin.name) ? `codex plugin add ${plugin.name}@${marketplaceName}` : undefined,
+      claudeCommand: `claude plugin install ${plugin.name}@${marketplaceName}`,
+      codexCommand: hasCodex ? `codex plugin add ${plugin.name}@${marketplaceName}` : undefined,
+      cursorCommand: hasCursor ? `cursor plugin install ${plugin.name}@${marketplaceName}` : undefined,
+      geminiCommand: hasGemini ? `gemini extensions install --path ./plugins/${plugin.name}` : undefined,
     };
   })
   .sort((a, b) => {
@@ -98,5 +130,6 @@ export const plugins = marketplace.plugins
 export const sourceDocuments = {
   claude: claudeContent,
   settings: settingsContent,
+  codex: read(".codex/config.toml"),
   install: read("INSTALL.md"),
 };
