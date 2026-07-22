@@ -181,7 +181,7 @@ button.tree-row { cursor: pointer; }
 .plugin-search kbd { min-width: 31px; padding: 5px 8px; border: 1px solid var(--border-strong); border-radius: 8px; color: #b8c0c9; text-align: center; font: 14px var(--mono); }
 .plugin-layout { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(330px, .9fr); gap: 20px; align-items: start; }
 .plugin-list, .install-panel { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; background: color-mix(in srgb, var(--surface), transparent 22%); }
-.plugin-head, .plugin-row { display: grid; grid-template-columns: 46px 170px minmax(240px, 1.5fr) minmax(150px, .75fr) 112px; gap: 14px; align-items: center; }
+.plugin-head, .plugin-row:not([hidden]) { display: grid; grid-template-columns: 46px 170px minmax(240px, 1.5fr) minmax(150px, .75fr) 112px; gap: 14px; align-items: center; }
 .plugin-head { min-height: 64px; padding: 0 20px; color: #aab3bd; font-size: 13px; }
 .plugin-row { min-height: 116px; padding: 18px 20px; border-top: 1px solid var(--border); transition: background 150ms ease; }
 .plugin-row:hover, .plugin-row.is-selected { background: var(--surface-hover); }

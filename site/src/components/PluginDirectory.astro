@@ -25,7 +25,17 @@ const initialCommand = plugins[0].codexCommand;
           data-plugin-row
           data-plugin={plugin.name}
           data-command={plugin.codexCommand}
-          data-search={`${plugin.name} ${plugin.description} ${plugin.keywords?.join(" ") || ""}`.toLowerCase()}
+          data-search={[
+            plugin.name,
+            plugin.description,
+            plugin.category,
+            ...(plugin.keywords || []),
+            ...(plugin.tags || []),
+            ...(plugin.components?.skills || []),
+            ...(plugin.components?.commands || []),
+            ...(plugin.components?.agents || []),
+            ...(plugin.components?.outputStyles || []),
+          ].filter(Boolean).join(" ").toLowerCase()}
         >
           <span class="plugin-number">{String(index + 1).padStart(2, "0")}</span>
           <button class="plugin-name" type="button" data-plugin-select>{plugin.name}</button>
