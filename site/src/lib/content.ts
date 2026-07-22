@@ -25,20 +25,31 @@ const variant = (process.env.SITE_VARIANT || "settings") as SiteVariant;
 export const repositoryUrl = "https://github.com/fcakyon/claude-codex-settings";
 export const rawRepositoryUrl = `${repositoryUrl.replace("github.com", "raw.githubusercontent.com")}/main`;
 export const marketplaceName = "claude-settings";
+export const author = {
+  id: "https://github.com/fcakyon",
+  name: "Fatih C. Akyon",
+  alternateName: "Fatih Akyon",
+  xHandle: "@fcakyon",
+  profiles: {
+    GitHub: "https://github.com/fcakyon",
+    X: "https://x.com/fcakyon",
+    LinkedIn: "https://www.linkedin.com/in/fcakyon",
+  },
+};
 export const site = {
   settings: {
     variant: "settings" as const,
     url: process.env.PUBLIC_SITE_URL || "https://claudesettings.com",
     title: "Claude Settings for Claude Code, Codex and Cursor",
     description:
-      "Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini.",
+      `Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
   plugins: {
     variant: "plugins" as const,
     url: process.env.PUBLIC_SITE_URL || "https://agentplugins.net",
     title: "Agent Plugins for Claude Code, Codex, Cursor and Gemini",
     description:
-      "Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini.",
+      `Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
 }[variant];
 
