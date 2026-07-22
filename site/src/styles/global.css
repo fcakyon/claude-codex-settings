@@ -208,7 +208,7 @@ button.tree-row { cursor: pointer; }
 
 footer { min-height: 120px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); }
 footer > span { font-weight: 750; color: var(--text); }
-footer div { display: flex; gap: 28px; }
+footer div { display: flex; flex-wrap: wrap; gap: 28px; }
 footer a:hover { color: var(--text); }
 
 @media (max-width: 1100px) {

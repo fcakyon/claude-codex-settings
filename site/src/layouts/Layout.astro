@@ -1,6 +1,6 @@
 ---
 import Header from "../components/Header.astro";
-import { repositoryUrl, type SiteVariant } from "../lib/content";
+import { author, repositoryUrl, type SiteVariant } from "../lib/content";
 import "../styles/global.css";
 
 interface Props {
@@ -16,7 +16,13 @@ const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
-    { "@type": "WebSite", name: variant === "settings" ? "Claude Settings" : "Agent Plugins", url: canonical, description },
+    {
+      "@type": "WebSite",
+      name: variant === "settings" ? "Claude Settings" : "Agent Plugins",
+      url: canonical,
+      description,
+      creator: { "@id": author.id },
+    },
     {
       "@type": "SoftwareSourceCode",
       name: "Claude Codex Settings",
@@ -24,7 +30,15 @@ const structuredData = {
       license: "https://www.apache.org/licenses/LICENSE-2.0",
       description,
       programmingLanguage: ["Markdown", "JSON", "Python", "Shell"],
-      author: { "@type": "Person", name: "Fatih Akyon", url: "https://github.com/fcakyon" },
+      author: { "@id": author.id },
+    },
+    {
+      "@id": author.id,
+      "@type": "Person",
+      name: author.name,
+      alternateName: author.alternateName,
+      url: author.id,
+      sameAs: Object.values(author.profiles),
     },
   ],
 };
@@ -36,6 +50,7 @@ const structuredData = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="author" content={author.name} />
     <meta name="theme-color" content={variant === "settings" ? "#ffffff" : "#070b10"} />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
@@ -55,6 +70,7 @@ const structuredData = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
+    <meta name="twitter:creator" content={author.xHandle} />
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     {googleAnalyticsId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />}
     {googleAnalyticsId && (
@@ -66,8 +82,12 @@ const structuredData = {
       <Header variant={variant} />
       <main><slot /></main>
       <footer>
-        <span>{variant === "settings" ? "Claude Settings" : "Agent Plugins"}</span>
-        <div><a href="/llms.txt">llms.txt</a><a href="/sitemap.xml">Sitemap</a><a href={repositoryUrl}>GitHub</a></div>
+        <span>{variant === "settings" ? "Claude Settings" : "Agent Plugins"} by {author.name}</span>
+        <div>
+          <a href="/llms.txt">llms.txt</a>
+          <a href="/sitemap.xml">Sitemap</a>
+          {Object.entries(author.profiles).map(([name, url]) => <a href={url} rel="me">{name}</a>)}
+        </div>
       </footer>
     </div>
   </body>
