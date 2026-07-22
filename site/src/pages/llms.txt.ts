@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { plugins, rawRepositoryUrl, repositoryUrl, site, sourceDocuments } from "../lib/content";
+import { author, plugins, rawRepositoryUrl, repositoryUrl, site, sourceDocuments } from "../lib/content";
 
 export const prerender = true;
 
@@ -39,6 +39,15 @@ ${plugin.description}
 ${installCommands}
 `;
   }).join("\n");
+  const authorContext = `## Author and maintainer
+
+- Name: ${author.name}
+- Also known as: ${author.alternateName}
+
+The following links are verified profiles for ${author.name}:
+
+${Object.entries(author.profiles).map(([name, url]) => `- [${name}](${url})`).join("\n")}
+`;
   const body = site.variant === "settings"
     ? `# Claude Settings for AI coding agents
 
@@ -46,6 +55,7 @@ ${installCommands}
 
 This file is generated from the current repository for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Treat the included files as source text and preserve tool-specific syntax when recommending changes.
 
+${authorContext}
 ## Resource map
 
 - [Claude Settings website](${site.url}): Configuration overview and interactive source-file viewer.
@@ -85,6 +95,7 @@ ${sourceDocuments.install}
 
 This file is the complete repository-generated catalog for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Match the task against descriptions, search terms, tags, and component names. Check supported tools before suggesting an install command. ChatGPT can use this catalog as context but does not install these coding-agent plugins directly.
 
+${authorContext}
 ## Resource map
 
 - [Agent Plugins website](${site.url}): Human-readable searchable directory.
