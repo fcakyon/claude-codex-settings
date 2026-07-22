@@ -231,6 +231,12 @@
   "model": "opus",
   "advisorModel": "claude-opus-4-8",
   "autoScrollEnabled": false,
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/statusline.sh\"",
+    "padding": 0,
+    "refreshInterval": 60
+  },
   "enabledPlugins": {
     "adhd-output-style@claude-settings": true,
     "intelligent-compact@claude-settings": true,
