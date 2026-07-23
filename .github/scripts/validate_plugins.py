@@ -301,13 +301,18 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
                                 f"{event}[{i}].hooks[{j}] should use ${{CLAUDE_PLUGIN_ROOT}}"
                             )
 
-                    # Check script exists. Shell form puts it in command, exec form in args.
+                    # Check each plugin-root path, whether shell form puts it inside command or exec form uses args.
                     refs = [cmd, *hook.get("args", [])]
                     for ref in refs:
-                        if isinstance(ref, str) and "${CLAUDE_PLUGIN_ROOT}" in ref:
-                            script_path = ref.replace("${CLAUDE_PLUGIN_ROOT}", str(plugin_dir))
-                            if not Path(script_path).exists():
-                                errors.append(f"{plugin_dir.name}/hooks/hooks.json: Script not found: {ref}")
+                        if not isinstance(ref, str):
+                            continue
+                        for relative_path in re.findall(r'\$\{CLAUDE_PLUGIN_ROOT\}(/[^"\'\s;|&]+)', ref):
+                            script_path = plugin_dir / relative_path.lstrip("/")
+                            if not script_path.exists():
+                                errors.append(
+                                    f"{plugin_dir.name}/hooks/hooks.json: Script not found: "
+                                    f"${{CLAUDE_PLUGIN_ROOT}}{relative_path}"
+                                )
 
                 elif hook_type == "prompt":
                     if "prompt" not in hook:

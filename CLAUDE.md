@@ -220,7 +220,27 @@ Hook types:
 
 Blocking and rewrite responses are tool-specific. Follow each tool's hook response schema.
 
-Use `${CLAUDE_PLUGIN_ROOT}` for script paths. `matcher` matches tool names (e.g., "Edit", "Bash", "mcp**tavily**tavily_search").
+Put the executable and its arguments together in `command` for shared hooks. Claude Code supports `args` as an exec
+form, but Codex does not document that field:
+
+```json
+{
+  "type": "command",
+  "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/check.py\""
+}
+```
+
+Codex normalizes shell and patch calls:
+
+- `Bash` and unified `exec_command` calls provide their command in `tool_input.command`.
+- `apply_patch` provides the full patch envelope in `tool_input.command`, not a `file_path`.
+- `apply_patch` matches `apply_patch`, `Edit`, or `Write`, but still reports `tool_name: "apply_patch"`.
+- Post-write hooks that need paths must parse each `*** Add File:` or `*** Update File:` header from the patch envelope.
+
+Claude Write, Edit, and MultiEdit calls continue to provide `tool_input.file_path`.
+
+Use `${CLAUDE_PLUGIN_ROOT}` for script paths. `matcher` matches tool names such as `Edit`, `Bash`, or
+`mcp__tavily__tavily_search`.
 
 ### Commands Format
 
