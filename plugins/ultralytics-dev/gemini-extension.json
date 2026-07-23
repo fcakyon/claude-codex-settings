@@ -1,5 +1,5 @@
 {
   "name": "ultralytics-dev",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase."
 }

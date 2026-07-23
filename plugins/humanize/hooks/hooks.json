@@ -3,12 +3,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit|apply_patch|Slack__slack_(send|schedule|create_canvas|update_canvas)|Linear__save_",
+        "matcher": "Write|Edit|MultiEdit|apply_patch|Slack__slack_(send|schedule|create_canvas|update_canvas)|Linear__save_|mcp__.*(?:slack_(?:send|schedule|create_canvas|update_canvas)|linear.*save_)",
         "hooks": [
           {
             "type": "command",
-            "command": "python3",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"]
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py\""
           }
         ]
       },
@@ -17,15 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"],
-            "if": "Bash(git commit *)"
-          },
-          {
-            "type": "command",
-            "command": "python3",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py"],
-            "if": "Bash(gh *)"
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/humanize.py\""
           }
         ]
       }
