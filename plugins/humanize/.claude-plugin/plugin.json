@@ -1,6 +1,6 @@
 {
   "name": "humanize",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Block a curated list of AI buzzwords on every write with a hook.",
   "license": "Apache-2.0"
 }
