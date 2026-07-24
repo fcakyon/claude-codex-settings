@@ -166,7 +166,7 @@ color: blue
 ```
 
 - `name`: kebab-case, 3-50 chars
-- `model`: inherit, sonnet, opus, haiku, fable (or a full model ID like `claude-opus-4-8`)
+- `model`: inherit, sonnet, opus, haiku, fable (or a full model ID like `claude-opus-5`)
 - `color`: red, blue, green, yellow, purple, orange, pink, cyan
 - `tools`: array of allowed tool names
 - `skills`: optional, skill name(s) to load
