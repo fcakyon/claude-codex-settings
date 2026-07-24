@@ -36,8 +36,8 @@ def main():
     check_result = subprocess.run([
         'ruff', 'check', '--fix',
         '--extend-select', 'F,I,D,UP,RUF,FA',
-        '--target-version', 'py39',
-        '--ignore', 'D100,D104,D203,D205,D212,D213,D401,D406,D407,D413,RUF001,RUF002,RUF012',
+        '--target-version', 'py38',
+        '--ignore', 'BLE001,D100,D104,D203,D205,D212,D213,D401,D406,D407,D413,RUF001,RUF002,RUF012,S110',
         str(py_file)
     ], capture_output=True, text=True, cwd=work_dir)
 
