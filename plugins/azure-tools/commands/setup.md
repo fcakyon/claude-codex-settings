@@ -1,4 +1,6 @@
 ---
+name: setup
+allowed-tools: Bash, Read
 description: Configure Azure MCP server with Azure CLI authentication
 ---
 
