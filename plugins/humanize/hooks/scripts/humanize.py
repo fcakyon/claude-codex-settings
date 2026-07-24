@@ -3,9 +3,8 @@
 
 Scans markdown whole, code files only in comments and docstrings, shell only in commit and PR text
 plus heredoc bodies that cat or tee writes to a file, patches only in added lines, and MCP calls
-only in message fields. Always
-blocks a few marks and stock words with a plain swap, and flags common words only when they pile
-up. En-dash is allowed.
+only in message fields. Always blocks a few marks and stock words with a plain swap, and flags
+common words only when they pile up. En-dash is allowed.
 
 Words draw on Wikipedia "Signs of AI writing": https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing
 """
@@ -72,7 +71,7 @@ FIELD_FLAGS = {"-f", "-F", "--field", "--raw-field"}
 # only cat and tee put a heredoc body in a file unchanged, python or sed in front of it rewrites the text
 SEPARATOR = re.compile(r"\|\||&&|[\n;|&]")
 CAT_TEE = re.compile(r"^\s*(cat|tee)\b(.*)$", re.DOTALL)
-REDIRECT = re.compile(r"(?<![0-9&])>>?[ \t]*['\"]?([^\s'\"|&;<>]+)")
+REDIRECT = re.compile(r"(?<![0-9&])>>?[ \t]*(\"[^\"]*\"|'[^']*'|[^\s'\"|&;<>]+)")
 
 # MCP input keys that carry human-facing message text, checked as markdown
 TEXT_KEYS = {"body", "text", "markdown_text", "content", "description", "title",
@@ -131,7 +130,7 @@ def heredoc_writes(command):
         targets = REDIRECT.findall(head)
         if writer.group(1) == "tee":
             targets += [a for a in REDIRECT.sub(" ", writer.group(2)).split() if not a.startswith("-")]
-        out += [checked(t, body) for t in targets]
+        out += [checked(t.strip("\"'"), body) for t in targets]
     return "\n".join(p for p in out if p)
 
 
