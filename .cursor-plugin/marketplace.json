@@ -24,6 +24,13 @@
       "license": "Apache-2.0"
     },
     {
+      "name": "codex-advisor",
+      "source": "./plugins/codex-advisor",
+      "description": "Get a second opinion from GPT via Codex CLI before big decisions.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "adhd-output-style",
       "source": "./plugins/adhd-output-style",
       "description": "Use fewer output tokens with short steps, quick insights, and clear next actions.",
