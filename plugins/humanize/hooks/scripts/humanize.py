@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Block AI buzzwords before a write, shell, or tool call lands, so text reads human.
 
-Scans markdown whole, code files only in comments and docstrings, Bash and gh only in commit,
-PR, and comment text, patches only in added lines, and MCP calls only in message fields. Always
+Scans markdown whole, code files only in comments and docstrings, shell only in commit and PR text
+plus heredoc bodies that cat or tee writes to a file, patches only in added lines, and MCP calls
+only in message fields. Always
 blocks a few marks and stock words with a plain swap, and flags common words only when they pile
 up. En-dash is allowed.
 
@@ -64,8 +65,14 @@ MARKS = {"—": "em-dash, use commas or periods", "§": "section sign", ";": "se
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
 OFTEN_RE = re.compile(r"\b(" + "|".join(OFTEN) + r")\b", re.IGNORECASE)
 
-HEREDOC = re.compile(r"<<-?\s*[\"']?([A-Za-z_]\w*)[\"']?\r?\n(.*?)\r?\n[ \t]*\1\b", re.DOTALL)
+# groups are the delimiter, the rest of the opening line, and the body
+HEREDOC = re.compile(r"<<-?[ \t]*[\"']?([A-Za-z_]\w*)[\"']?([^\n]*)\r?\n(.*?)\r?\n[ \t]*\1[ \t]*$", re.DOTALL | re.MULTILINE)
 FIELD_FLAGS = {"-f", "-F", "--field", "--raw-field"}
+
+# only cat and tee put a heredoc body in a file unchanged, python or sed in front of it rewrites the text
+SEPARATOR = re.compile(r"\|\||&&|[\n;|&]")
+CAT_TEE = re.compile(r"^\s*(cat|tee)\b(.*)$", re.DOTALL)
+REDIRECT = re.compile(r"(?<![0-9&])>>?[ \t]*['\"]?([^\s'\"|&;<>]+)")
 
 # MCP input keys that carry human-facing message text, checked as markdown
 TEXT_KEYS = {"body", "text", "markdown_text", "content", "description", "title",
@@ -109,13 +116,32 @@ def checked(path, text):
     return ""
 
 
+def heredocs(command):
+    """Yield each heredoc body paired with the simple command that opens it."""
+    for m in HEREDOC.finditer(command):
+        yield SEPARATOR.split(command[: m.start()])[-1] + SEPARATOR.split(m.group(2))[0], m.group(3)
+
+
+def heredoc_writes(command):
+    """Return checkable text from heredoc bodies that cat or tee writes to a file, routed per target."""
+    out = []
+    for head, body in heredocs(command):
+        if not (writer := CAT_TEE.match(head)):
+            continue
+        targets = REDIRECT.findall(head)
+        if writer.group(1) == "tee":
+            targets += [a for a in REDIRECT.sub(" ", writer.group(2)).split() if not a.startswith("-")]
+        out += [checked(t, body) for t in targets]
+    return "\n".join(p for p in out if p)
+
+
 def bash_text(command):
     """Return commit, PR, and comment message text from a git-commit or gh command, else empty."""
     git_commit = re.search(r"\bgit\b[^|&]*\bcommit\b", command)
     gh = re.search(r"\bgh\b", command)
     if not (git_commit or gh):
         return ""
-    parts = [m.group(2) for m in HEREDOC.finditer(command)]
+    parts = [body for head, body in heredocs(command) if re.search(r"\b(?:git|gh)\b", head)]
     stripped = HEREDOC.sub(" ", command)
     flags = {"-m", "--message"} if git_commit else set()
     if gh:
@@ -165,7 +191,7 @@ def extract(tool, tool_input):
     if tool.startswith("mcp__"):
         return md_text(mcp_text(tool_input))
     if tool == "Bash":
-        return md_text(bash_text(command))
+        return "\n".join(p for p in (md_text(bash_text(command)), heredoc_writes(command)) if p)
     if tool == "apply_patch":
         return patch_text(command)
     chunks = [tool_input.get("content", ""), tool_input.get("new_string", "")]
