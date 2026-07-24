@@ -21,6 +21,7 @@ Ask yourself: "What can I delete instead of add, and does this trace to what was
 - Reflect on tool results before acting, then plan and take the best next action.
 - Run independent operations in parallel.
 - Verify your solution before finishing.
+- Before committing to an approach, and after two failed attempts at the same problem, get a second opinion with `/codex-advisor` or `/fable-advisor` if either is installed.
 - Never create files unless necessary. Prefer editing. Never create docs (*.md, README) unless asked.
 - Prefer `rg` over `grep`.
 - When updating code, check related code in the same and other files for consistency.
@@ -54,7 +55,7 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 
 ## Python Coding
 
-For full Python guidelines, install and enable the `python-skills` plugin (`python-guidelines` skill). Key rules always in effect:
+For full Python guidelines, install and enable the `python-skills` plugin (`python-guidelines` skill). Read its `references/` files (idiomatic patterns, Zen of Python, Google style guide, Effective Python) before you write the code, not after. Key rules always in effect:
 
 - **Package manager**: uv (NOT pip). **Paths**: pathlib, not os.path.
 - **Verify before planning**: Run `python -c "..."` to test hypotheses. Never assume.

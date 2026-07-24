@@ -1,5 +1,6 @@
 ---
 import Header from "../components/Header.astro";
+import Icon, { type IconName } from "../components/Icon.astro";
 import { author, repositoryUrl, type SiteVariant } from "../lib/content";
 import "../styles/global.css";
 
@@ -82,11 +83,15 @@ const structuredData = {
       <Header variant={variant} />
       <main><slot /></main>
       <footer>
-        <span>{variant === "settings" ? "Claude Settings" : "Agent Plugins"} by {author.name}</span>
+        <span>Developed using web development plugins from <a href={repositoryUrl} target="_blank" rel="noreferrer">claude-codex-settings</a></span>
         <div>
           <a href="/llms.txt">llms.txt</a>
           <a href="/sitemap.xml">Sitemap</a>
-          {Object.entries(author.profiles).map(([name, url]) => <a href={url} rel="me">{name}</a>)}
+          {Object.entries(author.profiles).map(([name, url]) => (
+            <a class="social-link" href={url} rel="me noreferrer" target="_blank" aria-label={name} title={name}>
+              <Icon name={name.toLowerCase() as IconName} size={20} />
+            </a>
+          ))}
         </div>
       </footer>
     </div>

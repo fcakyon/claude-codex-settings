@@ -71,11 +71,11 @@ cursor plugin install simplify@claude-settings
 
 </details>
 
-Create symlinks for cross-tool compatibility:
+Want the shared agent guidance too? [`.claude/CLAUDE.md`](https://github.com/fcakyon/claude-codex-settings/blob/main/.claude/CLAUDE.md) is the file written for your projects. Run `/claude-tools:sync-claude-md` to pull it into `~/.claude/CLAUDE.md`, or paste it into a project as `CLAUDE.md`, then point the other tools at the same file:
 
 ```bash
-ln -sfn CLAUDE.md AGENTS.md
-ln -sfn CLAUDE.md GEMINI.md
+ln -sfn CLAUDE.md AGENTS.md   # Codex CLI, Cursor, Copilot
+ln -sfn CLAUDE.md GEMINI.md   # Gemini CLI
 ```
 
 ## Plugins
