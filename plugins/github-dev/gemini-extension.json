@@ -1,5 +1,5 @@
 {
   "name": "github-dev",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution."
 }
