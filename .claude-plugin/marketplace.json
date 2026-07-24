@@ -1,7 +1,7 @@
 {
   "name": "claude-settings",
   "owner": {
-    "name": "Fatih Akyon"
+    "name": "Fatih C. Akyon"
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
@@ -14,7 +14,7 @@
       "description": "Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups.",
       "version": "1.1.4",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -29,7 +29,7 @@
       "description": "Block a curated list of AI buzzwords on every write with a hook.",
       "version": "1.1.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -44,7 +44,7 @@
       "description": "Get a second opinion from Claude Fable 5 before big decisions.",
       "version": "1.2.0",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -59,7 +59,7 @@
       "description": "Use fewer output tokens with short steps, quick insights, and clear next actions.",
       "version": "1.0.0",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -74,7 +74,7 @@
       "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
       "version": "1.0.0",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -89,7 +89,7 @@
       "description": "Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard.",
       "version": "1.0.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -334,7 +334,7 @@
       "description": "Research skills for Claude Code \u2014 paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
       "version": "1.1.0",
       "author": {
-        "name": "Fatih Cagatay Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/phd-skills",
       "repository": "https://github.com/fcakyon/phd-skills",
@@ -349,7 +349,7 @@
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
       "version": "2.5.0",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -364,7 +364,7 @@
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase.",
       "version": "2.2.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -379,7 +379,7 @@
       "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
       "version": "2.0.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -394,7 +394,7 @@
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
       "version": "2.1.0",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -409,7 +409,7 @@
       "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
       "version": "2.0.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -424,7 +424,7 @@
       "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
       "version": "2.0.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -439,7 +439,7 @@
       "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
       "version": "2.0.2",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
@@ -454,7 +454,7 @@
       "description": "Pull review comments from an Overleaf project, map them to local .tex files, and apply edits in your git-tracked repo.",
       "version": "1.0.0",
       "author": {
-        "name": "Fatih Akyon"
+        "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",

@@ -2,5 +2,8 @@
   "name": "claude-tools",
   "version": "2.1.0",
   "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
   "license": "Apache-2.0"
 }

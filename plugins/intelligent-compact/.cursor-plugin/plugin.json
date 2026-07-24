@@ -2,5 +2,8 @@
   "name": "intelligent-compact",
   "version": "1.0.0",
   "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
   "license": "Apache-2.0"
 }

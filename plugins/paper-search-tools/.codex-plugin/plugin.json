@@ -2,5 +2,8 @@
   "name": "paper-search-tools",
   "version": "2.0.2",
   "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
   "license": "Apache-2.0"
 }

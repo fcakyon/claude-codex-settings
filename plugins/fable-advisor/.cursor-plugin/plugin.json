@@ -2,5 +2,8 @@
   "name": "fable-advisor",
   "version": "1.2.0",
   "description": "Get a second opinion from Claude Fable 5 before big decisions.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
   "license": "Apache-2.0"
 }
