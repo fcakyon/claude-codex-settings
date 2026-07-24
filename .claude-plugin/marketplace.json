@@ -347,7 +347,7 @@
         "path": "plugin"
       },
       "description": "Research skills for Claude Code \u2014 paper auditing, citation verification, experiment analysis, and methodology-first skills for academic workflows.",
-      "version": "1.1.0",
+      "version": "1.3.0",
       "author": {
         "name": "Fatih C. Akyon"
       },

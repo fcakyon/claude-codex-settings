@@ -43,3 +43,6 @@ enabled = true
 
 [plugins."ultralytics-dev@claude-settings"]
 enabled = true
+
+[plugins."fable-advisor@claude-settings"]
+enabled = true
