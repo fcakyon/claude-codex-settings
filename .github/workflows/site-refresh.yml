@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: "17 6 * * *"
   workflow_dispatch:
+    inputs:
+      force:
+        description: Deploy even if something already shipped in the last 24 hours
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -34,7 +39,7 @@ jobs:
           newest=$(( pushed > refreshed ? pushed : refreshed ))
           age=$(( $(date +%s) - newest ))
           echo "Last deploy was $(( age / 3600 ))h ago"
-          echo "due=$([ $age -ge 86400 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          echo "due=$([ $age -ge 86400 ] || [ "${{ inputs.force }}" = "true" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
           [ -n "$CLOUDFLARE_API_TOKEN" ] || echo "::warning::CLOUDFLARE_API_TOKEN is unset, nothing will deploy"
       - uses: actions/setup-node@v4
         if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
