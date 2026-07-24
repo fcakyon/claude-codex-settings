@@ -6,42 +6,49 @@
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups.",
-      "version": "1.1.4",
+      "version": "1.1.5",
       "license": "Apache-2.0"
     },
     {
       "name": "humanize",
       "source": "./plugins/humanize",
       "description": "Block a curated list of AI buzzwords on every write with a hook.",
-      "version": "1.1.2",
+      "version": "1.1.3",
       "license": "Apache-2.0"
     },
     {
       "name": "fable-advisor",
       "source": "./plugins/fable-advisor",
       "description": "Get a second opinion from Claude Fable 5 before big decisions.",
-      "version": "1.2.0",
+      "version": "1.2.1",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "codex-advisor",
+      "source": "./plugins/codex-advisor",
+      "description": "Get a second opinion from GPT via Codex CLI before big decisions.",
+      "version": "1.0.0",
       "license": "Apache-2.0"
     },
     {
       "name": "adhd-output-style",
       "source": "./plugins/adhd-output-style",
       "description": "Use fewer output tokens with short steps, quick insights, and clear next actions.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0"
     },
     {
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0"
     },
     {
@@ -160,56 +167,56 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "GitHub and Git workflow skills and agents for commits, PRs, code review, and PR comment resolution.",
-      "version": "2.5.0",
+      "version": "2.6.1",
       "license": "Apache-2.0"
     },
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase.",
-      "version": "2.2.2",
+      "version": "2.2.3",
       "license": "Apache-2.0"
     },
     {
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
       "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Commands for syncing CLAUDE.md, permissions allowlist, and refreshing context. Hooks for marketplace-to-plugin sync.",
-      "version": "2.1.0",
+      "version": "2.1.1",
       "license": "Apache-2.0"
     },
     {
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
       "description": "Google Cloud Observability MCP for logs, metrics, and traces with best practices skill.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "paper-search-tools",
       "source": "./plugins/paper-search-tools",
       "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "tavily-tools",
       "source": "./plugins/tavily-tools",
       "description": "Tavily web search and content extraction MCP with hooks and skills for optimal tool selection.",
-      "version": "2.0.2",
+      "version": "2.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "overleaf-skills",
       "source": "./plugins/overleaf-skills",
       "description": "Pull review comments from an Overleaf project, map them to local .tex files, and apply edits in your git-tracked repo.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0"
     }
   ]

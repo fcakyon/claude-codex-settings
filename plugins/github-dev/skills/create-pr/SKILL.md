@@ -54,10 +54,15 @@ plain-language branch name rather than copying the full text.
 7. **PR Body Guidelines**
    - One-line why it exists, not "This PR...". No second intro paragraph.
    - Three bullets max, one point each, under ~12 words. Need a fourth? You are over-explaining, cut it.
-   - Lead with the most visual proof, don't just describe it: a screenshot for UI or output changes, a benchmark table for results, else a `diff`, before/after, or runnable CLI snippet.
+   - Lead with the most visual proof, don't just describe it. A webpage, UI, or design change MUST carry before/after images in a two-column table, never text describing the change. Benchmarks get a table, anything else gets a `diff` or runnable CLI snippet.
    - Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table, not a paragraph.
    - One read, one section, no headers. Plain words, no buzzwords, no test plans or file lists.
-   - **Embedding images**: you can't drag-drop, so commit the image and reference it with a commit-pinned raw URL that survives the branch being deleted: `https://raw.githubusercontent.com/OWNER/REPO/COMMIT_SHA/path/to/shot.webp` (full commit SHA, never the branch name). Confirm it returns `200 image/*` with `curl -sI` before embedding, then put a before/after pair side by side in a two-column table.
+   - **Embedding images**: never commit them into the repo. Upload to a release and link that URL, which outlives the branch:
+     ```bash
+     gh release upload <tag> before.png after.png --clobber
+     # ![before](https://github.com/OWNER/REPO/releases/download/<tag>/before.png)
+     ```
+     Capture both shots at the same window size so the pair is comparable. Release assets serve as `application/octet-stream`, so `curl -sI` looks wrong even when fine. Open the PR and confirm the images render.
 
 ## Examples
 
@@ -84,17 +89,15 @@ Point it at a folder and a few models and it stitches the panels together, so yo
 `ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
 ```
 
-### Screenshot and benchmark table
+### Design change, before and after
 
 ```
-Link shares showed no thumbnail because the preview image had expired. Each site now serves its own screenshot.
+The install panel only ever printed Codex commands, even though the site lists four tools.
 
 | before | after |
 |---|---|
-| no preview, redirect to an expired URL | ![new preview](https://raw.githubusercontent.com/fcakyon/claude-codex-settings/9bedce4/site/public/og-settings.webp) |
+| ![before](https://github.com/fcakyon/claude-codex-settings/releases/download/v2.4.0/install-panel-before.png) | ![after](https://github.com/fcakyon/claude-codex-settings/releases/download/v2.4.0/install-panel-after.png) |
 
-| format | size | shows in whatsapp |
-|---|---|---|
-| png | 1.8 MB | no |
-| webp lossless | 87 KB | yes |
+- marketplace setup is its own step, shown only for tools that need one
+- unsupported plugins say so instead of a dead command
 ```

@@ -166,7 +166,7 @@ color: blue
 ```
 
 - `name`: kebab-case, 3-50 chars
-- `model`: inherit, sonnet, opus, haiku, fable (or a full model ID like `claude-opus-4-8`)
+- `model`: inherit, sonnet, opus, haiku, fable (or a full model ID like `claude-opus-5`)
 - `color`: red, blue, green, yellow, purple, orange, pink, cyan
 - `tools`: array of allowed tool names
 - `skills`: optional, skill name(s) to load
@@ -368,6 +368,7 @@ This repo contains config files (JSON settings, allowlist rules, hooks) rather t
 - Always name the concrete object you're acting on. "fix: add license fields" is useless (to what?). "fix: add license field to plugin manifests" tells the next reader exactly what changed
 - Keep PR bodies short: lead with why, short scannable bullets (one point each), a diff or snippet, numbers over adjectives
 - PR titles and bodies must read standalone months later: never reference session shorthand ("PR-cf", "the last orphan content PR"), only real PR numbers (`#176`)
+- Site design changes need before/after visuals in the PR body, never a text description of the change. Never commit visuals into the repo: upload with `gh release upload <tag> shot.png` and link the `releases/download/<tag>/shot.png` URL
 
 ## Maintenance Scripts
 
