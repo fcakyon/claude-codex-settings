@@ -730,6 +730,8 @@ Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard t
 - [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
 - [`block_force_push.py`](./plugins/ultralytics-dev/hooks/scripts/block_force_push.py) - Block force-push and rebase
 
+Install `ruff` and `prettier` first ([setup](INSTALL.md#code-quality-tools)). Without them the hooks skip quietly and nothing gets formatted.
+
 </details>
 
 <details>
