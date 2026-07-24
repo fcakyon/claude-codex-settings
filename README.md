@@ -728,6 +728,7 @@ Git and GitHub automation. Run the `setup` skill after install.
 - [`git_commit_confirm.py`](./plugins/github-dev/hooks/scripts/git_commit_confirm.py) - Confirmation before git commit
 - [`gh_pr_create_confirm.py`](./plugins/github-dev/hooks/scripts/gh_pr_create_confirm.py) - Confirmation before gh pr create
 - [`block_ai_attribution.py`](./plugins/github-dev/hooks/scripts/block_ai_attribution.py) - Block AI attribution lines in commits and PRs
+- [`block_commit_type.py`](./plugins/github-dev/hooks/scripts/block_commit_type.py) - Block commit types outside the allowed set
 
 </details>
 

@@ -1,5 +1,5 @@
 {
-  "description": "Git workflow hooks: block AI attribution in commits and PRs, then confirm them",
+  "description": "Git workflow hooks: block AI attribution and unsupported commit types, then confirm commits and PRs",
   "hooks": {
     "PreToolUse": [
       {
@@ -8,6 +8,10 @@
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/block_ai_attribution.py"
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/block_commit_type.py"
           },
           {
             "type": "command",
