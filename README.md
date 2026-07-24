@@ -147,7 +147,7 @@ Ask a Fable 5 reviewer to challenge a plan or conclusion before you commit, a dr
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
 | `claude plugin install codex-advisor@claude-settings` | `codex plugin add codex-advisor@claude-settings` | `gemini extensions install --path ./plugins/codex-advisor` |
 
-Ask GPT to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you because it only pairs Claude with Claude. Claude Code attaches the recent conversation for you, so a plain "ask the codex advisor" is enough, with no history to paste. Codex, Cursor, and Gemini reach the same reviewer through `codex exec`. Needs the Codex CLI installed and signed in.
+Ask GPT to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the codex advisor" is enough. Codex, Cursor, and Gemini reach the same reviewer. Needs the Codex CLI signed in.
 
 **Agents:**
 
