@@ -1,8 +1,9 @@
 ---
 import Icon from "./Icon.astro";
-import { plugins } from "../lib/content";
+import { plugins, installTools } from "../lib/content";
 
-const initialCommand = plugins[0].codexCommand;
+const defaultTool = installTools[0];
+const initialCommand = plugins[0].claudeCommand;
 ---
 
 <div class="plugin-browser" id="browse" data-plugin-browser>
@@ -24,7 +25,10 @@ const initialCommand = plugins[0].codexCommand;
           role="listitem"
           data-plugin-row
           data-plugin={plugin.name}
-          data-command={plugin.codexCommand}
+          data-cmd-claude={plugin.claudeCommand}
+          data-cmd-codex={plugin.codexCommand}
+          data-cmd-gemini={plugin.geminiCommand}
+          data-cmd-cursor={plugin.cursorCommand}
           data-search={[
             plugin.name,
             plugin.description,
@@ -49,16 +53,37 @@ const initialCommand = plugins[0].codexCommand;
 
     <aside class="install-panel" id="install">
       <div class="install-heading">
-        <strong>Install via Codex CLI</strong>
+        <strong>Install via <span data-tool-label>{defaultTool.label}</span></strong>
         <span aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
+      <div class="install-tabs" role="group" aria-label="Choose a tool">
+        {installTools.map((tool, index) => (
+          <button
+            class:list={["install-tab", { "is-active": index === 0 }]}
+            type="button"
+            aria-pressed={index === 0}
+            data-install-tab={tool.id}
+            data-marketplace={tool.marketplace}
+          >{tool.label}</button>
+        ))}
+      </div>
       <div class="install-content">
-        <p>Run this command in your terminal to install the selected plugin.</p>
-        <div class="command-line">
-          <code data-install-command>{initialCommand}</code>
-          <button class="icon-button" type="button" data-copy-command aria-label="Copy install command"><Icon name="copy" size={19} /></button>
+        <p data-install-unavailable hidden></p>
+        <div class="command-block" data-marketplace-block>
+          <span class="command-label">Add marketplace (one time)</span>
+          <div class="command-line">
+            <code data-marketplace-command>{defaultTool.marketplace}</code>
+            <button class="icon-button" type="button" data-copy-command aria-label="Copy marketplace command"><Icon name="copy" size={19} /></button>
+          </div>
         </div>
-        <p class="install-note">Select any plugin name to update the command.</p>
+        <div class="command-block" data-install-block>
+          <span class="command-label">Install plugin</span>
+          <div class="command-line">
+            <code data-install-command>{initialCommand}</code>
+            <button class="icon-button" type="button" data-copy-command aria-label="Copy install command"><Icon name="copy" size={19} /></button>
+          </div>
+        </div>
+        <p class="install-note">Pick a tab to switch tools, or a plugin name to change the command.</p>
       </div>
     </aside>
   </div>
@@ -71,9 +96,34 @@ const initialCommand = plugins[0].codexCommand;
   if (browser) {
     const search = browser.querySelector<HTMLInputElement>("[data-plugin-search]");
     const rows = [...browser.querySelectorAll<HTMLElement>("[data-plugin-row]")];
-    const command = browser.querySelector<HTMLElement>("[data-install-command]");
+    const tabs = [...browser.querySelectorAll<HTMLElement>("[data-install-tab]")];
+    const toolLabel = browser.querySelector<HTMLElement>("[data-tool-label]")!;
+    const unavailable = browser.querySelector<HTMLElement>("[data-install-unavailable]")!;
+    const marketplaceBlock = browser.querySelector<HTMLElement>("[data-marketplace-block]")!;
+    const marketplaceCommand = browser.querySelector<HTMLElement>("[data-marketplace-command]")!;
+    const installBlock = browser.querySelector<HTMLElement>("[data-install-block]")!;
+    const installCommand = browser.querySelector<HTMLElement>("[data-install-command]")!;
     const count = browser.querySelector<HTMLElement>("[data-result-count]");
     const empty = browser.querySelector<HTMLElement>("[data-empty]");
+
+    let activeRow = rows[0];
+    let activeTab = tabs[0];
+
+    const render = () => {
+      const label = activeTab.textContent || "";
+      const marketplace = activeTab.dataset.marketplace;
+      const install = activeRow.getAttribute(`data-cmd-${activeTab.dataset.installTab}`);
+
+      toolLabel.textContent = label;
+      marketplaceBlock.hidden = !install || !marketplace;
+      marketplaceCommand.textContent = marketplace ?? "";
+      installBlock.hidden = !install;
+      installCommand.textContent = install ?? "";
+      unavailable.hidden = Boolean(install);
+      unavailable.textContent = `${activeRow.dataset.plugin} is not available for ${label}.`;
+    };
+
+    render();
 
     search?.addEventListener("input", () => {
       const query = search.value.trim().toLowerCase();
@@ -93,17 +143,34 @@ const initialCommand = plugins[0].codexCommand;
       }
     });
 
-    rows.forEach((row) =>
-      row.querySelector("[data-plugin-select]")?.addEventListener("click", () => {
-        rows.forEach((item) => item.classList.toggle("is-selected", item === row));
-        if (command) command.textContent = row.dataset.command || `${row.dataset.plugin} is not available for Codex`;
+    tabs.forEach((tab) =>
+      tab.addEventListener("click", () => {
+        activeTab = tab;
+        tabs.forEach((item) => {
+          const selected = item === tab;
+          item.classList.toggle("is-active", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+        render();
       }),
     );
 
-    browser.querySelector("[data-copy-command]")?.addEventListener("click", async (event) => {
-      await navigator.clipboard.writeText(command?.textContent || "");
-      (event.currentTarget as HTMLElement).classList.add("is-copied");
-      setTimeout(() => (event.currentTarget as HTMLElement).classList.remove("is-copied"), 1200);
-    });
+    rows.forEach((row) =>
+      row.querySelector("[data-plugin-select]")?.addEventListener("click", () => {
+        activeRow = row;
+        rows.forEach((item) => item.classList.toggle("is-selected", item === row));
+        render();
+      }),
+    );
+
+    browser.querySelectorAll("[data-copy-command]").forEach((button) =>
+      button.addEventListener("click", async (event) => {
+        const trigger = event.currentTarget as HTMLElement;
+        const code = trigger.closest(".command-line")?.querySelector("code");
+        await navigator.clipboard.writeText(code?.textContent || "");
+        trigger.classList.add("is-copied");
+        setTimeout(() => trigger.classList.remove("is-copied"), 1200);
+      }),
+    );
   }
 </script>

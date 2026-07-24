@@ -138,6 +138,15 @@ export const plugins = marketplace.plugins
       (bFeatured < 0 ? featured.length + b.index : bFeatured);
   });
 
+const marketplaceSlug = repositoryUrl.replace("https://github.com/", "");
+
+export const installTools = [
+  { id: "claude", label: "Claude Code", marketplace: `claude plugin marketplace add ${marketplaceSlug}` },
+  { id: "codex", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
+  { id: "gemini", label: "Gemini CLI" },
+  { id: "cursor", label: "Cursor" },
+];
+
 export const sourceDocuments = {
   claude: claudeContent,
   settings: settingsContent,

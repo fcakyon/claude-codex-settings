@@ -198,10 +198,16 @@ button.tree-row { cursor: pointer; }
 .install-heading i { width: 13px; height: 13px; border-radius: 50%; background: #ff655e; }
 .install-heading i:nth-child(2) { background: #f5c94f; }
 .install-heading i:nth-child(3) { background: #76d95b; }
-.install-content { min-height: 330px; padding: 34px 22px; }
+.install-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px 22px 0; }
+.install-tab { padding: 7px 13px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: inherit; font: 600 12px var(--mono); cursor: pointer; opacity: .68; }
+.install-tab:hover { opacity: 1; }
+.install-tab.is-active { border-color: var(--accent); color: var(--accent); background: rgb(255 255 255 / 7%); opacity: 1; }
+.install-content { min-height: 330px; padding: 24px 22px 34px; }
 .install-content > p { max-width: 360px; }
-.command-line { display: flex; align-items: center; gap: 12px; margin: 28px 0; padding: 12px 12px 12px 16px; border: 1px solid var(--border); border-radius: 12px; background: #080c11; }
-.command-line code { min-width: 0; color: var(--accent); font: 11px/1.5 var(--mono); letter-spacing: -.025em; white-space: nowrap; }
+.command-block { margin: 22px 0; }
+.command-label { display: block; color: var(--muted); font: 600 11px var(--mono); letter-spacing: .05em; text-transform: uppercase; opacity: .62; }
+.command-line { display: flex; align-items: center; gap: 12px; margin: 9px 0 0; padding: 12px 12px 12px 16px; border: 1px solid var(--border); border-radius: 12px; background: #080c11; }
+.command-line code { min-width: 0; color: var(--accent); font: 11px/1.5 var(--mono); letter-spacing: -.025em; overflow-wrap: anywhere; }
 .install-note { font-size: 13px; }
 .compatibility { border-bottom: 0; }
 [data-site="plugins"] footer { border-top: 1px solid var(--border); }
