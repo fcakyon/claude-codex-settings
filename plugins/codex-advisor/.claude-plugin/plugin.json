@@ -1,0 +1,11 @@
+{
+  "name": "codex-advisor",
+  "version": "1.0.0",
+  "description": "Get a second opinion from GPT via Codex CLI before big decisions.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "agents": "./claude-agents/codex-advisor.md",
+  "hooks": "./claude-hooks/hooks.json",
+  "license": "Apache-2.0"
+}
