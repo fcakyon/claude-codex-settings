@@ -66,12 +66,14 @@ findings in the PR body when available.
      - `-b` or `--body`: write it like a sharp teammate would, not a changelog.
        One-line why it exists, not "This PR...". No second intro paragraph.
        Three bullets max, one point each, under ~12 words. A fourth means you are over-explaining, cut it.
-       Lead with the most visual proof, don't just describe it: a screenshot for UI or output changes,
-       a benchmark table for results, else a `diff`, before/after, or runnable CLI snippet.
+       Lead with the most visual proof, don't just describe it. A webpage, UI, or design change MUST
+       carry before/after images in a two-column table, never text describing the change.
        Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table.
-       To embed an image you can't drag-drop, commit it and link a commit-pinned raw URL that survives
-       branch deletion: `https://raw.githubusercontent.com/OWNER/REPO/COMMIT_SHA/path/to/shot.webp`
-       (full commit SHA, not the branch). Confirm `200 image/*` with `curl -sI` before embedding.
+       Never commit images into the repo. Upload to a release and link that URL:
+       `gh release upload <tag> before.png after.png --clobber`, then
+       `![before](https://github.com/OWNER/REPO/releases/download/<tag>/before.png)`.
+       Capture both shots at the same window size. Release assets serve as `application/octet-stream`,
+       so `curl -sI` looks wrong even when fine. Open the PR and confirm they render.
        One read, one section, no headers. No test plans, file lists, or line links.
      - `-a @me`: Self-assign (confirmation hook will show actual username)
      - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
