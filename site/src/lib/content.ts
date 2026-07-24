@@ -99,7 +99,7 @@ export const repositoryStars = () => {
 const marketplace = JSON.parse(read(".claude-plugin/marketplace.json")) as Marketplace;
 const codexPlugins = new Set((JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
 const cursorPlugins = new Set((JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
-const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
+export const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
 const componentNames = (directory: string, folder: string, skill = false) => {
   const path = resolve(directory, folder);
   if (!existsSync(path)) return [];

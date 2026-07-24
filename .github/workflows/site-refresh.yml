@@ -1,0 +1,60 @@
+name: Website daily refresh
+
+# Cloudflare Workers Builds redeploys on every push to main, so the star count on both
+# sites is only as fresh as the last push. This rebuilds and deploys once a day, and
+# skips when a push or an earlier refresh already deployed within the last 24 hours.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  refresh:
+    name: Rebuild and deploy
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check whether a deploy is due
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pushed=$(git log -1 --format=%ct)
+          refreshed=$(gh run list --workflow site-refresh.yml --status success --limit 1 --json updatedAt --jq '.[0].updatedAt // empty')
+          [ -n "$refreshed" ] && refreshed=$(date -d "$refreshed" +%s) || refreshed=0
+          newest=$(( pushed > refreshed ? pushed : refreshed ))
+          age=$(( $(date +%s) - newest ))
+          echo "Last deploy was $(( age / 3600 ))h ago"
+          echo "due=$([ $age -ge 86400 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          [ -n "$CLOUDFLARE_API_TOKEN" ] || echo "::warning::CLOUDFLARE_API_TOKEN is unset, nothing will deploy"
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci --prefix site
+        if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
+      - name: Deploy claudesettings.com
+        if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
+        env:
+          SITE_VARIANT: settings
+        run: |
+          npm run build --prefix site
+          npx --yes wrangler deploy --config wrangler.claudesettings.jsonc
+      - name: Deploy agentplugins.net
+        if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
+        env:
+          SITE_VARIANT: plugins
+        run: |
+          npm run build --prefix site
+          npx --yes wrangler deploy --config wrangler.agentplugins.jsonc

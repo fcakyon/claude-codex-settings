@@ -1,7 +1,7 @@
 ---
 import Editor from "./Editor.astro";
 import Icon from "./Icon.astro";
-import { plugins, repositoryStars, repositoryUrl } from "../lib/content";
+import { featured, plugins, repositoryStars, repositoryUrl } from "../lib/content";
 
 const stars = await repositoryStars();
 ---
@@ -51,7 +51,7 @@ const stars = await repositoryStars();
     <p>Descriptions and links come from the repository manifests on every build.</p>
   </div>
   <div class="plugin-rail">
-    {plugins.slice(0, 5).map((plugin) => <a href={plugin.href}><strong>{plugin.name}</strong><span>{plugin.description}</span><Icon name="arrow" size={18} /></a>)}
+    {plugins.slice(0, featured.length).map((plugin) => <a href={plugin.href}><strong>{plugin.name}</strong><span>{plugin.description}</span><Icon name="arrow" size={18} /></a>)}
   </div>
   <a class="text-link" href="https://agentplugins.net">Browse every plugin <Icon name="arrow" size={18} /></a>
 </section>

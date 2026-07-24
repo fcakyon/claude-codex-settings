@@ -111,7 +111,6 @@ button.tree-row { cursor: pointer; }
 .tree-row.is-active { background: #f0f3f7; color: var(--accent); }
 .folder-row { padding-left: 4px; }
 .tree-file { padding-left: 38px; }
-.root-file { padding-left: 8px; }
 .tree-caret { width: 10px; font-size: 17px; color: #5d6670; }
 .editor-main { grid-area: main; min-width: 0; display: grid; grid-template-rows: 46px minmax(0, 1fr); }
 .tabs { display: flex; min-width: 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
@@ -239,7 +238,7 @@ footer a:hover { color: var(--text); }
   .site-header { height: 76px; }
   .brand { font-size: 21px; }
   .header-cta { min-height: 44px; padding: 0 14px; }
-  .header-cta > span:not(.star-count) { display: none; }
+  .cta-label { display: none; }
   h1 { font-size: clamp(40px, 12vw, 58px); }
   h2 { font-size: 38px; }
   .settings-hero { display: block; min-height: 0; padding: 52px 0 40px; }

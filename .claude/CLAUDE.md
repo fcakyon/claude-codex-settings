@@ -55,7 +55,7 @@ Use `gh` CLI for all GitHub interactions. Never clone repositories to read code.
 
 ## Python Coding
 
-For full Python guidelines, install and enable the `python-skills` plugin (`python-guidelines` skill). It carries reference files worth reading before you write: `idiomatic-patterns.md` (loops, comprehensions, unpacking, context managers), `zen-of-python.md` (PEP 20, for design calls), `google-style-guide.md` (exceptions, defaults, imports, naming), and `effective-python-tips.md` (refactoring). Key rules always in effect:
+For full Python guidelines, install and enable the `python-skills` plugin (`python-guidelines` skill). Read its `references/` files (idiomatic patterns, Zen of Python, Google style guide, Effective Python) before you write the code, not after. Key rules always in effect:
 
 - **Package manager**: uv (NOT pip). **Paths**: pathlib, not os.path.
 - **Verify before planning**: Run `python -c "..."` to test hypotheses. Never assume.
