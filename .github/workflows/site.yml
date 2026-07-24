@@ -12,7 +12,7 @@ on:
       - ".cursor-plugin/marketplace.json"
       - "plugins/**/.claude-plugin/plugin.json"
       - "plugins/**/gemini-extension.json"
-      - "AGENTS.md"
+      - ".codex/config.toml"
       - "INSTALL.md"
       - ".github/workflows/site.yml"
   pull_request:
@@ -26,6 +26,8 @@ jobs:
   build:
     name: Build websites
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

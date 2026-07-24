@@ -101,9 +101,9 @@ Ask yourself: "Would a new developer understand this function from the docstring
 
 ## Reference Files
 
-For deeper guidance, see the reference files in `references/`:
+Read the matching file before you write the code, not after:
 
-- `zen-of-python.md` -- Full Zen of Python (PEP 20) with annotations
-- `google-style-guide.md` -- Curated sections: exceptions, defaults, imports, naming, comments
-- `idiomatic-patterns.md` -- 18 Python idioms with before/after code examples
-- `effective-python-tips.md` -- Key tips from "Effective Python" by Brett Slatkin, organized by category
+- [`references/idiomatic-patterns.md`](references/idiomatic-patterns.md) -- read when writing loops, comprehensions, unpacking, context managers, or dataclasses. 18 idioms with before/after code
+- [`references/zen-of-python.md`](references/zen-of-python.md) -- read when choosing between two designs or judging whether an abstraction earns its place. PEP 20 with annotations
+- [`references/google-style-guide.md`](references/google-style-guide.md) -- read when deciding on exceptions, mutable defaults, import style, naming, or comments
+- [`references/effective-python-tips.md`](references/effective-python-tips.md) -- read when reviewing or refactoring existing code. Key tips from "Effective Python" (Brett Slatkin)

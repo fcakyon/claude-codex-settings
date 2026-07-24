@@ -2,7 +2,7 @@
 
 Complete installation guide for Claude Code, dependencies, and this configuration.
 
-> Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and create the AGENTS.md symlink.
+> Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and set up the shared guidance file.
 
 ## Prerequisites
 
@@ -131,7 +131,7 @@ npm install -g prettier@3.6.2 prettier-plugin-sh
 
 ### Create Shared Agent Guidance
 
-Create symlinks for cross-tool compatibility ([AGENTS.md](https://agents.md/)):
+Start from [`.claude/CLAUDE.md`](https://github.com/fcakyon/claude-codex-settings/blob/main/.claude/CLAUDE.md), the guidance file this repo ships for your projects. `/claude-tools:sync-claude-md` pulls it into `~/.claude/CLAUDE.md`; in a single project, paste it as `CLAUDE.md` instead. Then symlink it for cross-tool compatibility ([AGENTS.md](https://agents.md/)):
 
 ```bash
 ln -sfn CLAUDE.md AGENTS.md
