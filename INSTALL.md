@@ -125,6 +125,8 @@ uv tool install ruff
 npm install -g prettier@3.6.2 prettier-plugin-sh
 ```
 
+> Verify both are on PATH: `ruff --version && npx prettier --version`. The Python, prettier, and bash hooks exit without a message when a tool is missing, so nothing gets formatted and nothing warns you.
+
 ## Post-Installation Setup
 
 ### Create Shared Agent Guidance
