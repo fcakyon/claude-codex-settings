@@ -32,6 +32,7 @@ button { color: inherit; }
 .site-header nav a { font-size: 16px; color: var(--muted); transition: color 160ms ease; }
 .site-header nav a:hover { color: var(--text); }
 .header-cta { justify-self: end; }
+.star-count { display: inline-flex; align-items: center; gap: 5px; padding-left: 11px; margin-left: 1px; border-left: 1px solid currentColor; font-size: 15px; font-variant-numeric: tabular-nums; opacity: .85; }
 
 .button {
   min-height: 52px;
@@ -135,21 +136,22 @@ button.tree-row { cursor: pointer; }
 .section { padding: clamp(80px, 9vw, 136px) 8px; border-bottom: 1px solid var(--border); }
 .section-intro { display: grid; grid-template-columns: 1.15fr .85fr; gap: 70px; align-items: end; margin-bottom: 62px; }
 .section-intro h2, .section-intro p { margin-bottom: 0; }
-.section-intro p { max-width: 560px; font-size: 19px; }
+.section-intro p { max-width: 560px; font-size: 20px; }
 .tool-rail, .compatibility-rail { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .tool-rail div, .compatibility-rail div { min-height: 148px; padding: 30px 26px; border-right: 1px solid var(--border); }
+.tool-rail svg, .compatibility-rail svg { display: block; margin-bottom: 16px; color: var(--text); }
 .tool-rail div:last-child, .compatibility-rail div:last-child { border-right: 0; }
 .tool-rail strong, .tool-rail span, .compatibility-rail strong, .compatibility-rail span { display: block; }
-.tool-rail strong, .compatibility-rail strong { margin-bottom: 14px; font-size: 18px; }
-.tool-rail span, .compatibility-rail span { color: var(--muted); line-height: 1.5; }
+.tool-rail strong, .compatibility-rail strong { margin-bottom: 12px; font-size: 19px; }
+.tool-rail span, .compatibility-rail span { color: var(--muted); font-size: 17px; line-height: 1.5; }
 .install-section { display: grid; grid-template-columns: .7fr 1.3fr; gap: 80px; background: #0d1218; color: white; margin-inline: calc(var(--gutter) * -1); padding-inline: calc(var(--gutter) + 8px); }
-.install-section p { max-width: 460px; color: #aeb8c4; font-size: 18px; }
+.install-section p { max-width: 460px; color: #aeb8c4; font-size: 19px; }
 .install-steps { border-top: 1px solid #35404c; }
 .install-steps div { padding: 24px 0; border-bottom: 1px solid #35404c; }
 .install-steps span { display: block; margin-bottom: 12px; color: #9faab6; font-size: 13px; }
-.install-steps code { display: block; overflow-x: auto; color: #fff; font: 14px/1.5 var(--mono); }
+.install-steps code { display: block; overflow-x: auto; color: #fff; font: 15px/1.5 var(--mono); }
 .plugin-rail { border-top: 1px solid var(--border); }
-.plugin-rail a { display: grid; grid-template-columns: 220px 1fr 28px; gap: 28px; align-items: center; min-height: 100px; border-bottom: 1px solid var(--border); }
+.plugin-rail a { display: grid; font-size: 17px; grid-template-columns: 220px 1fr 28px; gap: 28px; align-items: center; min-height: 100px; border-bottom: 1px solid var(--border); }
 .plugin-rail a:hover strong, .plugin-rail a:hover svg { color: var(--accent); }
 .plugin-rail span { color: var(--muted); line-height: 1.45; }
 .text-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; color: var(--link); font-weight: 700; }
@@ -174,7 +176,7 @@ button.tree-row { cursor: pointer; }
 .plugins-hero { padding: 58px 0 74px; border-bottom: 1px solid var(--border); }
 .plugins-intro { text-align: center; margin-bottom: 30px; }
 .plugins-intro h1 { margin-bottom: 16px; }
-.plugins-intro p { font-size: 18px; }
+.plugins-intro p { font-size: 19px; }
 .plugin-search { width: min(100%, 960px); min-height: 80px; display: flex; align-items: center; gap: 18px; margin: 0 auto 48px; padding: 0 22px; border: 1px solid var(--border-strong); border-radius: 18px; background: linear-gradient(135deg, #121820, #0b1016); }
 .plugin-search input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--text); font-size: 19px; }
 .plugin-search input::placeholder { color: #8f98a3; }
@@ -187,9 +189,9 @@ button.tree-row { cursor: pointer; }
 .plugin-row:hover, .plugin-row.is-selected { background: var(--surface-hover); }
 .plugin-number { color: #8d98a4; font-size: 15px; }
 .plugin-name { padding: 8px 0; border: 0; background: none; color: var(--accent); text-align: left; font-weight: 760; cursor: pointer; }
-.plugin-row p, .plugin-tools { margin: 0; color: #d7dce1; font-size: 14px; line-height: 1.5; }
+.plugin-row p, .plugin-tools { margin: 0; color: #d7dce1; font-size: 15px; line-height: 1.5; }
 .plugin-tools { color: #bac2cb; }
-.plugin-row > a { display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; color: var(--link); font-size: 14px; white-space: nowrap; }
+.plugin-row > a { display: inline-flex; align-items: center; justify-content: flex-end; gap: 5px; color: var(--link); font-size: 15px; white-space: nowrap; }
 .empty-state { padding: 36px; text-align: center; }
 .install-panel { position: sticky; top: 24px; }
 .install-heading { min-height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; border-bottom: 1px solid var(--border); }
@@ -214,8 +216,10 @@ button.tree-row { cursor: pointer; }
 
 footer { min-height: 120px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); }
 footer > span { font-weight: 750; color: var(--text); }
-footer div { display: flex; flex-wrap: wrap; gap: 28px; }
+footer > span a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+footer div { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
 footer a:hover { color: var(--text); }
+.social-link { display: inline-flex; color: var(--muted); transition: color 160ms ease; }
 
 @media (max-width: 1100px) {
   .site-header { grid-template-columns: 1fr auto; }
@@ -235,7 +239,7 @@ footer a:hover { color: var(--text); }
   .site-header { height: 76px; }
   .brand { font-size: 21px; }
   .header-cta { min-height: 44px; padding: 0 14px; }
-  .header-cta span { display: none; }
+  .header-cta > span:not(.star-count) { display: none; }
   h1 { font-size: clamp(40px, 12vw, 58px); }
   h2 { font-size: 38px; }
   .settings-hero { display: block; min-height: 0; padding: 52px 0 40px; }

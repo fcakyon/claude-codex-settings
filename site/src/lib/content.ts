@@ -55,6 +55,7 @@ export const site = {
 
 const claudeContent = read(".claude/CLAUDE.md");
 const settingsContent = read(".claude/settings.json");
+const codexContent = read(".codex/config.toml");
 
 export const editorFiles = [
   {
@@ -64,23 +65,41 @@ export const editorFiles = [
     focus: "## Core Principles",
   },
   {
-    id: "agents",
-    label: "AGENTS.md",
-    content: read("AGENTS.md"),
-    focus: "## Repo Structure",
-  },
-  {
     id: "settings",
     label: "settings.json",
     content: settingsContent,
     focus: '"env"',
   },
+  {
+    id: "codex",
+    label: "config.toml",
+    content: codexContent,
+    focus: "[plugins.",
+  },
 ];
+
+const marketplaceSlug = repositoryUrl.replace("https://github.com/", "");
+
+let starsRequest: Promise<number | null> | undefined;
+
+export const repositoryStars = () => {
+  starsRequest ||= fetch(`https://api.github.com/repos/${marketplaceSlug}`, {
+    signal: AbortSignal.timeout(8000),
+    headers: {
+      Accept: "application/vnd.github+json",
+      ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
+    },
+  })
+    .then((response) => response.ok ? response.json() : null)
+    .then((repository) => (repository?.stargazers_count as number) ?? null)
+    .catch(() => null);
+  return starsRequest;
+};
 
 const marketplace = JSON.parse(read(".claude-plugin/marketplace.json")) as Marketplace;
 const codexPlugins = new Set((JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
 const cursorPlugins = new Set((JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
-const featured = ["simplify", "humanize", "fable-advisor", "adhd-output-style"];
+const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
 const componentNames = (directory: string, folder: string, skill = false) => {
   const path = resolve(directory, folder);
   if (!existsSync(path)) return [];
@@ -138,8 +157,6 @@ export const plugins = marketplace.plugins
       (bFeatured < 0 ? featured.length + b.index : bFeatured);
   });
 
-const marketplaceSlug = repositoryUrl.replace("https://github.com/", "");
-
 export const installTools = [
   { id: "claude", label: "Claude Code", marketplace: `claude plugin marketplace add ${marketplaceSlug}` },
   { id: "codex", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
@@ -150,6 +167,6 @@ export const installTools = [
 export const sourceDocuments = {
   claude: claudeContent,
   settings: settingsContent,
-  codex: read(".codex/config.toml"),
+  codex: codexContent,
   install: read("INSTALL.md"),
 };

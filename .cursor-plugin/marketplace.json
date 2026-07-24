@@ -69,7 +69,7 @@
       "name": "python-skills",
       "source": "./plugins/python-skills",
       "description": "Python best practices grounded in PEP 8, PEP 20 (Zen of Python), Google Python Style Guide, and Effective Python by Brett Slatkin.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0"
     },
     {

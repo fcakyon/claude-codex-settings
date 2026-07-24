@@ -12,7 +12,7 @@ on:
       - ".cursor-plugin/marketplace.json"
       - "plugins/**/.claude-plugin/plugin.json"
       - "plugins/**/gemini-extension.json"
-      - "AGENTS.md"
+      - ".codex/config.toml"
       - "INSTALL.md"
       - ".github/workflows/site.yml"
   pull_request:
@@ -37,6 +37,8 @@ jobs:
       - run: npm run build --prefix site
         env:
           SITE_VARIANT: settings
+          GITHUB_TOKEN: ${{ github.token }}
       - run: npm run build --prefix site
         env:
           SITE_VARIANT: plugins
+          GITHUB_TOKEN: ${{ github.token }}

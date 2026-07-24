@@ -1,4 +1,5 @@
 ---
+import Icon from "./Icon.astro";
 import PluginDirectory from "./PluginDirectory.astro";
 ---
 
@@ -16,9 +17,9 @@ import PluginDirectory from "./PluginDirectory.astro";
     <p>Support labels are derived from the manifest files present in each plugin directory.</p>
   </div>
   <div class="compatibility-rail">
-    <div><strong>Claude Code</strong><span>Plugins, skills, agents, hooks and commands</span></div>
-    <div><strong>Codex CLI</strong><span>Plugins, skills and shared agent guidance</span></div>
-    <div><strong>Cursor</strong><span>Plugins, skills and project guidance</span></div>
-    <div><strong>Gemini CLI</strong><span>Extensions, skills, agents and hooks</span></div>
+    <div><Icon name="claude" size={26} /><strong>Claude Code</strong><span>Plugins, skills, agents, hooks and commands</span></div>
+    <div><Icon name="openai" size={26} /><strong>Codex CLI</strong><span>Plugins, skills and shared agent guidance</span></div>
+    <div><Icon name="cursor" size={26} /><strong>Cursor</strong><span>Plugins, skills and project guidance</span></div>
+    <div><Icon name="gemini" size={26} /><strong>Gemini CLI</strong><span>Extensions, skills, agents and hooks</span></div>
   </div>
 </section>
