@@ -904,7 +904,7 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 
 Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-- **Model**: OpusPlan mode (plan: Opus 4.8, execute: Opus 4.8, fast: Sonnet 4.6) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
+- **Model**: OpusPlan mode (plan: Opus 5, execute: Opus 5, fast: Sonnet 4.6) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
