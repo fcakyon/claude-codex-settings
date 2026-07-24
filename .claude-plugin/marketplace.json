@@ -54,6 +54,21 @@
       "tags": ["review", "agent"]
     },
     {
+      "name": "codex-advisor",
+      "source": "./plugins/codex-advisor",
+      "description": "Get a second opinion from GPT via Codex CLI before big decisions.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih C. Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["advisor", "second-opinion", "cross-model", "plan-review", "code-review"],
+      "category": "developer-tools",
+      "tags": ["review", "agent"]
+    },
+    {
       "name": "adhd-output-style",
       "source": "./plugins/adhd-output-style",
       "description": "Use fewer output tokens with short steps, quick insights, and clear next actions.",

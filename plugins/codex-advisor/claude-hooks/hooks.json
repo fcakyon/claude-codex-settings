@@ -1,0 +1,19 @@
+{
+  "description": "Stages the real conversation for the codex-advisor reviewer instead of only the caller's prompt",
+  "hooks": {
+    "SubagentStart": [
+      {
+        "matcher": "^(codex-advisor:)?codex-advisor$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/claude-hooks/scripts/stage_transcript.mjs"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
