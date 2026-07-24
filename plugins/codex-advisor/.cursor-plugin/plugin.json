@@ -1,0 +1,6 @@
+{
+  "name": "codex-advisor",
+  "version": "1.0.0",
+  "description": "Get a second opinion from GPT via Codex CLI before big decisions.",
+  "license": "Apache-2.0"
+}
