@@ -369,13 +369,7 @@ def format_docstring(
     text = content.strip()
     has_section = any(f"{s}:" in text for s in SECTIONS)
     has_list = any(is_list_item(line) for line in text.splitlines())
-    single_ok = (
-        ("\n" not in text)
-        and not has_section
-        and not has_list
-        and (indent + len(prefix) + len(quotes) * 2 + len(text) <= width)
-    )
-    if single_ok:
+    if ("\n" not in text) and not has_section and not has_list:
         words = text.split()
         core = words[0].rstrip(".") if words else ""  # ignore terminal dots so only interior ones mark identifiers
         if core.islower() and not any(c in core for c in "_./`("):
@@ -383,7 +377,8 @@ def format_docstring(
         out = " ".join(words)
         if out and out[-1] not in ".!?":
             out += "."
-        return f"{prefix}{quotes}{out}{quotes}"
+        if indent + len(prefix) + len(quotes) * 2 + len(out) <= width:
+            return f"{prefix}{quotes}{out}{quotes}"
     return format_google(text, indent, width, quotes, prefix, start_newline)
 
 
