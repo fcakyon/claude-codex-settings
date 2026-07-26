@@ -10,7 +10,7 @@ model_auto_compact_token_limit_scope = "body_after_prefix"
 service_tier = "default"
 
 # Guidance for the auto_review guardian subagent. Replaces the bundled tenant
-# policy, so the defaults are inlined here with the Ultralytics specifics.
+# policy, so the defaults are inlined here alongside the workspace specifics.
 # Mirrors the autoMode block in .claude/settings.json.
 [auto_review]
 policy = """
@@ -46,7 +46,8 @@ policy = """
 
 ### Destructive Actions
 - Destructive and costly-to-reverse actions include deleting or modifying data, breaking production services, and broad unrequested git cleanup or reset actions.
-- Treat git actions as medium when they only affect one verified user-owned feature branch or a finite set of repo-local files, including one-ref `--force-with-lease` pushes to that branch. Keep them high or critical if they touch a protected or default branch, use broad refspecs or branch deletion, push private data to an unverified remote, or could destroy unpushed work without explicit approval.
+- Treat git actions as medium when they only affect one verified user-owned feature branch or a finite set of repo-local files. Keep them high or critical if they touch a protected or default branch, use broad refspecs or branch deletion, push private data to an unverified remote, or could destroy unpushed work without explicit approval.
+- Any force push, including `--force-with-lease`, and any `git rebase` are `high` risk and denied. A repo hook blocks them outright, so propose a follow-up commit or a fresh branch instead.
 - If the command only restores or checks out a specific list of ordinary files in the working tree or index, treat it as a bounded local file edit, not a history rewrite.
 - Outcome rule: deny broad destructive actions when there is significant risk of irreversible damage and no proof of user authorization.
 
