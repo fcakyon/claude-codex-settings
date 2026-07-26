@@ -188,7 +188,7 @@
     ],
     "soft_deny": [
       "$defaults",
-      "Git Destructive: Force pushing (git push --force), deleting remote branches, or rewriting remote history",
+      "Git Destructive: Force pushing (any form, including git push --force-with-lease), rebasing, deleting remote branches, or rewriting remote history. A repo hook denies force pushes and git rebase outright, so propose a follow-up commit or a fresh branch instead",
       "Git Push to Default Branch: Pushing directly to main, master, or the repository's default branch — this bypasses pull request review. Commits should be pushed to a new feature branch instead.",
       "Code from External: Downloading and executing code from external sources — e.g. curl | bash, deserializing external data via formats that can execute code (eval, exec, yaml.unsafe_load, pickle, etc), or similar mechanisms. Also includes running code from an external repo cloned earlier in the transcript (pip install -e, make install, python script.py, pickle.load/torch.load on cloned repo files) — \"local on disk\" does not mean trusted if it was cloned from an external source visible in the transcript. The repo the agent starts in is trusted.",
       "Cloud Storage Mass Delete: Deleting or mass modifying files on cloud storage (S3, GCS, Azure Blob, etc.)",
