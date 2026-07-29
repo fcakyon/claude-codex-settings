@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-// SubagentStart hook: stages the recent conversation to a file and hands the codex-advisor
-// relay the exact command to run. Staging beats inlining here because the reviewer is a
-// separate process, so the relay never has to retype the history.
-// Node-only, cross-platform, exits 0 on any failure.
+// SubagentStart hook: stages the recent conversation and hands the codex-advisor relay the
+// command to run, so it never retypes the history. Node-only, exits 0 on any failure.
 
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -54,8 +52,7 @@ const renderBlock = (role, b) => {
   }
 };
 
-// Any failure here leaves lines empty, which still stages the transcript path so the
-// reviewer keeps its escape hatch instead of ruling on the caller's prompt alone.
+// On failure lines stays empty, but the path is still staged so the escape hatch survives.
 let transcript;
 let lines = [];
 try {
@@ -70,7 +67,7 @@ for (; i >= 0 && records.length < 80; i--) {
   if (!lines[i]) continue;
   let r;
   try {
-    r = JSON.parse(lines[i]); // skip a half-written or malformed line
+    r = JSON.parse(lines[i]); // the transcript is appended to while this runs
   } catch {
     continue;
   }
@@ -89,13 +86,11 @@ for (; i >= 0 && records.length < 80; i--) {
 }
 records.reverse();
 
-// Keep the newest characters so a very chatty session cannot flood the reviewer.
 let recent = records.join("\n\n---\n\n");
 const MAX = 160000;
 if (recent.length > MAX)
   recent = "…[older turns truncated for length]\n" + recent.slice(-MAX);
-// The record cap is silent otherwise, and a reviewer that cannot tell a whole session from
-// its tail never knows there is anything older to go looking for.
+// Without this the record cap is silent, and the tail of a session reads as the whole of it.
 if (i >= 0)
   recent = `…[this is only the newest ${records.length} turns of a longer session]\n` + recent;
 
