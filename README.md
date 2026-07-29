@@ -95,7 +95,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 
 **Hooks:**
 
-- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a /simplify run before each git commit
+- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a completed /simplify run before each Claude Code or Codex commit
 
 </details>
 

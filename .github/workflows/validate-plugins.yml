@@ -48,3 +48,6 @@ jobs:
         env:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: python .github/scripts/validate_plugins.py
+
+      - name: Test simplify guard
+        run: python .github/scripts/test_simplify_guard.py

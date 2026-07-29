@@ -15,7 +15,7 @@ Run `git diff @{upstream}...HEAD` (or `git diff main...HEAD` / `git diff HEAD~1`
 
 ## Phase 1 — Review (4 cleanup agents in parallel)
 
-Launch **4 independent review agents** via the Agent tool, all in a single message so they run concurrently. Pass each agent the diff and one of the four angles below. Each returns its findings with `file`, `line`, a one-line `summary`, and the concrete cost (what is duplicated, wasted, or harder to maintain).
+Run **4 distinct reviews**, one for each angle below. Launch four independent agents concurrently when capacity allows. If fewer than four slots are available, run the remaining angles in the primary agent or in later waves. Never omit or combine an angle. Pass each agent the diff and its assigned angle. Each returns its findings with `file`, `line`, a one-line `summary`, and the concrete cost (what is duplicated, wasted, or harder to maintain).
 
 ### Reuse
 
@@ -35,4 +35,18 @@ Check that each change is implemented at the right depth, not as a fragile banda
 
 ## Phase 2 — Apply the fixes
 
-Wait for all four agents to complete, dedup findings that point at the same line or mechanism, and fix each remaining one directly. Skip any finding whose fix would change intended behavior, require changes well outside the reviewed diff, or that you judge to be a false positive, note the skip rather than arguing with it. Finish with a brief summary of what was fixed and what was skipped (or confirm the code was already clean).
+Wait for all four agents to complete, dedup findings that point at the same line or mechanism, and fix each remaining one directly. Skip any finding whose fix would change intended behavior, require changes well outside the reviewed diff, or that you judge to be a false positive, note the skip rather than arguing with it.
+
+## Phase 3 — Mark completion in Codex
+
+In Codex only, after all accepted fixes are applied, run this exact command from the reviewed worktree:
+
+```bash
+echo simplify-guard:complete
+```
+
+Codex loads skills as instructions instead of emitting a Skill tool event. This command lets the bundled guard record completion. Do not run it before the review and cleanup phases finish.
+
+Claude Code should skip this phase because its `PostToolUse` Skill hook records completion automatically.
+
+Finish with a brief summary of what was fixed and what was skipped (or confirm the code was already clean).
