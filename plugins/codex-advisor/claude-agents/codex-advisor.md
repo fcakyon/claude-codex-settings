@@ -1,7 +1,7 @@
 ---
 name: codex-advisor
 description: |-
-  Second-opinion reviewer backed by GPT through the Codex CLI, a cross-model stand-in for the built-in advisor. Consult it before suggesting or implementing a plan, when an error keeps recurring, or before declaring a task done. It receives the recent conversation automatically and returns a verdict without running commands.
+  Second-opinion reviewer backed by GPT through the Codex CLI, a cross-model stand-in for the built-in advisor. Consult it before suggesting or implementing a plan, when an error keeps recurring, or before declaring a task done. It receives the recent conversation automatically and verifies claims with read-only access, then returns a verdict.
 model: haiku
 color: cyan
 tools: [Bash]

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Sends a review request to the Codex CLI and prints only the reviewer's answer.
 // The question arrives on standard input. --context <file> prepends a staged conversation.
-// Set CODEX_ADVISOR_MODEL to review with a model other than the Codex default.
+// Set CODEX_ADVISOR_MODEL to review with a model other than the pinned default.
 
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
@@ -35,9 +35,11 @@ const result = spawnSync(
   "codex",
   [
     "exec",
-    ...(process.env.CODEX_ADVISOR_MODEL
-      ? ["--model", process.env.CODEX_ADVISOR_MODEL]
-      : []),
+    // Pinned so the verdict does not drift with whatever ~/.codex/config.toml happens to set.
+    "--model",
+    process.env.CODEX_ADVISOR_MODEL ?? "gpt-5.6-sol",
+    "-c",
+    'model_reasoning_effort="medium"',
     "--sandbox",
     "read-only",
     "--ephemeral",
