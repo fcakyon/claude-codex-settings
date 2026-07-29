@@ -8,9 +8,7 @@
           {
             "type": "command",
             "command": "node",
-            "args": [
-              "${CLAUDE_PLUGIN_ROOT}/claude-hooks/scripts/stage_transcript.mjs"
-            ]
+            "args": ["${CLAUDE_PLUGIN_ROOT}/claude-hooks/scripts/forward_transcript.mjs"]
           }
         ]
       }
