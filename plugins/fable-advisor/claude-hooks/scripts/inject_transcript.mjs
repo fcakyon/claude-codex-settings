@@ -3,14 +3,11 @@
 // (it otherwise sees only the caller's prompt). Node-only, exits 0 on any failure.
 
 import { randomUUID } from "node:crypto";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { readFileSync } from "node:fs";
 
-const emit = (ctx) =>
-  process.stdout.write(
-    JSON.stringify({ hookSpecificOutput: { hookEventName: "SubagentStart", additionalContext: ctx } })
-  );
+const output = (ctx) =>
+  JSON.stringify({ hookSpecificOutput: { hookEventName: "SubagentStart", additionalContext: ctx } });
+const emit = (ctx) => process.stdout.write(output(ctx));
 
 const clip = (s, n) => (s.length > n ? s.slice(0, n) + " …[truncated]" : s);
 
@@ -68,35 +65,26 @@ const source = transcriptPath
   : "";
 
 let recent = records.join("\n\n---\n\n");
-const MAX = 160000;
+const MAX = 40000;
 if (recent.length > MAX) recent = "…[older turns truncated for length]\n" + recent.slice(-MAX);
 // Without this the record cap is silent, and the tail of a session reads as the whole of it.
 if (i >= 0) recent = `…[this is only the newest ${records.length} turns of a longer session]\n` + recent;
 
-// Staged, not inlined: the harness previews a large additionalContext instead of passing it.
-// The token exists only in the file, so echoing it proves the reviewer read it.
-let contextFile;
-try {
-  if (records.length) {
-    const staged = join(mkdtempSync(join(tmpdir(), "fable-advisor-")), "conversation.md");
-    writeFileSync(
-      staged,
-      `You are reviewing an in-progress Claude Code session. Below is the recent conversation, most recent last, the same history the built-in advisor tool would see. Weigh the specific question in the caller's prompt against this actual context, not just the caller's summary of it.
+if (records.length) {
+  const token = randomUUID().slice(0, 8);
+  const context = () =>
+    `You are reviewing an in-progress Claude Code session. Below is the recent conversation, most recent last, the same history the built-in advisor tool would see. Weigh the specific question in the caller's prompt against this actual context, not just the caller's summary of it.
 
-Confirmation token: ${randomUUID().slice(0, 8)}
+Confirmation token: ${token}
 
 Long turns are shortened and marked \`…[truncated]\`.${source}
 
 <recent-conversation>
 ${recent}
-</recent-conversation>`
-    );
-    contextFile = staged;
-  }
-} catch {}
-
-emit(
-  contextFile
-    ? `Read ${contextFile} before answering. It holds the recent conversation your question is about and the caller's prompt is only a summary of it.`
-    : `The recent conversation could not be reconstructed, so you see only the caller's prompt. Name the context you need.${source}`
-);
+</recent-conversation>`;
+  while (output(context()).length > 45000)
+    recent = "…[older turns truncated for hook delivery]\n" + recent.slice(-Math.floor(recent.length * 0.8));
+  emit(context());
+} else {
+  emit(`The recent conversation could not be reconstructed, so you see only the caller's prompt. Name the context you need.${source}`);
+}
