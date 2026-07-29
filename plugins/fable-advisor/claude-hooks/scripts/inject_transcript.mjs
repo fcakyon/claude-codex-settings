@@ -9,21 +9,6 @@ const emit = (ctx) =>
     JSON.stringify({ hookSpecificOutput: { hookEventName: "SubagentStart", additionalContext: ctx } })
   );
 
-let transcriptPath;
-try {
-  transcriptPath = JSON.parse(readFileSync(0, "utf8")).transcript_path;
-} catch {
-  process.exit(0);
-}
-if (!transcriptPath) process.exit(0);
-
-let lines;
-try {
-  lines = readFileSync(transcriptPath, "utf8").split("\n");
-} catch {
-  process.exit(0);
-}
-
 const clip = (s, n) => (s.length > n ? s.slice(0, n) + " …[truncated]" : s);
 
 const renderBlock = (role, b) => {
@@ -31,23 +16,33 @@ const renderBlock = (role, b) => {
     case "text":
       return `${role}: ${clip(b.text ?? "", 4000)}`;
     case "thinking":
-      return `assistant (thinking): ${clip(b.thinking ?? "", 1200)}`;
+      return `assistant (thinking): ${clip(b.thinking ?? "", 4000)}`;
     case "tool_use":
-      return `assistant → ${b.name ?? "?"}(${clip(JSON.stringify(b.input ?? {}), 280)})`;
+      return `assistant → ${b.name ?? "?"}(${clip(JSON.stringify(b.input ?? {}), 8000)})`;
     case "tool_result": {
       const c = b.content;
       const text =
         typeof c === "string" ? c : Array.isArray(c) ? c.map((x) => x.text ?? "").join(" ") : JSON.stringify(c ?? "");
-      return `  ↳ result: ${clip(text, 700)}`;
+      return `  ↳ result: ${clip(text, 8000)}`;
     }
     default:
       return "";
   }
 };
 
+// Any failure here leaves lines empty, which downgrades the review to the caller's prompt
+// with a warning attached rather than letting the reviewer rule on thin context unknowingly.
+let transcriptPath;
+let lines = [];
+try {
+  transcriptPath = JSON.parse(readFileSync(0, "utf8")).transcript_path;
+  lines = readFileSync(transcriptPath, "utf8").split("\n");
+} catch {}
+
 // Scan newest-first and stop at 80 records, so a multi-MB transcript never parses the head it would discard.
 const records = [];
-for (let i = lines.length - 1; i >= 0 && records.length < 80; i--) {
+let i = lines.length - 1;
+for (; i >= 0 && records.length < 80; i--) {
   if (!lines[i]) continue;
   let r;
   try {
@@ -66,8 +61,12 @@ for (let i = lines.length - 1; i >= 0 && records.length < 80; i--) {
 }
 records.reverse();
 
+const source = transcriptPath
+  ? ` Full session: ${transcriptPath}, one JSON record per line, newest last. Grep it for a term, number, or phrase you are chasing; never read it whole.`
+  : "";
+
 if (records.length === 0) {
-  emit("The recent conversation could not be reconstructed. Review only the caller's prompt and name any missing context.");
+  emit(`The recent conversation could not be reconstructed, so you see only the caller's prompt. Name the context you need.${source}`);
   process.exit(0);
 }
 
@@ -75,9 +74,14 @@ if (records.length === 0) {
 let recent = records.join("\n\n---\n\n");
 const MAX = 160000;
 if (recent.length > MAX) recent = "…[older turns truncated for length]\n" + recent.slice(-MAX);
+// The record cap is silent otherwise, and a reviewer that cannot tell a whole session from
+// its tail never knows there is anything older to go looking for.
+if (i >= 0) recent = `…[this is only the newest ${records.length} turns of a longer session]\n` + recent;
 
 emit(
   `You are reviewing an in-progress Claude Code session. Below is the recent conversation, most recent last, the same history the built-in advisor tool would see. Weigh the specific question in the caller's prompt against this actual context, not just the caller's summary of it.
+
+Long turns are shortened and marked \`…[truncated]\`.${source}
 
 <recent-conversation>
 ${recent}

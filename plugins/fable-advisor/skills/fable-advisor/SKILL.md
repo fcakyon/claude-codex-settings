@@ -12,13 +12,13 @@ tool's model.
 
 1. In Claude Code, delegate to the native `fable-advisor` agent. Do not launch
    another Claude Code process.
-2. In Codex, Cursor, or Gemini CLI, locate this skill's directory and run
-   `node scripts/ask_fable.mjs`. Pass the review request on standard input.
+2. Elsewhere, run `node scripts/ask_fable.mjs` from this skill's directory with
+   the review request on standard input.
 
-The request must include the decision or conclusion, the relevant recent
-context and evidence, and any constraints or alternatives that affect the
-verdict. Include only facts that matter to the decision.
+State the decision, the evidence behind it, and any constraint that changes the
+verdict. Name the paths that matter: the reviewer has read-only access and
+checks load-bearing claims itself.
 
-Return Fable's answer without rewriting it. If `claude` is missing or not
-authenticated, surface the command error and ask the user to install or sign in
-to Claude Code. Do not fall back to the host model.
+Return Fable's answer without rewriting it. If `claude` is missing or
+unauthenticated, surface the error and ask the user to install it or sign in.
+Never review in its place.
