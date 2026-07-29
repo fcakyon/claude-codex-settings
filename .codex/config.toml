@@ -76,7 +76,7 @@ enabled = false
 status_line = ["model-with-reasoning", "context-used", "weekly-limit", "task-progress"]
 
 [agents]
-max_threads = 8
+max_concurrent_threads_per_session = 8
 
 [plugins."simplify@claude-settings"]
 enabled = true
