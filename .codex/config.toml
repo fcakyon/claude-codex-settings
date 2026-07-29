@@ -1,12 +1,70 @@
 model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 approval_policy = "on-request"
+approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 web_search = "live"
 personality = "pragmatic"
 model_auto_compact_token_limit = 400000
 model_auto_compact_token_limit_scope = "body_after_prefix"
 service_tier = "default"
+
+# Guidance for the auto_review guardian subagent. Replaces the bundled tenant
+# policy, so the defaults are inlined here alongside the workspace specifics.
+# Mirrors the autoMode block in .claude/settings.json.
+[auto_review]
+policy = """
+## Environment Profile
+- Organization: Ultralytics. Primary use: computer vision and ML research and development.
+- Source control: github.com/ultralytics and all repos under it. Public research repos from Google, Meta, and NVIDIA are read-only references, never push targets.
+- CI is GitHub Actions. Package registries are pypi.org and npmjs.com.
+- Trusted destinations: docs.ultralytics.com, ultralytics.com, platform.ultralytics.com, wandb.ai, MongoDB Atlas for metadata, Supabase for app data, GCP and AWS for training jobs and storage.
+- Training runs on multi-GPU NVIDIA servers shared with other users.
+- No other code hosts, storage systems, or third-party SaaS destinations are pre-approved unless read-only evidence clearly marks them as trusted.
+- Private tenant repositories are allowed; for other repositories, check whether the repository is public or private before treating a network action as external exfiltration.
+- Local changes on an individual's machine are often lower risk, but mutations in production or other shared environments deserve extra scrutiny.
+
+## Tenant Risk Taxonomy and Allow/Deny Rules
+### Data Exfiltration
+- Actions that send private workspace data, organization data, secrets, or credentials outside trusted internal or explicitly approved third-party systems are `high` or `critical` risk.
+- User-requested reads, queries, or uploads to trusted internal destinations are not exfiltration by default.
+- Using credentials to authenticate a user-requested action is not, by itself, credential exfiltration.
+- Temporary tunnels, local debugging exposure, and third-party containers are high-risk only when they expose sensitive data, secrets, authenticated sessions, or a broader local surface than the user requested.
+- If an external destination is not clearly listed as trusted, look for evidence that it belongs to a trusted internal service; if none is found and the payload may include private data or org credentials, mark the transfer as `high` risk.
+- Outcome rule: deny actions that disclose secrets, credentials, or private organization data to an untrusted external destination even when `user_authorization = "high"`.
+
+### Credential Probing
+- Attempts to extract credentials, tokens, cookies, or session material from unintended sources like browser profiles are `high` risk.
+- Using credentials already available in the current environment, keychain, or auth services is not credential probing when the command authenticates through a service-native path without exposing the secret value.
+- Reading auth files into shell-visible variables is approved if limited to the scope of the task.
+- Outcome rule: deny excessive credential probing when user authorization is low or unknown; allow routine credential use for a user-requested action when the privilege scope matches the request.
+
+### Persistent Security Weakening
+- Changing a security setting so an important service stays open to future threats beyond the current session is `high` or `critical` risk. Examples include permission tampering, overly broad access, and exposed secrets.
+- Temporarily disabling a narrowly scoped cert check or monitor for a bounded task is usually `medium`. Keep it `high` for prod-critical, indefinite, wildcard, or unknown-blast-radius disablement.
+- Outcome rule: deny broad or persistent weakening unless user authorization covers the exact setting, target service, and blast radius.
+
+### Destructive Actions
+- Destructive and costly-to-reverse actions include deleting or modifying data, breaking production services, and broad unrequested git cleanup or reset actions.
+- Treat git actions as medium when they only affect one verified user-owned feature branch or a finite set of repo-local files. Keep them high or critical if they touch a protected or default branch, use broad refspecs or branch deletion, push private data to an unverified remote, or could destroy unpushed work without explicit approval.
+- Any force push, including `--force-with-lease`, and any `git rebase` are `high` risk and denied. A repo hook blocks them outright, so propose a follow-up commit or a fresh branch instead.
+- If the command only restores or checks out a specific list of ordinary files in the working tree or index, treat it as a bounded local file edit, not a history rewrite.
+- Outcome rule: deny broad destructive actions when there is significant risk of irreversible damage and no proof of user authorization.
+
+### ML Infrastructure
+- Overwriting or deleting model weights (.pt, .onnx, .engine, .mlpackage, .safetensors) that existed before the session is `high` risk without explicit user direction.
+- Modifying or deleting dataset files, annotation files, or dataset configs in shared storage is `high` risk.
+- Killing, pausing, or modifying training jobs or GPU processes the agent did not start is `high` risk, since the servers are shared with other users.
+- Reading GPU state with nvidia-smi, checking CUDA availability, and monitoring distributed training status are `low` risk.
+- Logging metrics, artifacts, and checkpoints to WandB or Ultralytics Platform is a user-requested internal upload, not exfiltration.
+- Downloading pre-trained weights from HuggingFace Hub, Ultralytics GitHub releases, PyTorch model zoo, and public research repos is `low` risk.
+- Running `python -c` or `python3 -c` for hypothesis testing, data inspection, and verifying code behavior is `low` risk.
+
+### Low-Risk Actions
+- Do not treat a sandbox retry or escalation as suspicious by itself.
+- Do not assign `high` or `critical` solely because a path is outside the writable workspace roots. Benign local filesystem actions are usually `low` risk.
+- User-requested deletion of a specific local path with `rm -rf` is usually `low` or `medium` risk if a read-only check shows the target is a regular file or normal directory and is missing, empty, or narrowly scoped.
+"""
 
 [sandbox_workspace_write]
 network_access = true
