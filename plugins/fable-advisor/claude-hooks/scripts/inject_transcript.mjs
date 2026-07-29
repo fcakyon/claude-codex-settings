@@ -2,7 +2,9 @@
 // SubagentStart hook: feeds the fable-advisor subagent the recent conversation
 // (it otherwise sees only the caller's prompt). Node-only, cross-platform, exits 0 on any failure.
 
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const emit = (ctx) =>
   process.stdout.write(
@@ -65,11 +67,6 @@ const source = transcriptPath
   ? ` Full session: ${transcriptPath}, one JSON record per line, newest last. Grep it for a term, number, or phrase you are chasing; never read it whole.`
   : "";
 
-if (records.length === 0) {
-  emit(`The recent conversation could not be reconstructed, so you see only the caller's prompt. Name the context you need.${source}`);
-  process.exit(0);
-}
-
 // Keep the newest characters so a very chatty session cannot flood the reviewer.
 let recent = records.join("\n\n---\n\n");
 const MAX = 160000;
@@ -78,12 +75,28 @@ if (recent.length > MAX) recent = "…[older turns truncated for length]\n" + re
 // its tail never knows there is anything older to go looking for.
 if (i >= 0) recent = `…[this is only the newest ${records.length} turns of a longer session]\n` + recent;
 
-emit(
-  `You are reviewing an in-progress Claude Code session. Below is the recent conversation, most recent last, the same history the built-in advisor tool would see. Weigh the specific question in the caller's prompt against this actual context, not just the caller's summary of it.
+// Staged to a file rather than inlined, because the harness spills a large additionalContext
+// to disk and previews it: the reviewer then sees less than a pointer would have given it.
+let contextFile;
+try {
+  if (records.length) {
+    const staged = join(mkdtempSync(join(tmpdir(), "fable-advisor-")), "conversation.md");
+    writeFileSync(
+      staged,
+      `You are reviewing an in-progress Claude Code session. Below is the recent conversation, most recent last, the same history the built-in advisor tool would see. Weigh the specific question in the caller's prompt against this actual context, not just the caller's summary of it.
 
 Long turns are shortened and marked \`…[truncated]\`.${source}
 
 <recent-conversation>
 ${recent}
 </recent-conversation>`
+    );
+    contextFile = staged; // only after the write returned, so the path always resolves
+  }
+} catch {}
+
+emit(
+  contextFile
+    ? `Read ${contextFile} before answering. It holds the recent conversation your question is about, and the caller's prompt is only a summary of it.`
+    : `The recent conversation could not be reconstructed, so you see only the caller's prompt. Name the context you need.${source}`
 );
