@@ -66,29 +66,42 @@ class SimplifyGuardTest(unittest.TestCase):
             "deny",
         )
 
-    def test_codex_commit_is_denied_before_simplify(self) -> None:
+    def test_claude_and_codex_commits_are_denied_before_simplify(self) -> None:
+        for runtime in ("codex", "claude"):
+            for command in (
+                "git commit -m test",
+                f"git -C {self.repo} commit -m test",
+                "git -c user.name=test commit -m test",
+                "git --no-pager commit -m test",
+            ):
+                with self.subTest(runtime=runtime, command=command):
+                    self.assert_denied(self.run_guard("PreToolUse", command, **{runtime: True}))
+
+    def test_git_c_uses_the_target_worktree_marker(self) -> None:
+        other_repo = self.repo / "other repo"
+        subprocess.run(["git", "init", "-q", str(other_repo)], check=True)
+        self.assertIsNone(self.run_guard("PreToolUse", COMPLETION_SIGNAL, codex=True))
         self.assert_denied(
-            self.run_guard("PreToolUse", "git commit -m test", codex=True)
+            self.run_guard(
+                "PreToolUse",
+                f"git -C '{other_repo}' commit -m test",
+                codex=True,
+            )
         )
+        self.assertTrue(self.marker.exists())
 
     def test_codex_completion_allows_exactly_one_commit_attempt(self) -> None:
         self.assertIsNone(self.run_guard("PreToolUse", COMPLETION_SIGNAL, codex=True))
         self.assertTrue(self.marker.exists())
 
-        self.assertIsNone(
-            self.run_guard("PreToolUse", "git commit -m test", codex=True)
-        )
+        self.assertIsNone(self.run_guard("PreToolUse", "git commit -m test", codex=True))
         self.assertFalse(self.marker.exists())
-        self.assert_denied(
-            self.run_guard("PreToolUse", "git commit -m again", codex=True)
-        )
+        self.assert_denied(self.run_guard("PreToolUse", "git commit -m again", codex=True))
 
     def test_claude_skill_event_still_allows_one_commit_attempt(self) -> None:
         self.assertIsNone(self.run_guard("PostToolUse", skill="simplify", claude=True))
         self.assertTrue(self.marker.exists())
-        self.assertIsNone(
-            self.run_guard("PreToolUse", "git commit -m test", claude=True)
-        )
+        self.assertIsNone(self.run_guard("PreToolUse", "git commit -m test", claude=True))
         self.assertFalse(self.marker.exists())
 
     def test_only_runtime_specific_completion_events_mint(self) -> None:
@@ -111,12 +124,20 @@ class SimplifyGuardTest(unittest.TestCase):
         self.assertIsNone(self.run_guard("PreToolUse", "git commit -m test"))
 
     def test_quoted_commit_text_and_commit_helpers_are_ignored(self) -> None:
+        self.assertIsNone(self.run_guard("PreToolUse", 'echo "git commit -m test"', codex=True))
+        self.assertIsNone(self.run_guard("PreToolUse", "git commit-tree HEAD^{tree}", codex=True))
+        self.assertIsNone(self.run_guard("PreToolUse", "git log commit", codex=True))
+        self.assertIsNone(self.run_guard("PreToolUse", "git rev-parse commit", codex=True))
+        self.assertIsNone(self.run_guard("PreToolUse", "git --version commit", codex=True))
+        self.assertFalse((self.repo / "alias-ran").exists())
         self.assertIsNone(
-            self.run_guard("PreToolUse", 'echo "git commit -m test"', codex=True)
+            self.run_guard(
+                "PreToolUse",
+                f"git -c alias.foo='!touch {self.repo / 'alias-ran'}' foo commit",
+                codex=True,
+            )
         )
-        self.assertIsNone(
-            self.run_guard("PreToolUse", "git commit-tree HEAD^{tree}", codex=True)
-        )
+        self.assertFalse((self.repo / "alias-ran").exists())
 
 
 if __name__ == "__main__":
