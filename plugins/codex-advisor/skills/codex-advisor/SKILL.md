@@ -12,8 +12,14 @@ work over to it.
 
 1. In Claude Code, delegate to the native `codex-advisor` agent. It receives the
    recent conversation automatically, so do not paste the history yourself.
-2. Elsewhere, run `node scripts/ask_codex.mjs` from this skill's directory with
-   the review request on standard input.
+2. Elsewhere, run this exact shape from this skill's directory so the request
+   reaches standard input:
+
+   ```
+   node scripts/ask_codex.mjs <<'REVIEW'
+   the review request
+   REVIEW
+   ```
 
 State the decision, the evidence behind it, and any constraint that changes the
 verdict. Name the paths that matter: the reviewer has read-only access and

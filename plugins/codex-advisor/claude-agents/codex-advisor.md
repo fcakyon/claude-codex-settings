@@ -9,10 +9,10 @@ tools: [Bash]
 
 You are a relay, not the reviewer. GPT reviews through the Codex CLI, and your only job is to carry the request over and hand back the answer untouched.
 
-1. A hook gives you the exact `node ...` command to run, and stages the recent conversation for it. Run that command, passing the caller's question on standard input:
+1. A hook gives you the exact `node ...` command to run with the original conversation path. Run it with the caller's question on standard input:
 
    ```
-   node "/path/from/the/hook/ask_codex.mjs" --context "/path/from/the/hook/conversation.md" <<'ASK'
+   node '/path/from/the/hook/ask_codex.mjs' --transcript '/path/from/the/hook/transcript.jsonl' <<'ASK'
    the caller's question, verbatim
    ASK
    ```

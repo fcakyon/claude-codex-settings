@@ -8,6 +8,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import yaml
@@ -172,7 +173,9 @@ def validate_agents(plugin_dir: Path) -> list[str]:
         if "model" not in frontmatter:
             errors.append(f"{prefix}: Missing 'model' field")
         elif not is_valid_model(frontmatter["model"]):
-            errors.append(f"{prefix}: 'model' must be one of {sorted(VALID_MODEL_ALIASES)} or a full model ID: '{frontmatter['model']}'")
+            errors.append(
+                f"{prefix}: 'model' must be one of {sorted(VALID_MODEL_ALIASES)} or a full model ID: '{frontmatter['model']}'"
+            )
 
         # Validate color field
         if "color" not in frontmatter:
@@ -217,7 +220,9 @@ def validate_commands(plugin_dir: Path) -> list[str]:
         if frontmatter:
             # Validate model if present
             if "model" in frontmatter and not is_valid_model(frontmatter["model"]):
-                errors.append(f"{prefix}: 'model' must be one of {sorted(VALID_MODEL_ALIASES)} or a full model ID: '{frontmatter['model']}'")
+                errors.append(
+                    f"{prefix}: 'model' must be one of {sorted(VALID_MODEL_ALIASES)} or a full model ID: '{frontmatter['model']}'"
+                )
 
             # Validate disable-model-invocation if present
             if "disable-model-invocation" in frontmatter:
@@ -502,6 +507,79 @@ def validate_version_bumps() -> list[str]:
     return errors
 
 
+def validate_advisor_context_handoff() -> list[str]:
+    """Validate advisor context handoff without copied temp files.
+
+    Returns:
+        (list[str]): Validation errors.
+    """
+    errors = []
+
+    with tempfile.TemporaryDirectory(prefix="advisor-validation-") as temp_dir:
+        temp_root = Path(temp_dir)
+        transcript_dir = temp_root / "odd $' path"
+        transcript_dir.mkdir()
+        transcript = transcript_dir / "transcript.jsonl"
+        records = [{"type": "user", "message": {"content": f"turn-{i}"}} for i in range(82)]
+        records.append({"type": "user", "message": {"content": "ADVISOR-CONTEXT-7F3A"}})
+        transcript.write_text("\n".join(json.dumps(record) for record in records))
+        payload = json.dumps({"transcript_path": str(transcript)})
+        env = {**os.environ, "TMPDIR": temp_dir, "TMP": temp_dir, "TEMP": temp_dir}
+
+        scripts = {
+            "codex": REPO_ROOT / "plugins/codex-advisor/claude-hooks/scripts/forward_transcript.mjs",
+            "fable": REPO_ROOT / "plugins/fable-advisor/claude-hooks/scripts/inject_transcript.mjs",
+        }
+        outputs = {}
+        for name, script in scripts.items():
+            result = subprocess.run(["node", script], input=payload, capture_output=True, text=True, env=env)
+            if result.returncode:
+                errors.append(
+                    f"{script.relative_to(REPO_ROOT)} failed with exit code {result.returncode}. "
+                    f"Run it with a SubagentStart transcript_path payload. Error: {result.stderr.strip()}"
+                )
+                continue
+            outputs[name] = result.stdout
+
+        if "codex" in outputs:
+            context = json.loads(outputs["codex"])["hookSpecificOutput"]["additionalContext"]
+            quoted_transcript = str(transcript).replace("'", "'\\''")
+            if f"--transcript '{quoted_transcript}'" not in context:
+                errors.append(
+                    "plugins/codex-advisor/claude-hooks/scripts/forward_transcript.mjs must pass the original "
+                    "transcript path to ask_codex.mjs with shell-safe quoting"
+                )
+        if "fable" in outputs:
+            context = json.loads(outputs["fable"])["hookSpecificOutput"]["additionalContext"]
+            if "ADVISOR-CONTEXT-7F3A" not in context or not re.search(r"Confirmation token: [0-9a-f]{8}", context):
+                errors.append(
+                    "plugins/fable-advisor/claude-hooks/scripts/inject_transcript.mjs must include the recent "
+                    "conversation and a generated Confirmation token in additionalContext"
+                )
+            if len(outputs["fable"]) >= 50000:
+                errors.append(
+                    "plugins/fable-advisor/claude-hooks/scripts/inject_transcript.mjs output must stay below "
+                    "50,000 characters so Claude Code injects it directly instead of saving a preview"
+                )
+        for prefix in ("codex-advisor-", "fable-advisor-"):
+            if any(temp_root.glob(f"{prefix}*")):
+                errors.append(
+                    f"{prefix.removesuffix('-')} context handoff must not leave {prefix}* directories. "
+                    "Use the original transcript or bounded additionalContext"
+                )
+
+    for name in ("codex-advisor", "fable-advisor"):
+        skill = (REPO_ROOT / f"plugins/{name}/skills/{name}/SKILL.md").read_text()
+        script = f"ask_{name.removesuffix('-advisor')}.mjs"
+        if f"node scripts/{script} <<'REVIEW'" not in skill:
+            errors.append(
+                f"plugins/{name}/skills/{name}/SKILL.md must show how to pass the review request on standard input: "
+                f"node scripts/{script} <<'REVIEW'"
+            )
+
+    return errors
+
+
 def main():
     """Validate all plugins and return exit code."""
     plugins_dir = Path("plugins")
@@ -532,6 +610,7 @@ def main():
 
     all_errors.extend(validate_symlinks())
     all_errors.extend(validate_marketplace_alignment())
+    all_errors.extend(validate_advisor_context_handoff())
     all_errors.extend(validate_version_bumps())
 
     if all_errors:
