@@ -15,7 +15,7 @@ const result = spawnSync(
     "--effort",
     "high",
     "--tools",
-    "",
+    "Read,Grep,Glob",
     "--no-session-persistence",
     "--output-format",
     "text",
