@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Block `git commit` until /simplify runs. Each commit spends one /simplify.
+"""Block `git commit` until /simplify runs. Each commit attempt spends one /simplify.
 
-The marker lives in the per-worktree git dir (`git rev-parse --git-dir`): /simplify reviews the
-staged diff and the index is per-worktree, so the token is minted and spent in the same worktree
-any session or subagent commits from. /simplify mints via the Skill tool, which only Claude Code
-fires, so the commit deny is scoped to Claude Code, other harnesses that can never mint are not
-blocked.
+The marker lives in the per-worktree Git directory because /simplify reviews
+the worktree's index. Claude Code mints it through the Skill event; Codex mints
+it through the explicit completion signal at the end of the skill. Other
+runtimes remain unblocked because they have no supported completion path.
 """
+
 import json
 import os
-import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -18,34 +18,87 @@ data = json.load(sys.stdin)
 event = data.get("hook_event_name", "")
 tool_input = data.get("tool_input") or {}
 
+COMPLETION_SIGNAL = "echo simplify-guard:complete"
+SHELL_OPERATORS = {";", "&&", "||", "|", "(", ")"}
+GIT_OPTIONS_WITH_VALUES = {"-C", "-c", "--config-env", "--git-dir", "--namespace", "--work-tree"}
+GIT_OPTIONS_WITHOUT_SUBCOMMAND = {
+    "-h",
+    "--exec-path",
+    "--help",
+    "--html-path",
+    "--info-path",
+    "--man-path",
+    "--version",
+}
 
-def marker():
+
+def marker(git=("git",)):
     git_dir = subprocess.run(
-        ["git", "-C", data.get("cwd") or ".", "rev-parse", "--path-format=absolute", "--git-dir"],
+        [*git, "rev-parse", "--path-format=absolute", "--git-dir"],
         capture_output=True,
+        cwd=data.get("cwd") or ".",
         text=True,
     ).stdout.strip()
     return Path(git_dir) / "simplify-guard.ok" if git_dir else None
 
 
-# PostToolUse matcher scopes to the Skill tool, confirm it was /simplify
-if event == "PostToolUse" and tool_input.get("skill") == "simplify" and (m := marker()):
-    m.touch()
-elif event == "PreToolUse" and os.environ.get("CLAUDECODE") == "1":
-    # match a real `git commit` (not commit-graph/-tree) with quoted args stripped
-    bare = re.sub(r"'[^']*'|\"[^\"]*\"", "", tool_input.get("command", ""))
-    if re.search(r"git\s+commit(?![\w-])", bare) and (m := marker()):
-        if m.exists():
-            m.unlink()  # spend the token: this commit uses up the pending /simplify
-        else:
-            print(
-                json.dumps(
-                    {
-                        "hookSpecificOutput": {
-                            "hookEventName": "PreToolUse",
-                            "permissionDecision": "deny",
-                            "permissionDecisionReason": "simplify-guard: run /simplify on the staged diff first, then retry the commit.",
-                        }
-                    }
-                )
-            )
+def commit_prefix(command):
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()")
+    lexer.whitespace_split = True
+    tokens = list(lexer)
+    for start, arg in enumerate(tokens):
+        if Path(arg).name != "git":
+            continue
+        git = [arg]
+        for token in tokens[start + 1 :]:
+            if token in SHELL_OPERATORS:
+                break
+            if git[-1] in GIT_OPTIONS_WITH_VALUES:
+                git.append(token)
+            elif token == "commit":
+                return git
+            elif token in GIT_OPTIONS_WITHOUT_SUBCOMMAND or not token.startswith("-"):
+                break
+            else:
+                git.append(token)
+
+
+def main():
+    is_claude = os.environ.get("CLAUDECODE") == "1"
+    is_codex = bool(data.get("turn_id"))
+
+    if event == "PostToolUse":
+        if is_claude and tool_input.get("skill") == "simplify" and (m := marker()):
+            m.touch()
+        return
+
+    if event != "PreToolUse" or not (is_claude or is_codex):
+        return
+
+    command = tool_input.get("command", "")
+    if is_codex and command.strip() == COMPLETION_SIGNAL:
+        if m := marker():
+            m.touch()
+        return
+
+    if not (git := commit_prefix(command)) or not (m := marker(git)):
+        return
+
+    if m.exists():
+        m.unlink()  # spend the token before Git runs; every attempt needs a fresh review
+        return
+
+    print(
+        json.dumps(
+            {
+                "hookSpecificOutput": {
+                    "hookEventName": "PreToolUse",
+                    "permissionDecision": "deny",
+                    "permissionDecisionReason": "simplify-guard: run /simplify on the staged diff first, then retry the commit.",
+                }
+            }
+        )
+    )
+
+
+main()

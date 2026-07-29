@@ -1,5 +1,5 @@
 {
-  "description": "simplify-guard: require /simplify before git commit (per session)",
+  "description": "simplify-guard: require /simplify before each git commit attempt in a worktree",
   "hooks": {
     "PostToolUse": [
       {
