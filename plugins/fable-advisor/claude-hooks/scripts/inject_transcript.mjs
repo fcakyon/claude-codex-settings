@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // SubagentStart hook: feeds the fable-advisor subagent the recent conversation
-// (it otherwise sees only the caller's prompt). Node-only, cross-platform, exits 0 on any failure.
+// (it otherwise sees only the caller's prompt). Node-only, exits 0 on any failure.
 
+import { randomUUID } from "node:crypto";
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -32,8 +33,7 @@ const renderBlock = (role, b) => {
   }
 };
 
-// Any failure here leaves lines empty, which downgrades the review to the caller's prompt
-// with a warning attached rather than letting the reviewer rule on thin context unknowingly.
+// On failure lines stays empty, so the reviewer is told it has only the caller's prompt.
 let transcriptPath;
 let lines = [];
 try {
@@ -48,7 +48,7 @@ for (; i >= 0 && records.length < 80; i--) {
   if (!lines[i]) continue;
   let r;
   try {
-    r = JSON.parse(lines[i]); // skip a half-written or malformed line
+    r = JSON.parse(lines[i]); // the transcript is appended to while this runs
   } catch {
     continue;
   }
@@ -67,16 +67,14 @@ const source = transcriptPath
   ? ` Full session: ${transcriptPath}, one JSON record per line, newest last. Grep it for a term, number, or phrase you are chasing; never read it whole.`
   : "";
 
-// Keep the newest characters so a very chatty session cannot flood the reviewer.
 let recent = records.join("\n\n---\n\n");
 const MAX = 160000;
 if (recent.length > MAX) recent = "…[older turns truncated for length]\n" + recent.slice(-MAX);
-// The record cap is silent otherwise, and a reviewer that cannot tell a whole session from
-// its tail never knows there is anything older to go looking for.
+// Without this the record cap is silent, and the tail of a session reads as the whole of it.
 if (i >= 0) recent = `…[this is only the newest ${records.length} turns of a longer session]\n` + recent;
 
-// Staged to a file rather than inlined, because the harness spills a large additionalContext
-// to disk and previews it: the reviewer then sees less than a pointer would have given it.
+// Staged, not inlined: the harness previews a large additionalContext instead of passing it.
+// The token exists only in the file, so echoing it proves the reviewer read it.
 let contextFile;
 try {
   if (records.length) {
@@ -85,18 +83,20 @@ try {
       staged,
       `You are reviewing an in-progress Claude Code session. Below is the recent conversation, most recent last, the same history the built-in advisor tool would see. Weigh the specific question in the caller's prompt against this actual context, not just the caller's summary of it.
 
+Confirmation token: ${randomUUID().slice(0, 8)}
+
 Long turns are shortened and marked \`…[truncated]\`.${source}
 
 <recent-conversation>
 ${recent}
 </recent-conversation>`
     );
-    contextFile = staged; // only after the write returned, so the path always resolves
+    contextFile = staged;
   }
 } catch {}
 
 emit(
   contextFile
-    ? `Read ${contextFile} before answering. It holds the recent conversation your question is about, and the caller's prompt is only a summary of it.`
+    ? `Read ${contextFile} before answering. It holds the recent conversation your question is about and the caller's prompt is only a summary of it.`
     : `The recent conversation could not be reconstructed, so you see only the caller's prompt. Name the context you need.${source}`
 );
