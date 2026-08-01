@@ -1,6 +1,6 @@
 {
   "name": "dokploy-skills",
-  "version": "1.0.0",
-  "description": "Dokploy deployment skill for Dokploy Cloud, self-hosted dashboard, Docker Compose, databases, domains, remote servers, and Dokploy CLI workflows.",
+  "version": "1.0.2",
+  "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
   "license": "MIT"
 }

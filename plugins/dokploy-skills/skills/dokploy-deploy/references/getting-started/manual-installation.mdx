@@ -398,11 +398,6 @@ export DOKPLOY_VERSION=canary && curl -sSL https://dokploy.com/install.sh | sh
 export DOKPLOY_VERSION=latest && curl -sSL https://dokploy.com/install.sh | sh
 ```
 
-**Install/Update to Specific Version:**
-```bash
-export DOKPLOY_VERSION=v0.26.6 && curl -sSL https://dokploy.com/install.sh | sh
-```
-
 **Auto-detect Latest Stable (Default):**
 ```bash
 curl -sSL https://dokploy.com/install.sh | sh
@@ -412,7 +407,6 @@ Alternatively, you can use `bash -s` for inline version specification:
 
 ```bash
 DOKPLOY_VERSION=canary bash -s < <(curl -sSL https://dokploy.com/install.sh)
-DOKPLOY_VERSION=v0.26.6 bash -s < <(curl -sSL https://dokploy.com/install.sh)
 ```
 
 ### Additional Environment Variables

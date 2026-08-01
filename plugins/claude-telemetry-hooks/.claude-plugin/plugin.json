@@ -1,7 +1,7 @@
 {
   "name": "claude-telemetry-hooks",
-  "version": "1.0.3",
-  "description": "Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard.",
+  "version": "1.0.4",
+  "description": "Track Claude Code usage, rejections, and session stats in one dashboard.",
   "author": {
     "name": "Fatih C. Akyon"
   },
