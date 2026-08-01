@@ -4,7 +4,6 @@
 [![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/hesreallyhim/awesome-claude-code)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](#installation)
 [![Codex CLI](https://img.shields.io/badge/Codex_CLI-Plugin-green)](#installation)
-[![Gemini CLI](https://img.shields.io/badge/Gemini_CLI-Extension-orange)](#installation)
 [![Cursor](https://img.shields.io/badge/Cursor-Plugin-purple)](#installation)
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
 [![llms.txt](https://img.shields.io/badge/llms.txt-✓-brightgreen)](https://context7.com/fcakyon/claude-codex-settings/llms.txt)
