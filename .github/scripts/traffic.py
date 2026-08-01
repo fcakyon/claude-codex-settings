@@ -29,7 +29,6 @@ def badge(label: str, total: int, collected: int) -> str:
         "label": label.capitalize(),
         "message": f"{count}/{period}",
         "color": "e2603a",
-        "cacheSeconds": 86400,
     }
     return json.dumps(payload) + "\n"
 
