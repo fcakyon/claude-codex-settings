@@ -28,7 +28,7 @@ def badge(label: str, total: int, collected: int) -> str:
         "schemaVersion": 1,
         "label": label.capitalize(),
         "message": f"{count}/{period}",
-        "color": "blue",
+        "color": "e2603a",
         "cacheSeconds": 86400,
     }
     return json.dumps(payload) + "\n"
