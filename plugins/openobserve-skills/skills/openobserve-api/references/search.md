@@ -38,6 +38,9 @@ Description
 | query.size | int64     | 0             | limit in SQL  |
 | search_type | string   | -             | default is empty, support: `ui`, `dashboards`, `reports`, `alerts` |
 | timeout    | int       | 0             | default value based on `ZO_QUERY_TIMEOUT=600` |
+| agent_options | object    | -             | options for agent/MCP clients |
+| agent_options.mode | string | `default` | query execution mode: `default` (result cache path) or `partition` (streaming partition loop, see below) |
+| agent_options.output_format | string | `json` | response format for hits: `json`, `csv`, or `md_table` |
 
 ## Response
 
@@ -97,6 +100,43 @@ Description
 | scan_size  | int64     | 0             | unit: MB, it response the data size scale when execute the query. |
 | hits       | array     | -             | records for query, each record is a log row what you ingested. |
 
+
+## Agent options
+
+### `output_format`
+
+Controls how hits are formatted in the response. Useful for agent/MCP clients that pay per token.
+
+| Value       | Description |
+|-------------|-------------|
+| `json`      | Default. Hits returned as a JSON array of objects. |
+| `csv`       | Tabular hits as a compact CSV block (~40% fewer tokens than JSON). |
+| `md_table`  | Tabular hits as a Markdown table. Best for small result sets. |
+
+### `mode: partition`
+
+Set `agent_options.mode` to `partition` to run search through the streaming backend pipeline. The server scans time partitions one by one and stops early once enough rows are collected, which reduces data scanned for top-N queries. For aggregation queries, the server accumulates reusable cache partition by partition, so repeated queries against shifting time windows hit progressively warmer cache instead of invalidating a monolithic entry.
+
+This mode is designed for agent/MCP clients that speak plain request-response and cannot consume SSE — it exposes the same partitioned execution that the streaming `_search_stream` endpoint uses, collected into a single response.
+
+| Value       | Description |
+|-------------|-------------|
+| `default`   | (default) Single search through the result cache path. Behavior is byte-for-byte unchanged. |
+| `partition` | Partitioned execution with per-partition early termination and streaming-agg caching, collected into one response. |
+
+**Key behaviors in partition mode:**
+
+- **Early termination**: scanning stops once the query has enough rows; useful for `SELECT ... LIMIT 100`-style queries scanning a wide time range.
+- **Progressive aggregation cache**: aggregation queries (histogram, term counts, etc.) build up the streaming-agg cache partition by partition, so follow-up queries with similar time windows reuse cached work.
+- **Cancellation**: if the HTTP client disconnects (drops the request), the per-partition loop stops — you are not billed for scanning partitions you never see.
+- **No SSE required**: the response is a plain JSON `Response` identical in shape to `default` mode, with all hit pages and scan counters folded together.
+
+**When to use partition mode:**
+
+- Your client cannot consume SSE (MCP tools, REST clients, curl-based scripts).
+- You are scanning a large time range but only need a few rows (top-N or sample).
+- You run exploratory queries that shift their time window with each call — the progressive cache rewards this pattern.
+- **Do NOT** split the time range yourself and call `_search` in a loop. Let the server do it with one call in `partition` mode.
 
 ## SQL Syntax
 
@@ -212,6 +252,110 @@ Here list some common examples, if you want more example please create a issue t
     }
 }
 ```
+
+### Partition mode with CSV output
+
+Run a top-N query across a wide time window with partition mode, returning hits as compact CSV:
+
+```json
+{
+    "query": {
+        "sql": "SELECT * FROM {stream} WHERE code=500 ORDER BY _timestamp DESC",
+        "start_time": 1674000000000000,
+        "end_time": 1675000000000000,
+        "from": 0,
+        "size": 50
+    },
+    "agent_options": {
+        "mode": "partition",
+        "output_format": "csv"
+    }
+}
+```
+
+With `mode: partition`, the server scans partitions one by one and stops early once it has 50 rows, instead of scanning the full time range through the cache path.
+
+### Partition mode for aggregation
+
+```json
+{
+    "query": {
+        "sql": "SELECT kubernetes_namespace_name, COUNT(*) AS cnt FROM {stream} GROUP BY kubernetes_namespace_name ORDER BY cnt DESC LIMIT 10",
+        "start_time": 1674000000000000,
+        "end_time": 1675000000000000
+    },
+    "agent_options": {
+        "mode": "partition"
+    }
+}
+```
+
+Each partition's aggregation result accumulates into a progressively merged cache entry. Follow-up queries with slightly shifted time windows reuse that cached work.
+
+## Error Responses
+
+When a search request fails, the API returns a standard error body. For certain error codes, the response includes **self-correcting guidance** to help you (or an AI agent) fix the query without manual investigation.
+
+### Error Response Body
+
+| Field name   | Data type     | Always present | Description |
+|-------------|---------------|----------------|-------------|
+| code         | int           | yes            | Numeric error code (see below) |
+| message      | string        | yes            | Human-readable problem description |
+| error_detail | string        | no             | Raw technical detail (omitted when `hint`/`suggestions` are present) |
+| hint         | string        | no             | One-line guidance on how to fix the error |
+| suggestions  | array[string] | no             | Closest valid alternatives (up to 3), ranked by similarity |
+
+The `hint` and `suggestions` fields appear only when the server has enough information to offer useful guidance. Existing clients that ignore these optional fields are unaffected.
+
+### Field Not Found (`code: 20004`)
+
+When you reference a field that doesn't exist in the stream schema:
+
+```json
+{
+  "code": 20004,
+  "message": "unknown field 'servce'",
+  "suggestions": ["service"]
+}
+```
+
+The `suggestions` list contains the closest matching field names ranked by edit distance. If no close match is found, `hint` provides a fallback:
+
+- **Small schemas** (10 fields or fewer): the `hint` lists all valid fields.
+- **Large schemas**: the `hint` directs you to use the [stream schema endpoint](../stream/schema.md).
+- **UDS violations** (the field exists in the raw stream but not in the User-Defined Schema): the `hint` explains that the field is excluded by the UDS and suggests adding it in stream settings.
+
+### Function Not Defined (`code: 20005`)
+
+When you call a function that doesn't exist:
+
+```json
+{
+  "code": 20005,
+  "message": "unknown function 'str_mach'",
+  "hint": "usage: str_match(field, 'v')",
+  "suggestions": ["str_match", "str_match_ignore_case"]
+}
+```
+
+Suggestions cover both OpenObserve UDFs and DataFusion built-in functions. When a top suggestion is found, the `hint` carries a usage example for the closest match.
+
+### Other Error Codes
+
+| Code  | Name                          | Description |
+|-------|-------------------------------|-------------|
+| 20001 | `ServerInternalError`         | Internal server error |
+| 20002 | `SearchSQLNotValid`           | SQL syntax is invalid |
+| 20003 | `SearchStreamNotFound`        | Stream does not exist |
+| 20004 | `SearchFieldNotFound`         | Field name not found (with suggestions) |
+| 20005 | `SearchFunctionNotDefined`    | Function name not found (with suggestions) |
+| 20008 | `SearchSQLExecuteError`       | SQL execution failed |
+| 20009 | `SearchCancelQuery`           | Query was cancelled |
+| 20010 | `SearchTimeout`               | Query timed out |
+| 20011 | `InvalidParams`               | Invalid request parameters |
+| 20012 | `RatelimitExceeded`           | Rate limit exceeded |
+| 20013 | `SearchHistogramNotAvailable` | Histogram data unavailable |
 
 ## Next steps
 

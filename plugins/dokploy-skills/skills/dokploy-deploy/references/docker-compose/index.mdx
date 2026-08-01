@@ -153,7 +153,7 @@ volumes:
 | Best for config files | ✅ Yes | ⚠️ Possible but less common |
 | Best for databases | ⚠️ Possible | ✅ Recommended |
 
-**Important:** If you need to use files from your repository (configuration files, scripts, etc.), you must move them to Dokploy's File Mounts (via Advanced → Mounts) instead of mounting them directly from the repository. When using AutoDeploy, Dokploy performs a `git clone` on each deployment, which clears the repository directory. Mounting files directly from your repository using relative paths (e.g., `./` or `./config/file.conf`) will cause them to be lost or empty in subsequent deployments. See the [Troubleshooting guide](/docs/core/troubleshooting#using-files-from-your-repository) for more details.
+**Important:** If you need to use files from your repository (configuration files, scripts, etc.), you must move them to Dokploy's File Mounts (via Advanced → Mounts) instead of mounting them directly from the repository. When using AutoDeploy, Dokploy performs a `git clone` on each deployment, which clears the repository directory. Mounting files directly from your repository using relative paths (e.g., `./` or `./config/file.conf`) will cause them to be lost or empty in subsequent deployments. See the [Troubleshooting guide](/docs/core/troubleshooting/volumes-mounts#using-files-from-your-repository) for more details.
 
 </Callout>
 
