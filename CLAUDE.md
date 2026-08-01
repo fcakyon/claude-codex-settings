@@ -439,7 +439,7 @@ Updates marketplace version, regenerates all skill zips, uploads them as release
 
 **Pre-flight**: run `bash .github/scripts/sync-versions.sh` and every `sync-*-skills.sh` manually first. `release.sh` re-runs them, but if any has broken on an upstream restructure the release will ship a stale or empty plugin. Surface those breakages BEFORE tagging.
 
-**Versioning**: pass the new semver to `release.sh <version>`. The script bumps `metadata.version` in `.claude-plugin/marketplace.json` and propagates everywhere via `sync-versions.sh`. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
+**Versioning**: bump `metadata.version` in `.claude-plugin/marketplace.json` yourself, run `sync-versions.sh` to propagate it, and commit that before releasing. `release.sh <version>` only checks the committed value matches and stops if it does not, because `gh release create` tags the pushed branch and never sees a local edit. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
 
 **README zip URLs**: existing zip badges use `releases/latest/download/<skill>.zip` and auto-resolve to the new tag. Do NOT manually bump these URLs after release. New skills introduced in the release need new badge rows added via `/claude-tools:update-readme`.
 

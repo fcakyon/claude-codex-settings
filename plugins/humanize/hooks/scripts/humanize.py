@@ -203,7 +203,7 @@ text = extract(data.get("tool_name", ""), data.get("tool_input") or {})
 
 notes = [f"remove {label}" for ch, label in MARKS.items() if ch in text]
 notes += [f"'{w}' -> {SWAP[w]}" for w in dict.fromkeys(m.group(1).lower() for m in SWAP_RE.finditer(text))]
-notes += [note for pat, note in PHRASES if re.search(pat, text, re.IGNORECASE)]
+notes += [note for pat, note in PHRASES if re.search(rf"\b(?:{pat})\b", text, re.IGNORECASE)]
 counts = Counter(m.group(1).lower() for m in OFTEN_RE.finditer(text))
 notes += [f"'{w}' used {n} times, vary it" for w, n in counts.items() if n >= LIMIT]
 

@@ -24,15 +24,18 @@ fi
 
 cd "$REPO_ROOT"
 
-# Update marketplace top-level version
+# Check the marketplace version. gh release create tags the pushed branch, so a local
+# edit here would never reach the release. The bump belongs in the commit that precedes it.
 python3 -c "
 import json
 from pathlib import Path
-p = Path('.claude-plugin/marketplace.json')
-d = json.loads(p.read_text())
-d['metadata']['version'] = '$VERSION'
-p.write_text(json.dumps(d, indent=2) + '\n')
-print('Updated marketplace metadata.version to $VERSION')
+current = json.loads(Path('.claude-plugin/marketplace.json').read_text())['metadata']['version']
+if current != '$VERSION':
+    raise SystemExit(
+        'ERROR: marketplace metadata.version is ' + current + ', expected $VERSION. '
+        'Bump it, run sync-versions.sh, then commit and merge before releasing.'
+    )
+print('Marketplace metadata.version is $VERSION')
 "
 
 # Sync all plugin versions across platforms
