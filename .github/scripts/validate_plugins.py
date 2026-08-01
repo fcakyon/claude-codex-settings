@@ -462,6 +462,28 @@ def validate_marketplace_alignment() -> list[str]:
     return errors
 
 
+MAX_PLUGIN_SUMMARY_CHARS = 100
+
+
+def validate_plugin_summary_length() -> list[str]:
+    """Fail when a Claude marketplace entry makes an over-long README row.
+
+    update-readme.md writes each row as `<summary><strong>{name}</strong> - {description}</summary>`, so the
+    row is the name plus a 3-char separator plus the description. This is an editorial limit that keeps rows
+    short enough to read as one line, not a rendering guarantee.
+    """
+    errors = []
+    data = load_json(CLAUDE_MARKETPLACE)
+    for entry in (data or {}).get("plugins", []):
+        length = len(entry.get("name", "")) + 3 + len(entry.get("description", ""))
+        if length > MAX_PLUGIN_SUMMARY_CHARS:
+            errors.append(
+                f"claude marketplace/{entry.get('name')}: README row exceeds {MAX_PLUGIN_SUMMARY_CHARS} "
+                f"chars ({length}). Shorten the description by {length - MAX_PLUGIN_SUMMARY_CHARS}"
+            )
+    return errors
+
+
 def _git(*args: str) -> subprocess.CompletedProcess:
     """Run a git command in the repo root and capture its output."""
     return subprocess.run(["git", *args], capture_output=True, text=True, cwd=REPO_ROOT)
@@ -610,6 +632,7 @@ def main():
 
     all_errors.extend(validate_symlinks())
     all_errors.extend(validate_marketplace_alignment())
+    all_errors.extend(validate_plugin_summary_length())
     all_errors.extend(validate_advisor_context_handoff())
     all_errors.extend(validate_version_bumps())
 
