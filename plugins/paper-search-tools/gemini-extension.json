@@ -1,5 +1,5 @@
 {
   "name": "paper-search-tools",
-  "version": "2.0.3",
-  "description": "Academic paper search MCP for arXiv, PubMed, IEEE, Scopus, ACM, and more. Requires Docker."
+  "version": "2.0.4",
+  "description": "Paper search MCP for arXiv, PubMed, IEEE, Scopus, and more. Requires Docker."
 }

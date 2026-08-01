@@ -199,7 +199,7 @@ Your agent strings together three specialized providers into a high-performance 
 | Component | Model | Alternatives |
 | STT | Deepgram Nova-3 | [STT models](https://docs.livekit.io/agents/models/stt.md) |
 | LLM | Gemma 4 31B | [LLM models](https://docs.livekit.io/agents/models/llm.md) |
-| TTS | Cartesia Sonic-3 | [TTS models](https://docs.livekit.io/agents/models/tts.md) |
+| TTS | Inworld TTS-2 | [TTS models](https://docs.livekit.io/agents/models/tts.md) |
 
 ---
 
@@ -301,8 +301,8 @@ async def my_agent(ctx: agents.JobContext):
         stt=inference.STT(model="deepgram/nova-3", language="multi"),
         llm=inference.LLM(model="google/gemma-4-31b-it"),
         tts=inference.TTS(
-            model="cartesia/sonic-3",
-            voice="9626c31c-bec5-4cca-baa8-f8ba9e84c8bc",
+            model="inworld/inworld-tts-2",
+            voice="Ashley",
         ),
         turn_handling=TurnHandlingOptions(
             turn_detection=inference.TurnDetector(),
@@ -354,8 +354,8 @@ export default defineAgent({
       stt: new inference.STT({ model: 'deepgram/nova-3', language: 'multi' }),
       llm: new inference.LLM({ model: 'google/gemma-4-31b-it' }),
       tts: new inference.TTS({
-        model: 'cartesia/sonic-3',
-        voice: '9626c31c-bec5-4cca-baa8-f8ba9e84c8bc',
+        model: 'inworld/inworld-tts-2',
+        voice: 'Ashley',
       }),
       turnHandling: {
         turnDetection: new inference.TurnDetector(),

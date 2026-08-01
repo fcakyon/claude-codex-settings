@@ -81,7 +81,7 @@ ln -sfn CLAUDE.md GEMINI.md   # Gemini CLI
 ## Plugins
 
 <details>
-<summary><strong>simplify</strong> - Review your changed code for reuse, redundancy, wasted work, and over-engineering, then apply the cleanups</summary>
+<summary><strong>simplify</strong> - Review changed code for reuse, redundancy, and over-engineering, then apply fixes</summary>
 
 | Claude Code                                      | Codex CLI                                   | Gemini CLI                                            |
 | ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
@@ -181,7 +181,7 @@ Cuts filler and keeps output token use down with the answer or next step first, 
 </details>
 
 <details>
-<summary><strong>intelligent-compact</strong> - Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions</summary>
+<summary><strong>intelligent-compact</strong> - Keep file paths, root causes, and open questions through auto-summaries</summary>
 
 | Claude Code                                                 | Codex CLI                                              | Gemini CLI                                                       |
 | ----------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------- |
@@ -203,7 +203,7 @@ Runs on every `/compact` (manual) and every auto compaction. Claude Code only; C
 </details>
 
 <details>
-<summary><strong>claude-telemetry-hooks</strong> - Track per-device Claude Code usage, rejection reasons, and per-session stats from a single dashboard</summary>
+<summary><strong>claude-telemetry-hooks</strong> - Track Claude Code usage, rejections, and session stats in one dashboard</summary>
 
 | Claude Code                                                    | Codex CLI | Gemini CLI                                                          |
 | -------------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
@@ -272,7 +272,7 @@ Office document skills for creating and editing PDFs, Word documents, slide deck
 </details>
 
 <details>
-<summary><strong>python-skills</strong> - Python best practices from PEP 8, Zen of Python, Google Style Guide, Effective Python</summary>
+<summary><strong>python-skills</strong> - Python best practices from PEP 8, Zen of Python, Google style, and Effective Python</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
@@ -497,7 +497,7 @@ Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports
 </details>
 
 <details>
-<summary><strong>cloudflare-skills</strong> - Official Cloudflare developer platform skill for Workers, R2, D1, KV, AI, and 50+ services</summary>
+<summary><strong>cloudflare-skills</strong> - Official Cloudflare skill for Workers, R2, D1, KV, AI, and 50+ services</summary>
 
 | Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
@@ -520,7 +520,7 @@ Cloudflare developer platform skill with decision trees for product selection ac
 </details>
 
 <details>
-<summary><strong>web-performance-skills</strong> - Web performance auditing with Core Web Vitals, Lighthouse, and Chrome DevTools</summary>
+<summary><strong>web-performance-skills</strong> - Web performance audits with Core Web Vitals and Chrome DevTools</summary>
 
 | Claude Code                                                    | Codex CLI                                                 | Gemini CLI                                                          |
 | -------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -545,7 +545,7 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 </details>
 
 <details>
-<summary><strong>openobserve-skills</strong> - OpenObserve REST API skill for AI agents to search logs/metrics/traces and create dashboards via curl</summary>
+<summary><strong>openobserve-skills</strong> - Search logs, metrics, and traces and build OpenObserve dashboards via curl</summary>
 
 | Claude Code                                                | Codex CLI                                             | Gemini CLI                                                      |
 | ---------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
@@ -574,7 +574,7 @@ Built for AI agents: uses `curl` only, no SDK or CLI dependency. Pairs naturally
 </details>
 
 <details>
-<summary><strong>hetzner-skills</strong> - Hetzner Cloud CLI skill for servers, networks, firewalls, load balancers, DNS, and storage</summary>
+<summary><strong>hetzner-skills</strong> - Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage</summary>
 
 | Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
@@ -894,7 +894,7 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 </details>
 
 <details>
-<summary><strong>overleaf-skills</strong> - Pull Overleaf review comments into your local .tex repo and apply the suggested edits</summary>
+<summary><strong>overleaf-skills</strong> - Pull Overleaf review comments into your .tex repo and apply the edits</summary>
 
 | Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |

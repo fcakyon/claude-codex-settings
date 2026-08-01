@@ -1,7 +1,7 @@
 {
   "name": "ultralytics-dev",
-  "version": "2.2.4",
-  "description": "Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase.",
+  "version": "2.2.6",
+  "description": "Auto-format hooks for Python, JavaScript, Markdown, and Bash, plus a push guard.",
   "author": {
     "name": "Fatih C. Akyon"
   },

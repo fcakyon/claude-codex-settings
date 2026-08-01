@@ -96,10 +96,17 @@ export DOKPLOY_VERSION=canary && curl -sSL https://dokploy.com/install.sh | sh
 export DOKPLOY_VERSION=latest && curl -sSL https://dokploy.com/install.sh | sh
 ```
 
-**Install Specific Version:**
+**Install a Specific Version:**
+
+Every [Dokploy release](https://github.com/Dokploy/dokploy/releases) includes its own `install.sh` as a release asset, which installs exactly that version with the setup it expects. Replace the version tag in the URL with the one you want:
+
 ```bash
-export DOKPLOY_VERSION=v0.26.6 && curl -sSL https://dokploy.com/install.sh | sh
+curl -sL https://github.com/Dokploy/dokploy/releases/download/v0.26.6/install.sh | sh
 ```
+
+<Callout type='info'>
+  Don't use `DOKPLOY_VERSION` to install a specific version — the main script at `dokploy.com/install.sh` always targets the latest release, so its setup may not be compatible with older versions.
+</Callout>
 
 #### Custom Network Configuration
 
@@ -130,7 +137,7 @@ Docker Swarm's default service discovery requires IPVS support in the kernel. So
 curl -sSL https://dokploy.com/install.sh | sudo ENDPOINT_MODE=dnsrr sh
 ```
 
-See [Services Can't Reach Each Other (Missing IPVS Kernel Modules)](/docs/core/troubleshooting#services-cant-reach-each-other-missing-ipvs-kernel-modules) for how to detect this situation and its trade-offs.
+See [Services Can't Reach Each Other (Missing IPVS Kernel Modules)](/docs/core/troubleshooting/networking#services-cant-reach-each-other-missing-ipvs-kernel-modules) for how to detect this situation and its trade-offs.
 
 ### Proxmox LXC Support
 
@@ -147,8 +154,11 @@ curl -sSL https://dokploy.com/install.sh | sh -s update
 ```
 
 **Update to Specific Version:**
+
+Use the `install.sh` from that version's [GitHub release](https://github.com/Dokploy/dokploy/releases):
+
 ```bash
-export DOKPLOY_VERSION=v0.26.6 && curl -sSL https://dokploy.com/install.sh | sh -s update
+curl -sL https://github.com/Dokploy/dokploy/releases/download/v0.26.6/install.sh | sh -s update
 ```
 
 ## Completing the Setup
