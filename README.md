@@ -4,10 +4,11 @@
 [![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/hesreallyhim/awesome-claude-code)
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](#installation)
 [![Codex CLI](https://img.shields.io/badge/Codex_CLI-Plugin-green)](#installation)
-[![Gemini CLI](https://img.shields.io/badge/Gemini_CLI-Extension-orange)](#installation)
 [![Cursor](https://img.shields.io/badge/Cursor-Plugin-purple)](#installation)
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
 [![llms.txt](https://img.shields.io/badge/llms.txt-✓-brightgreen)](https://context7.com/fcakyon/claude-codex-settings/llms.txt)
+[![Clones](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffcakyon%2Fclaude-codex-settings%2Ftraffic-data%2Fclones.json)](https://github.com/fcakyon/claude-codex-settings/blob/traffic-data/history.json)
+[![Views](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffcakyon%2Fclaude-codex-settings%2Ftraffic-data%2Fviews.json)](https://github.com/fcakyon/claude-codex-settings/blob/traffic-data/history.json)
 
 Battle-tested [Claude Code](https://github.com/anthropics/claude-code), [Claude Desktop](https://claude.ai/download), [OpenAI Codex](https://developers.openai.com/codex), and [Cursor](https://cursor.com) setup with skills, commands, hooks, subagents, and MCP servers, plus Kimi, MiniMax, and GLM API support.
 

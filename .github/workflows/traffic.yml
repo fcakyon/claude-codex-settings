@@ -1,0 +1,38 @@
+name: Traffic counts
+
+# GitHub's traffic API only keeps 14 days, so a "this month" number has to be collected
+# daily before it ages out. Counts land on the orphan `traffic-data` branch, which
+# shields.io reads as a badge endpoint. The API needs Administration:read, which the
+# default GITHUB_TOKEN cannot hold, hence the TRAFFIC_TOKEN secret.
+
+on:
+  schedule:
+    - cron: "41 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    name: Collect and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check out the data branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin traffic-data:traffic-data && git worktree add data traffic-data \
+            || git worktree add --orphan -b traffic-data data
+      - name: Collect counts
+        env:
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+        run: python3 .github/scripts/traffic.py data
+      - name: Publish counts
+        working-directory: data
+        run: |
+          git add -A
+          git diff --cached --quiet && exit 0
+          git commit -m "Traffic counts for $(date -u +%F)"
+          git push origin traffic-data
