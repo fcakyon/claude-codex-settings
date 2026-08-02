@@ -97,7 +97,7 @@ def main():
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "deny",
-                    "permissionDecisionReason": "simplify-guard: run /simplify on the staged diff first. If the user explicitly asked to skip it, run echo simplify-guard:bypass before retrying.",
+                    "permissionDecisionReason": "simplify-guard: run /simplify on the staged diff first, then retry the commit.",
                 }
             }
         )
