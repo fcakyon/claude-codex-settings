@@ -97,7 +97,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 
 **Hooks:**
 
-- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a completed /simplify run before each Claude Code or Codex commit
+- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a completed /simplify run before each Claude Code or Codex commit. When a user explicitly asks to skip simplify, the agent can bypass it for one commit without skipping normal Git hooks
 
 </details>
 

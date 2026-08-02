@@ -12,7 +12,7 @@
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
-      "version": "1.1.7",
+      "version": "1.1.8",
       "author": {
         "name": "Fatih C. Akyon"
       },
