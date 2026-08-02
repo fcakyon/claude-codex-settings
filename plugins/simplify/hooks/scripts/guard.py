@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Block `git commit` until /simplify runs. Each commit attempt spends one /simplify.
+"""Block `git commit` until /simplify runs or the user requests a one-time bypass.
 
 The marker lives in the per-worktree Git directory because /simplify reviews
 the worktree's index. Claude Code mints it through the Skill event; Codex mints
-it through the explicit completion signal at the end of the skill. Other
-runtimes remain unblocked because they have no supported completion path.
+it through the explicit completion signal at the end of the skill. An agent can
+mint the same one-use permission when the user explicitly asks to skip
+/simplify. Other runtimes remain unblocked because they have no supported path.
 """
 
 import json
@@ -19,6 +20,7 @@ event = data.get("hook_event_name", "")
 tool_input = data.get("tool_input") or {}
 
 COMPLETION_SIGNAL = "echo simplify-guard:complete"
+BYPASS_SIGNAL = "echo simplify-guard:bypass"
 SHELL_OPERATORS = {";", "&&", "||", "|", "(", ")"}
 GIT_OPTIONS_WITH_VALUES = {"-C", "-c", "--config-env", "--git-dir", "--namespace", "--work-tree"}
 GIT_OPTIONS_WITHOUT_SUBCOMMAND = {
@@ -76,7 +78,8 @@ def main():
         return
 
     command = tool_input.get("command", "")
-    if is_codex and command.strip() == COMPLETION_SIGNAL:
+    signal = command.strip()
+    if signal == BYPASS_SIGNAL or (is_codex and signal == COMPLETION_SIGNAL):
         if m := marker():
             m.touch()
         return

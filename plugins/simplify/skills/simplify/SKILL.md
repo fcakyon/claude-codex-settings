@@ -1,6 +1,6 @@
 ---
 name: simplify
-description: This skill should be used when the user asks to "simplify", "clean up the diff", "run simplify", "simplify the changes", "review changed code for cleanup", or explicitly invokes "/simplify". Reviews the changed code across reuse, simplification, efficiency, and altitude with parallel agents, then applies the fixes. Not for correctness bugs.
+description: This skill should be used when the user asks to "simplify", "clean up the diff", "run simplify", "simplify the changes", "review changed code for cleanup", explicitly invokes "/simplify", or asks to "commit without simplify", "skip simplify for this commit", or "commit this but skip simplify". Reviews changed code across reuse, simplification, efficiency, and altitude, or grants an explicit one-commit bypass. Not for correctness bugs.
 ---
 
 # Simplify
@@ -8,6 +8,21 @@ description: This skill should be used when the user asks to "simplify", "clean 
 `/simplify → 4 cleanup agents in parallel → apply the fixes`
 
 You are improving the quality of the changed code, not hunting for bugs. Review it for reuse, simplification, efficiency, and altitude issues, then fix what you find. Do not look for correctness bugs, that is what `/code-review` is for.
+
+## Explicit commit bypass
+
+If the user explicitly asks to commit while skipping simplify, skip the review phases below:
+
+1. State that simplify will be skipped for one commit and normal Git hooks will still run.
+2. Run this exact command from the worktree:
+
+```bash
+echo simplify-guard:bypass
+```
+
+3. Commit normally without `--no-verify`.
+
+Never infer permission to bypass from the size, urgency, or type of change. The user must explicitly name simplify when asking to skip it.
 
 ## Phase 0 — Gather the diff
 
