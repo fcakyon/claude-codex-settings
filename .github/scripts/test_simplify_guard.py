@@ -13,6 +13,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GUARD = REPO_ROOT / "plugins" / "simplify" / "hooks" / "scripts" / "guard.py"
 COMPLETION_SIGNAL = "echo simplify-guard:complete"
+BYPASS_SIGNAL = "echo simplify-guard:bypass"
 
 
 class SimplifyGuardTest(unittest.TestCase):
@@ -98,6 +99,21 @@ class SimplifyGuardTest(unittest.TestCase):
         self.assertFalse(self.marker.exists())
         self.assert_denied(self.run_guard("PreToolUse", "git commit -m again", codex=True))
 
+    def test_explicit_user_bypass_allows_exactly_one_commit_attempt(self) -> None:
+        for runtime in ("codex", "claude"):
+            with self.subTest(runtime=runtime):
+                self.assertIsNone(
+                    self.run_guard("PreToolUse", BYPASS_SIGNAL, **{runtime: True})
+                )
+                self.assertTrue(self.marker.exists())
+                self.assertIsNone(
+                    self.run_guard("PreToolUse", "git commit -m test", **{runtime: True})
+                )
+                self.assertFalse(self.marker.exists())
+                self.assert_denied(
+                    self.run_guard("PreToolUse", "git commit -m again", **{runtime: True})
+                )
+
     def test_claude_skill_event_still_allows_one_commit_attempt(self) -> None:
         self.assertIsNone(self.run_guard("PostToolUse", skill="simplify", claude=True))
         self.assertTrue(self.marker.exists())
@@ -109,9 +125,15 @@ class SimplifyGuardTest(unittest.TestCase):
             {"event": "PostToolUse", "skill": "simplify", "codex": True},
             {"event": "PreToolUse", "command": COMPLETION_SIGNAL, "claude": True},
             {"event": "PreToolUse", "command": COMPLETION_SIGNAL},
+            {"event": "PreToolUse", "command": BYPASS_SIGNAL},
             {
                 "event": "PreToolUse",
                 "command": "echo simplify-guard:complete-later",
+                "codex": True,
+            },
+            {
+                "event": "PreToolUse",
+                "command": "echo simplify-guard:bypass-later",
                 "codex": True,
             },
         ]
