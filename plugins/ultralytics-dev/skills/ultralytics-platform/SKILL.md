@@ -52,7 +52,7 @@ Resolve to signed URLs inside `data=` and `model=`, no manual download:
 YOLO("ul://username/my-project/my-model").train(data="ul://username/datasets/my-dataset", epochs=100)
 ```
 
-## REST flows
+## REST
 
 Read `references/recipes.md` before writing a request. It carries working code for retro upload
 of a finished run, dataset upload and download, search, cloud training, export, deployment, and

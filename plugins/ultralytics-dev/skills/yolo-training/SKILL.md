@@ -5,29 +5,26 @@ description: This skill should be used when user asks to "improve my mAP", "why 
 
 # YOLO26 training
 
-Read the run before changing anything. Most requests for "better accuracy" arrive with a
-`results.csv` and confusion matrix that already name the problem.
+Read the run before changing anything. The `results.csv` and confusion matrix usually name the
+problem already.
 
 ## Order of operations
 
-Ordered by cost to try, cheapest first, not by size of the potential win. The last two are the
-ones people reach for first and they are the two that spend real budget.
+Ordered by cost to try, cheapest first, not by size of the potential win.
 
 1. **Epochs and schedule.** Undertrained looks like every other problem, and it costs nothing
    but time to rule out.
-2. **Augmentation.** The lever for the generalization gap, at no extra compute per epoch.
+2. **Augmentation.** The knob for the generalization gap, at no extra compute per epoch.
 3. **Loss weights and LR.** Cheap, and the curves usually say which one is wrong.
 4. **Model size.** Scale up when train loss is still falling at the end of the schedule and the
-   train and val curves sit close together. That is the signature of underfitting, and the only
-   one a bigger model reliably fixes.
+   train and val curves sit close together. That is underfitting, and it is the only case a
+   bigger model reliably fixes.
 5. **Resolution.** Compute scales with the square of `imgsz`, so 640 to 1280 is roughly 4x the
-   training budget. Pretrained weights also transfer worse the further you move from the size
-   they were trained at, so a large jump is a new training budget, not a free knob. Justify it
-   with the object sizes in your data, not as a default first move.
-6. **Data**, label quality and class balance. The highest ceiling and the slowest to move, and
-   the package ships no dataset-analysis tooling, so any audit here is your own script plus
-   looking at images. Worth it once the cheap knobs are spent and the curves say the model is
-   not the limit.
+   training budget, and pretrained weights transfer worse the further you move from the size
+   they were fit at. Justify it with the object sizes in your data, not as a default first move.
+6. **Data**, label quality and class balance. The highest ceiling and the slowest to move. The
+   package ships no dataset-analysis tooling, so any audit here is your own script plus looking
+   at images. Worth it once the cheap knobs are spent.
 
 ## Diagnostic loop
 
@@ -56,13 +53,14 @@ out before turning that knob. Read it before recommending a change.
 `references/task-notes.md` covers detect, segment, semantic, pose, obb, classify, and depth
 specifics.
 
-## Things that silently override your settings
+## Defaults that will surprise you
 
-These produce "I changed X and nothing happened", and each one is real in current defaults.
+These produce "I changed X and nothing happened". All six are current defaults.
 
-1. **`optimizer=auto` ignores `lr0` and `momentum`.** It is the default. It picks
-   `MuSGD` at lr 0.01 when total iterations exceed 10000, otherwise `AdamW` at
-   `0.002 * 5 / (4 + nc)`, and forces `warmup_bias_lr=0`. Setting `lr0` while leaving
+1. **`optimizer=auto` ignores `lr0` and `momentum`.** It is the default. It picks `MuSGD` at
+   lr 0.01 when `ceil(len(dataset) / max(batch, nbs)) * epochs` exceeds 10000, otherwise `AdamW`
+   at `0.002 * 5 / (4 + nc)`, and forces `warmup_bias_lr=0`. Crossing that iteration count
+   silently changes optimizer between two runs you meant to compare. Setting `lr0` while leaving
    `optimizer=auto` does nothing. Set `optimizer=AdamW` or `optimizer=SGD` explicitly first.
 2. **`nbs=64` normalizes the loss, so batch does not scale LR the way you assume.** Below 64 the
    trainer accumulates gradients to an effective 64. Dropping batch 64 to 16 changes almost
@@ -76,8 +74,8 @@ These produce "I changed X and nothing happened", and each one is real in curren
    mAP50-95 is flat will still early-stop.
 5. **`max_det=300`** truncates validation on dense scenes. Above roughly 300 objects per image
    your recall ceiling is an artifact.
-6. **YOLO26 `end2end` models do their own NMS-free decoding**, so `iou` and `agnostic_nms`
-   have no effect on them.
+6. **YOLO26 `end2end` models decode without NMS**, so `iou` does nothing on them. `agnostic_nms`
+   still applies, the predictor passes it into the head, so only the IoU threshold is dead.
 
 ## Starting recipe
 
@@ -89,11 +87,10 @@ yolo train model=yolo26s.pt data=my-data.yaml epochs=200 imgsz=640 batch=16 \
   patience=50 close_mosaic=20
 ```
 
-Deviate on evidence from the charts, one axis at a time. Reasons this differs from the shipped
-defaults: `epochs=100` is short for a small dataset, `patience=100` never fires inside 100
-epochs so it is not real early stopping, and `close_mosaic=10` is too short a clean tail once
-epochs rise.
+Deviate on evidence from the charts, one axis at a time. It differs from the shipped defaults
+because `epochs=100` is short for a small dataset, `patience=100` never fires inside 100 epochs,
+and `close_mosaic=10` is too short a clean tail once epochs rise.
 
 Change one thing per run and keep `seed` fixed. Run-to-run noise on a small dataset is often
 0.5 to 1.0 mAP, so a 0.3 mAP "improvement" from a single run is not a result. Confirm anything
-smaller than about 1 point across two or three seeds before believing it.
+under about 1 point across three seeds.
