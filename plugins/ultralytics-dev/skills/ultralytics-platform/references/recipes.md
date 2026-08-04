@@ -148,9 +148,9 @@ end. Enablement gate, all must hold:
 4. A key from `ULTRALYTICS_API_KEY` or `settings.json`. There is no separate on/off setting, the
    key and `project=` are the whole switch.
 
-All traffic goes to one endpoint, `POST /api/webhooks/training/metrics`. A `401` from it clears
-the cached key and silently disables tracking for the rest of the process, while `403` and `404`
-only warn, so a mid-run stop with no error usually means the key was rejected once.
+All traffic goes to one endpoint, `POST /api/webhooks/training/metrics`. A `401` clears the
+cached key and stops tracking for the rest of the process, while `403` and `404` fail only the
+one request. Every one of them logs a warning.
 
 Diagnosing silence:
 
@@ -160,6 +160,7 @@ Diagnosing silence:
 | `Training will not be tracked on Platform` | key present, server rejected `training_started`            |
 | Run appears, no weights                    | `best.pt` upload failed, warning is in the console log     |
 | Name is `train-2` not `train`              | server auto-incremented a taken slug, it logs the real one |
+| Streams for a while, then stops            | a `401` cleared the key, the warning is in the console log |
 
 Checkpoints upload at most every 15 minutes mid-run, then `best.pt` uploads blocking at the end.
 Project and name are slugified, so `My Run 1` becomes `my-run-1`.
