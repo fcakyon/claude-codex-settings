@@ -1,5 +1,5 @@
 {
   "name": "ultralytics-dev",
-  "version": "2.2.6",
-  "description": "Auto-format hooks for Python, JavaScript, Markdown, and Bash, plus a push guard."
+  "version": "2.3.0",
+  "description": "Ultralytics Platform API and YOLO26 training skills, format hooks, push guard."
 }

@@ -376,15 +376,15 @@
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
-      "description": "Auto-format hooks for Python, JavaScript, Markdown, and Bash, plus a push guard.",
-      "version": "2.2.6",
+      "description": "Ultralytics Platform API and YOLO26 training skills, format hooks, push guard.",
+      "version": "2.3.0",
       "author": {
         "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["ultralytics", "formatting", "hooks", "python", "code-quality", "docstrings"],
+      "keywords": ["ultralytics", "yolo", "platform", "training", "computer-vision", "formatting", "hooks"],
       "category": "developer-tools",
       "tags": ["formatting", "development"]
     },
