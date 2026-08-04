@@ -735,13 +735,20 @@ Git and GitHub automation. Run the `setup` skill after install.
 </details>
 
 <details>
-<summary><strong>ultralytics-dev</strong> - Auto-formatting hooks + force-push guard</summary>
+<summary><strong>ultralytics-dev</strong> - Ultralytics Platform + YOLO26 training skills, auto-formatting hooks</summary>
 
 | Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
 | `claude plugin install ultralytics-dev@claude-settings` | `codex plugin add ultralytics-dev@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-dev` |
 
-Auto-formatting hooks for Python, JavaScript, Markdown, and Bash, plus a guard that blocks force-push and rebase.
+Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formatting hooks for Python, JavaScript, Markdown, and Bash and a guard that blocks force-push and rebase.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                    | Description                                                  | ZIP                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ultralytics-platform`](./plugins/ultralytics-dev/skills/ultralytics-platform/SKILL.md) | Platform API: model upload, datasets, search, cloud training | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-platform.zip) |
+| [`yolo-training`](./plugins/ultralytics-dev/skills/yolo-training/SKILL.md) | YOLO26 training diagnosis: read the curves, pick the knob    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/yolo-training.zip) |
 
 **Hooks:**
 
