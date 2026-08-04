@@ -1,5 +1,5 @@
 {
   "name": "ultralytics-dev",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Ultralytics Platform API and YOLO26 training skills, format hooks, push guard."
 }

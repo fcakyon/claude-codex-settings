@@ -6,8 +6,10 @@ What differs by task. Everything in `diagnostics.md` still applies on top of thi
 
 Loss gains: `box=7.5`, `cls=0.5`, `dfl=1.5`. Fitness is mAP50-95 alone.
 
-- YOLO26 ships `end2end` NMS-free heads. `iou` and `agnostic_nms` do nothing on those models,
-  and duplicate-box complaints need a different explanation.
+- YOLO26 `end2end` heads train two branches at once, `0.8 * one2many + 0.2 * one2one`, and decay
+  the one2many weight to `0.1` across the schedule. Only the one2one losses reach `results.csv`,
+  so the logged box loss is not the whole objective and comparing it against a non-end2end run
+  compares different quantities.
 - `single_cls=True` collapses every class into one. The fastest way to answer "is this a
   localization problem or a classification problem", run it and compare mAP50-95. A large jump
   means the boxes were never the issue.
@@ -24,8 +26,9 @@ heads gate early stopping.
   It costs memory.
 - `overlap_mask=True` merges instances into one mask per image. Set `False` when instances
   overlap heavily and you need them separated during training.
-- `copy_paste` is far more effective here than in detection because real masks make the pasted
-  instances look right. `copy_paste=0.3` with `copy_paste_mode=flip` is a reasonable start.
+- `copy_paste` only does anything here. The augmentation returns early when the labels carry no
+  segments, so it is live on segment datasets and a no-op on box-only detect ones.
+  `copy_paste=0.3` with `copy_paste_mode=flip` is a reasonable start.
 - Mask AP trailing box AP by a lot means polygon quality. Coarse polygons (4 to 6 points around
   a curved object) cap mask AP no matter what you train.
 - `retina_masks=True` at inference only, higher-resolution masks at some cost.
@@ -35,14 +38,13 @@ heads gate early stopping.
 Fitness is mIoU. Loss is cross-entropy with `ignore_index=255`, so 255 is the void label.
 
 - `cls_pw` applies ENet inverse-log weighting, `(1 / ln(1.02 + p)) ** cls_pw`, not the
-  inverse-frequency form detection uses. It is the main lever for classes that occupy few
+  inverse-frequency form detection uses. It is the main knob for classes that occupy few
   pixels, which in semantic segmentation is most of the interesting ones.
 - mIoU is a mean over classes, so one collapsed class costs a full share regardless of its
   pixel count. Always print per-class IoU.
 - Binary (`nc=1`) uses BCE and ignores class weighting by design.
 - Resolution binds harder than in detection, since thin structures below a few pixels wide
-  cannot survive the encoder stride. Same quadratic cost as everywhere else, so confirm the
-  structures are actually that thin before paying it.
+  cannot survive the encoder stride. Measure their width before paying the quadratic cost.
 
 ## Pose
 
@@ -70,6 +72,8 @@ Adds `angle=1.0`.
   target. Check the label convention before raising `angle`, a systematic offset is a data bug.
 - Objects with near-square aspect ratio have poorly defined angles and will always score worse.
   Exclude them from the analysis rather than tuning against them.
+- OBB validation runs at `conf=0.01`, the other tasks at `0.001`. OBB mAP is measured on a
+  smaller candidate pool, so it is not directly comparable to an axis-aligned number.
 
 ## Classification
 
@@ -78,8 +82,8 @@ Fitness is `(top1 + top5) / 2`. Different augmentation set from the detection ta
 - `auto_augment` accepts `randaugment` (default), `autoaugment`, `augmix`. `randaugment` is the
   right default. Set it empty for small fine-grained datasets where the transforms destroy the
   distinguishing detail.
-- `erasing=0.4` is random erasing, the classification analogue of cutout, and it is the main
-  overfitting lever alongside `mixup` and `cutmix`.
+- `erasing=0.4` is random erasing, the classification analogue of cutout, and the main
+  overfitting knob alongside `mixup` and `cutmix`.
 - `dropout` applies to the classification head only, and is 0 by default. `0.1` to `0.2` for a
   small dataset.
 - Mosaic, mixup ratios, and the box augmentations do not apply.
