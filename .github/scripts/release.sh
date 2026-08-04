@@ -48,7 +48,7 @@ done
 
 # Local skill-only plugins have no vendor sync script, so zip their skills here for download assets
 source "$SCRIPTS_DIR/_helpers.sh"
-for skill_dir in plugins/{python-skills,adhd-output-style}/skills/*/; do
+for skill_dir in plugins/{python-skills,adhd-output-style,ultralytics-dev}/skills/*/; do
   create_zip "$skill_dir"
 done
 
