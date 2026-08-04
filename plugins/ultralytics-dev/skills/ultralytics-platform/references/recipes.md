@@ -2,9 +2,9 @@
 
 Working code for each flow. All snippets assume `ULTRALYTICS_API_KEY` is exported.
 
-Recipes 1, 5, and 8 were run end to end against the live API on 2026-08-04. The rest are
-derived from `/openapi.json` and have not been executed, since recipes 3, 6, and 7 create
-billable resources. Treat their request shapes as correct and their responses as unconfirmed.
+Recipes 1, 5, and 8 were run end to end against the live API on 2026-08-04. The rest come from
+`/openapi.json` and were not executed, since 3, 6, and 7 create billable resources. Their
+request shapes are correct, their responses unconfirmed.
 
 ## Shared client
 
@@ -142,11 +142,15 @@ yolo train model=yolo26n.pt data=my-data.yaml epochs=100 project=my-project name
 It prints `Platform: Streaming training metrics to Platform` at startup and a model URL at the
 end. Enablement gate, all must hold:
 
-1. Not running under pytest.
-2. `SETTINGS["platform"] is True` or `ULTRALYTICS_API_KEY` set or `SETTINGS["api_key"]` set.
-3. A resolved API key.
-4. `trainer.args.project` is truthy, checked separately in every callback.
-5. `RANK` in `{-1, 0}`, so under DDP only rank 0 reports.
+1. `RANK` in `{-1, 0}` and not the DDP launcher process, so under DDP only rank 0 reports.
+2. Not running under pytest.
+3. `trainer.args.project` is truthy, checked again in every callback.
+4. A key from `ULTRALYTICS_API_KEY` or `settings.json`. There is no separate on/off setting, the
+   key and `project=` are the whole switch.
+
+All traffic goes to one endpoint, `POST /api/webhooks/training/metrics`. A `401` clears the
+cached key and stops tracking for the rest of the process, while `403` and `404` fail only the
+one request. Every one of them logs a warning.
 
 Diagnosing silence:
 
@@ -156,6 +160,7 @@ Diagnosing silence:
 | `Training will not be tracked on Platform` | key present, server rejected `training_started`            |
 | Run appears, no weights                    | `best.pt` upload failed, warning is in the console log     |
 | Name is `train-2` not `train`              | server auto-incremented a taken slug, it logs the real one |
+| Streams for a while, then stops            | a `401` cleared the key, the warning is in the console log |
 
 Checkpoints upload at most every 15 minutes mid-run, then `best.pt` uploads blocking at the end.
 Project and name are slugified, so `My Run 1` becomes `my-run-1`.
@@ -216,9 +221,9 @@ Fastest path, let the package do it:
 YOLO("yolo26n.pt").train(data="ul://username/datasets/my-dataset", epochs=100)
 ```
 
-`resolve_platform_uri` in `ultralytics/utils/callbacks/platform.py` turns the URI into a signed
-URL, `check_file` in `ultralytics/utils/checks.py` downloads it, and
-`convert_ndjson_to_yolo_if_needed` in `ultralytics/data/utils.py` converts the NDJSON on the fly.
+`resolve_platform_uri` and `check_file`, both in `ultralytics/utils/checks.py`, turn the URI into
+a signed URL and download it, then `convert_ndjson_to_yolo_if_needed` in
+`ultralytics/data/utils.py` converts the NDJSON on the fly.
 
 To materialize it on disk:
 

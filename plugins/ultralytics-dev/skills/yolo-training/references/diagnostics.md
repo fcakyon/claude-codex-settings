@@ -1,8 +1,19 @@
 # Reading a run
 
-Symptom, the cheap knob, and what to check when the knob does not move it. Reach for the free
-changes first and treat anything that costs compute or relabeling as the answer you fall back
-to, not the one you open with.
+Symptom, the cheap knob, and what to check when the knob does not move it. Compute and
+relabeling are the fallback, not the opener.
+
+## Schedule patterns
+
+| Best epoch lands at          | Meaning                          | Action                             |
+| ---------------------------- | -------------------------------- | ---------------------------------- |
+| final epoch                  | undertrained                     | more epochs, 1.5x to 2x            |
+| 80 to 95 percent through     | about right                      | leave it                           |
+| 40 to 60 percent, then decay | overtrained                      | more augmentation, or stop earlier |
+| under 25 percent             | LR too high, or the data is tiny | lower `lr0`, add regularization    |
+
+`patience=100` against `epochs=100` means early stopping never fires. Set `patience` to roughly
+a quarter of `epochs` when you want it to be real.
 
 ## Metric-shape patterns
 
@@ -10,16 +21,17 @@ to, not the one you open with.
 
 Classification and coarse localization work. Tight localization does not.
 
-Start with the loss weights. This is the cheap test and it is the one targeted at the symptom:
+Start with the loss weights. Cheap, and aimed at the symptom:
 
 ```bash
 box=10.0 dfl=2.0 # from 7.5 / 1.5
 ```
 
-Raise `box` and `dfl` together, roughly 1.3x to 2x. `dfl` governs the distribution focal loss
-that produces sub-pixel box edges, so it is the more targeted of the two for this symptom.
-Watch that `cls` does not get crowded out, a collapsing `metrics/precision(B)` means you went
-too far.
+Raise `box` and `dfl` together, roughly 1.3x to 2x. YOLO26 sets `reg_max: 1`, which switches the
+distribution focal loss off, so `dfl` weights a plain L1 term on the box edges and the
+results.csv column is `train/l1_loss`, not `train/dfl_loss`. The knob still works, and it is
+still the more targeted of the two. Watch that `cls` does not get crowded out, a collapsing
+`metrics/precision(B)` means you went too far.
 
 If that moves nothing, the ceiling is probably not the loss:
 
@@ -31,11 +43,6 @@ If that moves nothing, the ceiling is probably not the loss:
 3. **Objects too small for the resolution.** An object spanning 12 pixels cannot be localized
    to mAP50-95 precision at any loss weight. Read the Small objects section for what raising
    `imgsz` costs before reaching for it.
-
-### mAP50-95 close to mAP50
-
-Unusual, and normally means objects are large and easy. Little headroom on localization.
-Look at recall and per-class AP instead.
 
 ### Precision high, recall low
 
@@ -94,6 +101,11 @@ then look at 20 of its images. A class with 40 instances against classes with 40
 underperform regardless of the recipe. Options, in order: collect more, merge it into a
 neighbor class, or apply `cls_pw`.
 
+### mAP50-95 close to mAP50
+
+Unusual, and normally means objects are large and easy. Little headroom on localization.
+Look at recall and per-class AP instead.
+
 ## Loss-curve patterns
 
 ### Train loss falls, val loss rises
@@ -108,8 +120,9 @@ mixup=0.15 copy_paste=0.3 scale=0.9 degrees=10 mosaic=1.0 close_mosaic=20
 
 - `mixup` blends two images and their labels. The general-purpose regularizer, and the first
   thing to reach for. `0.1` to `0.2` on small datasets.
-- `copy_paste` pastes instances between images. Needs segmentation masks to work well, and it
-  is the strongest single lever for rare-class recall when they exist.
+- `copy_paste` pastes instances between images. It returns the labels untouched when they carry
+  no segments, so on a box-only detect dataset it is a silent no-op, not a weak effect. Where
+  masks exist it is the strongest single knob for rare-class recall.
 - `scale` is the most underrated. `0.5` means 0.5x to 1.5x. Raising to `0.9` widens the
   scale range the model must handle, and it costs nothing at inference.
 - `erasing` (classify) and `cutmix` are alternatives when mixup is already maxed.
@@ -155,18 +168,6 @@ Small val split, or LR too high late in the schedule. Set `cos_lr=True` and `lrf
 LR actually decays to near zero, and check the val split has at least a few hundred instances
 per class. Below that, epoch-to-epoch swings are sampling noise and reading them is a mistake.
 
-## Schedule patterns
-
-| Best epoch lands at          | Meaning                          | Action                             |
-| ---------------------------- | -------------------------------- | ---------------------------------- |
-| final epoch                  | undertrained                     | more epochs, 1.5x to 2x            |
-| 80 to 95 percent through     | about right                      | leave it                           |
-| 40 to 60 percent, then decay | overtrained                      | more augmentation, or stop earlier |
-| under 25 percent             | LR too high, or the data is tiny | lower `lr0`, add regularization    |
-
-`patience=100` against `epochs=100` means early stopping never fires. Set `patience` to roughly
-a quarter of `epochs` when you want it to be real.
-
 ## Learning rate
 
 `lr0` is the initial LR, `lrf` is a fraction, so the final LR is `lr0 * lrf`. Default `lrf=0.01`
@@ -180,9 +181,11 @@ decays to 1 percent.
 | Diverging                                    | current / 10 |
 | Flat loss, confirmed the value applied       | current \* 3 |
 
-`cos_lr=True` beats the linear default on most fine-tunes. `warmup_epochs=3` is right for
-most runs, raise to 5 for large batches or an unstable start, and drop toward 1 on runs under
-30 epochs where 3 epochs of warmup is 10 percent of the budget.
+The default schedule is linear, `(1 - x/epochs) * (1 - lrf) + lrf`. `cos_lr=True` swaps in a
+one-cycle cosine and beats it on most fine-tunes. `warmup_epochs=3` is right for most runs,
+raise to 5 for large batches or an unstable start, and drop toward 1 on runs under 30 epochs
+where 3 epochs of warmup is 10 percent of the budget. It is clamped to `epochs - 1`, so a
+10-epoch smoke test with the default spends 3 of its 10 epochs warming up.
 
 There is no per-group LR argument. To protect a pretrained backbone from a randomly initialized
 head, `freeze` it for the first run, or lower `lr0` for the whole model. A discriminative LR
@@ -193,10 +196,13 @@ needs a callback that rewrites `optimizer.param_groups`.
 Set it to fill the GPU, not to tune accuracy. `nbs=64` normalization means small batches get
 gradient accumulation, so batch mostly buys throughput.
 
-- `batch=-1` or a float like `batch=0.8` uses AutoBatch to fill a memory fraction.
+- `batch=-1` or a float like `batch=0.8` uses AutoBatch to fill a memory fraction, `-1` targeting
+  60 percent.
 - Above 64, the effective LR does rise, so scale `lr0` roughly linearly.
-- Very small batches (under 8) make BatchNorm statistics noisy, which is a real accuracy cost
-  and the one case where batch size is not just a throughput decision.
+- Weight decay is rescaled the same way, `weight_decay * batch * accumulate / nbs`. At
+  `batch=128` your `0.0005` is really `0.001`, which is a common unexplained regularization
+  change when someone moves a recipe to a bigger GPU.
+- Very small batches (under 8) make BatchNorm statistics noisy, a real accuracy cost.
 
 ## Small objects
 
@@ -216,15 +222,13 @@ Then the expensive ones:
 4. Tile large images into overlapping crops for training and inference. More images per epoch,
    but each stays at the resolution the pretrained weights expect, which is usually the better
    trade for 4K imagery with 20-pixel objects.
-5. Raise `imgsz`. It works, and it is last because the cost is quadratic: 640 to 1280 is about
-   4x the compute and memory per epoch, and it moves the model away from the input size its
-   pretrained weights were fit at. Budget for a longer schedule rather than swapping `imgsz`
-   into an otherwise unchanged recipe.
+5. Raise `imgsz`. It works, and it is last because of the quadratic cost. Budget for a longer
+   schedule rather than swapping `imgsz` into an otherwise unchanged recipe.
 
 ## Class imbalance
 
 1. `cls_pw` in `0.3` to `0.5`, see Precision high, recall low for what the power does.
-2. `copy_paste` to synthesize rare-class instances, needs masks.
+2. `copy_paste` to synthesize rare-class instances, and only if the labels carry segments.
 3. Oversample rare-class images by duplicating their paths in the train list. Crude, effective.
 4. Merge classes that annotators confuse anyway.
 
@@ -236,7 +240,9 @@ Report per-class AP, never only the macro mAP. A macro number hides a class at 0
   a custom dataset is almost never right.
 - `cls_remap=True` (default) matches pretrained classification-head rows by class name, so
   shared names like `person` keep their learned weights across datasets.
-- `freeze=10` freezes the backbone. Useful for a tiny dataset (under about 500 images) or a
+- `freeze=N` freezes model indices `0` to `N-1`. On YOLO26 the backbone ends at C2PSA, index 10,
+  and the head starts at 11, so `freeze=11` is the whole backbone and the widely copied
+  `freeze=10` leaves C2PSA trainable. Useful for a tiny dataset (under about 500 images) or a
   first sanity run. Unfreeze for the real run, a frozen backbone gives up several points once
   the dataset is large enough to move it.
 - Domain distance decides how much you fine-tune. Medical, thermal, and satellite imagery share
@@ -252,9 +258,8 @@ Worth running only after the manual passes above are exhausted, and only on a da
 enough that a 0.5 mAP difference is signal. It costs `iterations` full trainings. Use a reduced
 `epochs` per iteration, then retrain the winner at full length.
 
-## Reporting a change honestly
+## Reporting a change
 
 - State the delta and the baseline: "mAP50-95 0.412 to 0.437, +2.5 points, one seed".
 - Name what else changed. A recipe with three simultaneous edits attributes nothing.
-- Compare at the same epoch count and the same `imgsz`. Different budgets are different
-  experiments.
+- Compare at the same epoch count and the same `imgsz`. Different budgets are not comparable.
