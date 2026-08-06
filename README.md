@@ -764,6 +764,23 @@ Install `ruff` and `prettier` first ([setup](INSTALL.md#code-quality-tools)).
 </details>
 
 <details>
+<summary><strong>ultralytics-branding</strong> - Ultralytics brand colors, fonts, logo, naming, and tone for branded content.</summary>
+
+| Claude Code                                                  | Codex CLI                                               | Gemini CLI                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `claude plugin install ultralytics-branding@claude-settings` | `codex plugin add ultralytics-branding@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-branding` |
+
+Official colors, Archivo typography, logo and naming rules, tone of voice, and per-format defaults from [ultralytics.com/brand](https://www.ultralytics.com/brand) for PDF/PPTX/Canva decks, DOCX documents, marketing email HTML, social posts, and web designs.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                         | Description                                              | ZIP                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ultralytics-branding`](./plugins/ultralytics-branding/skills/ultralytics-branding/SKILL.md) | Brand colors, fonts, logo, naming, tone, format defaults | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-branding.zip) |
+
+</details>
+
+<details>
 <summary><strong>azure-tools</strong> - Azure MCP & Skills</summary>
 
 | Claude Code                                         | Codex CLI                                      | Gemini CLI                                               |

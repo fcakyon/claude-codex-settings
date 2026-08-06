@@ -134,38 +134,43 @@ Manage the memory and CPU resources allocated to your applications or databases.
 
 ### Memory Resources
 
-Docker API expects memory values in **bytes**. Dokploy provides a user-friendly interface that accepts values with units and converts them automatically.
+Docker API expects memory values in **bytes**. Dokploy passes the value you enter directly to the Docker API, so you must enter the value in raw bytes. Units like `MB` or `GB` are not parsed.
 
 #### Memory Limit
 
 The maximum amount of memory the container can use. If the container tries to use more memory than this limit, it will be killed by the Docker daemon.
 
-**Format**: Enter a number followed by the unit (B, KB, MB, GB)
+**Format**: Enter the value in raw bytes, without a unit
 
-**Docker API Value**: The value is converted to bytes internally
+**Common values**:
 - `1073741824` bytes = 1GB
 - `268435456` bytes = 256MB
 - `536870912` bytes = 512MB
 
 **Examples**:
-- `256MB` → Limits container to 256 megabytes
-- `1GB` → Limits container to 1 gigabyte
-- `2GB` → Limits container to 2 gigabytes
+- `268435456` → Limits container to 256 megabytes
+- `1073741824` → Limits container to 1 gigabyte
+- `2147483648` → Limits container to 2 gigabytes
+
+<Callout type="warn">
+  Values with units are not converted. For example, `1024m` is read as `1024` bytes, which is below Docker's minimum (about 6MB), so the deployment fails with a generic Swarm error.
+</Callout>
 
 #### Memory Reservation
 
 The minimum amount of memory guaranteed to the container. Docker will try to ensure this amount is always available, but the container can use more if available.
 
-**Format**: Enter a number followed by the unit (B, KB, MB, GB)
+**Format**: Enter the value in raw bytes, without a unit
 
-**Docker API Value**: The value is converted to bytes internally
+**Common values**:
+- `134217728` bytes = 128MB
 - `268435456` bytes = 256MB
 - `536870912` bytes = 512MB
 
 **Examples**:
-- `128MB` → Reserves at least 128 megabytes
-- `256MB` → Reserves at least 256 megabytes
-- `512MB` → Reserves at least 512 megabytes
+- `134217728` → Reserves at least 128 megabytes
+- `268435456` → Reserves at least 256 megabytes
+- `536870912` → Reserves at least 512 megabytes
 
 <Callout type="warn">
   Memory Reservation should always be **less than or equal to** Memory Limit. If you set a reservation higher than the limit, Docker will use the limit value.
@@ -173,39 +178,47 @@ The minimum amount of memory guaranteed to the container. Docker will try to ens
 
 ### CPU Resources
 
-Docker API expects CPU values in **nanoseconds** (for periods) or as a decimal fraction of available CPU cores. Dokploy displays this in a user-friendly format.
+Docker API expects CPU values in **nanoCPUs**, where `1000000000` nanoCPUs equal 1 CPU core. Dokploy passes the value you enter directly to the Docker API, so you must enter the value in raw nanoCPUs. Decimal core values like `0.5` are not parsed.
 
 #### CPU Limit
 
 The maximum number of CPU cores the container can use. This is a hard limit enforced by the Docker daemon.
 
-**Format**: Enter as a decimal number representing CPU cores
-- `2000000000` nanoseconds = 2 CPUs (2 full cores)
-- `1000000000` nanoseconds = 1 CPU (1 full core)
-- `500000000` nanoseconds = 0.5 CPU (half a core)
+**Format**: Enter the value in nanoCPUs (1 CPU core = `1000000000`)
+
+**Common values**:
+- `2000000000` nanoCPUs = 2 CPUs (2 full cores)
+- `1000000000` nanoCPUs = 1 CPU (1 full core)
+- `500000000` nanoCPUs = 0.5 CPU (half a core)
 
 **Docker API Value**: Internally represented as `NanoCPUs`
 
 **Examples**:
-- `1 CPU` → Limits to 1 full CPU core (1000000000 nanoseconds)
-- `2 CPUs` → Limits to 2 full CPU cores (2000000000 nanoseconds)
-- `0.5 CPU` → Limits to half a CPU core (500000000 nanoseconds)
-- `4 CPUs` → Limits to 4 full CPU cores (4000000000 nanoseconds)
+- `1000000000` → Limits to 1 full CPU core
+- `2000000000` → Limits to 2 full CPU cores
+- `500000000` → Limits to half a CPU core
+- `4000000000` → Limits to 4 full CPU cores
+
+<Callout type="warn">
+  Decimal core values are not converted. For example, `1.5` is read as `1` nanoCPU, which is far below Docker's minimum (0.001 CPU), so the deployment fails with a generic Swarm error.
+</Callout>
 
 #### CPU Reservation
 
 The minimum number of CPU cores reserved for the container. Docker will try to ensure this amount is always available.
 
-**Format**: Enter as a decimal number representing CPU cores
-- `1000000000` nanoseconds = 1 CPU
-- `500000000` nanoseconds = 0.5 CPU
+**Format**: Enter the value in nanoCPUs (1 CPU core = `1000000000`)
+
+**Common values**:
+- `1000000000` nanoCPUs = 1 CPU
+- `500000000` nanoCPUs = 0.5 CPU
 
 **Docker API Value**: Internally represented as `NanoCPUs`
 
 **Examples**:
-- `0.5 CPU` → Reserves half a CPU core (500000000 nanoseconds)
-- `1 CPU` → Reserves 1 full CPU core (1000000000 nanoseconds)
-- `0.25 CPU` → Reserves a quarter CPU core (250000000 nanoseconds)
+- `500000000` → Reserves half a CPU core
+- `1000000000` → Reserves 1 full CPU core
+- `250000000` → Reserves a quarter CPU core
 
 <Callout type="warn">
   CPU Reservation should always be **less than or equal to** CPU Limit. Setting it too high may prevent the container from starting if resources aren't available.
@@ -235,9 +248,9 @@ When Dokploy communicates with Docker API, these values are sent in the service 
 ```
 
 This JSON represents:
-- **CPU Limit**: 2 CPUs (2000000000 nanoseconds)
+- **CPU Limit**: 2 CPUs (2000000000 nanoCPUs)
 - **Memory Limit**: 1GB (1073741824 bytes)
-- **CPU Reservation**: 1 CPU (1000000000 nanoseconds)
+- **CPU Reservation**: 1 CPU (1000000000 nanoCPUs)
 - **Memory Reservation**: 512MB (536870912 bytes)
 
 #### Learn More

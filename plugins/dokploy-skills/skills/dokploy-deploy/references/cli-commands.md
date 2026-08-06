@@ -8,14 +8,19 @@ Generated from `Dokploy/cli` source files.
 
 ## ai
 
+- `dokploy ai analyze-logs` - ai analyzeLogs
 - `dokploy ai create` - ai create
 - `dokploy ai delete` - ai delete
 - `dokploy ai deploy` - ai deploy
 - `dokploy ai get` - ai get
 - `dokploy ai get-all` - ai getAll
+- `dokploy ai get-custom-providers` - ai getCustomProviders
+- `dokploy ai get-enabled-providers` - ai getEnabledProviders
 - `dokploy ai get-models` - ai getModels
 - `dokploy ai one` - ai one
+- `dokploy ai save-custom-providers` - ai saveCustomProviders
 - `dokploy ai suggest` - ai suggest
+- `dokploy ai test-connection` - ai testConnection
 - `dokploy ai update` - ai update
 
 ## application
@@ -27,11 +32,13 @@ Generated from `Dokploy/cli` source files.
 - `dokploy application delete` - application delete
 - `dokploy application deploy` - application deploy
 - `dokploy application disconnect-git-provider` - application disconnectGitProvider
+- `dokploy application drop-deployment` - application dropDeployment
 - `dokploy application kill-build` - application killBuild
 - `dokploy application mark-running` - application markRunning
 - `dokploy application move` - application move
 - `dokploy application one` - application one
 - `dokploy application read-app-monitoring` - application readAppMonitoring
+- `dokploy application read-logs` - application readLogs
 - `dokploy application read-traefik-config` - application readTraefikConfig
 - `dokploy application redeploy` - application redeploy
 - `dokploy application refresh-token` - application refreshToken
@@ -50,6 +57,10 @@ Generated from `Dokploy/cli` source files.
 - `dokploy application update` - application update
 - `dokploy application update-traefik-config` - application updateTraefikConfig
 
+## audit-log
+
+- `dokploy audit-log all` - auditLog all
+
 ## auth
 
 - `dokploy auth` - Authenticate with your Dokploy server
@@ -59,6 +70,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy backup create` - backup create
 - `dokploy backup list-backup-files` - backup listBackupFiles
 - `dokploy backup manual-backup-compose` - backup manualBackupCompose
+- `dokploy backup manual-backup-libsql` - backup manualBackupLibsql
 - `dokploy backup manual-backup-mariadb` - backup manualBackupMariadb
 - `dokploy backup manual-backup-mongo` - backup manualBackupMongo
 - `dokploy backup manual-backup-my-sql` - backup manualBackupMySql
@@ -84,6 +96,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy certificates create` - certificates create
 - `dokploy certificates one` - certificates one
 - `dokploy certificates remove` - certificates remove
+- `dokploy certificates update` - certificates update
 
 ## cluster
 
@@ -113,15 +126,27 @@ Generated from `Dokploy/cli` source files.
 - `dokploy compose load-services` - compose loadServices
 - `dokploy compose move` - compose move
 - `dokploy compose one` - compose one
+- `dokploy compose preview-template` - compose previewTemplate
 - `dokploy compose process-template` - compose processTemplate
 - `dokploy compose randomize-compose` - compose randomizeCompose
+- `dokploy compose read-logs` - compose readLogs
 - `dokploy compose redeploy` - compose redeploy
 - `dokploy compose refresh-token` - compose refreshToken
+- `dokploy compose save-environment` - compose saveEnvironment
 - `dokploy compose search` - compose search
 - `dokploy compose start` - compose start
 - `dokploy compose stop` - compose stop
 - `dokploy compose templates` - compose templates
 - `dokploy compose update` - compose update
+
+## custom-role
+
+- `dokploy custom-role all` - customRole all
+- `dokploy custom-role create` - customRole create
+- `dokploy custom-role get-statements` - customRole getStatements
+- `dokploy custom-role members-by-role` - customRole membersByRole
+- `dokploy custom-role remove` - customRole remove
+- `dokploy custom-role update` - customRole update
 
 ## deployment
 
@@ -132,6 +157,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy deployment all-centralized` - deployment allCentralized
 - `dokploy deployment kill-process` - deployment killProcess
 - `dokploy deployment queue-list` - deployment queueList
+- `dokploy deployment read-logs` - deployment readLogs
 - `dokploy deployment remove-deployment` - deployment removeDeployment
 
 ## destination
@@ -151,7 +177,12 @@ Generated from `Dokploy/cli` source files.
 - `dokploy docker get-containers-by-app-name-match` - docker getContainersByAppNameMatch
 - `dokploy docker get-service-containers-by-app-name` - docker getServiceContainersByAppName
 - `dokploy docker get-stack-containers-by-app-name` - docker getStackContainersByAppName
+- `dokploy docker kill-container` - docker killContainer
+- `dokploy docker remove-container` - docker removeContainer
 - `dokploy docker restart-container` - docker restartContainer
+- `dokploy docker start-container` - docker startContainer
+- `dokploy docker stop-container` - docker stopContainer
+- `dokploy docker upload-file-to-container` - docker uploadFileToContainer
 
 ## domain
 
@@ -175,10 +206,25 @@ Generated from `Dokploy/cli` source files.
 - `dokploy environment search` - environment search
 - `dokploy environment update` - environment update
 
+## forward-auth
+
+- `dokploy forward-auth deploy-on-server` - forwardAuth deployOnServer
+- `dokploy forward-auth disable` - forwardAuth disable
+- `dokploy forward-auth enable` - forwardAuth enable
+- `dokploy forward-auth get-auth-domain` - forwardAuth getAuthDomain
+- `dokploy forward-auth list-providers` - forwardAuth listProviders
+- `dokploy forward-auth remove-auth-domain` - forwardAuth removeAuthDomain
+- `dokploy forward-auth remove-on-server` - forwardAuth removeOnServer
+- `dokploy forward-auth server-status` - forwardAuth serverStatus
+- `dokploy forward-auth set-auth-domain` - forwardAuth setAuthDomain
+- `dokploy forward-auth status` - forwardAuth status
+
 ## git-provider
 
+- `dokploy git-provider all-for-permissions` - gitProvider allForPermissions
 - `dokploy git-provider get-all` - gitProvider getAll
 - `dokploy git-provider remove` - gitProvider remove
+- `dokploy git-provider toggle-share` - gitProvider toggleShare
 
 ## gitea
 
@@ -210,6 +256,23 @@ Generated from `Dokploy/cli` source files.
 - `dokploy gitlab test-connection` - gitlab testConnection
 - `dokploy gitlab update` - gitlab update
 
+## libsql
+
+- `dokploy libsql change-status` - libsql changeStatus
+- `dokploy libsql create` - libsql create
+- `dokploy libsql deploy` - libsql deploy
+- `dokploy libsql move` - libsql move
+- `dokploy libsql one` - libsql one
+- `dokploy libsql read-logs` - libsql readLogs
+- `dokploy libsql rebuild` - libsql rebuild
+- `dokploy libsql reload` - libsql reload
+- `dokploy libsql remove` - libsql remove
+- `dokploy libsql save-environment` - libsql saveEnvironment
+- `dokploy libsql save-external-ports` - libsql saveExternalPorts
+- `dokploy libsql start` - libsql start
+- `dokploy libsql stop` - libsql stop
+- `dokploy libsql update` - libsql update
+
 ## license-key
 
 - `dokploy license-key activate` - licenseKey activate
@@ -221,11 +284,13 @@ Generated from `Dokploy/cli` source files.
 
 ## mariadb
 
+- `dokploy mariadb change-password` - mariadb changePassword
 - `dokploy mariadb change-status` - mariadb changeStatus
 - `dokploy mariadb create` - mariadb create
 - `dokploy mariadb deploy` - mariadb deploy
 - `dokploy mariadb move` - mariadb move
 - `dokploy mariadb one` - mariadb one
+- `dokploy mariadb read-logs` - mariadb readLogs
 - `dokploy mariadb rebuild` - mariadb rebuild
 - `dokploy mariadb reload` - mariadb reload
 - `dokploy mariadb remove` - mariadb remove
@@ -238,11 +303,13 @@ Generated from `Dokploy/cli` source files.
 
 ## mongo
 
+- `dokploy mongo change-password` - mongo changePassword
 - `dokploy mongo change-status` - mongo changeStatus
 - `dokploy mongo create` - mongo create
 - `dokploy mongo deploy` - mongo deploy
 - `dokploy mongo move` - mongo move
 - `dokploy mongo one` - mongo one
+- `dokploy mongo read-logs` - mongo readLogs
 - `dokploy mongo rebuild` - mongo rebuild
 - `dokploy mongo reload` - mongo reload
 - `dokploy mongo remove` - mongo remove
@@ -264,11 +331,13 @@ Generated from `Dokploy/cli` source files.
 
 ## mysql
 
+- `dokploy mysql change-password` - mysql changePassword
 - `dokploy mysql change-status` - mysql changeStatus
 - `dokploy mysql create` - mysql create
 - `dokploy mysql deploy` - mysql deploy
 - `dokploy mysql move` - mysql move
 - `dokploy mysql one` - mysql one
+- `dokploy mysql read-logs` - mysql readLogs
 - `dokploy mysql rebuild` - mysql rebuild
 - `dokploy mysql reload` - mysql reload
 - `dokploy mysql remove` - mysql remove
@@ -287,6 +356,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy notification create-email` - notification createEmail
 - `dokploy notification create-gotify` - notification createGotify
 - `dokploy notification create-lark` - notification createLark
+- `dokploy notification create-mattermost` - notification createMattermost
 - `dokploy notification create-ntfy` - notification createNtfy
 - `dokploy notification create-pushover` - notification createPushover
 - `dokploy notification create-resend` - notification createResend
@@ -302,6 +372,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy notification test-email-connection` - notification testEmailConnection
 - `dokploy notification test-gotify-connection` - notification testGotifyConnection
 - `dokploy notification test-lark-connection` - notification testLarkConnection
+- `dokploy notification test-mattermost-connection` - notification testMattermostConnection
 - `dokploy notification test-ntfy-connection` - notification testNtfyConnection
 - `dokploy notification test-pushover-connection` - notification testPushoverConnection
 - `dokploy notification test-resend-connection` - notification testResendConnection
@@ -313,6 +384,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy notification update-email` - notification updateEmail
 - `dokploy notification update-gotify` - notification updateGotify
 - `dokploy notification update-lark` - notification updateLark
+- `dokploy notification update-mattermost` - notification updateMattermost
 - `dokploy notification update-ntfy` - notification updateNtfy
 - `dokploy notification update-pushover` - notification updatePushover
 - `dokploy notification update-resend` - notification updateResend
@@ -327,6 +399,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy organization all-invitations` - organization allInvitations
 - `dokploy organization create` - organization create
 - `dokploy organization delete` - organization delete
+- `dokploy organization invite-member` - organization inviteMember
 - `dokploy organization one` - organization one
 - `dokploy organization remove-invitation` - organization removeInvitation
 - `dokploy organization set-default` - organization setDefault
@@ -357,11 +430,13 @@ Generated from `Dokploy/cli` source files.
 
 ## postgres
 
+- `dokploy postgres change-password` - postgres changePassword
 - `dokploy postgres change-status` - postgres changeStatus
 - `dokploy postgres create` - postgres create
 - `dokploy postgres deploy` - postgres deploy
 - `dokploy postgres move` - postgres move
 - `dokploy postgres one` - postgres one
+- `dokploy postgres read-logs` - postgres readLogs
 - `dokploy postgres rebuild` - postgres rebuild
 - `dokploy postgres reload` - postgres reload
 - `dokploy postgres remove` - postgres remove
@@ -385,6 +460,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy project all-for-permissions` - project allForPermissions
 - `dokploy project create` - project create
 - `dokploy project duplicate` - project duplicate
+- `dokploy project home-stats` - project homeStats
 - `dokploy project one` - project one
 - `dokploy project remove` - project remove
 - `dokploy project search` - project search
@@ -399,11 +475,13 @@ Generated from `Dokploy/cli` source files.
 
 ## redis
 
+- `dokploy redis change-password` - redis changePassword
 - `dokploy redis change-status` - redis changeStatus
 - `dokploy redis create` - redis create
 - `dokploy redis deploy` - redis deploy
 - `dokploy redis move` - redis move
 - `dokploy redis one` - redis one
+- `dokploy redis read-logs` - redis readLogs
 - `dokploy redis rebuild` - redis rebuild
 - `dokploy redis reload` - redis reload
 - `dokploy redis remove` - redis remove
@@ -438,6 +516,12 @@ Generated from `Dokploy/cli` source files.
 - `dokploy schedule run-manually` - schedule runManually
 - `dokploy schedule update` - schedule update
 
+## scim
+
+- `dokploy scim delete-provider` - scim deleteProvider
+- `dokploy scim generate-token` - scim generateToken
+- `dokploy scim list-providers` - scim listProviders
+
 ## security
 
 - `dokploy security create` - security create
@@ -448,6 +532,7 @@ Generated from `Dokploy/cli` source files.
 ## server
 
 - `dokploy server all` - server all
+- `dokploy server all-for-permissions` - server allForPermissions
 - `dokploy server build-servers` - server buildServers
 - `dokploy server count` - server count
 - `dokploy server create` - server create
@@ -461,6 +546,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy server setup` - server setup
 - `dokploy server setup-monitoring` - server setupMonitoring
 - `dokploy server update` - server update
+- `dokploy server update-builds-concurrency` - server updateBuildsConcurrency
 - `dokploy server validate` - server validate
 - `dokploy server with-sshkey` - server withSSHKey
 
@@ -468,6 +554,7 @@ Generated from `Dokploy/cli` source files.
 
 - `dokploy settings assign-domain-server` - settings assignDomainServer
 - `dokploy settings check-gpustatus` - settings checkGPUStatus
+- `dokploy settings check-infrastructure-health` - settings checkInfrastructureHealth
 - `dokploy settings clean-all` - settings cleanAll
 - `dokploy settings clean-all-deployment-queue` - settings cleanAllDeploymentQueue
 - `dokploy settings clean-docker-builder` - settings cleanDockerBuilder
@@ -478,6 +565,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy settings clean-stopped-containers` - settings cleanStoppedContainers
 - `dokploy settings clean-unused-images` - settings cleanUnusedImages
 - `dokploy settings clean-unused-volumes` - settings cleanUnusedVolumes
+- `dokploy settings get-docker-disk-usage` - settings getDockerDiskUsage
 - `dokploy settings get-dokploy-cloud-ips` - settings getDokployCloudIps
 - `dokploy settings get-dokploy-version` - settings getDokployVersion
 - `dokploy settings get-ip` - settings getIp
@@ -505,9 +593,12 @@ Generated from `Dokploy/cli` source files.
 - `dokploy settings setup-gpu` - settings setupGPU
 - `dokploy settings toggle-dashboard` - settings toggleDashboard
 - `dokploy settings toggle-requests` - settings toggleRequests
+- `dokploy settings update-builds-concurrency` - settings updateBuildsConcurrency
 - `dokploy settings update-docker-cleanup` - settings updateDockerCleanup
+- `dokploy settings update-enforce-sso` - settings updateEnforceSSO
 - `dokploy settings update-log-cleanup` - settings updateLogCleanup
 - `dokploy settings update-middleware-traefik-config` - settings updateMiddlewareTraefikConfig
+- `dokploy settings update-remote-servers-only` - settings updateRemoteServersOnly
 - `dokploy settings update-server` - settings updateServer
 - `dokploy settings update-server-ip` - settings updateServerIp
 - `dokploy settings update-traefik-config` - settings updateTraefikConfig
@@ -519,6 +610,7 @@ Generated from `Dokploy/cli` source files.
 ## ssh-key
 
 - `dokploy ssh-key all` - sshKey all
+- `dokploy ssh-key all-for-apps` - sshKey allForApps
 - `dokploy ssh-key create` - sshKey create
 - `dokploy ssh-key generate` - sshKey generate
 - `dokploy ssh-key one` - sshKey one
@@ -529,6 +621,7 @@ Generated from `Dokploy/cli` source files.
 
 - `dokploy sso add-trusted-origin` - sso addTrustedOrigin
 - `dokploy sso delete-provider` - sso deleteProvider
+- `dokploy sso enforce-sso` - sso enforceSSO
 - `dokploy sso get-trusted-origins` - sso getTrustedOrigins
 - `dokploy sso list-providers` - sso listProviders
 - `dokploy sso one` - sso one
@@ -546,13 +639,26 @@ Generated from `Dokploy/cli` source files.
 - `dokploy stripe get-current-plan` - stripe getCurrentPlan
 - `dokploy stripe get-invoices` - stripe getInvoices
 - `dokploy stripe get-products` - stripe getProducts
+- `dokploy stripe update-invoice-notifications` - stripe updateInvoiceNotifications
 - `dokploy stripe upgrade-subscription` - stripe upgradeSubscription
 
 ## swarm
 
+- `dokploy swarm get-container-stats` - swarm getContainerStats
 - `dokploy swarm get-node-apps` - swarm getNodeApps
 - `dokploy swarm get-node-info` - swarm getNodeInfo
 - `dokploy swarm get-nodes` - swarm getNodes
+
+## tag
+
+- `dokploy tag all` - tag all
+- `dokploy tag assign-to-project` - tag assignToProject
+- `dokploy tag bulk-assign` - tag bulkAssign
+- `dokploy tag create` - tag create
+- `dokploy tag one` - tag one
+- `dokploy tag remove` - tag remove
+- `dokploy tag remove-from-project` - tag removeFromProject
+- `dokploy tag update` - tag update
 
 ## user
 
@@ -560,19 +666,24 @@ Generated from `Dokploy/cli` source files.
 - `dokploy user assign-permissions` - user assignPermissions
 - `dokploy user check-user-organizations` - user checkUserOrganizations
 - `dokploy user create-api-key` - user createApiKey
+- `dokploy user create-user-with-credentials` - user createUserWithCredentials
 - `dokploy user delete-api-key` - user deleteApiKey
 - `dokploy user generate-token` - user generateToken
 - `dokploy user get` - user get
 - `dokploy user get-backups` - user getBackups
+- `dokploy user get-bookmarked-templates` - user getBookmarkedTemplates
 - `dokploy user get-container-metrics` - user getContainerMetrics
 - `dokploy user get-invitations` - user getInvitations
 - `dokploy user get-metrics-token` - user getMetricsToken
+- `dokploy user get-permissions` - user getPermissions
 - `dokploy user get-server-metrics` - user getServerMetrics
 - `dokploy user get-user-by-token` - user getUserByToken
 - `dokploy user have-root-access` - user haveRootAccess
 - `dokploy user one` - user one
 - `dokploy user remove` - user remove
 - `dokploy user send-invitation` - user sendInvitation
+- `dokploy user session` - user session
+- `dokploy user toggle-template-bookmark` - user toggleTemplateBookmark
 - `dokploy user update` - user update
 
 ## volume-backups
@@ -583,4 +694,11 @@ Generated from `Dokploy/cli` source files.
 - `dokploy volume-backups one` - volumeBackups one
 - `dokploy volume-backups run-manually` - volumeBackups runManually
 - `dokploy volume-backups update` - volumeBackups update
+
+## whitelabeling
+
+- `dokploy whitelabeling get` - whitelabeling get
+- `dokploy whitelabeling get-public` - whitelabeling getPublic
+- `dokploy whitelabeling reset` - whitelabeling reset
+- `dokploy whitelabeling update` - whitelabeling update
 

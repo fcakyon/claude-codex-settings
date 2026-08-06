@@ -159,8 +159,8 @@ stripe projects variables delete <name> --yes
 
 | Error code | Cause | Recovery |
 | --- | --- | --- |
-| `BROWSER_AUTH_REQUIRED` | No auth session and browser needed | Tell user to run `stripe login` — you cannot fix this |
-| `ACCOUNT_NOT_ELIGIBLE` | Account not onboarded for Projects | Tell user to run `stripe login` or visit https://projects.dev |
+| `BROWSER_AUTH_REQUIRED` | No auth session and browser needed | Tell user to run `stripe projects init` — you cannot fix this |
+| `ACCOUNT_NOT_ELIGIBLE` | Account not onboarded for Projects | Tell user to run `stripe projects switch-account` to choose an account or continue setup for this account. |
 | `TOS_ACCEPTANCE_REQUIRED` | Developer or provider terms not accepted | Re-run with `--accept-tos` |
 | `PROVIDER_NOT_LINKED` | Provider requires OAuth linking | Run `stripe projects link <provider>` — may open a browser |
 | `PLAN_REQUIRED` | Deployable needs a plan provisioned first | Provision the plan listed in the error, then retry |
