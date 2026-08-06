@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.5.0"
+    "version": "2.6.0"
   },
   "plugins": [
     {
@@ -387,6 +387,21 @@
       "keywords": ["ultralytics", "yolo", "platform", "training", "computer-vision", "formatting", "hooks"],
       "category": "developer-tools",
       "tags": ["formatting", "development"]
+    },
+    {
+      "name": "ultralytics-branding",
+      "source": "./plugins/ultralytics-branding",
+      "description": "Ultralytics brand colors, fonts, logo, naming, and tone for branded content.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Fatih C. Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "keywords": ["ultralytics", "branding", "design", "presentation", "marketing", "social-media"],
+      "category": "design",
+      "tags": ["branding", "design", "marketing"]
     },
     {
       "name": "azure-tools",

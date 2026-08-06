@@ -76,8 +76,8 @@ cursor plugin install simplify@claude-settings
 Want the shared agent guidance too? [`.claude/CLAUDE.md`](https://github.com/fcakyon/claude-codex-settings/blob/main/.claude/CLAUDE.md) is the file written for your projects. Run `/claude-tools:sync-claude-md` to pull it into `~/.claude/CLAUDE.md`, or paste it into a project as `CLAUDE.md`, then point the other tools at the same file:
 
 ```bash
-ln -sfn CLAUDE.md AGENTS.md   # Codex CLI, Cursor, Copilot
-ln -sfn CLAUDE.md GEMINI.md   # Gemini CLI
+ln -sfn CLAUDE.md AGENTS.md # Codex CLI, Cursor, Copilot
+ln -sfn CLAUDE.md GEMINI.md # Gemini CLI
 ```
 
 ## Plugins
@@ -748,7 +748,7 @@ Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formattin
 | Skill                                                                                    | Description                                                  | ZIP                                                                                                                                                                          |
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`ultralytics-platform`](./plugins/ultralytics-dev/skills/ultralytics-platform/SKILL.md) | Platform API: model upload, datasets, search, cloud training | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-platform.zip) |
-| [`yolo-training`](./plugins/ultralytics-dev/skills/yolo-training/SKILL.md) | YOLO26 training diagnosis: read the curves, pick the knob    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/yolo-training.zip) |
+| [`yolo-training`](./plugins/ultralytics-dev/skills/yolo-training/SKILL.md)               | YOLO26 training diagnosis: read the curves, pick the knob    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/yolo-training.zip)        |
 
 **Hooks:**
 
@@ -760,6 +760,23 @@ Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formattin
 - [`block_force_push.py`](./plugins/ultralytics-dev/hooks/scripts/block_force_push.py) - Block force-push and rebase
 
 Install `ruff` and `prettier` first ([setup](INSTALL.md#code-quality-tools)).
+
+</details>
+
+<details>
+<summary><strong>ultralytics-branding</strong> - Ultralytics brand colors, fonts, logo, naming, and tone for branded content.</summary>
+
+| Claude Code                                                  | Codex CLI                                               | Gemini CLI                                                        |
+| ------------------------------------------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `claude plugin install ultralytics-branding@claude-settings` | `codex plugin add ultralytics-branding@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-branding` |
+
+Official colors, Archivo typography, logo and naming rules, tone of voice, and per-format defaults from [ultralytics.com/brand](https://www.ultralytics.com/brand) for PDF/PPTX/Canva decks, DOCX documents, marketing email HTML, social posts, and web designs.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                                         | Description                                              | ZIP                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ultralytics-branding`](./plugins/ultralytics-branding/skills/ultralytics-branding/SKILL.md) | Brand colors, fonts, logo, naming, tone, format defaults | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-branding.zip) |
 
 </details>
 

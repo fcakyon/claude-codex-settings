@@ -305,6 +305,18 @@
       "category": "developer-tools"
     },
     {
+      "name": "ultralytics-branding",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ultralytics-branding"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "design"
+    },
+    {
       "name": "azure-tools",
       "source": {
         "source": "local",
