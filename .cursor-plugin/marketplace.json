@@ -178,6 +178,13 @@
       "license": "Apache-2.0"
     },
     {
+      "name": "ultralytics-branding",
+      "source": "./plugins/ultralytics-branding",
+      "description": "Ultralytics brand colors, fonts, logo, naming, and tone for branded content.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
       "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
