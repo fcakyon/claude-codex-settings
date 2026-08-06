@@ -1,10 +1,19 @@
 import type { APIRoute } from "astro";
-import { author, plugins, rawRepositoryUrl, repositoryUrl, site, sourceDocuments } from "../lib/content";
+import {
+  author,
+  modelProviders,
+  plugins,
+  rawRepositoryUrl,
+  repositoryUrl,
+  site,
+  sourceDocuments,
+} from "../lib/content";
 
 export const prerender = true;
 
 export const GET: APIRoute = () => {
-  const toolNames = (tools: string[]) => tools.map((tool) => tool === "Codex" ? "OpenAI Codex" : tool === "Gemini" ? "Gemini CLI" : tool);
+  const toolNames = (tools: string[]) =>
+    tools.map((tool) => (tool === "Codex" ? "OpenAI Codex" : tool === "Gemini" ? "Gemini CLI" : tool));
   const componentSummary = (plugin: (typeof plugins)[number]) => {
     if (!plugin.components) return "See the external source repository.";
     const lines = [
@@ -17,14 +26,18 @@ export const GET: APIRoute = () => {
     ].filter(Boolean);
     return lines.join("; ") || "Plugin manifest only.";
   };
-  const pluginCatalog = () => plugins.map((plugin) => {
-    const installCommands = [
-      `- Claude Code install: \`${plugin.claudeCommand}\``,
-      plugin.codexCommand ? `- OpenAI Codex install: \`${plugin.codexCommand}\`` : "",
-      plugin.cursorCommand ? `- Cursor install: \`${plugin.cursorCommand}\`` : "",
-      plugin.geminiCommand ? `- Gemini CLI install: \`${plugin.geminiCommand}\`` : "",
-    ].filter(Boolean).join("\n");
-    return `## ${plugin.name}
+  const pluginCatalog = () =>
+    plugins
+      .map((plugin) => {
+        const installCommands = [
+          `- Claude Code install: \`${plugin.claudeCommand}\``,
+          plugin.codexCommand ? `- OpenAI Codex install: \`${plugin.codexCommand}\`` : "",
+          plugin.cursorCommand ? `- Cursor install: \`${plugin.cursorCommand}\`` : "",
+          plugin.geminiCommand ? `- Gemini CLI install: \`${plugin.geminiCommand}\`` : "",
+        ]
+          .filter(Boolean)
+          .join("\n");
+        return `## ${plugin.name}
 
 ${plugin.description}
 
@@ -38,7 +51,8 @@ ${plugin.description}
 - [Source](${plugin.href}): Plugin files and documentation.
 ${installCommands}
 `;
-  }).join("\n");
+      })
+      .join("\n");
   const authorContext = `## Author and maintainer
 
 - Name: ${author.name}
@@ -46,10 +60,27 @@ ${installCommands}
 
 The following links are verified profiles for ${author.name}:
 
-${Object.entries(author.profiles).map(([name, url]) => `- [${name}](${url})`).join("\n")}
+${Object.entries(author.profiles)
+  .map(([name, url]) => `- [${name}](${url})`)
+  .join("\n")}
 `;
-  const body = site.variant === "settings"
-    ? `# Claude Settings for AI coding agents
+  const providerContext = `## Alternative model providers
+
+${modelProviders
+  .map(
+    (provider) => `### ${provider.name}
+
+- Claude Code endpoint: \`${provider.baseUrl}\`
+- Claude Code models: ${provider.models.map((model) => `\`${model}\``).join(", ")}
+- [Claude Code settings](${provider.claudeUrl})
+- Codex CLI: ${provider.codexUrl ? `local Responses proxy using \`${provider.codexModel}\`. [Recipe](${provider.codexUrl})` : "no official Codex route"}
+`,
+  )
+  .join("\n")}
+`;
+  const body =
+    site.variant === "settings"
+      ? `# Claude Settings for AI coding agents
 
 > ${site.description}
 
@@ -64,6 +95,8 @@ ${authorContext}
 - [Claude marketplace](${rawRepositoryUrl}/.claude-plugin/marketplace.json): Canonical plugin metadata.
 - [Codex marketplace](${rawRepositoryUrl}/.agents/plugins/marketplace.json): OpenAI Codex plugin availability.
 - [Cursor marketplace](${rawRepositoryUrl}/.cursor-plugin/marketplace.json): Cursor plugin availability.
+
+${providerContext}
 
 ## AI guidance: .claude/CLAUDE.md
 
@@ -89,7 +122,7 @@ ${sourceDocuments.install}
 
 - [README](${rawRepositoryUrl}/README.md): Full human-facing repository documentation.
 `
-    : `# Agent Plugins for Claude, Codex, Cursor, and Gemini
+      : `# Agent Plugins for Claude, Codex, Cursor, and Gemini
 
 > ${site.description}
 
@@ -104,6 +137,7 @@ ${authorContext}
 - [Claude marketplace](${rawRepositoryUrl}/.claude-plugin/marketplace.json): Descriptions, versions, categories, tags, keywords, licenses, and sources.
 - [Codex marketplace](${rawRepositoryUrl}/.agents/plugins/marketplace.json): OpenAI Codex plugin availability.
 - [Cursor marketplace](${rawRepositoryUrl}/.cursor-plugin/marketplace.json): Cursor plugin availability.
+- [Claude Settings provider guide](https://claudesettings.com/#providers): Kimi, MiniMax, and Z.ai/GLM setup and Codex compatibility.
 
 ## Installation rules
 

@@ -1,27 +1,44 @@
 ---
-import Icon from "./Icon.astro";
-import { repositoryStars, repositoryUrl, type SiteVariant } from "../lib/content";
+import Icon from "./Icon.astro"
+import { repositoryStars, repositoryUrl, type SiteVariant } from "../lib/content"
+import { localePath, translations, type Locale } from "../lib/i18n"
 
 interface Props {
-  variant: SiteVariant;
+  locale: Locale
+  variant: SiteVariant
 }
 
-const { variant } = Astro.props;
-const settings = variant === "settings";
-const stars = await repositoryStars();
-const nav = settings
-  ? [["Install", "#install"], ["Plugins", "#plugins"], ["Configuration", "#configuration"], ["GitHub", repositoryUrl]]
-  : [["Browse", "#browse"], ["Install", "#install"], ["Compatibility", "#compatibility"], ["GitHub", repositoryUrl]];
+const { locale, variant } = Astro.props
+const copy = translations[locale]
+const settings = variant === "settings"
+const stars = await repositoryStars()
+const nav = copy[variant].nav
+const languageLocale = locale === "en" ? "zh-CN" : "en"
 ---
 
 <header class="site-header">
-  <a class="brand" href="/">{settings ? "Claude Settings" : "Agent Plugins"}</a>
+  <a class="brand" href={localePath(locale)}>{settings ? "Claude Settings" : "Agent Plugins"}</a>
   <nav aria-label="Primary navigation">
     {nav.map(([label, href]) => <a href={href}>{label}</a>)}
+    <a href={repositoryUrl}>GitHub</a>
   </nav>
-  <a class="button primary header-cta" href={repositoryUrl} target="_blank" rel="noreferrer">
-    <Icon name="github" size={21} />
-    <span class="cta-label">View on GitHub</span>
-    {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString("en-US")}<span class="sr-only"> stars</span></span>}
-  </a>
+  <div class="header-actions">
+    <a class="language-link" href={localePath(languageLocale)} hreflang={languageLocale}>{copy.languageLabel}</a>
+    <a class="button primary header-cta" href={repositoryUrl} target="_blank" rel="noreferrer">
+      <Icon name="github" size={21} />
+      <span class="cta-label">{copy.github}</span>
+      {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}<span class="sr-only"> {copy.settings.hero.stars}</span></span>}
+    </a>
+  </div>
 </header>
+
+<style is:global>
+  .header-actions { justify-self: end; display: flex; align-items: center; gap: 18px; }
+  .language-link { color: var(--muted); font-size: 14px; font-weight: 700; white-space: nowrap; }
+  .language-link:hover { color: var(--text); }
+
+  @media (max-width: 760px) {
+    .header-actions { gap: 10px; }
+    .language-link { font-size: 13px; }
+  }
+</style>

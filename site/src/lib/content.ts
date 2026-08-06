@@ -41,21 +41,48 @@ export const site = {
     variant: "settings" as const,
     url: process.env.PUBLIC_SITE_URL || "https://claudesettings.com",
     title: "Claude Settings for Claude Code, Codex and Cursor",
-    description:
-      `Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
+    description: `Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
   plugins: {
     variant: "plugins" as const,
     url: process.env.PUBLIC_SITE_URL || "https://agentplugins.net",
     title: "Agent Plugins for Claude Code, Codex, Cursor and Gemini",
-    description:
-      `Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
+    description: `Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
 }[variant];
 
 const claudeContent = read(".claude/CLAUDE.md");
 const settingsContent = read(".claude/settings.json");
 const codexContent = read(".codex/config.toml");
+
+const providerDefinitions = [
+  { name: "Kimi", claudePath: ".claude/settings-kimi.json", codexPath: ".codex/config-kimi.toml" },
+  {
+    name: "MiniMax",
+    claudePath: ".claude/settings-minimax.json",
+    codexPath: ".codex/config-minimax.toml",
+  },
+  { name: "Z.ai / GLM", claudePath: ".claude/settings-zai.json" },
+] as const;
+
+export const modelProviders = providerDefinitions.map((provider) => {
+  const settings = JSON.parse(read(provider.claudePath)) as { env: Record<string, string> };
+  const codexRecipe = "codexPath" in provider ? read(provider.codexPath) : undefined;
+  return {
+    ...provider,
+    baseUrl: settings.env.ANTHROPIC_BASE_URL,
+    models: [
+      ...new Set(
+        Object.entries(settings.env)
+          .filter(([key]) => key.startsWith("ANTHROPIC_DEFAULT_"))
+          .map(([, model]) => model),
+      ),
+    ],
+    codexModel: codexRecipe?.match(/^model = "([^"]+)"/m)?.[1],
+    claudeUrl: `${repositoryUrl}/blob/main/${provider.claudePath}`,
+    codexUrl: "codexPath" in provider ? `${repositoryUrl}/blob/main/${provider.codexPath}` : undefined,
+  };
+});
 
 export const editorFiles = [
   {
@@ -90,24 +117,30 @@ export const repositoryStars = () => {
       ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
     },
   })
-    .then((response) => response.ok ? response.json() : null)
+    .then((response) => (response.ok ? response.json() : null))
     .then((repository) => (repository?.stargazers_count as number) ?? null)
     .catch(() => null);
   return starsRequest;
 };
 
 const marketplace = JSON.parse(read(".claude-plugin/marketplace.json")) as Marketplace;
-const codexPlugins = new Set((JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
-const cursorPlugins = new Set((JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
+const codexPlugins = new Set(
+  (JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
+);
+const cursorPlugins = new Set(
+  (JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
+);
 export const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
 const componentNames = (directory: string, folder: string, skill = false) => {
   const path = resolve(directory, folder);
   if (!existsSync(path)) return [];
   return readdirSync(path, { withFileTypes: true })
-    .filter((entry) => skill
-      ? entry.isDirectory() && existsSync(resolve(path, entry.name, "SKILL.md"))
-      : entry.isFile() && extname(entry.name) === ".md")
-    .map((entry) => skill ? entry.name : basename(entry.name, ".md"))
+    .filter((entry) =>
+      skill
+        ? entry.isDirectory() && existsSync(resolve(path, entry.name, "SKILL.md"))
+        : entry.isFile() && extname(entry.name) === ".md",
+    )
+    .map((entry) => (skill ? entry.name : basename(entry.name, ".md")))
     .sort();
 };
 
@@ -124,9 +157,10 @@ export const plugins = marketplace.plugins
       ...(hasCursor ? ["Cursor"] : []),
       ...(hasGemini ? ["Gemini"] : []),
     ];
-    const externalUrl = typeof plugin.source === "object"
-      ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
-      : undefined;
+    const externalUrl =
+      typeof plugin.source === "object"
+        ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
+        : undefined;
     const components = directory
       ? {
           skills: componentNames(directory, "skills", true),
@@ -153,8 +187,9 @@ export const plugins = marketplace.plugins
   .sort((a, b) => {
     const aFeatured = featured.indexOf(a.name);
     const bFeatured = featured.indexOf(b.name);
-    return (aFeatured < 0 ? featured.length + a.index : aFeatured) -
-      (bFeatured < 0 ? featured.length + b.index : bFeatured);
+    return (
+      (aFeatured < 0 ? featured.length + a.index : aFeatured) - (bFeatured < 0 ? featured.length + b.index : bFeatured)
+    );
   });
 
 export const installTools = [

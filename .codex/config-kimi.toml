@@ -1,0 +1,24 @@
+# Kimi K3 recipe for Codex CLI.
+# Copy the blocks below into ~/.codex/config.toml to activate.
+# This file is NOT auto-loaded. Codex only reads config.toml.
+#
+# Codex requires the Responses API, while Kimi Code exposes an OpenAI-compatible
+# Chat Completions endpoint. Start a local translation proxy before Codex:
+#
+#   export KIMI_API_KEY="your_kimi_api_key"
+#   npx @codeproxy/cli --base-url https://api.kimi.com/coding/v1 --model k3 --apikey "$KIMI_API_KEY"
+#
+# Kimi K3 requires a Moderato plan or higher. Use k3-256k in both the proxy
+# command and model setting when 256K context is enough and lower quota use matters.
+
+model = "k3"
+model_provider = "kimi"
+model_context_window = 1048576
+model_reasoning_effort = "high"
+model_supports_reasoning_summaries = false
+
+[model_providers.kimi]
+name = "Kimi K3 via local proxy"
+base_url = "http://127.0.0.1:8787/v1"
+wire_api = "responses"
+stream_idle_timeout_ms = 600000

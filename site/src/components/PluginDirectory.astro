@@ -1,23 +1,30 @@
 ---
-import Icon from "./Icon.astro";
-import { plugins, installTools } from "../lib/content";
+import Icon from "./Icon.astro"
+import { plugins, installTools } from "../lib/content"
+import { translations, type Locale } from "../lib/i18n"
 
-const defaultTool = installTools[0];
-const initialCommand = plugins[0].claudeCommand;
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const copy = translations[locale].plugins.directory
+const defaultTool = installTools[0]
+const initialCommand = plugins[0].claudeCommand
 ---
 
-<div class="plugin-browser" id="browse" data-plugin-browser>
+<div class="plugin-browser" id="browse" data-plugin-browser data-unavailable={copy.unavailable} data-shown={copy.shown}>
   <label class="plugin-search">
     <Icon name="search" size={27} />
-    <span class="sr-only">Search plugins and skills</span>
-    <input type="search" placeholder="Search plugins and skills" autocomplete="off" data-plugin-search />
+    <span class="sr-only">{copy.search}</span>
+    <input type="search" placeholder={copy.search} autocomplete="off" data-plugin-search />
     <kbd>/</kbd>
   </label>
 
   <div class="plugin-layout">
-    <div class="plugin-list" role="list" aria-label="Available plugins">
+    <div class="plugin-list" role="list" aria-label={copy.available}>
       <div class="plugin-head" aria-hidden="true">
-        <span>#</span><span>Plugin</span><span>Description</span><span>Supported tools</span><span>Link</span>
+        {copy.columns.map((label) => <span>{label}</span>)}
       </div>
       {plugins.map((plugin, index) => (
         <article
@@ -45,18 +52,18 @@ const initialCommand = plugins[0].claudeCommand;
           <button class="plugin-name" type="button" data-plugin-select>{plugin.name}</button>
           <p>{plugin.description}</p>
           <span class="plugin-tools">{plugin.tools.join(", ")}</span>
-          <a href={plugin.href} target="_blank" rel="noreferrer">View plugin <Icon name="arrow" size={18} /></a>
+          <a href={plugin.href} target="_blank" rel="noreferrer">{copy.view} <Icon name="arrow" size={18} /></a>
         </article>
       ))}
-      <p class="empty-state" data-empty hidden>No plugins match that search.</p>
+      <p class="empty-state" data-empty hidden>{copy.empty}</p>
     </div>
 
     <aside class="install-panel" id="install">
       <div class="install-heading">
-        <strong>Install via <span data-tool-label>{defaultTool.label}</span></strong>
+        <strong>{copy.installVia} <span data-tool-label>{defaultTool.label}</span></strong>
         <span aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
-      <div class="install-tabs" role="group" aria-label="Choose a tool">
+      <div class="install-tabs" role="group" aria-label={copy.chooseTool}>
         {installTools.map((tool, index) => (
           <button
             class:list={["install-tab", { "is-active": index === 0 }]}
@@ -70,20 +77,20 @@ const initialCommand = plugins[0].claudeCommand;
       <div class="install-content">
         <p data-install-unavailable hidden></p>
         <div class="command-block" data-marketplace-block>
-          <span class="command-label">Add marketplace (one time)</span>
+          <span class="command-label">{copy.addMarketplace}</span>
           <div class="command-line">
             <code data-marketplace-command>{defaultTool.marketplace}</code>
-            <button class="icon-button" type="button" data-copy-command aria-label="Copy marketplace command"><Icon name="copy" size={19} /></button>
+            <button class="icon-button" type="button" data-copy-command aria-label={copy.copyMarketplace}><Icon name="copy" size={19} /></button>
           </div>
         </div>
         <div class="command-block" data-install-block>
-          <span class="command-label">Install plugin</span>
+          <span class="command-label">{copy.installPlugin}</span>
           <div class="command-line">
             <code data-install-command>{initialCommand}</code>
-            <button class="icon-button" type="button" data-copy-command aria-label="Copy install command"><Icon name="copy" size={19} /></button>
+            <button class="icon-button" type="button" data-copy-command aria-label={copy.copyInstall}><Icon name="copy" size={19} /></button>
           </div>
         </div>
-        <p class="install-note">Pick a tab to switch tools, or a plugin name to change the command.</p>
+        <p class="install-note">{copy.note}</p>
       </div>
     </aside>
   </div>
@@ -91,86 +98,86 @@ const initialCommand = plugins[0].claudeCommand;
 </div>
 
 <script>
-  const browser = document.querySelector<HTMLElement>("[data-plugin-browser]");
+  const browser = document.querySelector<HTMLElement>("[data-plugin-browser]")
 
   if (browser) {
-    const search = browser.querySelector<HTMLInputElement>("[data-plugin-search]");
-    const rows = [...browser.querySelectorAll<HTMLElement>("[data-plugin-row]")];
-    const tabs = [...browser.querySelectorAll<HTMLElement>("[data-install-tab]")];
-    const toolLabel = browser.querySelector<HTMLElement>("[data-tool-label]")!;
-    const unavailable = browser.querySelector<HTMLElement>("[data-install-unavailable]")!;
-    const marketplaceBlock = browser.querySelector<HTMLElement>("[data-marketplace-block]")!;
-    const marketplaceCommand = browser.querySelector<HTMLElement>("[data-marketplace-command]")!;
-    const installBlock = browser.querySelector<HTMLElement>("[data-install-block]")!;
-    const installCommand = browser.querySelector<HTMLElement>("[data-install-command]")!;
-    const count = browser.querySelector<HTMLElement>("[data-result-count]");
-    const empty = browser.querySelector<HTMLElement>("[data-empty]");
+    const search = browser.querySelector<HTMLInputElement>("[data-plugin-search]")
+    const rows = [...browser.querySelectorAll<HTMLElement>("[data-plugin-row]")]
+    const tabs = [...browser.querySelectorAll<HTMLElement>("[data-install-tab]")]
+    const toolLabel = browser.querySelector<HTMLElement>("[data-tool-label]")!
+    const unavailable = browser.querySelector<HTMLElement>("[data-install-unavailable]")!
+    const marketplaceBlock = browser.querySelector<HTMLElement>("[data-marketplace-block]")!
+    const marketplaceCommand = browser.querySelector<HTMLElement>("[data-marketplace-command]")!
+    const installBlock = browser.querySelector<HTMLElement>("[data-install-block]")!
+    const installCommand = browser.querySelector<HTMLElement>("[data-install-command]")!
+    const count = browser.querySelector<HTMLElement>("[data-result-count]")
+    const empty = browser.querySelector<HTMLElement>("[data-empty]")
 
-    let activeRow = rows[0];
-    let activeTab = tabs[0];
+    let activeRow = rows[0]
+    let activeTab = tabs[0]
 
     const render = () => {
-      const label = activeTab.textContent || "";
-      const marketplace = activeTab.dataset.marketplace;
-      const install = activeRow.getAttribute(`data-cmd-${activeTab.dataset.installTab}`);
+      const label = activeTab.textContent || ""
+      const marketplace = activeTab.dataset.marketplace
+      const install = activeRow.getAttribute(`data-cmd-${activeTab.dataset.installTab}`)
 
-      toolLabel.textContent = label;
-      marketplaceBlock.hidden = !install || !marketplace;
-      marketplaceCommand.textContent = marketplace ?? "";
-      installBlock.hidden = !install;
-      installCommand.textContent = install ?? "";
-      unavailable.hidden = Boolean(install);
-      unavailable.textContent = `${activeRow.dataset.plugin} is not available for ${label}.`;
-    };
+      toolLabel.textContent = label
+      marketplaceBlock.hidden = !install || !marketplace
+      marketplaceCommand.textContent = marketplace ?? ""
+      installBlock.hidden = !install
+      installCommand.textContent = install ?? ""
+      unavailable.hidden = Boolean(install)
+      unavailable.textContent = `${activeRow.dataset.plugin} ${browser.dataset.unavailable} ${label}.`
+    }
 
-    render();
+    render()
 
     search?.addEventListener("input", () => {
-      const query = search.value.trim().toLowerCase();
-      let visible = 0;
+      const query = search.value.trim().toLowerCase()
+      let visible = 0
       rows.forEach((row) => {
-        row.hidden = !row.dataset.search?.includes(query);
-        if (!row.hidden) visible += 1;
-      });
-      if (empty) empty.hidden = visible > 0;
-      if (count) count.textContent = `${visible} plugins shown`;
-    });
+        row.hidden = !row.dataset.search?.includes(query)
+        if (!row.hidden) visible += 1
+      })
+      if (empty) empty.hidden = visible > 0
+      if (count) count.textContent = `${visible} ${browser.dataset.shown}`
+    })
 
     document.addEventListener("keydown", (event) => {
       if (event.key === "/" && document.activeElement !== search) {
-        event.preventDefault();
-        search?.focus();
+        event.preventDefault()
+        search?.focus()
       }
-    });
+    })
 
     tabs.forEach((tab) =>
       tab.addEventListener("click", () => {
-        activeTab = tab;
+        activeTab = tab
         tabs.forEach((item) => {
-          const selected = item === tab;
-          item.classList.toggle("is-active", selected);
-          item.setAttribute("aria-pressed", String(selected));
-        });
-        render();
+          const selected = item === tab
+          item.classList.toggle("is-active", selected)
+          item.setAttribute("aria-pressed", String(selected))
+        })
+        render()
       }),
-    );
+    )
 
     rows.forEach((row) =>
       row.querySelector("[data-plugin-select]")?.addEventListener("click", () => {
-        activeRow = row;
-        rows.forEach((item) => item.classList.toggle("is-selected", item === row));
-        render();
+        activeRow = row
+        rows.forEach((item) => item.classList.toggle("is-selected", item === row))
+        render()
       }),
-    );
+    )
 
     browser.querySelectorAll("[data-copy-command]").forEach((button) =>
       button.addEventListener("click", async (event) => {
-        const trigger = event.currentTarget as HTMLElement;
-        const code = trigger.closest(".command-line")?.querySelector("code");
-        await navigator.clipboard.writeText(code?.textContent || "");
-        trigger.classList.add("is-copied");
-        setTimeout(() => trigger.classList.remove("is-copied"), 1200);
+        const trigger = event.currentTarget as HTMLElement
+        const code = trigger.closest(".command-line")?.querySelector("code")
+        await navigator.clipboard.writeText(code?.textContent || "")
+        trigger.classList.add("is-copied")
+        setTimeout(() => trigger.classList.remove("is-copied"), 1200)
       }),
-    );
+    )
   }
 </script>

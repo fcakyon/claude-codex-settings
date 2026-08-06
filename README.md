@@ -76,8 +76,8 @@ cursor plugin install simplify@claude-settings
 Want the shared agent guidance too? [`.claude/CLAUDE.md`](https://github.com/fcakyon/claude-codex-settings/blob/main/.claude/CLAUDE.md) is the file written for your projects. Run `/claude-tools:sync-claude-md` to pull it into `~/.claude/CLAUDE.md`, or paste it into a project as `CLAUDE.md`, then point the other tools at the same file:
 
 ```bash
-ln -sfn CLAUDE.md AGENTS.md   # Codex CLI, Cursor, Copilot
-ln -sfn CLAUDE.md GEMINI.md   # Gemini CLI
+ln -sfn CLAUDE.md AGENTS.md # Codex CLI, Cursor, Copilot
+ln -sfn CLAUDE.md GEMINI.md # Gemini CLI
 ```
 
 ## Plugins
@@ -748,7 +748,7 @@ Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formattin
 | Skill                                                                                    | Description                                                  | ZIP                                                                                                                                                                          |
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`ultralytics-platform`](./plugins/ultralytics-dev/skills/ultralytics-platform/SKILL.md) | Platform API: model upload, datasets, search, cloud training | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-platform.zip) |
-| [`yolo-training`](./plugins/ultralytics-dev/skills/yolo-training/SKILL.md) | YOLO26 training diagnosis: read the curves, pick the knob    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/yolo-training.zip) |
+| [`yolo-training`](./plugins/ultralytics-dev/skills/yolo-training/SKILL.md)               | YOLO26 training diagnosis: read the curves, pick the knob    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/yolo-training.zip)        |
 
 **Hooks:**
 
@@ -952,6 +952,8 @@ Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) usin
 - **Cost savings**: much cheaper than frontier Claude models
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
+Z.ai currently documents Anthropic Messages and OpenAI Chat Completions endpoints, but Codex CLI requires the Responses API. No GLM Codex recipe is included until Z.ai publishes a compatible route.
+
 </details>
 
 <details>
@@ -976,6 +978,8 @@ export ENABLE_TOOL_SEARCH=false
 ```
 
 Or use the settings file: [`.claude/settings-kimi.json`](./.claude/settings-kimi.json)
+
+For Codex CLI, use Kimi K3 through the local Responses proxy in [`.codex/config-kimi.toml`](./.codex/config-kimi.toml). The recipe uses Kimi Code model ID `k3`. Use `k3-256k` in both the proxy command and config when 256K context is enough.
 
 </details>
 

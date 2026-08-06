@@ -1,0 +1,15 @@
+---
+import PluginsPage from "../../components/PluginsPage.astro"
+import SettingsPage from "../../components/SettingsPage.astro"
+import Layout from "../../layouts/Layout.astro"
+import { site } from "../../lib/content"
+import { translations } from "../../lib/i18n"
+
+const locale = "zh-CN"
+const copy = translations[locale][site.variant]
+const canonical = `${site.url}/zh-cn/`
+---
+
+<Layout locale={locale} variant={site.variant} title={copy.meta.title} description={copy.meta.description} canonical={canonical}>
+  {site.variant === "settings" ? <SettingsPage locale={locale} /> : <PluginsPage locale={locale} />}
+</Layout>
