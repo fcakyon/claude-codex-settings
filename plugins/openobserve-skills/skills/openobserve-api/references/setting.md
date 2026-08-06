@@ -1,8 +1,8 @@
 ---
-description: >-
-  Create or update OpenObserve stream settings via API. Configure partitions,
-  index fields, full-text search keys, retention, and more.
+title: Settings
+description: Create or update OpenObserve stream settings via API. Configure partitions, index fields, full-text search keys, retention, and more.
 ---
+
 ## Set or Update Stream Settings
 
 You can configure settings for a stream at creation time or update them later. Use the same endpoint with different HTTP methods depending on the operation.

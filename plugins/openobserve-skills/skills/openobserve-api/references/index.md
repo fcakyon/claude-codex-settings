@@ -1,7 +1,9 @@
 ---
-title: API Reference | OpenObserve
+title: Overview
+metaTitle: API Reference | OpenObserve
 description: Programmatic access to OpenObserve. HTTP basic-auth endpoints for streams, ingestion, search, functions, users, and metrics.
 ---
+
 # API Index
 
 These APIs can be used to programmatically interact with OpenObserve.
