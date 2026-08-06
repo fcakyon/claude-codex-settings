@@ -1,0 +1,15 @@
+# Start a local Responses proxy before using this config:
+#   export KIMI_API_KEY="your_kimi_api_key"
+#   npx @codeproxy/cli --base-url https://api.kimi.com/coding/v1 --model k3 --apikey "$KIMI_API_KEY"
+
+model = "k3"
+model_provider = "kimi"
+model_context_window = 1048576
+model_reasoning_effort = "high"
+model_supports_reasoning_summaries = false
+
+[model_providers.kimi]
+name = "Kimi K3 via local proxy"
+base_url = "http://127.0.0.1:8787/v1"
+wire_api = "responses"
+stream_idle_timeout_ms = 600000

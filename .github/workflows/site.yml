@@ -6,13 +6,14 @@ on:
     paths: &site-paths
       - "site/**"
       - ".claude/CLAUDE.md"
-      - ".claude/settings.json"
+      - ".claude/settings*.json"
       - ".claude-plugin/marketplace.json"
       - ".agents/plugins/marketplace.json"
       - ".cursor-plugin/marketplace.json"
       - "plugins/**/.claude-plugin/plugin.json"
       - "plugins/**/gemini-extension.json"
       - ".codex/config.toml"
+      - ".codex/config-*.toml"
       - "INSTALL.md"
       - ".github/workflows/site.yml"
   pull_request:

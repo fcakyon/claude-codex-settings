@@ -1,19 +1,23 @@
 ---
-import Header from "../components/Header.astro";
-import Icon, { type IconName } from "../components/Icon.astro";
-import { author, repositoryUrl, type SiteVariant } from "../lib/content";
-import "../styles/global.css";
+import Header from "../components/Header.astro"
+import Icon, { type IconName } from "../components/Icon.astro"
+import { author, repositoryUrl, site, type SiteVariant } from "../lib/content"
+import { locales, translations, type Locale } from "../lib/i18n"
+import "../styles/global.css"
 
 interface Props {
-  variant: SiteVariant;
-  title: string;
-  description: string;
-  canonical: string;
+  locale: Locale
+  variant: SiteVariant
+  title: string
+  description: string
+  canonical: string
 }
 
-const { variant, title, description, canonical } = Astro.props;
-const image = new URL(`/og-${variant}.webp`, Astro.site).href;
-const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID;
+const { locale, variant, title, description, canonical } = Astro.props
+const copy = translations[locale]
+const image = new URL(`/og-${variant}.webp`, Astro.site).href
+const localeData = locales[locale]
+const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -22,6 +26,7 @@ const structuredData = {
       name: variant === "settings" ? "Claude Settings" : "Agent Plugins",
       url: canonical,
       description,
+      inLanguage: locale,
       creator: { "@id": author.id },
     },
     {
@@ -30,6 +35,7 @@ const structuredData = {
       codeRepository: repositoryUrl,
       license: "https://www.apache.org/licenses/LICENSE-2.0",
       description,
+      inLanguage: locale,
       programmingLanguage: ["Markdown", "JSON", "Python", "Shell"],
       author: { "@id": author.id },
     },
@@ -42,11 +48,11 @@ const structuredData = {
       sameAs: Object.values(author.profiles),
     },
   ],
-};
+}
 ---
 
 <!doctype html>
-<html lang="en" data-site={variant}>
+<html lang={locale} data-site={variant}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -55,12 +61,16 @@ const structuredData = {
     <meta name="theme-color" content={variant === "settings" ? "#ffffff" : "#070b10"} />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {Object.entries(locales).map(([language, data]) => <link rel="alternate" hreflang={language} href={`${site.url}${data.path}`} />)}
+    <link rel="alternate" hreflang="x-default" href={`${site.url}${locales.en.path}`} />
+    <link rel="icon" href={`/favicon-${variant}.svg`} type="image/svg+xml" />
     <title>{title}</title>
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={localeData.og} />
+    <meta property="og:locale:alternate" content={locales[localeData.alternate].og} />
     <meta property="og:image" content={image} />
     <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />
@@ -80,13 +90,13 @@ const structuredData = {
   </head>
   <body>
     <div class="page-shell">
-      <Header variant={variant} />
+      <Header locale={locale} variant={variant} />
       <main><slot /></main>
       <footer>
-        <span>Developed using web development plugins from <a href={repositoryUrl} target="_blank" rel="noreferrer">claude-codex-settings</a></span>
+        <span>{copy.footer.credit} <a href={repositoryUrl} target="_blank" rel="noreferrer">claude-codex-settings</a></span>
         <div>
           <a href="/llms.txt">llms.txt</a>
-          <a href="/sitemap.xml">Sitemap</a>
+          <a href="/sitemap.xml">{copy.footer.sitemap}</a>
           {Object.entries(author.profiles).map(([name, url]) => (
             <a class="social-link" href={url} rel="me noreferrer" target="_blank" aria-label={name} title={name}>
               <Icon name={name.toLowerCase() as IconName} size={20} />

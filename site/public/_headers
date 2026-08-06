@@ -3,5 +3,8 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
-/favicon.svg
+/favicon-settings.svg
+  Cache-Control: public, max-age=604800
+
+/favicon-plugins.svg
   Cache-Control: public, max-age=604800

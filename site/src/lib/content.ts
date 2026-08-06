@@ -40,42 +40,70 @@ export const site = {
   settings: {
     variant: "settings" as const,
     url: process.env.PUBLIC_SITE_URL || "https://claudesettings.com",
-    title: "Claude Settings for Claude Code, Codex and Cursor",
-    description:
-      `Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
   plugins: {
     variant: "plugins" as const,
     url: process.env.PUBLIC_SITE_URL || "https://agentplugins.net",
-    title: "Agent Plugins for Claude Code, Codex, Cursor and Gemini",
-    description:
-      `Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
 }[variant];
 
-const claudeContent = read(".claude/CLAUDE.md");
-const settingsContent = read(".claude/settings.json");
-const codexContent = read(".codex/config.toml");
+const editorDirectories = [
+  {
+    name: ".claude",
+    tool: "Claude Code",
+    files: [
+      "CLAUDE.md",
+      ...readdirSync(resolve(root, ".claude"))
+        .filter((name) => /^settings(?:-[^.]+)?\.json$/.test(name))
+        .sort((a, b) => Number(a !== "settings.json") - Number(b !== "settings.json") || a.localeCompare(b)),
+    ],
+  },
+  {
+    name: ".codex",
+    tool: "Codex CLI",
+    files: readdirSync(resolve(root, ".codex"))
+      .filter((name) => /^config(?:-[^.]+)?\.toml$/.test(name))
+      .sort((a, b) => Number(a !== "config.toml") - Number(b !== "config.toml") || a.localeCompare(b)),
+  },
+] as const;
 
-export const editorFiles = [
-  {
-    id: "claude",
-    label: "CLAUDE.md",
-    content: claudeContent,
-    focus: "## Core Principles",
-  },
-  {
-    id: "settings",
-    label: "settings.json",
-    content: settingsContent,
-    focus: '"env"',
-  },
-  {
-    id: "codex",
-    label: "config.toml",
-    content: codexContent,
-    focus: "[plugins.",
-  },
+export const editorGroups = editorDirectories.map((directory) => ({
+  ...directory,
+  files: directory.files.map((label) => {
+    const path = `${directory.name}/${label}`;
+    const provider = label.match(/^(?:settings|config)-([^.]+)\./)?.[1];
+    return {
+      id: path.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, ""),
+      label,
+      path,
+      tool: directory.tool,
+      provider,
+      content: read(path),
+      focus:
+        label === "CLAUDE.md"
+          ? "## Core Principles"
+          : provider
+            ? label.endsWith(".json")
+              ? '"ANTHROPIC_BASE_URL"'
+              : "model ="
+            : label.endsWith(".json")
+              ? '"env"'
+              : "[plugins.",
+      language: label.endsWith(".md") ? "markdown" : label.endsWith(".json") ? "json" : "toml",
+      url: `${repositoryUrl}/blob/main/${path}`,
+    };
+  }),
+}));
+
+export const editorFiles = editorGroups.flatMap((group) => group.files);
+export const configurationDocuments = editorFiles.filter((file) => file.label !== "CLAUDE.md");
+
+const providerLabels: Record<string, string> = { kimi: "Kimi", minimax: "MiniMax", zai: "Z.ai / GLM" };
+
+export const providerNames = [
+  ...new Set(
+    configurationDocuments.flatMap(({ provider }) => (provider ? [providerLabels[provider] || provider] : [])),
+  ),
 ];
 
 const marketplaceSlug = repositoryUrl.replace("https://github.com/", "");
@@ -90,24 +118,30 @@ export const repositoryStars = () => {
       ...(process.env.GITHUB_TOKEN ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
     },
   })
-    .then((response) => response.ok ? response.json() : null)
+    .then((response) => (response.ok ? response.json() : null))
     .then((repository) => (repository?.stargazers_count as number) ?? null)
     .catch(() => null);
   return starsRequest;
 };
 
 const marketplace = JSON.parse(read(".claude-plugin/marketplace.json")) as Marketplace;
-const codexPlugins = new Set((JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
-const cursorPlugins = new Set((JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name));
+const codexPlugins = new Set(
+  (JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
+);
+const cursorPlugins = new Set(
+  (JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
+);
 export const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
 const componentNames = (directory: string, folder: string, skill = false) => {
   const path = resolve(directory, folder);
   if (!existsSync(path)) return [];
   return readdirSync(path, { withFileTypes: true })
-    .filter((entry) => skill
-      ? entry.isDirectory() && existsSync(resolve(path, entry.name, "SKILL.md"))
-      : entry.isFile() && extname(entry.name) === ".md")
-    .map((entry) => skill ? entry.name : basename(entry.name, ".md"))
+    .filter((entry) =>
+      skill
+        ? entry.isDirectory() && existsSync(resolve(path, entry.name, "SKILL.md"))
+        : entry.isFile() && extname(entry.name) === ".md",
+    )
+    .map((entry) => (skill ? entry.name : basename(entry.name, ".md")))
     .sort();
 };
 
@@ -124,9 +158,10 @@ export const plugins = marketplace.plugins
       ...(hasCursor ? ["Cursor"] : []),
       ...(hasGemini ? ["Gemini"] : []),
     ];
-    const externalUrl = typeof plugin.source === "object"
-      ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
-      : undefined;
+    const externalUrl =
+      typeof plugin.source === "object"
+        ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
+        : undefined;
     const components = directory
       ? {
           skills: componentNames(directory, "skills", true),
@@ -153,20 +188,24 @@ export const plugins = marketplace.plugins
   .sort((a, b) => {
     const aFeatured = featured.indexOf(a.name);
     const bFeatured = featured.indexOf(b.name);
-    return (aFeatured < 0 ? featured.length + a.index : aFeatured) -
-      (bFeatured < 0 ? featured.length + b.index : bFeatured);
+    return (
+      (aFeatured < 0 ? featured.length + a.index : aFeatured) - (bFeatured < 0 ? featured.length + b.index : bFeatured)
+    );
   });
 
-export const installTools = [
-  { id: "claude", label: "Claude Code", marketplace: `claude plugin marketplace add ${marketplaceSlug}` },
-  { id: "codex", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
-  { id: "gemini", label: "Gemini CLI" },
-  { id: "cursor", label: "Cursor" },
-];
+export const codingTools = [
+  {
+    id: "claude",
+    icon: "claude",
+    label: "Claude Code",
+    marketplace: `claude plugin marketplace add ${marketplaceSlug}`,
+  },
+  { id: "codex", icon: "openai", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
+  { id: "cursor", icon: "cursor", label: "Cursor", marketplace: undefined },
+  { id: "gemini", icon: "gemini", label: "Gemini CLI", marketplace: undefined },
+] as const;
 
 export const sourceDocuments = {
-  claude: claudeContent,
-  settings: settingsContent,
-  codex: codexContent,
+  claude: read(".claude/CLAUDE.md"),
   install: read("INSTALL.md"),
 };
