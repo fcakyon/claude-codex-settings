@@ -25,6 +25,12 @@ const variant = (process.env.SITE_VARIANT || "settings") as SiteVariant;
 export const repositoryUrl = "https://github.com/fcakyon/claude-codex-settings";
 export const rawRepositoryUrl = `${repositoryUrl.replace("github.com", "raw.githubusercontent.com")}/main`;
 export const marketplaceName = "claude-settings";
+export const codingTools = [
+  ["claude", "Claude Code"],
+  ["openai", "Codex CLI"],
+  ["cursor", "Cursor"],
+  ["gemini", "Gemini CLI"],
+] as const;
 export const author = {
   id: "https://github.com/fcakyon",
   name: "Fatih C. Akyon",

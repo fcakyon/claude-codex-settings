@@ -4,9 +4,8 @@ export const localePath = (locale: Locale) => (locale === "en" ? "/" : "/zh-cn/"
 
 export const translations = {
   en: {
-    htmlLang: "en",
-    ogLocale: "en_US",
     languageLabel: "简体中文",
+    stars: "stars",
     footer: {
       credit: "Developed using web development plugins from",
       sitemap: "Sitemap",
@@ -28,7 +27,6 @@ export const translations = {
           `Explore ready-to-use ${providers} files alongside shared skills, hooks, agents and MCP servers.`,
         repository: "View the repository",
         install: "Read the install guide",
-        stars: "stars",
       },
       configuration: {
         title: "One setup, four coding tools",
@@ -102,9 +100,8 @@ export const translations = {
     github: "View on GitHub",
   },
   "zh-CN": {
-    htmlLang: "zh-CN",
-    ogLocale: "zh_CN",
     languageLabel: "English",
+    stars: "个星标",
     footer: {
       credit: "使用以下仓库中的网页开发插件构建：",
       sitemap: "网站地图",
@@ -125,7 +122,6 @@ export const translations = {
         description: (providers: string) => `直接查看 ${providers} 配置，并共享技能、钩子、智能体和 MCP 服务。`,
         repository: "查看 GitHub 仓库",
         install: "阅读安装指南",
-        stars: "个星标",
       },
       configuration: {
         title: "一套配置，支持四种编程工具",

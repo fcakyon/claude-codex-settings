@@ -6,10 +6,7 @@ on:
     paths: &site-paths
       - "site/**"
       - ".claude/CLAUDE.md"
-      - ".claude/settings.json"
-      - ".claude/settings-kimi.json"
-      - ".claude/settings-minimax.json"
-      - ".claude/settings-zai.json"
+      - ".claude/settings*.json"
       - ".claude-plugin/marketplace.json"
       - ".agents/plugins/marketplace.json"
       - ".cursor-plugin/marketplace.json"

@@ -1,18 +1,5 @@
 ---
-import PluginsPage from "../components/PluginsPage.astro"
-import SettingsPage from "../components/SettingsPage.astro"
-import Layout from "../layouts/Layout.astro"
-import { providerNames, site } from "../lib/content"
-import { translations } from "../lib/i18n"
-
-const locale = "en"
-const copy = translations[locale][site.variant]
-const canonical = `${site.url}/`
-const description = site.variant === "settings"
-  ? translations[locale].settings.meta.description(providerNames.join(", "))
-  : copy.meta.description
+import SitePage from "../components/SitePage.astro"
 ---
 
-<Layout locale={locale} variant={site.variant} title={copy.meta.title} description={description} canonical={canonical}>
-  {site.variant === "settings" ? <SettingsPage locale={locale} /> : <PluginsPage locale={locale} />}
-</Layout>
+<SitePage locale="en" />

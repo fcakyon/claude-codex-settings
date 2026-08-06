@@ -27,7 +27,7 @@ const languageLocale = locale === "en" ? "zh-CN" : "en"
     <a class="button primary header-cta" href={repositoryUrl} target="_blank" rel="noreferrer">
       <Icon name="github" size={21} />
       <span class="cta-label">{copy.github}</span>
-      {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}<span class="sr-only"> {copy.settings.hero.stars}</span></span>}
+      {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}<span class="sr-only"> {copy.stars}</span></span>}
     </a>
   </div>
 </header>

@@ -1,23 +1,17 @@
 ---
 import Editor from "./Editor.astro"
 import Icon from "./Icon.astro"
-import { featured, plugins, providerNames, repositoryStars, repositoryUrl } from "../lib/content"
+import { codingTools, featured, plugins, repositoryStars, repositoryUrl } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
   locale: Locale
+  providers: string
 }
 
-const { locale } = Astro.props
+const { locale, providers } = Astro.props
 const copy = translations[locale].settings
-const providers = providerNames.join(locale === "en" ? ", " : "、")
 const stars = await repositoryStars()
-const tools = [
-  ["claude", "Claude Code"],
-  ["openai", "Codex CLI"],
-  ["cursor", "Cursor"],
-  ["gemini", "Gemini CLI"],
-] as const
 ---
 
 <section class="settings-hero">
@@ -27,7 +21,7 @@ const tools = [
     <div class="hero-actions">
       <a class="button primary" href={repositoryUrl} target="_blank" rel="noreferrer">
         <Icon name="github" size={23} />{copy.hero.repository}
-        {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}<span class="sr-only"> {copy.hero.stars}</span></span>}
+        {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}<span class="sr-only"> {translations[locale].stars}</span></span>}
       </a>
       <a class="button secondary" href="#install">{copy.hero.install} <Icon name="arrow" size={19} /></a>
     </div>
@@ -41,7 +35,7 @@ const tools = [
     <p>{copy.configuration.description}</p>
   </div>
   <div class="tool-rail">
-    {tools.map(([icon, label], index) => (
+    {codingTools.map(([icon, label], index) => (
       <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.configuration.tools[index]}</span></div>
     ))}
   </div>

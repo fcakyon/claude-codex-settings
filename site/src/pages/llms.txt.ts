@@ -65,17 +65,18 @@ ${Object.entries(author.profiles)
   .map(([name, url]) => `- [${name}](${url})`)
   .join("\n")}
 `;
-  const configurationCatalog = configurationDocuments
-    .map(
-      (file) => `## ${file.tool} configuration: ${file.path}
+  const configurationCatalog = () =>
+    configurationDocuments
+      .map(
+        (file) => `## ${file.tool} configuration: ${file.path}
 
 - [Source](${file.url})
 ~~~${file.language}
 ${file.content}
 ~~~
 `,
-    )
-    .join("\n");
+      )
+      .join("\n");
   const settingsDescription = `Repository-backed Claude Code and Codex CLI settings for ${providerNames.join(", ")}, plus shared plugins, skills, and hooks.`;
   const body =
     site.variant === "settings"
@@ -99,7 +100,7 @@ ${authorContext}
 
 ${sourceDocuments.claude}
 
-${configurationCatalog}
+${configurationCatalog()}
 
 ## Cross-tool installation: INSTALL.md
 

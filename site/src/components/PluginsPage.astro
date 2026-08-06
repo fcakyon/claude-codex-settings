@@ -1,6 +1,7 @@
 ---
 import Icon from "./Icon.astro"
 import PluginDirectory from "./PluginDirectory.astro"
+import { codingTools } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -9,12 +10,6 @@ interface Props {
 
 const { locale } = Astro.props
 const copy = translations[locale].plugins
-const tools = [
-  ["claude", "Claude Code"],
-  ["openai", "Codex CLI"],
-  ["cursor", "Cursor"],
-  ["gemini", "Gemini CLI"],
-] as const
 ---
 
 <section class="plugins-hero">
@@ -31,7 +26,7 @@ const tools = [
     <p>{copy.compatibility.description}</p>
   </div>
   <div class="compatibility-rail">
-    {tools.map(([icon, label], index) => (
+    {codingTools.map(([icon, label], index) => (
       <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.compatibility.tools[index]}</span></div>
     ))}
   </div>

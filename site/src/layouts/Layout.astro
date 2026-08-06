@@ -18,6 +18,7 @@ const copy = translations[locale]
 const englishUrl = `${site.url}/`
 const chineseUrl = `${site.url}/zh-cn/`
 const image = new URL(`/og-${variant}.webp`, Astro.site).href
+const ogLocale = locale === "en" ? "en_US" : "zh_CN"
 const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
 const structuredData = {
   "@context": "https://schema.org",
@@ -27,7 +28,7 @@ const structuredData = {
       name: variant === "settings" ? "Claude Settings" : "Agent Plugins",
       url: canonical,
       description,
-      inLanguage: copy.htmlLang,
+      inLanguage: locale,
       creator: { "@id": author.id },
     },
     {
@@ -36,7 +37,7 @@ const structuredData = {
       codeRepository: repositoryUrl,
       license: "https://www.apache.org/licenses/LICENSE-2.0",
       description,
-      inLanguage: copy.htmlLang,
+      inLanguage: locale,
       programmingLanguage: ["Markdown", "JSON", "Python", "Shell"],
       author: { "@id": author.id },
     },
@@ -53,7 +54,7 @@ const structuredData = {
 ---
 
 <!doctype html>
-<html lang={copy.htmlLang} data-site={variant}>
+<html lang={locale} data-site={variant}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -71,7 +72,7 @@ const structuredData = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content={copy.ogLocale} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:locale:alternate" content={locale === "en" ? "zh_CN" : "en_US"} />
     <meta property="og:image" content={image} />
     <meta property="og:image:type" content="image/webp" />
