@@ -1,8 +1,9 @@
 ---
-description: >-
-  Ingest logs in batch via POST /api/{org}/{stream}/_json using standard JSON.
-  Supports flattening, timestamps, and up to 200 fields per record.
+title: JSON
+metaTitle: Ingest Logs as JSON - OpenObserve API
+description: Ingest logs in batch via POST /api/{org}/{stream}/_json using standard JSON. Supports flattening, timestamps, and up to 200 fields per record.
 ---
+
 # Logs Ingestion - JSON
 
 Endpoint: `POST /api/{organization}/{stream}/_json`
@@ -102,7 +103,7 @@ One can configure ZO_COLS_PER_RECORD_LIMIT to set desired value for allowed numb
 
 OpenObserve flattens deep JSON logs. Below is an example log before and after being flattened.
 
-#### Before
+### Before
 
 ```json
 {
@@ -122,7 +123,7 @@ OpenObserve flattens deep JSON logs. Below is an example log before and after be
 }
 ```
 
-#### After
+### After
 
 ```json
 {

@@ -1,8 +1,8 @@
 ---
-description: >-
-  Ingest logs via OpenTelemetry Protocol (OTLP) at POST /api/{org}/v1/logs.
-  Supports OTLP JSON and Protobuf formats with resource attributes and log records.
+title: Otlp
+description: Ingest logs via OpenTelemetry Protocol (OTLP) at POST /api/{org}/v1/logs. Supports OTLP JSON and Protobuf formats with resource attributes and log records.
 ---
+
 # Logs Ingestion - OTLP
 
 Endpoint: `POST /api/{organization}/v1/logs`

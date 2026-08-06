@@ -1,8 +1,8 @@
 ---
-description: >-
-  Search around to fetch field values from a stream using filters like time,
-  keyword, and size with the _values API endpoint.
+title: Value
+description: Search around to fetch field values from a stream using filters like time, keyword, and size with the _values API endpoint.
 ---
+
 # Search around
 
 Endpoint: `GET /api/{organization}/{stream}/_values?fields={fields}&start_time={start_time}&end_time={end_time}&size=10&keyword=&no_count=false`
