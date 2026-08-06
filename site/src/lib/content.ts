@@ -25,12 +25,6 @@ const variant = (process.env.SITE_VARIANT || "settings") as SiteVariant;
 export const repositoryUrl = "https://github.com/fcakyon/claude-codex-settings";
 export const rawRepositoryUrl = `${repositoryUrl.replace("github.com", "raw.githubusercontent.com")}/main`;
 export const marketplaceName = "claude-settings";
-export const codingTools = [
-  ["claude", "Claude Code"],
-  ["openai", "Codex CLI"],
-  ["cursor", "Cursor"],
-  ["gemini", "Gemini CLI"],
-] as const;
 export const author = {
   id: "https://github.com/fcakyon",
   name: "Fatih C. Akyon",
@@ -46,14 +40,10 @@ export const site = {
   settings: {
     variant: "settings" as const,
     url: process.env.PUBLIC_SITE_URL || "https://claudesettings.com",
-    title: "Claude Settings for Claude Code, Codex and Cursor",
-    description: `Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
   plugins: {
     variant: "plugins" as const,
     url: process.env.PUBLIC_SITE_URL || "https://agentplugins.net",
-    title: "Agent Plugins for Claude Code, Codex, Cursor and Gemini",
-    description: `Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by ${author.name}.`,
   },
 }[variant];
 
@@ -110,9 +100,11 @@ export const configurationDocuments = editorFiles.filter((file) => file.label !=
 
 const providerLabels: Record<string, string> = { kimi: "Kimi", minimax: "MiniMax", zai: "Z.ai / GLM" };
 
-export const providerNames = configurationDocuments
-  .filter((file) => file.path.startsWith(".claude/settings-"))
-  .map((file) => providerLabels[file.provider!] || file.provider!);
+export const providerNames = [
+  ...new Set(
+    configurationDocuments.flatMap(({ provider }) => (provider ? [providerLabels[provider] || provider] : [])),
+  ),
+];
 
 const marketplaceSlug = repositoryUrl.replace("https://github.com/", "");
 
@@ -201,14 +193,19 @@ export const plugins = marketplace.plugins
     );
   });
 
-export const installTools = [
-  { id: "claude", label: "Claude Code", marketplace: `claude plugin marketplace add ${marketplaceSlug}` },
-  { id: "codex", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
-  { id: "gemini", label: "Gemini CLI" },
-  { id: "cursor", label: "Cursor" },
-];
+export const codingTools = [
+  {
+    id: "claude",
+    icon: "claude",
+    label: "Claude Code",
+    marketplace: `claude plugin marketplace add ${marketplaceSlug}`,
+  },
+  { id: "codex", icon: "openai", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
+  { id: "cursor", icon: "cursor", label: "Cursor", marketplace: undefined },
+  { id: "gemini", icon: "gemini", label: "Gemini CLI", marketplace: undefined },
+] as const;
 
 export const sourceDocuments = {
-  claude: editorFiles[0].content,
+  claude: read(".claude/CLAUDE.md"),
   install: read("INSTALL.md"),
 };

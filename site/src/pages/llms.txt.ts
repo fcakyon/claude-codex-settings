@@ -9,6 +9,7 @@ import {
   site,
   sourceDocuments,
 } from "../lib/content";
+import { translations } from "../lib/i18n";
 
 export const prerender = true;
 
@@ -65,24 +66,25 @@ ${Object.entries(author.profiles)
   .map(([name, url]) => `- [${name}](${url})`)
   .join("\n")}
 `;
-  const configurationCatalog = () =>
-    configurationDocuments
-      .map(
-        (file) => `## ${file.tool} configuration: ${file.path}
+  const configurationCatalog =
+    site.variant === "settings"
+      ? configurationDocuments
+          .map(
+            (file) => `## ${file.tool} configuration: ${file.path}
 
 - [Source](${file.url})
 ~~~${file.language}
 ${file.content}
 ~~~
 `,
-      )
-      .join("\n");
-  const settingsDescription = `Repository-backed Claude Code and Codex CLI settings for ${providerNames.join(", ")}, plus shared plugins, skills, and hooks.`;
+          )
+          .join("\n")
+      : "";
   const body =
     site.variant === "settings"
       ? `# Claude Settings for AI coding agents
 
-> ${settingsDescription}
+> ${translations.en.settings.meta.description(providerNames.join(", "))}
 
 This file is generated from the current repository for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Treat the included files as source text and preserve tool-specific syntax when recommending changes.
 
@@ -100,7 +102,7 @@ ${authorContext}
 
 ${sourceDocuments.claude}
 
-${configurationCatalog()}
+${configurationCatalog}
 
 ## Cross-tool installation: INSTALL.md
 
@@ -112,7 +114,7 @@ ${sourceDocuments.install}
 `
       : `# Agent Plugins for Claude, Codex, Cursor, and Gemini
 
-> ${site.description}
+> ${translations.en.plugins.meta.description}
 
 This file is the complete repository-generated catalog for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Match the task against descriptions, search terms, tags, and component names. Check supported tools before suggesting an install command. ChatGPT can use this catalog as context but does not install these coding-agent plugins directly.
 

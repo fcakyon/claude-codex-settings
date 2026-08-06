@@ -26,7 +26,7 @@ const copy = translations[locale].plugins
     <p>{copy.compatibility.description}</p>
   </div>
   <div class="compatibility-rail">
-    {codingTools.map(([icon, label], index) => (
+    {codingTools.map(({ icon, label }, index) => (
       <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.compatibility.tools[index]}</span></div>
     ))}
   </div>

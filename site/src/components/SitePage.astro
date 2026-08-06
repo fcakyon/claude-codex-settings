@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import { providerNames, site } from "../lib/content"
-import { localePath, translations, type Locale } from "../lib/i18n"
+import { locales, translations, type Locale } from "../lib/i18n"
 import PluginsPage from "./PluginsPage.astro"
 import SettingsPage from "./SettingsPage.astro"
 
@@ -15,6 +15,6 @@ const providers = providerNames.join(locale === "en" ? ", " : "、")
 const description = site.variant === "settings" ? translations[locale].settings.meta.description(providers) : copy.meta.description
 ---
 
-<Layout locale={locale} variant={site.variant} title={copy.meta.title} description={description} canonical={`${site.url}${localePath(locale)}`}>
+<Layout locale={locale} variant={site.variant} title={copy.meta.title} description={description} canonical={`${site.url}${locales[locale].path}`}>
   {site.variant === "settings" ? <SettingsPage locale={locale} providers={providers} /> : <PluginsPage locale={locale} />}
 </Layout>

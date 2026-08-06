@@ -21,7 +21,7 @@ const stars = await repositoryStars()
     <div class="hero-actions">
       <a class="button primary" href={repositoryUrl} target="_blank" rel="noreferrer">
         <Icon name="github" size={23} />{copy.hero.repository}
-        {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale === "en" ? "en-US" : "zh-CN")}<span class="sr-only"> {translations[locale].stars}</span></span>}
+        {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale)}<span class="sr-only"> {translations[locale].stars}</span></span>}
       </a>
       <a class="button secondary" href="#install">{copy.hero.install} <Icon name="arrow" size={19} /></a>
     </div>
@@ -35,7 +35,7 @@ const stars = await repositoryStars()
     <p>{copy.configuration.description}</p>
   </div>
   <div class="tool-rail">
-    {codingTools.map(([icon, label], index) => (
+    {codingTools.map(({ icon, label }, index) => (
       <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.configuration.tools[index]}</span></div>
     ))}
   </div>
@@ -47,8 +47,7 @@ const stars = await repositoryStars()
     <p>{copy.install.description}</p>
   </div>
   <div class="install-steps">
-    <div><span>Claude Code</span><code>claude plugin marketplace add fcakyon/claude-codex-settings</code></div>
-    <div><span>Codex CLI</span><code>codex plugin marketplace add fcakyon/claude-codex-settings</code></div>
+    {codingTools.filter((tool) => tool.marketplace).map((tool) => <div><span>{tool.label}</span><code>{tool.marketplace}</code></div>)}
   </div>
 </section>
 

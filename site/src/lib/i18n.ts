@@ -1,6 +1,9 @@
-export type Locale = "en" | "zh-CN";
+export const locales = {
+  en: { path: "/", og: "en_US", alternate: "zh-CN" },
+  "zh-CN": { path: "/zh-cn/", og: "zh_CN", alternate: "en" },
+} as const;
 
-export const localePath = (locale: Locale) => (locale === "en" ? "/" : "/zh-cn/");
+export type Locale = keyof typeof locales;
 
 export const translations = {
   en: {

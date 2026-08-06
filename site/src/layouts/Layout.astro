@@ -2,7 +2,7 @@
 import Header from "../components/Header.astro"
 import Icon, { type IconName } from "../components/Icon.astro"
 import { author, repositoryUrl, site, type SiteVariant } from "../lib/content"
-import { translations, type Locale } from "../lib/i18n"
+import { locales, translations, type Locale } from "../lib/i18n"
 import "../styles/global.css"
 
 interface Props {
@@ -15,10 +15,8 @@ interface Props {
 
 const { locale, variant, title, description, canonical } = Astro.props
 const copy = translations[locale]
-const englishUrl = `${site.url}/`
-const chineseUrl = `${site.url}/zh-cn/`
 const image = new URL(`/og-${variant}.webp`, Astro.site).href
-const ogLocale = locale === "en" ? "en_US" : "zh_CN"
+const localeData = locales[locale]
 const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
 const structuredData = {
   "@context": "https://schema.org",
@@ -63,17 +61,16 @@ const structuredData = {
     <meta name="theme-color" content={variant === "settings" ? "#ffffff" : "#070b10"} />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="en" href={englishUrl} />
-    <link rel="alternate" hreflang="zh-CN" href={chineseUrl} />
-    <link rel="alternate" hreflang="x-default" href={englishUrl} />
+    {Object.entries(locales).map(([language, data]) => <link rel="alternate" hreflang={language} href={`${site.url}${data.path}`} />)}
+    <link rel="alternate" hreflang="x-default" href={`${site.url}${locales.en.path}`} />
     <link rel="icon" href={`/favicon-${variant}.svg`} type="image/svg+xml" />
     <title>{title}</title>
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content={ogLocale} />
-    <meta property="og:locale:alternate" content={locale === "en" ? "zh_CN" : "en_US"} />
+    <meta property="og:locale" content={localeData.og} />
+    <meta property="og:locale:alternate" content={locales[localeData.alternate].og} />
     <meta property="og:image" content={image} />
     <meta property="og:image:type" content="image/webp" />
     <meta property="og:image:width" content="1200" />

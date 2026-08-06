@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro"
-import { plugins, installTools } from "../lib/content"
+import { codingTools, plugins } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 
 const { locale } = Astro.props
 const copy = translations[locale].plugins.directory
-const defaultTool = installTools[0]
+const defaultTool = codingTools[0]
 const initialCommand = plugins[0].claudeCommand
 ---
 
@@ -64,7 +64,7 @@ const initialCommand = plugins[0].claudeCommand
         <span aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
       <div class="install-tabs" role="group" aria-label={copy.chooseTool}>
-        {installTools.map((tool, index) => (
+        {codingTools.map((tool, index) => (
           <button
             class:list={["install-tab", { "is-active": index === 0 }]}
             type="button"

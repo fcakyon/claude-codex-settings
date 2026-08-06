@@ -1,12 +1,10 @@
 import type { APIRoute } from "astro";
 import { site } from "../lib/content";
+import { locales } from "../lib/i18n";
 
 export const prerender = true;
 
-const languages = [
-  ["en", `${site.url}/`],
-  ["zh-CN", `${site.url}/zh-cn/`],
-] as const;
+const languages = Object.entries(locales).map(([language, data]) => [language, `${site.url}${data.path}`]);
 
 const alternateLinks = languages
   .map(([language, url]) => `    <xhtml:link rel="alternate" hreflang="${language}" href="${url}"/>`)

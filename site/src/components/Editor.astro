@@ -9,8 +9,8 @@ interface Props {
 
 const { locale } = Astro.props
 const copy = translations[locale].editor
-const lines = editorFiles.map((file) => {
-  const fileLines = file.content.split("\n")
+const lines = editorFiles.map(({ content, ...file }) => {
+  const fileLines = content.split("\n")
   return {
     ...file,
     lines: fileLines,
