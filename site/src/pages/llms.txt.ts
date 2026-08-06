@@ -1,10 +1,21 @@
 import type { APIRoute } from "astro";
-import { author, plugins, rawRepositoryUrl, repositoryUrl, site, sourceDocuments } from "../lib/content";
+import {
+  author,
+  configurationDocuments,
+  plugins,
+  providerNames,
+  rawRepositoryUrl,
+  repositoryUrl,
+  site,
+  sourceDocuments,
+} from "../lib/content";
+import { translations } from "../lib/i18n";
 
 export const prerender = true;
 
 export const GET: APIRoute = () => {
-  const toolNames = (tools: string[]) => tools.map((tool) => tool === "Codex" ? "OpenAI Codex" : tool === "Gemini" ? "Gemini CLI" : tool);
+  const toolNames = (tools: string[]) =>
+    tools.map((tool) => (tool === "Codex" ? "OpenAI Codex" : tool === "Gemini" ? "Gemini CLI" : tool));
   const componentSummary = (plugin: (typeof plugins)[number]) => {
     if (!plugin.components) return "See the external source repository.";
     const lines = [
@@ -17,14 +28,18 @@ export const GET: APIRoute = () => {
     ].filter(Boolean);
     return lines.join("; ") || "Plugin manifest only.";
   };
-  const pluginCatalog = () => plugins.map((plugin) => {
-    const installCommands = [
-      `- Claude Code install: \`${plugin.claudeCommand}\``,
-      plugin.codexCommand ? `- OpenAI Codex install: \`${plugin.codexCommand}\`` : "",
-      plugin.cursorCommand ? `- Cursor install: \`${plugin.cursorCommand}\`` : "",
-      plugin.geminiCommand ? `- Gemini CLI install: \`${plugin.geminiCommand}\`` : "",
-    ].filter(Boolean).join("\n");
-    return `## ${plugin.name}
+  const pluginCatalog = () =>
+    plugins
+      .map((plugin) => {
+        const installCommands = [
+          `- Claude Code install: \`${plugin.claudeCommand}\``,
+          plugin.codexCommand ? `- OpenAI Codex install: \`${plugin.codexCommand}\`` : "",
+          plugin.cursorCommand ? `- Cursor install: \`${plugin.cursorCommand}\`` : "",
+          plugin.geminiCommand ? `- Gemini CLI install: \`${plugin.geminiCommand}\`` : "",
+        ]
+          .filter(Boolean)
+          .join("\n");
+        return `## ${plugin.name}
 
 ${plugin.description}
 
@@ -38,7 +53,8 @@ ${plugin.description}
 - [Source](${plugin.href}): Plugin files and documentation.
 ${installCommands}
 `;
-  }).join("\n");
+      })
+      .join("\n");
   const authorContext = `## Author and maintainer
 
 - Name: ${author.name}
@@ -46,12 +62,29 @@ ${installCommands}
 
 The following links are verified profiles for ${author.name}:
 
-${Object.entries(author.profiles).map(([name, url]) => `- [${name}](${url})`).join("\n")}
+${Object.entries(author.profiles)
+  .map(([name, url]) => `- [${name}](${url})`)
+  .join("\n")}
 `;
-  const body = site.variant === "settings"
-    ? `# Claude Settings for AI coding agents
+  const configurationCatalog =
+    site.variant === "settings"
+      ? configurationDocuments
+          .map(
+            (file) => `## ${file.tool} configuration: ${file.path}
 
-> ${site.description}
+- [Source](${file.url})
+~~~${file.language}
+${file.content}
+~~~
+`,
+          )
+          .join("\n")
+      : "";
+  const body =
+    site.variant === "settings"
+      ? `# Claude Settings for AI coding agents
+
+> ${translations.en.settings.meta.description(providerNames.join(", "))}
 
 This file is generated from the current repository for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Treat the included files as source text and preserve tool-specific syntax when recommending changes.
 
@@ -69,17 +102,7 @@ ${authorContext}
 
 ${sourceDocuments.claude}
 
-## Claude Code configuration: .claude/settings.json
-
-~~~json
-${sourceDocuments.settings}
-~~~
-
-## OpenAI Codex configuration: .codex/config.toml
-
-~~~toml
-${sourceDocuments.codex}
-~~~
+${configurationCatalog}
 
 ## Cross-tool installation: INSTALL.md
 
@@ -89,9 +112,9 @@ ${sourceDocuments.install}
 
 - [README](${rawRepositoryUrl}/README.md): Full human-facing repository documentation.
 `
-    : `# Agent Plugins for Claude, Codex, Cursor, and Gemini
+      : `# Agent Plugins for Claude, Codex, Cursor, and Gemini
 
-> ${site.description}
+> ${translations.en.plugins.meta.description}
 
 This file is the complete repository-generated catalog for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Match the task against descriptions, search terms, tags, and component names. Check supported tools before suggesting an install command. ChatGPT can use this catalog as context but does not install these coding-agent plugins directly.
 
@@ -104,6 +127,7 @@ ${authorContext}
 - [Claude marketplace](${rawRepositoryUrl}/.claude-plugin/marketplace.json): Descriptions, versions, categories, tags, keywords, licenses, and sources.
 - [Codex marketplace](${rawRepositoryUrl}/.agents/plugins/marketplace.json): OpenAI Codex plugin availability.
 - [Cursor marketplace](${rawRepositoryUrl}/.cursor-plugin/marketplace.json): Cursor plugin availability.
+- [Claude Settings configuration viewer](https://claudesettings.com/): Repository-backed Claude Code and Codex CLI provider files.
 
 ## Installation rules
 

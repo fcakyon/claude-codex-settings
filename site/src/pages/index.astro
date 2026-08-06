@@ -1,10 +1,5 @@
 ---
-import PluginsPage from "../components/PluginsPage.astro";
-import SettingsPage from "../components/SettingsPage.astro";
-import Layout from "../layouts/Layout.astro";
-import { site } from "../lib/content";
+import SitePage from "../components/SitePage.astro"
 ---
 
-<Layout variant={site.variant} title={site.title} description={site.description} canonical={site.url}>
-  {site.variant === "settings" ? <SettingsPage /> : <PluginsPage />}
-</Layout>
+<SitePage locale="en" />

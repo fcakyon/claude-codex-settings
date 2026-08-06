@@ -969,6 +969,8 @@ Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) usin
 - **Cost savings**: much cheaper than frontier Claude models
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
+Z.ai currently documents Anthropic Messages and OpenAI Chat Completions endpoints, but Codex CLI requires the Responses API. No GLM Codex recipe is included until Z.ai publishes a compatible route.
+
 </details>
 
 <details>
@@ -993,6 +995,8 @@ export ENABLE_TOOL_SEARCH=false
 ```
 
 Or use the settings file: [`.claude/settings-kimi.json`](./.claude/settings-kimi.json)
+
+For Codex CLI, use Kimi K3 through the local Responses proxy in [`.codex/config-kimi.toml`](./.codex/config-kimi.toml). The recipe uses Kimi Code model ID `k3`. Use `k3-256k` in both the proxy command and config when 256K context is enough.
 
 </details>
 
