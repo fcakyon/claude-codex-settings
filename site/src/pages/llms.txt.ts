@@ -1,8 +1,9 @@
 import type { APIRoute } from "astro";
 import {
   author,
-  modelProviders,
+  configurationDocuments,
   plugins,
+  providerNames,
   rawRepositoryUrl,
   repositoryUrl,
   site,
@@ -64,25 +65,23 @@ ${Object.entries(author.profiles)
   .map(([name, url]) => `- [${name}](${url})`)
   .join("\n")}
 `;
-  const providerContext = `## Alternative model providers
+  const configurationCatalog = configurationDocuments
+    .map(
+      (file) => `## ${file.tool} configuration: ${file.path}
 
-${modelProviders
-  .map(
-    (provider) => `### ${provider.name}
-
-- Claude Code endpoint: \`${provider.baseUrl}\`
-- Claude Code models: ${provider.models.map((model) => `\`${model}\``).join(", ")}
-- [Claude Code settings](${provider.claudeUrl})
-- Codex CLI: ${provider.codexUrl ? `local Responses proxy using \`${provider.codexModel}\`. [Recipe](${provider.codexUrl})` : "no official Codex route"}
+- [Source](${file.url})
+~~~${file.language}
+${file.content}
+~~~
 `,
-  )
-  .join("\n")}
-`;
+    )
+    .join("\n");
+  const settingsDescription = `Repository-backed Claude Code and Codex CLI settings for ${providerNames.join(", ")}, plus shared plugins, skills, and hooks.`;
   const body =
     site.variant === "settings"
       ? `# Claude Settings for AI coding agents
 
-> ${site.description}
+> ${settingsDescription}
 
 This file is generated from the current repository for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Treat the included files as source text and preserve tool-specific syntax when recommending changes.
 
@@ -96,23 +95,11 @@ ${authorContext}
 - [Codex marketplace](${rawRepositoryUrl}/.agents/plugins/marketplace.json): OpenAI Codex plugin availability.
 - [Cursor marketplace](${rawRepositoryUrl}/.cursor-plugin/marketplace.json): Cursor plugin availability.
 
-${providerContext}
-
 ## AI guidance: .claude/CLAUDE.md
 
 ${sourceDocuments.claude}
 
-## Claude Code configuration: .claude/settings.json
-
-~~~json
-${sourceDocuments.settings}
-~~~
-
-## OpenAI Codex configuration: .codex/config.toml
-
-~~~toml
-${sourceDocuments.codex}
-~~~
+${configurationCatalog}
 
 ## Cross-tool installation: INSTALL.md
 
@@ -137,7 +124,7 @@ ${authorContext}
 - [Claude marketplace](${rawRepositoryUrl}/.claude-plugin/marketplace.json): Descriptions, versions, categories, tags, keywords, licenses, and sources.
 - [Codex marketplace](${rawRepositoryUrl}/.agents/plugins/marketplace.json): OpenAI Codex plugin availability.
 - [Cursor marketplace](${rawRepositoryUrl}/.cursor-plugin/marketplace.json): Cursor plugin availability.
-- [Claude Settings provider guide](https://claudesettings.com/#providers): Kimi, MiniMax, and Z.ai/GLM setup and Codex compatibility.
+- [Claude Settings configuration viewer](https://claudesettings.com/): Repository-backed Claude Code and Codex CLI provider files.
 
 ## Installation rules
 

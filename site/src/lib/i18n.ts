@@ -14,19 +14,18 @@ export const translations = {
     settings: {
       meta: {
         title: "Claude Settings for Claude Code, Codex and Cursor",
-        description:
-          "Battle-tested settings, skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by Fatih C. Akyon.",
+        description: (providers: string) =>
+          `Repository-backed settings for Claude Code and Codex CLI, including ${providers}, plus shared plugins, skills and hooks.`,
       },
       nav: [
         ["Install", "#install"],
-        ["Providers", "#providers"],
         ["Plugins", "#plugins"],
         ["Configuration", "#configuration"],
       ],
       hero: {
         title: "Battle-tested settings for Claude Code, Codex and Cursor",
-        description:
-          "One practical setup for skills, commands, hooks, agents and MCP servers across your AI coding tools.",
+        description: (providers: string) =>
+          `Explore ready-to-use ${providers} files alongside shared skills, hooks, agents and MCP servers.`,
         repository: "View the repository",
         install: "Read the install guide",
         stars: "stars",
@@ -40,16 +39,6 @@ export const translations = {
           "Portable plugins and project rules",
           "Extensions, skills and shared guidance",
         ],
-      },
-      providers: {
-        title: "Use Claude Code with three model providers",
-        description: "Provider routes and model names are read from the repository settings on every build.",
-        columns: ["Provider", "Claude Code", "Codex CLI", "Models", "Source"],
-        claudeDirect: "Direct Anthropic-compatible API",
-        codexProxy: "Local Responses proxy",
-        codexUnavailable: "No official Codex route",
-        claudeSource: "Claude settings",
-        codexSource: "Codex recipe",
       },
       install: {
         title: "Start with one command",
@@ -123,17 +112,17 @@ export const translations = {
     settings: {
       meta: {
         title: "Claude Code 配置与 Codex CLI 插件 | Claude Settings",
-        description: "适用于 Claude Code、Codex CLI、Cursor 和 Gemini CLI 的配置、技能、钩子与智能体安装指南。",
+        description: (providers: string) =>
+          `由仓库自动生成的 Claude Code 与 Codex CLI 配置，包含 ${providers}，以及共享插件、技能和钩子。`,
       },
       nav: [
         ["安装", "#install"],
-        ["模型服务", "#providers"],
         ["插件", "#plugins"],
         ["配置", "#configuration"],
       ],
       hero: {
         title: "适用于 Claude Code、Codex 和 Cursor 的实用配置",
-        description: "在常用的 AI 编程工具之间共享技能、命令、钩子、智能体和 MCP 服务。",
+        description: (providers: string) => `直接查看 ${providers} 配置，并共享技能、钩子、智能体和 MCP 服务。`,
         repository: "查看 GitHub 仓库",
         install: "阅读安装指南",
         stars: "个星标",
@@ -142,16 +131,6 @@ export const translations = {
         title: "一套配置，支持四种编程工具",
         description: "直接使用仓库中的配置，在常用的 AI 编程工具之间保持一致。",
         tools: ["设置、钩子、命令和智能体", "插件、技能和共享指引", "可移植插件和项目规则", "扩展、技能和共享指引"],
-      },
-      providers: {
-        title: "在 Claude Code 中使用三种模型服务",
-        description: "每次构建都会从仓库配置读取 Kimi、MiniMax 和智谱 GLM 的接入方式与模型名称。",
-        columns: ["模型服务", "Claude Code", "Codex CLI", "模型", "配置来源"],
-        claudeDirect: "直接使用 Anthropic 兼容接口",
-        codexProxy: "通过本地 Responses 代理",
-        codexUnavailable: "暂无官方 Codex 接入方式",
-        claudeSource: "Claude 配置",
-        codexSource: "Codex 配方",
       },
       install: {
         title: "从一条命令开始",

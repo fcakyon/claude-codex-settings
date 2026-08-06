@@ -51,59 +51,62 @@ export const site = {
   },
 }[variant];
 
-const claudeContent = read(".claude/CLAUDE.md");
-const settingsContent = read(".claude/settings.json");
-const codexContent = read(".codex/config.toml");
-
-const providerDefinitions = [
-  { name: "Kimi", claudePath: ".claude/settings-kimi.json", codexPath: ".codex/config-kimi.toml" },
+const editorDirectories = [
   {
-    name: "MiniMax",
-    claudePath: ".claude/settings-minimax.json",
-    codexPath: ".codex/config-minimax.toml",
+    name: ".claude",
+    tool: "Claude Code",
+    files: [
+      "CLAUDE.md",
+      ...readdirSync(resolve(root, ".claude"))
+        .filter((name) => /^settings(?:-[^.]+)?\.json$/.test(name))
+        .sort((a, b) => Number(a !== "settings.json") - Number(b !== "settings.json") || a.localeCompare(b)),
+    ],
   },
-  { name: "Z.ai / GLM", claudePath: ".claude/settings-zai.json" },
+  {
+    name: ".codex",
+    tool: "Codex CLI",
+    files: readdirSync(resolve(root, ".codex"))
+      .filter((name) => /^config(?:-[^.]+)?\.toml$/.test(name))
+      .sort((a, b) => Number(a !== "config.toml") - Number(b !== "config.toml") || a.localeCompare(b)),
+  },
 ] as const;
 
-export const modelProviders = providerDefinitions.map((provider) => {
-  const settings = JSON.parse(read(provider.claudePath)) as { env: Record<string, string> };
-  const codexRecipe = "codexPath" in provider ? read(provider.codexPath) : undefined;
-  return {
-    ...provider,
-    baseUrl: settings.env.ANTHROPIC_BASE_URL,
-    models: [
-      ...new Set(
-        Object.entries(settings.env)
-          .filter(([key]) => key.startsWith("ANTHROPIC_DEFAULT_"))
-          .map(([, model]) => model),
-      ),
-    ],
-    codexModel: codexRecipe?.match(/^model = "([^"]+)"/m)?.[1],
-    claudeUrl: `${repositoryUrl}/blob/main/${provider.claudePath}`,
-    codexUrl: "codexPath" in provider ? `${repositoryUrl}/blob/main/${provider.codexPath}` : undefined,
-  };
-});
+export const editorGroups = editorDirectories.map((directory) => ({
+  ...directory,
+  files: directory.files.map((label) => {
+    const path = `${directory.name}/${label}`;
+    const provider = label.match(/^(?:settings|config)-([^.]+)\./)?.[1];
+    return {
+      id: path.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, ""),
+      label,
+      path,
+      tool: directory.tool,
+      provider,
+      content: read(path),
+      focus:
+        label === "CLAUDE.md"
+          ? "## Core Principles"
+          : provider
+            ? label.endsWith(".json")
+              ? '"ANTHROPIC_BASE_URL"'
+              : "model ="
+            : label.endsWith(".json")
+              ? '"env"'
+              : "[plugins.",
+      language: label.endsWith(".md") ? "markdown" : label.endsWith(".json") ? "json" : "toml",
+      url: `${repositoryUrl}/blob/main/${path}`,
+    };
+  }),
+}));
 
-export const editorFiles = [
-  {
-    id: "claude",
-    label: "CLAUDE.md",
-    content: claudeContent,
-    focus: "## Core Principles",
-  },
-  {
-    id: "settings",
-    label: "settings.json",
-    content: settingsContent,
-    focus: '"env"',
-  },
-  {
-    id: "codex",
-    label: "config.toml",
-    content: codexContent,
-    focus: "[plugins.",
-  },
-];
+export const editorFiles = editorGroups.flatMap((group) => group.files);
+export const configurationDocuments = editorFiles.filter((file) => file.label !== "CLAUDE.md");
+
+const providerLabels: Record<string, string> = { kimi: "Kimi", minimax: "MiniMax", zai: "Z.ai / GLM" };
+
+export const providerNames = configurationDocuments
+  .filter((file) => file.path.startsWith(".claude/settings-"))
+  .map((file) => providerLabels[file.provider!] || file.provider!);
 
 const marketplaceSlug = repositoryUrl.replace("https://github.com/", "");
 
@@ -200,8 +203,6 @@ export const installTools = [
 ];
 
 export const sourceDocuments = {
-  claude: claudeContent,
-  settings: settingsContent,
-  codex: codexContent,
+  claude: editorFiles[0].content,
   install: read("INSTALL.md"),
 };

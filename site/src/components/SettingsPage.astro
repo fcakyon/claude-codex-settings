@@ -1,7 +1,7 @@
 ---
 import Editor from "./Editor.astro"
 import Icon from "./Icon.astro"
-import { featured, modelProviders, plugins, repositoryStars, repositoryUrl } from "../lib/content"
+import { featured, plugins, providerNames, repositoryStars, repositoryUrl } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 
 const { locale } = Astro.props
 const copy = translations[locale].settings
+const providers = providerNames.join(locale === "en" ? ", " : "、")
 const stars = await repositoryStars()
 const tools = [
   ["claude", "Claude Code"],
@@ -22,7 +23,7 @@ const tools = [
 <section class="settings-hero">
   <div class="hero-copy">
     <h1>{copy.hero.title}</h1>
-    <p>{copy.hero.description}</p>
+    <p>{copy.hero.description(providers)}</p>
     <div class="hero-actions">
       <a class="button primary" href={repositoryUrl} target="_blank" rel="noreferrer">
         <Icon name="github" size={23} />{copy.hero.repository}
@@ -34,33 +35,6 @@ const tools = [
   <Editor locale={locale} />
 </section>
 
-<style is:global>
-  .provider-ledger { border-top: 1px solid var(--border); }
-  .provider-head, .provider-row { display: grid; grid-template-columns: 140px 1.15fr 1fr 1.2fr 130px; gap: 24px; align-items: start; }
-  .provider-head { padding: 0 20px 16px; color: var(--muted); font: 700 12px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
-  .provider-row { min-height: 148px; padding: 28px 20px; border-bottom: 1px solid var(--border); }
-  .provider-row > strong { font-size: 20px; }
-  .provider-row div { display: grid; gap: 8px; min-width: 0; }
-  .provider-row span { color: var(--muted); line-height: 1.45; }
-  .provider-row code { color: var(--text); font: 12px/1.45 var(--mono); overflow-wrap: anywhere; }
-  .provider-label { display: none; }
-  .model-list { color: var(--text) !important; font: 13px/1.55 var(--mono); }
-  .provider-links a { color: var(--link); font-weight: 700; }
-
-  @media (max-width: 1100px) {
-    .provider-head, .provider-row { grid-template-columns: 120px 1fr 1fr; }
-    .provider-head span:nth-child(4), .provider-head span:nth-child(5) { display: none; }
-    .provider-row > div:nth-child(4), .provider-row > div:nth-child(5) { grid-column: 2 / 4; }
-  }
-
-  @media (max-width: 760px) {
-    .provider-head { display: none; }
-    .provider-row { grid-template-columns: 1fr; gap: 20px; padding-inline: 0; }
-    .provider-row > div:nth-child(4), .provider-row > div:nth-child(5) { grid-column: 1; }
-    .provider-label { display: block; color: var(--muted); font: 700 11px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .04em; }
-  }
-</style>
-
 <section class="section tool-section" id="configuration">
   <div class="section-intro">
     <h2>{copy.configuration.title}</h2>
@@ -69,31 +43,6 @@ const tools = [
   <div class="tool-rail">
     {tools.map(([icon, label], index) => (
       <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.configuration.tools[index]}</span></div>
-    ))}
-  </div>
-</section>
-
-<section class="section provider-section" id="providers">
-  <div class="section-intro">
-    <h2>{copy.providers.title}</h2>
-    <p>{copy.providers.description}</p>
-  </div>
-  <div class="provider-ledger">
-    <div class="provider-head" aria-hidden="true">
-      {copy.providers.columns.map((label) => <span>{label}</span>)}
-    </div>
-    {modelProviders.map((provider) => (
-      <article class="provider-row">
-        <strong>{provider.name}</strong>
-        <div><span class="provider-label">{copy.providers.columns[1]}</span><span>{copy.providers.claudeDirect}</span><code>{provider.baseUrl}</code></div>
-        <div><span class="provider-label">{copy.providers.columns[2]}</span><span>{provider.codexUrl ? copy.providers.codexProxy : copy.providers.codexUnavailable}</span>{provider.codexModel && <code>{provider.codexModel}</code>}</div>
-        <div><span class="provider-label">{copy.providers.columns[3]}</span><span class="model-list">{provider.models.join(" · ")}</span></div>
-        <div class="provider-links">
-          <span class="provider-label">{copy.providers.columns[4]}</span>
-          <a href={provider.claudeUrl}>{copy.providers.claudeSource}</a>
-          {provider.codexUrl && <a href={provider.codexUrl}>{copy.providers.codexSource}</a>}
-        </div>
-      </article>
     ))}
   </div>
 </section>

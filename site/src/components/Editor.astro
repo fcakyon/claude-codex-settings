@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro"
-import { editorFiles, repositoryUrl } from "../lib/content"
+import { editorFiles, editorGroups, repositoryUrl } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -17,19 +17,24 @@ const lines = editorFiles.map((file) => {
     focusLine: Math.max(fileLines.findIndex((line) => line.includes(file.focus)), 0),
   }
 })
+const initialFile = lines[0]
 ---
 
-<div class="editor" data-editor>
+<div class="editor" data-editor data-initial-file={initialFile.id}>
   <div class="editor-topbar" aria-hidden="true"><span></span><span></span><span></span></div>
   <aside class="file-tree" aria-label={copy.files}>
     <p>{copy.project}</p>
     <div class="tree-row root-row"><Icon name="folder" size={18} /><span>claude-codex-settings</span></div>
-    <div class="tree-row folder-row"><span class="tree-caret">⌄</span><Icon name="folder" size={18} /><span>.claude</span></div>
-    <button class="tree-row tree-file is-active" type="button" data-file="claude"><Icon name="file" size={17} /><span>CLAUDE.md</span></button>
-    <button class="tree-row tree-file" type="button" data-file="settings"><Icon name="file" size={17} /><span>settings.json</span></button>
-    <div class="tree-row folder-row"><span class="tree-caret">⌄</span><Icon name="folder" size={18} /><span>.codex</span></div>
-    <button class="tree-row tree-file" type="button" data-file="codex"><Icon name="file" size={17} /><span>config.toml</span></button>
-    <div class="tree-row folder-row"><span class="tree-caret">›</span><Icon name="folder" size={18} /><span>.vscode</span></div>
+    {editorGroups.map((group) => (
+      <>
+        <div class="tree-row folder-row"><span class="tree-caret">⌄</span><Icon name="folder" size={18} /><span>{group.name}</span></div>
+        {group.files.map((file) => (
+          <button class:list={["tree-row", "tree-file", { "is-active": file.id === initialFile.id }]} type="button" data-file={file.id} title={file.path}>
+            <Icon name="file" size={17} /><span>{file.label}</span>
+          </button>
+        ))}
+      </>
+    ))}
   </aside>
   <div class="editor-main">
     <div class="tabs" role="tablist" aria-label={copy.tabs}>
@@ -93,7 +98,7 @@ const lines = editorFiles.map((file) => {
     }
 
     editor.querySelectorAll<HTMLElement>("[data-tab], [data-file]").forEach((control) =>
-      control.addEventListener("click", () => activate(control.dataset.tab || control.dataset.file || "claude")),
+      control.addEventListener("click", () => activate(control.dataset.tab || control.dataset.file || editor.dataset.initialFile!)),
     )
     editor.querySelectorAll<HTMLElement>("[data-tab]").forEach((tab, index, tabs) =>
       tab.addEventListener("keydown", (event) => {
@@ -101,10 +106,10 @@ const lines = editorFiles.map((file) => {
         const next = event.key === "ArrowRight" ? index + 1 : index - 1
         const target = tabs[(next + tabs.length) % tabs.length]
         target.focus()
-        activate(target.dataset.tab || "claude")
+        activate(target.dataset.tab || editor.dataset.initialFile!)
       }),
     )
-    activate("claude")
+    activate(editor.dataset.initialFile!)
   }
 
   document.querySelectorAll<HTMLElement>("[data-copy]").forEach((button) =>
@@ -115,3 +120,8 @@ const lines = editorFiles.map((file) => {
     }),
   )
 </script>
+
+<style is:global>
+  .editor .file-tree { overflow-y: auto; }
+  .editor .tree-row span:last-child { overflow: hidden; text-overflow: ellipsis; }
+</style>
