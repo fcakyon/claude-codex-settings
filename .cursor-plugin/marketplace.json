@@ -111,7 +111,7 @@
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe skills for checkout, billing, Connect, and API upgrades.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "MIT"
     },
     {
@@ -146,7 +146,7 @@
       "name": "openobserve-skills",
       "source": "./plugins/openobserve-skills",
       "description": "Search logs, metrics, and traces and build OpenObserve dashboards via curl.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "Apache-2.0"
     },
     {
@@ -160,7 +160,7 @@
       "name": "dokploy-skills",
       "source": "./plugins/dokploy-skills",
       "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "MIT"
     },
     {

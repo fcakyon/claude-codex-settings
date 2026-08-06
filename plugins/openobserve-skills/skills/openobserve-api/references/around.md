@@ -1,8 +1,8 @@
 ---
-description: >-
-  Search around a specific timestamp to fetch nearby log records using GET
-  /_around with forward and backward context in a 5-minute window.
+title: Around
+description: Search around a specific timestamp to fetch nearby log records using GET /_around with forward and backward context in a 5-minute window.
 ---
+
 # Search around
 
 Endpoint: `GET /api/{organization}/{stream}/_around?key={timestamp}&size=10`

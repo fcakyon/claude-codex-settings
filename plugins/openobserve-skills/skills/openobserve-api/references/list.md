@@ -1,8 +1,9 @@
 ---
-description: >-
-  List all streams in OpenObserve by type (logs, metrics, traces). Optionally
-  include schema, storage stats, and stream settings in the response.
+title: List
+metaTitle: List Streams - OpenObserve API
+description: List all streams in OpenObserve by type (logs, metrics, traces). Optionally include schema, storage stats, and stream settings in the response.
 ---
+
 # List streams
 
 Endpoint: `GET /api/{organization}/streams?fetchSchema=false&type={StreamType}`

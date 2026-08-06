@@ -1,8 +1,8 @@
 ---
-description: >-
-  Ingest logs via Grafana Loki-compatible push API at POST /api/{organization}/loki/api/v1/push.
-  Supports Loki stream labels, nanosecond timestamps, and structured metadata.
+title: Loki
+description: "Ingest logs through the Grafana Loki-compatible push API. Supports Loki stream labels, nanosecond timestamps, and structured metadata."
 ---
+
 # Logs Ingestion - Loki
 
 Endpoint: `POST /api/{organization}/loki/api/v1/push`

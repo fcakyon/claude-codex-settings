@@ -1,8 +1,8 @@
 ---
-description: >-
-  Ingest multiple log records in JSON lines via POST /api/{org}/{stream}/_multi.
-  Supports batch upload, timestamps, and up to 200 fields per record.
+title: Multi
+description: Ingest multiple log records in JSON lines via POST /api/{org}/{stream}/_multi. Supports batch upload, timestamps, and up to 200 fields per record.
 ---
+
 # Logs Ingestion - Multi
 
 Endpoint: `POST /api/{organization}/{stream}/_multi`

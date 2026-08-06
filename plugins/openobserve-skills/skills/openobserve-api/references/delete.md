@@ -1,8 +1,9 @@
 ---
-description: >-
-  Delete OpenObserve streams via API. Deletion is async and handled by the
-  compactor. Configure auto-deletion with data retention environment settings.
+title: Delete
+metaTitle: Delete a Stream - OpenObserve API
+description: Delete OpenObserve streams via API. Deletion is async and handled by the compactor. Configure auto-deletion with data retention environment settings.
 ---
+
 ## Delete stream
 OpenObserve provides multiple deletion strategies to manage your data lifecycle: immediate complete stream deletion, targeted time-range deletion with job tracking, and automatic retention-based cleanup.
 
@@ -80,13 +81,15 @@ Deletion is asynchronous and does not happen immediately:
 5. In the worst-case scenario (if you request deletion just before Compactor runs), the entire process could take up to 30 minutes total.
 6. You do not need to wait. The deletion happens in the background. You can check the stream status later to confirm it has been deleted.
 
-!!! note "Notes"
+:::note[Notes]
+:::
 
 	- This operation cannot be undone.
 	- Data is deleted from both the `file_list` table and object store.
 	- No job tracking is available for this endpoint
 
-!!! note "Environment variables"
+:::note[Environment variables]
+:::
 	- You can change the `compactor` run interval: `ZO_COMPACT_INTERVAL=600`. Unit is second. default is `10 minutes`.
 	- You can configure data life cycle to auto delete old data: `ZO_COMPACT_DATA_RETENTION_DAYS=30`. The system will auto delete the data after `30` days. Note that the value must be greater than `0`.
 

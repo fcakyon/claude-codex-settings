@@ -1,8 +1,8 @@
 ---
-description: >-
-  Ingest logs in bulk via POST /api/{org}/_bulk using NDJSON. Compatible with
-  Elasticsearch _bulk API and supports up to 200 fields per record.
+title: Bulk
+description: Ingest logs in bulk via POST /api/{org}/_bulk using NDJSON. Compatible with Elasticsearch _bulk API and supports up to 200 fields per record.
 ---
+
 # Logs Ingestion - Bulk
 
 Endpoint: `POST /api/{organization}/_bulk`

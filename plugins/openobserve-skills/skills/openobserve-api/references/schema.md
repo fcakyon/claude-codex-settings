@@ -1,8 +1,8 @@
 ---
-description: >-
-  Retrieve schema, stats, and settings for a log, metric, or trace stream in
-  OpenObserve via GET API. Includes timestamps, field types, and storage info.
+title: Schema
+description: Retrieve schema, stats, and settings for a log, metric, or trace stream in OpenObserve via GET API. Includes timestamps, field types, and storage info.
 ---
+
 # Get schema for stream
 
 Endpoint: `GET /api/{organization}/streams/{stream}/schema?type={StreamType}`

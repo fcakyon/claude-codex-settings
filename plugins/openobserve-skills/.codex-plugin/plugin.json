@@ -1,6 +1,6 @@
 {
   "name": "openobserve-skills",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Search logs, metrics, and traces and build OpenObserve dashboards via curl.",
   "license": "Apache-2.0"
 }
