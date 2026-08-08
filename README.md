@@ -117,6 +117,12 @@ Before a Write or Edit saves, humanize scans the new text and blocks whatever re
 
 Runs on Claude Code and Gemini. Unlike a markdown rule the model can ignore, the hook checks every Write or Edit and blocks each match until it is replaced. The word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
 
+**Skills** (ZIP for claude.ai, ChatGPT, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                     | Description                                    | ZIP                                                                                                                                                              |
+| --------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`humanize`](./plugins/humanize/skills/humanize/SKILL.md) | Avoid common AI writing patterns with examples | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/humanize.zip) |
+
 **Hooks:**
 
 - [`humanize.py`](./plugins/humanize/hooks/scripts/humanize.py) - blocks matched marks, buzzwords, and cliches before a Write or Edit lands
