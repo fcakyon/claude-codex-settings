@@ -44,6 +44,31 @@ def marker(git=("git",)):
     return Path(git_dir) / "simplify-guard.ok" if git_dir else None
 
 
+def session_marker():
+    """Fallback for when the session cwd is not a Git repository at all.
+
+    The per-worktree marker above stays the primary, but minting it resolves a git dir
+    from the SESSION cwd, and that fails outright when the session runs from a plain
+    directory that merely contains checkouts, for example a home directory holding
+    several worktrees. In that layout /simplify can never arm the guard: the mint is a
+    silent no-op while the PreToolUse check still resolves the correct per-worktree path
+    and denies. Every commit is refused no matter how many reviews ran, and the only way
+    through is to create the marker by hand, which defeats the guard.
+
+    Keyed by session id where the runtime supplies one, so concurrent sessions cannot
+    spend each other's token. Still consumed on every commit attempt, so the one review
+    per commit rule is unchanged.
+    """
+    session = str(data.get("session_id") or data.get("sessionId") or "shared")
+    safe = "".join(ch if ch.isalnum() or ch in "-_" else "_" for ch in session)[:64]
+    directory = Path.home() / ".claude" / "simplify-guard"
+    try:
+        directory.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return None
+    return directory / ("%s.ok" % safe)
+
+
 def commit_prefix(command):
     lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()")
     lexer.whitespace_split = True
@@ -70,8 +95,13 @@ def main():
     is_codex = bool(data.get("turn_id"))
 
     if event == "PostToolUse":
-        if is_claude and tool_input.get("skill") == "simplify" and (m := marker()):
-            m.touch()
+        # Mint both. The per-worktree marker is the precise one and is preferred when
+        # spending, the session marker only carries the review when the session cwd is
+        # not a repo and the precise path cannot be resolved at all.
+        if is_claude and tool_input.get("skill") == "simplify":
+            for m in (marker(), session_marker()):
+                if m:
+                    m.touch()
         return
 
     if event != "PreToolUse" or not (is_claude or is_codex):
@@ -80,15 +110,19 @@ def main():
     command = tool_input.get("command", "")
     signal = command.strip()
     if signal == BYPASS_SIGNAL or (is_codex and signal == COMPLETION_SIGNAL):
-        if m := marker():
-            m.touch()
+        for m in (marker(), session_marker()):
+            if m:
+                m.touch()
         return
 
-    if not (git := commit_prefix(command)) or not (m := marker(git)):
+    if not (git := commit_prefix(command)):
         return
 
-    if m.exists():
-        m.unlink()  # spend the token before Git runs; every attempt needs a fresh review
+    # Prefer the worktree this commit targets, fall back to the session marker.
+    spend = next((m for m in (marker(git), session_marker()) if m and m.exists()), None)
+
+    if spend:
+        spend.unlink()  # spend the token before Git runs; every attempt needs a fresh review
         return
 
     print(
