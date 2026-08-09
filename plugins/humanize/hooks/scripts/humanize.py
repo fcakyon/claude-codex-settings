@@ -63,7 +63,8 @@ PHRASES = [
 LIMIT = 3
 OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermore", "additionally", "aligns", "explore", "prompted"]
 
-MARKS = {"—": "em-dash, use commas or periods", "§": "section sign", ";": "semicolon, use a period or comma"}
+MARKS = {"—": ("em-dash", "use commas or periods"), "§": ("section sign", "remove it"), ";": ("semicolon", "use a period or comma")}
+MARK_RE = re.compile("|".join(map(re.escape, MARKS)))
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
 OFTEN_RE = re.compile(r"\b(" + "|".join(OFTEN) + r")\b", re.IGNORECASE)
 
@@ -97,6 +98,27 @@ class Region:
 
     source: str
     text: str
+
+
+@dataclass(frozen=True)
+class Finding:
+    """Store one detector match and its source span.
+
+    Attributes:
+        region (Region): Source region containing the match.
+        start (int): Match start offset in the region.
+        end (int): Match end offset in the region.
+        rule (str): Human-readable rule name.
+        replacement (str): Suggested correction.
+        pileup (bool): Whether the rule depends on repeated use.
+    """
+
+    region: Region
+    start: int
+    end: int
+    rule: str
+    replacement: str
+    pileup: bool = False
 
 
 def masked(text, keep):
@@ -238,16 +260,22 @@ def heredoc_writes(command):
 
 
 def bash_text(command):
-    """Return commit, PR, and comment message strings from a shell command."""
+    """Return labeled commit, PR, and comment messages from a shell command."""
     git_commit = re.search(r"\bgit\b[^|&]*\bcommit\b", command)
     gh = re.search(r"\bgh\b", command)
     if not (git_commit or gh):
         return []
-    parts = [body for head, body in heredocs(command) if re.search(r"\b(?:git|gh)\b", head)]
+    is_pr = re.search(r"\bgh\s+pr\b", command)
+    body_source = "PR body" if is_pr else "GitHub body"
+    parts = [
+        ("commit message" if re.search(r"\bgit\b", head) else body_source, body)
+        for head, body in heredocs(command)
+        if re.search(r"\b(?:git|gh)\b", head)
+    ]
     stripped = HEREDOC.sub(" ", command)
-    flags = {"-m", "--message"} if git_commit else set()
+    flags = {"-m": "commit message", "--message": "commit message"} if git_commit else {}
     if gh:
-        flags |= {"-b", "--body", "-t", "--title"}
+        flags |= {"-b": body_source, "--body": body_source, "-t": "PR title", "--title": "PR title"}
     try:
         tokens = shlex.split(stripped, comments=False)
     except ValueError:
@@ -255,13 +283,13 @@ def bash_text(command):
     for i, tok in enumerate(tokens):
         key, sep, val = tok.partition("=")
         if tok in flags and i + 1 < len(tokens):
-            parts.append(tokens[i + 1])
+            parts.append((flags[tok], tokens[i + 1]))
         elif sep and key in flags:
-            parts.append(val)
+            parts.append((flags[key], val))
         elif gh and tok in FIELD_FLAGS and i + 1 < len(tokens):
             field, _, value = tokens[i + 1].partition("=")
             if field in {"body", "title"} and not value.startswith("@"):
-                parts.append(value)
+                parts.append((body_source if field == "body" else "PR title", value))
     return parts
 
 
@@ -323,9 +351,11 @@ def patch_regions(patch):
 
 
 def mcp_text(obj):
-    """Return human-facing field values pulled from an MCP tool input."""
+    """Return human-facing field names and values from an MCP tool input."""
     if isinstance(obj, dict):
-        items = [[v] if k.lower() in TEXT_KEYS and isinstance(v, str) else mcp_text(v) for k, v in obj.items()]
+        items = [
+            [(k.lower(), v)] if k.lower() in TEXT_KEYS and isinstance(v, str) else mcp_text(v) for k, v in obj.items()
+        ]
     elif isinstance(obj, list):
         items = [mcp_text(v) for v in obj]
     else:
@@ -339,9 +369,22 @@ def extract(tool, tool_input):
     if isinstance(command, list):  # Codex sends the shell tool an argv array, Claude Code a string
         command = " ".join(str(c) for c in command)
     if tool.startswith("mcp__"):
-        return [Region("tool input", md_text(text)) for text in mcp_text(tool_input)]
+        server = tool.split("__", 2)[1]
+        if server.startswith("claude_ai_"):
+            server = server.removeprefix("claude_ai_")
+        elif server == "codex_apps":
+            server = tool.split("__", 2)[2].split("_", 1)[0]
+        regions = []
+        for field, text in mcp_text(tool_input):
+            kind = (
+                "message"
+                if field in {"body", "text", "markdown_text", "content", "comment", "message"}
+                else field.replace("_", " ")
+            )
+            regions.append(Region(f"{server.replace('_', ' ').title()} {kind}", md_text(text)))
+        return regions
     if tool == "Bash":
-        return [Region("shell message", md_text(text)) for text in bash_text(command)] + heredoc_writes(command)
+        return [Region(source, md_text(text)) for source, text in bash_text(command)] + heredoc_writes(command)
     if tool == "apply_patch":
         return patch_regions(command)
     path = tool_input.get("file_path", "")
@@ -351,25 +394,84 @@ def extract(tool, tool_input):
     return apply_edits(path, [edit for edit in edits if isinstance(edit, dict) and "old_string" in edit])
 
 
+def detect(regions):
+    """Return every rule occurrence with its source span."""
+    findings = []
+    often = []
+    for region in regions:
+        for match in MARK_RE.finditer(region.text):
+            rule, replacement = MARKS[match.group()]
+            findings.append(Finding(region, match.start(), match.end(), rule, replacement))
+        for match in SWAP_RE.finditer(region.text):
+            word = match.group().lower()
+            replacement = SWAP[word]
+            findings.append(
+                Finding(
+                    region,
+                    match.start(),
+                    match.end(),
+                    f'"{word}"',
+                    replacement if replacement == "drop it" else f'use "{replacement}"',
+                )
+            )
+        for pattern, replacement in PHRASES:
+            for match in re.finditer(rf"\b(?:{pattern})\b", region.text, re.IGNORECASE):
+                findings.append(Finding(region, match.start(), match.end(), f'"{match.group()}"', replacement))
+        often += [
+            Finding(region, match.start(), match.end(), f'"{match.group().lower()}"', "vary it", True)
+            for match in OFTEN_RE.finditer(region.text)
+        ]
+    counts = Counter(finding.rule for finding in often)
+    return findings + [finding for finding in often if counts[finding.rule] >= LIMIT]
+
+
+def location(finding):
+    """Format a finding's source, line, and column."""
+    text = finding.region.text
+    return f"{finding.region.source}:{text.count(chr(10), 0, finding.start) + 1}:{finding.start - text.rfind(chr(10), 0, finding.start)}"
+
+
+def context(finding, width=60):
+    """Return short single-line context around a finding."""
+    text = finding.region.text
+    line_start = text.rfind("\n", 0, finding.start) + 1
+    line_end = text.find("\n", finding.end)
+    line_end = len(text) if line_end < 0 else line_end
+    start = max(line_start, finding.start - width // 2)
+    end = min(line_end, finding.end + width // 2)
+    snippet = ("..." if start > line_start else "") + text[start:end].strip() + ("..." if end < line_end else "")
+    return json.dumps(snippet)
+
+
+def format_findings(findings):
+    """Format all findings into one actionable denial message."""
+    lines = [
+        f"- {finding.rule} at {location(finding)}, {finding.replacement}: {context(finding)}"
+        for finding in findings
+        if not finding.pileup
+    ]
+    piles = {}
+    for finding in (finding for finding in findings if finding.pileup):
+        piles.setdefault(finding.rule, []).append(finding)
+    for rule, matches in piles.items():
+        shown = ", ".join(location(finding) for finding in matches[:5])
+        more = f", +{len(matches) - 5} more" if len(matches) > 5 else ""
+        lines.append(f"- {rule} used {len(matches)} times at {shown}{more}, {matches[0].replacement}")
+    return "humanize:\n" + "\n".join(lines)
+
+
 data = json.load(sys.stdin)
 regions = extract(data.get("tool_name", ""), data.get("tool_input") or {})
-text = "\n".join(region.text for region in regions)
+findings = detect(regions)
 
-notes = [f"remove {label}" for ch, label in MARKS.items() if ch in text]
-notes += [f"'{w}' -> {SWAP[w]}" for w in dict.fromkeys(m.group(1).lower() for m in SWAP_RE.finditer(text))]
-notes += [note for pat, note in PHRASES if re.search(rf"\b(?:{pat})\b", text, re.IGNORECASE)]
-counts = Counter(m.group(1).lower() for m in OFTEN_RE.finditer(text))
-notes += [f"'{w}' used {n} times, vary it" for w, n in counts.items() if n >= LIMIT]
-
-if notes:
-    reason = "humanize: " + ", ".join(notes) + ". Applies to markdown, code comments, and message text."
+if findings:
     print(
         json.dumps(
             {
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "deny",
-                    "permissionDecisionReason": reason,
+                    "permissionDecisionReason": format_findings(findings),
                 }
             }
         )

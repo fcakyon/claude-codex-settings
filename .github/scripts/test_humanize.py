@@ -13,13 +13,14 @@ SEMICOLON = chr(59)
 
 def run_hook(tool, tool_input):
     """Run humanize with one tool payload."""
-    return subprocess.run(
+    output = subprocess.run(
         ["python3", HOOK],
         input=json.dumps({"tool_name": tool, "tool_input": tool_input}),
         capture_output=True,
         check=True,
         text=True,
     ).stdout
+    return json.loads(output)["hookSpecificOutput"]["permissionDecisionReason"] if output else ""
 
 
 class HumanizeTest(unittest.TestCase):
@@ -77,18 +78,66 @@ class HumanizeTest(unittest.TestCase):
                 "new_string": f"New{SEMICOLON} sentence.",
             }
             self.assertEqual(run_hook("Edit", code_edit), "")
-            self.assertTrue(run_hook("Edit", prose_edit))
+            self.assertIn(f"{path}:5:4", run_hook("Edit", prose_edit))
 
     def test_applies_markdown_patches_with_file_context(self):
         """Use the full Markdown file to classify patched text."""
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "README.md"
-            path.write_text(f"Intro.\n```js\nconst value = 1{SEMICOLON}\n```\n")
-            patch = (
+            path.write_text(f"Intro.\n```js\nconst value = 1{SEMICOLON}\n```\nOld sentence.\n")
+            code_patch = (
                 f"*** Begin Patch\n*** Update File: {path}\n@@\n ```js\n"
                 f"-const value = 1{SEMICOLON}\n+const value = 2{SEMICOLON}\n ```\n*** End Patch"
             )
-            self.assertEqual(run_hook("apply_patch", {"command": patch}), "")
+            prose_patch = (
+                f"*** Begin Patch\n*** Update File: {path}\n@@\n ```\n"
+                f"-Old sentence.\n+New{SEMICOLON} sentence.\n*** End Patch"
+            )
+            self.assertEqual(run_hook("apply_patch", {"command": code_patch}), "")
+            self.assertIn(f"{path}:5:4", run_hook("apply_patch", {"command": prose_patch}))
+
+    def test_reports_each_file_location_with_context(self):
+        """Report every file finding with line, column, fix, and context."""
+        reason = run_hook(
+            "Write",
+            {"file_path": "README.md", "content": f"First line.\nAI sections{SEMICOLON} it does not{SEMICOLON}\n"},
+        )
+        self.assertIn(
+            f'- semicolon at README.md:2:12, use a period or comma: "AI sections{SEMICOLON} it does not{SEMICOLON}"',
+            reason,
+        )
+        self.assertEqual(reason.count("- semicolon at"), 2)
+
+    def test_caps_pileup_locations(self):
+        """Report five pile-up locations and count the remainder."""
+        content = "\n".join(f"crucial item {i}" for i in range(7))
+        reason = run_hook("Write", {"file_path": "README.md", "content": content})
+        self.assertIn('"crucial" used 7 times', reason)
+        self.assertIn("README.md:5:1, +2 more", reason)
+        self.assertNotIn("README.md:6:1", reason)
+
+    def test_labels_non_file_sources(self):
+        """Label PR, Slack, and heredoc findings by their real source."""
+        cases = (
+            ("Bash", {"command": f'gh pr create -b "One{SEMICOLON} two"'}, "PR body:1:4"),
+            (
+                "mcp__claude_ai_Slack__slack_send_message",
+                {"message": f"One{SEMICOLON} two"},
+                "Slack message:1:4",
+            ),
+            (
+                "mcp__codex_apps__slack_slack_send_message",
+                {"message": {"markdown_text": f"One{SEMICOLON} two"}},
+                "Slack message:1:4",
+            ),
+            (
+                "Bash",
+                {"command": f"cat > notes.md <<'EOF'\nOne{SEMICOLON} two\nEOF"},
+                "notes.md:1:4",
+            ),
+        )
+        for tool, tool_input, source in cases:
+            self.assertIn(source, run_hook(tool, tool_input))
 
 
 if __name__ == "__main__":
