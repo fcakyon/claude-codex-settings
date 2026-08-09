@@ -13,8 +13,7 @@ import json
 import re
 import shlex
 import sys
-from collections import Counter
-from dataclasses import dataclass
+from collections import namedtuple
 from pathlib import Path
 
 # TODO: build a companion guidance skill from that page's pitfalls, not only its word list
@@ -78,8 +77,8 @@ CAT_TEE = re.compile(r"^\s*(cat|tee)\b(.*)$", re.DOTALL)
 REDIRECT = re.compile(r"(?<![0-9&])>>?[ \t]*(\"[^\"]*\"|'[^']*'|[^\s'\"|&;<>]+)")
 
 # MCP input keys that carry human-facing message text, checked as markdown
-TEXT_KEYS = {"body", "text", "markdown_text", "content", "description", "title",
-             "comment", "message", "subject", "note", "summary", "richtext", "rich_text"}
+MESSAGE_KEYS = {"body", "text", "markdown_text", "content", "comment", "message"}
+TEXT_KEYS = MESSAGE_KEYS | {"description", "title", "subject", "note", "summary", "richtext", "rich_text"}
 
 MD_EXT = {".md", ".markdown", ".mdx"}
 HASH_EXT = {".py", ".sh", ".bash", ".zsh", ".rb", ".yaml", ".yml", ".toml"}
@@ -87,38 +86,8 @@ C_EXT = {".js", ".ts", ".jsx", ".tsx", ".c", ".cc", ".cpp", ".h", ".hpp", ".java
 # fmt: on
 
 
-@dataclass(frozen=True)
-class Region:
-    """Store checkable text without losing its source coordinates.
-
-    Attributes:
-        source (str): File path or non-file source label.
-        text (str): Source-length text with excluded content masked.
-    """
-
-    source: str
-    text: str
-
-
-@dataclass(frozen=True)
-class Finding:
-    """Store one detector match and its source span.
-
-    Attributes:
-        region (Region): Source region containing the match.
-        start (int): Match start offset in the region.
-        end (int): Match end offset in the region.
-        rule (str): Human-readable rule name.
-        replacement (str): Suggested correction.
-        pileup (bool): Whether the rule depends on repeated use.
-    """
-
-    region: Region
-    start: int
-    end: int
-    rule: str
-    replacement: str
-    pileup: bool = False
+Region = namedtuple("Region", "source text")
+Finding = namedtuple("Finding", "region start end rule replacement")
 
 
 def masked(text, keep):
@@ -129,10 +98,9 @@ def masked(text, keep):
 def md_text(text):
     """Mask fenced and inline Markdown code without changing source offsets."""
     keep = [True] * len(text)
-    lines = text.splitlines(keepends=True)
     offset = 0
     fence = None
-    for line in lines:
+    for line in text.splitlines(keepends=True):
         match = re.match(r" {0,3}(`{3,}|~{3,})(.*)$", line.rstrip("\r\n"))
         if fence:
             keep[offset : offset + len(line)] = [False] * len(line)
@@ -265,8 +233,7 @@ def bash_text(command):
     gh = re.search(r"\bgh\b", command)
     if not (git_commit or gh):
         return []
-    is_pr = re.search(r"\bgh\s+pr\b", command)
-    body_source = "PR body" if is_pr else "GitHub body"
+    body_source = "PR body" if re.search(r"\bgh\s+pr\b", command) else "GitHub body"
     parts = [
         ("commit message" if re.search(r"\bgit\b", head) else body_source, body)
         for head, body in heredocs(command)
@@ -351,16 +318,16 @@ def patch_regions(patch):
 
 
 def mcp_text(obj):
-    """Return human-facing field names and values from an MCP tool input."""
+    """Yield human-facing field names and values from an MCP tool input."""
     if isinstance(obj, dict):
-        items = [
-            [(k.lower(), v)] if k.lower() in TEXT_KEYS and isinstance(v, str) else mcp_text(v) for k, v in obj.items()
-        ]
+        for key, value in obj.items():
+            if key.lower() in TEXT_KEYS and isinstance(value, str):
+                yield key.lower(), value
+            else:
+                yield from mcp_text(value)
     elif isinstance(obj, list):
-        items = [mcp_text(v) for v in obj]
-    else:
-        return []
-    return [text for group in items for text in group]
+        for value in obj:
+            yield from mcp_text(value)
 
 
 def extract(tool, tool_input):
@@ -369,18 +336,11 @@ def extract(tool, tool_input):
     if isinstance(command, list):  # Codex sends the shell tool an argv array, Claude Code a string
         command = " ".join(str(c) for c in command)
     if tool.startswith("mcp__"):
-        server = tool.split("__", 2)[1]
-        if server.startswith("claude_ai_"):
-            server = server.removeprefix("claude_ai_")
-        elif server == "codex_apps":
-            server = tool.split("__", 2)[2].split("_", 1)[0]
+        namespace, name = tool.split("__", 2)[1:]
+        server = name.split("_", 1)[0] if namespace == "codex_apps" else namespace.removeprefix("claude_ai_")
         regions = []
         for field, text in mcp_text(tool_input):
-            kind = (
-                "message"
-                if field in {"body", "text", "markdown_text", "content", "comment", "message"}
-                else field.replace("_", " ")
-            )
+            kind = "message" if field in MESSAGE_KEYS else field.replace("_", " ")
             regions.append(Region(f"{server.replace('_', ' ').title()} {kind}", md_text(text)))
         return regions
     if tool == "Bash":
@@ -397,32 +357,29 @@ def extract(tool, tool_input):
 def detect(regions):
     """Return every rule occurrence with its source span."""
     findings = []
-    often = []
+    piles = {}
     for region in regions:
         for match in MARK_RE.finditer(region.text):
             rule, replacement = MARKS[match.group()]
-            findings.append(Finding(region, match.start(), match.end(), rule, replacement))
+            findings.append(Finding(region, *match.span(), rule, replacement))
         for match in SWAP_RE.finditer(region.text):
             word = match.group().lower()
             replacement = SWAP[word]
             findings.append(
                 Finding(
                     region,
-                    match.start(),
-                    match.end(),
+                    *match.span(),
                     f'"{word}"',
                     replacement if replacement == "drop it" else f'use "{replacement}"',
                 )
             )
         for pattern, replacement in PHRASES:
             for match in re.finditer(rf"\b(?:{pattern})\b", region.text, re.IGNORECASE):
-                findings.append(Finding(region, match.start(), match.end(), f'"{match.group()}"', replacement))
-        often += [
-            Finding(region, match.start(), match.end(), f'"{match.group().lower()}"', "vary it", True)
-            for match in OFTEN_RE.finditer(region.text)
-        ]
-    counts = Counter(finding.rule for finding in often)
-    return findings + [finding for finding in often if counts[finding.rule] >= LIMIT]
+                findings.append(Finding(region, *match.span(), f'"{match.group()}"', replacement))
+        for match in OFTEN_RE.finditer(region.text):
+            rule = f'"{match.group().lower()}"'
+            piles.setdefault(rule, []).append(Finding(region, *match.span(), rule, "vary it"))
+    return findings, {rule: matches for rule, matches in piles.items() if len(matches) >= LIMIT}
 
 
 def location(finding):
@@ -437,22 +394,18 @@ def context(finding, width=60):
     line_start = text.rfind("\n", 0, finding.start) + 1
     line_end = text.find("\n", finding.end)
     line_end = len(text) if line_end < 0 else line_end
-    start = max(line_start, finding.start - width // 2)
-    end = min(line_end, finding.end + width // 2)
-    snippet = ("..." if start > line_start else "") + text[start:end].strip() + ("..." if end < line_end else "")
+    clip_start = max(line_start, finding.start - width // 2)
+    clip_end = min(line_end, finding.end + width // 2)
+    snippet = ("..." if clip_start > line_start else "") + text[clip_start:clip_end].strip()
+    snippet += "..." if clip_end < line_end else ""
     return json.dumps(snippet)
 
 
-def format_findings(findings):
+def format_findings(findings, piles):
     """Format all findings into one actionable denial message."""
     lines = [
-        f"- {finding.rule} at {location(finding)}, {finding.replacement}: {context(finding)}"
-        for finding in findings
-        if not finding.pileup
+        f"- {finding.rule} at {location(finding)}, {finding.replacement}: {context(finding)}" for finding in findings
     ]
-    piles = {}
-    for finding in (finding for finding in findings if finding.pileup):
-        piles.setdefault(finding.rule, []).append(finding)
     for rule, matches in piles.items():
         shown = ", ".join(location(finding) for finding in matches[:5])
         more = f", +{len(matches) - 5} more" if len(matches) > 5 else ""
@@ -461,17 +414,16 @@ def format_findings(findings):
 
 
 data = json.load(sys.stdin)
-regions = extract(data.get("tool_name", ""), data.get("tool_input") or {})
-findings = detect(regions)
+findings, piles = detect(extract(data.get("tool_name", ""), data.get("tool_input") or {}))
 
-if findings:
+if findings or piles:
     print(
         json.dumps(
             {
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "deny",
-                    "permissionDecisionReason": format_findings(findings),
+                    "permissionDecisionReason": format_findings(findings, piles),
                 }
             }
         )

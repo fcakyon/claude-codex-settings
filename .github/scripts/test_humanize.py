@@ -100,13 +100,18 @@ class HumanizeTest(unittest.TestCase):
         """Report every file finding with line, column, fix, and context."""
         reason = run_hook(
             "Write",
-            {"file_path": "README.md", "content": f"First line.\nAI sections{SEMICOLON} it does not{SEMICOLON}\n"},
+            {
+                "file_path": "README.md",
+                "content": f"First line.\nAI sections{SEMICOLON} it does not{SEMICOLON}\nWe leverage tools.\nIn conclusion, done.\n",
+            },
         )
         self.assertIn(
             f'- semicolon at README.md:2:12, use a period or comma: "AI sections{SEMICOLON} it does not{SEMICOLON}"',
             reason,
         )
         self.assertEqual(reason.count("- semicolon at"), 2)
+        self.assertIn('"leverage" at README.md:3:4, use "use"', reason)
+        self.assertIn('"In conclusion" at README.md:4:1, drop it', reason)
 
     def test_caps_pileup_locations(self):
         """Report five pile-up locations and count the remainder."""
