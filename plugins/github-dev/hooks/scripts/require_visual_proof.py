@@ -40,9 +40,17 @@ if "--body-file" in text or ("$(" in text and "<<" not in text) or re.search(r"g
 
 import subprocess  # noqa: E402  deferred, this hook runs on every Bash call and reaches here on almost none
 
-# rev-parse of a missing origin/HEAD exits non-zero, leaving no files and letting the command through
+# Diff against the base the PR actually targets, not the repo default. A repo with a long-lived
+# integration branch (development, staging, next) merges into it rather than into main, so
+# origin/HEAD...HEAD attributes every design change already sitting in that base to this branch and
+# demands screenshots of somebody else's merged work. Falls back to origin/HEAD when no base is
+# given, which is what gh itself defaults to.
+base = re.search(r"(?:^|\s)(?:-B|--base)(?:[=\s]+)['\"]?([^\s'\"]+)", text)
+base_ref = "origin/" + base.group(1).removeprefix("origin/") if base else "origin/HEAD"
+
+# rev-parse of a missing base exits non-zero, leaving no files and letting the command through
 changed = "" if IMAGE.search(text) else subprocess.run(
-    ["git", "-C", data.get("cwd") or ".", "diff", "--name-only", "origin/HEAD...HEAD"],
+    ["git", "-C", data.get("cwd") or ".", "diff", "--name-only", f"{base_ref}...HEAD"],
     capture_output=True,
     text=True,
     timeout=5,
