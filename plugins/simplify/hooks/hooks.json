@@ -1,12 +1,6 @@
 {
   "description": "simplify-guard: require /simplify or an explicit one-time user bypass before each git commit attempt in a worktree",
   "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Skill",
-        "hooks": [{ "type": "command", "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/guard.py\"" }]
-      }
-    ],
     "PreToolUse": [
       {
         "matcher": "Bash",
