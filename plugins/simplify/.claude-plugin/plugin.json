@@ -1,6 +1,6 @@
 {
   "name": "simplify",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
   "author": {
     "name": "Fatih C. Akyon"
