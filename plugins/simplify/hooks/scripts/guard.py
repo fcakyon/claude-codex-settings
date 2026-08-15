@@ -2,10 +2,10 @@
 """Block `git commit` until /simplify runs or the user requests a one-time bypass.
 
 The marker lives in the per-worktree Git directory because /simplify reviews
-the worktree's index. Claude Code mints it through the Skill event; Codex mints
-it through the explicit completion signal at the end of the skill. An agent can
-mint the same one-use permission when the user explicitly asks to skip
-/simplify. Other runtimes remain unblocked because they have no supported path.
+the worktree's index. Claude Code and Codex mint it through an explicit
+completion signal carrying the reviewed worktree. An agent can mint the same
+one-use permission when the user explicitly asks to skip /simplify. Other
+runtimes remain unblocked because they have no supported path.
 """
 
 import json
@@ -19,8 +19,8 @@ data = json.load(sys.stdin)
 event = data.get("hook_event_name", "")
 tool_input = data.get("tool_input") or {}
 
-COMPLETION_SIGNAL = "echo simplify-guard:complete"
-BYPASS_SIGNAL = "echo simplify-guard:bypass"
+COMPLETION_SIGNAL = ("echo", "simplify-guard:complete")
+BYPASS_SIGNAL = ("echo", "simplify-guard:bypass")
 SHELL_OPERATORS = {";", "&&", "||", "|", "(", ")"}
 GIT_OPTIONS_WITH_VALUES = {"-C", "-c", "--config-env", "--git-dir", "--namespace", "--work-tree"}
 GIT_OPTIONS_WITHOUT_SUBCOMMAND = {
@@ -35,6 +35,14 @@ GIT_OPTIONS_WITHOUT_SUBCOMMAND = {
 
 
 def marker(git=("git",)):
+    """Return the one-use marker for a Git worktree.
+
+    Args:
+        git (tuple[str, ...], optional): Git executable and global options.
+
+    Returns:
+        (Path | None): Marker path when the command resolves a Git directory.
+    """
     git_dir = subprocess.run(
         [*git, "rev-parse", "--path-format=absolute", "--git-dir"],
         capture_output=True,
@@ -44,10 +52,15 @@ def marker(git=("git",)):
     return Path(git_dir) / "simplify-guard.ok" if git_dir else None
 
 
-def commit_prefix(command):
-    lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()")
-    lexer.whitespace_split = True
-    tokens = list(lexer)
+def commit_prefix(tokens):
+    """Return the safe Git prefix for a commit command.
+
+    Args:
+        tokens (list[str]): Shell tokens to inspect.
+
+    Returns:
+        (list[str] | None): Git executable and global options before `commit`.
+    """
     for start, arg in enumerate(tokens):
         if Path(arg).name != "git":
             continue
@@ -66,29 +79,28 @@ def commit_prefix(command):
 
 
 def main():
-    is_claude = os.environ.get("CLAUDECODE") == "1"
-    is_codex = bool(data.get("turn_id"))
-
-    if event == "PostToolUse":
-        if is_claude and tool_input.get("skill") == "simplify" and (m := marker()):
-            m.touch()
-        return
-
-    if event != "PreToolUse" or not (is_claude or is_codex):
+    """Run the guard for one hook event."""
+    if event != "PreToolUse" or not (os.environ.get("CLAUDECODE") == "1" or data.get("turn_id")):
         return
 
     command = tool_input.get("command", "")
-    signal = command.strip()
-    if signal == BYPASS_SIGNAL or (is_codex and signal == COMPLETION_SIGNAL):
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()")
+    lexer.whitespace_split = True
+    tokens = list(lexer)
+    if len(tokens) == 3 and tuple(tokens[:2]) == COMPLETION_SIGNAL:
+        if m := marker(("git", "-C", tokens[2])):
+            m.touch()
+        return
+    if tuple(tokens) == BYPASS_SIGNAL:
         if m := marker():
             m.touch()
         return
 
-    if not (git := commit_prefix(command)) or not (m := marker(git)):
+    if not (git := commit_prefix(tokens)) or not (m := marker(git)):
         return
 
     if m.exists():
-        m.unlink()  # spend the token before Git runs; every attempt needs a fresh review
+        m.unlink()  # spend the token before Git runs. Every attempt needs a fresh review
         return
 
     print(

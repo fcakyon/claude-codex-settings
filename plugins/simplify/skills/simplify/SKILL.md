@@ -52,16 +52,14 @@ Check that each change is implemented at the right depth, not as a fragile banda
 
 Wait for all four agents to complete, dedup findings that point at the same line or mechanism, and fix each remaining one directly. Skip any finding whose fix would change intended behavior, require changes well outside the reviewed diff, or that you judge to be a false positive, note the skip rather than arguing with it.
 
-## Phase 3 — Mark completion in Codex
+## Phase 3: Mark completion
 
-In Codex only, after all accepted fixes are applied, run this exact command from the reviewed worktree:
+After all accepted fixes are applied, resolve the reviewed worktree with `git -C '<reviewed-worktree>' rev-parse --show-toplevel`, then put that absolute path in this command:
 
 ```bash
-echo simplify-guard:complete
+echo simplify-guard:complete '/absolute/path/to/reviewed/worktree'
 ```
 
-Codex loads skills as instructions instead of emitting a Skill tool event. This command lets the bundled guard record completion. Do not run it before the review and cleanup phases finish.
-
-Claude Code should skip this phase because its `PostToolUse` Skill hook records completion automatically.
+This lets the bundled guard record completion against the reviewed worktree even when the session started elsewhere. Do not run it before the review and cleanup phases finish.
 
 Finish with a brief summary of what was fixed and what was skipped (or confirm the code was already clean).
