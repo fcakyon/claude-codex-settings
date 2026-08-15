@@ -1,6 +1,6 @@
 {
   "name": "github-dev",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Git and GitHub workflow skills for commits, PRs, code review, and comment resolution.",
   "author": {
     "name": "Fatih C. Akyon"

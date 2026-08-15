@@ -56,3 +56,6 @@ jobs:
 
       - name: Test simplify guard
         run: python .github/scripts/test_simplify_guard.py
+
+      - name: Test visual proof guard
+        run: python .github/scripts/test_require_visual_proof.py

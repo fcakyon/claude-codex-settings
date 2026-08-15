@@ -362,7 +362,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "Git and GitHub workflow skills for commits, PRs, code review, and comment resolution.",
-      "version": "2.7.1",
+      "version": "2.7.2",
       "author": {
         "name": "Fatih C. Akyon"
       },
