@@ -144,6 +144,18 @@ class HumanizeTest(unittest.TestCase):
         for tool, tool_input, source in cases:
             self.assertIn(source, run_hook(tool, tool_input))
 
+    def test_checks_github_close_comments_from_shell_tools(self):
+        """Check close comments from Claude and Codex shell calls."""
+        cases = (
+            ("Bash", {"command": f'gh pr close 106 --comment "Old{SEMICOLON} new"'}),
+            ("exec_command", {"cmd": f'gh issue close 105 -c "Fixed{SEMICOLON} thanks"'}),
+        )
+        for tool, tool_input in cases:
+            self.assertIn("semicolon at GitHub comment:1:", run_hook(tool, tool_input))
+        self.assertEqual(run_hook("Bash", {"command": "gh pr review 106 -c"}), "")
+        self.assertEqual(run_hook("Bash", {"command": "gh pr close 106 && gh pr review 106 -c"}), "")
+        self.assertEqual(run_hook("exec_command", {"cmd": "git status --short"}), "")
+
 
 if __name__ == "__main__":
     unittest.main()

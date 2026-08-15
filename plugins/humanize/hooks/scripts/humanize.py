@@ -247,12 +247,22 @@ def bash_text(command):
         tokens = shlex.split(stripped, comments=False)
     except ValueError:
         tokens = stripped.split()
+    close_comment = False
     for i, tok in enumerate(tokens):
+        if tok in {"&&", "||", ";", "|", "&"}:
+            close_comment = False
+            continue
+        if tokens[i : i + 3] in (["gh", "pr", "close"], ["gh", "issue", "close"]):
+            close_comment = True
         key, sep, val = tok.partition("=")
         if tok in flags and i + 1 < len(tokens):
             parts.append((flags[tok], tokens[i + 1]))
         elif sep and key in flags:
             parts.append((flags[key], val))
+        elif close_comment and tok in {"-c", "--comment"} and i + 1 < len(tokens):
+            parts.append(("GitHub comment", tokens[i + 1]))
+        elif close_comment and sep and key in {"-c", "--comment"}:
+            parts.append(("GitHub comment", val))
         elif gh and tok in FIELD_FLAGS and i + 1 < len(tokens):
             field, _, value = tokens[i + 1].partition("=")
             if field in {"body", "title"} and not value.startswith("@"):
@@ -332,7 +342,7 @@ def mcp_text(obj):
 
 def extract(tool, tool_input):
     """Return source-preserving regions for a tool call."""
-    command = tool_input.get("command", "")
+    command = tool_input.get("command", tool_input.get("cmd", ""))
     if isinstance(command, list):  # Codex sends the shell tool an argv array, Claude Code a string
         command = " ".join(str(c) for c in command)
     if tool.startswith("mcp__"):
@@ -343,7 +353,7 @@ def extract(tool, tool_input):
             kind = "message" if field in MESSAGE_KEYS else field.replace("_", " ")
             regions.append(Region(f"{server.replace('_', ' ').title()} {kind}", md_text(text)))
         return regions
-    if tool == "Bash":
+    if tool in {"Bash", "exec_command"}:
         return [Region(source, md_text(text)) for source, text in bash_text(command)] + heredoc_writes(command)
     if tool == "apply_patch":
         return patch_regions(command)

@@ -1,6 +1,6 @@
 {
   "name": "humanize",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Block a curated list of AI buzzwords on every write with a hook.",
   "author": {
     "name": "Fatih C. Akyon"
