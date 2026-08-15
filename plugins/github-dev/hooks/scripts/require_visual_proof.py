@@ -7,6 +7,7 @@ the branch changes a webpage or stylesheet and the body carries no image at all.
 command (Claude Code) and an argv array (Codex). Lets the command through when git cannot list the
 branch files.
 """
+
 import json
 import re
 import sys
@@ -26,7 +27,11 @@ command = (data.get("tool_input") or {}).get("command", "")
 text = " ".join(map(str, command)) if isinstance(command, list) else str(command)
 
 # anchor per command segment so `cd site && gh pr create` matches but `gh issue comment -b "pr create"` does not
-if not any(part.strip().startswith(("gh pr create", "gh pr edit")) for part in SEGMENT.split(text)):
+pr_command = next(
+    (part.strip() for part in SEGMENT.split(text) if part.strip().startswith(("gh pr create", "gh pr edit"))),
+    "",
+)
+if not pr_command:
     sys.exit(0)
 
 # only a command writing an inline body can be judged, label or reviewer edits carry none
@@ -38,23 +43,25 @@ if not re.search(r"(^|\s)(-b|--body)(\s|=)", text):
 if "--body-file" in text or ("$(" in text and "<<" not in text) or re.search(r"gh pr edit\s+\d", text):
     sys.exit(0)
 
-import subprocess  # noqa: E402  deferred, this hook runs on every Bash call and reaches here on almost none
+import shlex
+import subprocess
 
-# Diff against the base the PR actually targets, not the repo default. A repo with a long-lived
-# integration branch (development, staging, next) merges into it rather than into main, so
-# origin/HEAD...HEAD attributes every design change already sitting in that base to this branch and
-# demands screenshots of somebody else's merged work. Falls back to origin/HEAD when no base is
-# given, which is what gh itself defaults to.
-base = re.search(r"(?:^|\s)(?:-B|--base)(?:[=\s]+)['\"]?([^\s'\"]+)", text)
-base_ref = "origin/" + base.group(1).removeprefix("origin/") if base else "origin/HEAD"
+args = list(map(str, command)) if isinstance(command, list) else shlex.split(pr_command)
+base = next((value for option, value in zip(args, args[1:]) if option in {"-B", "--base"}), None)
+base = next((arg.removeprefix("--base=") for arg in args if arg.startswith("--base=")), base)
+base_ref = f"origin/{base.removeprefix('origin/') if base else 'HEAD'}"
 
 # rev-parse of a missing base exits non-zero, leaving no files and letting the command through
-changed = "" if IMAGE.search(text) else subprocess.run(
-    ["git", "-C", data.get("cwd") or ".", "diff", "--name-only", f"{base_ref}...HEAD"],
-    capture_output=True,
-    text=True,
-    timeout=5,
-).stdout
+changed = (
+    ""
+    if IMAGE.search(text)
+    else subprocess.run(
+        ["git", "-C", data.get("cwd") or ".", "diff", "--name-only", f"{base_ref}...HEAD"],
+        capture_output=True,
+        text=True,
+        timeout=5,
+    ).stdout
+)
 design = [path for path in changed.split() if DESIGN.search(path)]
 
 if COMMITTED_IMAGE.search(text):
@@ -68,4 +75,14 @@ elif design:
 else:
     sys.exit(0)
 
-print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": reason}}))
+print(
+    json.dumps(
+        {
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "deny",
+                "permissionDecisionReason": reason,
+            }
+        }
+    )
+)
