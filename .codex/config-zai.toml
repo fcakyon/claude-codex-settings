@@ -1,0 +1,55 @@
+# Z.ai GLM recipe for Codex CLI.
+# Copy the blocks below into ~/.codex/config.toml to activate.
+# This file is NOT auto-loaded. Codex only reads config.toml.
+#
+# Source: https://docs.z.ai/devpack/tool/codex
+# Z.ai now serves an OpenAI Responses endpoint at /api/v1, so no local proxy
+# is needed (unlike the Kimi and MiniMax recipes). wire_api must be "responses".
+#
+# Codex reads model limits from a catalog file, so also create ~/.codex/models.json:
+#
+# {
+#   "models": [
+#     {
+#       "slug": "glm-5.3",
+#       "display_name": "glm-5.3",
+#       "description": "Z.ai flagship model",
+#       "default_reasoning_level": "max",
+#       "supported_reasoning_levels": [
+#         { "effort": "low", "description": "Light reasoning" },
+#         { "effort": "high", "description": "Deeper reasoning" },
+#         { "effort": "max", "description": "Deep reasoning" }
+#       ],
+#       "shell_type": "shell_command",
+#       "visibility": "list",
+#       "supported_in_api": true,
+#       "priority": 0,
+#       "base_instructions": "",
+#       "supports_reasoning_summaries": true,
+#       "default_reasoning_summary": "none",
+#       "support_verbosity": false,
+#       "apply_patch_tool_type": "freeform",
+#       "truncation_policy": { "mode": "bytes", "limit": 10000 },
+#       "context_window": 1048576,
+#       "max_context_window": 1048576,
+#       "effective_context_window_percent": 95,
+#       "supports_parallel_tool_calls": true,
+#       "experimental_supported_tools": [],
+#       "input_modalities": ["text"]
+#     }
+#   ]
+# }
+#
+# Claude Code users: see .claude/settings-zai.json, which uses the
+# Anthropic-compatible endpoint and the glm-5.3[1m] 1M-context model ID.
+
+model = "glm-5.3"
+model_provider = "ZAI"
+model_reasoning_effort = "max"
+model_catalog_json = "~/.codex/models.json"
+
+[model_providers.ZAI]
+name = "ZAI"
+base_url = "https://api.z.ai/api/v1"
+experimental_bearer_token = "your_zai_api_key"
+wire_api = "responses"

@@ -966,16 +966,16 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 </details>
 
 <details>
-<summary><strong>Z.ai GLM-5.2 (1M context)</strong></summary>
+<summary><strong>Z.ai GLM-5.3 (1M context)</strong></summary>
 
 Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/scenario-example/develop-tools/claude):
 
-- **Main model**: GLM-5.2 with 1M context (dialogue, planning, coding, complex reasoning)
+- **Main model**: GLM-5.3 with 1M context (dialogue, planning, coding, complex reasoning)
 - **Fast model**: GLM-4.7 (file search, syntax checking)
 - **Cost savings**: much cheaper than frontier Claude models
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
-Z.ai currently documents Anthropic Messages and OpenAI Chat Completions endpoints, but Codex CLI requires the Responses API. No GLM Codex recipe is included until Z.ai publishes a compatible route.
+For Codex CLI, see the recipe at [`.codex/config-zai.toml`](./.codex/config-zai.toml). Z.ai serves a Responses endpoint at `/api/v1`, so no local proxy is needed.
 
 </details>
 
