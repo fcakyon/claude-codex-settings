@@ -9,9 +9,6 @@ model_auto_compact_token_limit = 400000
 model_auto_compact_token_limit_scope = "body_after_prefix"
 service_tier = "default"
 
-# Guidance for the auto_review guardian subagent. Replaces the bundled tenant
-# policy, so the defaults are inlined here alongside the workspace specifics.
-# Mirrors the autoMode block in .claude/settings.json.
 [auto_review]
 policy = """
 ## Environment Profile
@@ -94,6 +91,9 @@ enabled = true
 enabled = true
 
 [plugins."frontend-design-skills@claude-settings"]
+enabled = true
+
+[plugins."seo-skills@claude-settings"]
 enabled = true
 
 [plugins."github-dev@claude-settings"]
