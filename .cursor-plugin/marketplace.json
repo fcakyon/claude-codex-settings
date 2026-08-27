@@ -89,8 +89,8 @@
     {
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
-      "description": "Design skills from Anthropic and OpenAI for landing pages and web apps.",
-      "version": "1.0.2",
+      "description": "Design distinctive frontends and write clear interface copy.",
+      "version": "1.1.0",
       "license": "Apache-2.0"
     },
     {
@@ -225,6 +225,13 @@
       "description": "Pull Overleaf review comments into your .tex repo and apply the edits.",
       "version": "1.0.2",
       "license": "Apache-2.0"
+    },
+    {
+      "name": "seo-skills",
+      "source": "./plugins/seo-skills",
+      "description": "Audit SEO, plan scalable pages, validate schema, and improve site architecture.",
+      "version": "1.0.0",
+      "license": "MIT"
     }
   ]
 }
