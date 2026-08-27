@@ -1,83 +1,81 @@
 ---
 name: ultralytics-platform
-description: This skill should be used when user asks to "upload my model to Ultralytics Platform", "push this run to the platform", "upload a dataset to platform", "download a dataset from platform", "search platform datasets", "start cloud training", "train on platform GPUs", "export a model on platform", "deploy a model endpoint", "why is my run not showing on platform", or mentions platform.ultralytics.com, ul:// URIs, or ULTRALYTICS_API_KEY.
+description: This skill should be used when user asks to "upload my model to Ultralytics Platform", "push this run to the platform", "upload a dataset to platform", "download a dataset from platform", "search platform datasets", "start cloud training", "train on platform GPUs", "export a model on platform", "deploy a model endpoint", "why is my run not showing on platform", or mentions platform.ultralytics.com, ul:// URIs, ultralytics-platform, or ULTRALYTICS_API_KEY.
 ---
 
 # Ultralytics Platform
 
-REST API at `https://platform.ultralytics.com`, auth `Authorization: Bearer ul_...`.
-Interactive spec: `GET /openapi.json` (needs the bearer header).
+Use `ultralytics` for YOLO training and inference. Use the generated `ultralytics-platform` Python
+SDK for API resource work. It follows the same contract as the live API and handles authentication,
+typed responses, retries, and errors.
 
-The auth shape and the four gotchas below were run against the live API on
-2026-08-04. Endpoint shapes not covered by those runs come from `/openapi.json` and are marked
-unverified in `references/`.
+## Read the live contract
 
-## Get the key first
+Before API work, check the generated [API reference](https://platform.ultralytics.com/api/docs) or
+`GET https://platform.ultralytics.com/openapi.json`. Treat the live OpenAPI document as authoritative
+when examples disagree. The shapes below match API and SDK v0.1.18, checked on 2026-08-27.
 
 ```bash
-export ULTRALYTICS_API_KEY=ul_... # Settings > API Keys on platform.ultralytics.com
+uv pip install -U "ultralytics-platform>=0.1.18"
+export ULTRALYTICS_API_KEY=ul_... # Settings > API Keys
 ```
 
-The `ultralytics` package reads `ULTRALYTICS_API_KEY` env first, then `api_key` in
-`settings.json` (`yolo settings api_key=ul_...`). Check both before assuming the key is missing.
+`Platform()` reads `ULTRALYTICS_API_KEY`. The `ultralytics` package also reads the key saved by
+`yolo login`. Never print or commit a key.
 
-## Pick the path before writing any code
+## Choose the interface
 
-| Goal                                                          | Path                      |
-| ------------------------------------------------------------- | ------------------------- |
-| Track a run that has **not started yet**                      | Package callback, no REST |
-| Push a run that **already finished**                          | REST retro upload         |
-| Read a platform dataset or model in training code             | `ul://` URI               |
-| Upload/download datasets, search, cloud train, export, deploy | REST                      |
+| Goal                                                       | Interface                        |
+| ---------------------------------------------------------- | -------------------------------- |
+| Track a run that has not started                           | `ultralytics` training callback  |
+| Train with a Platform dataset or model                     | `ultralytics` with a `ul://` URI |
+| Manage datasets, models, training, exports, or deployments | `ultralytics-platform` SDK       |
+| Use another language or inspect a new field                | Live OpenAPI                     |
 
-### Package callback (live runs)
+### Live training and `ul://` URIs
 
-Set the key and pass `project=`, then train normally. `ultralytics/utils/callbacks/platform.py`
-streams per-epoch metrics, system metrics, console output, PR/F1/confusion-matrix plots, and
-uploads `best.pt` at the end.
+Pass an owner-qualified project to stream a run:
 
 ```python
-model.train(data="coco8.yaml", epochs=100, project="my-project", name="run1")
+from ultralytics import YOLO
+
+YOLO("yolo26n.pt").train(data="coco8.yaml", epochs=100, project="owner/project", name="run1")
 ```
 
-**`project=` is mandatory.** The callback returns early without it, so no key and no `project=`
-both produce the same silent nothing. That is the #1 cause of "I trained but the platform is
-empty". See `references/recipes.md` for the full enablement gate and the other failure modes.
-
-### `ul://` URIs
-
-Resolve to signed URLs inside `data=` and `model=`, no manual download:
+`project=` is required. Without it, the callback exits before creating a Platform run. Use the
+owner prefix for a team workspace.
 
 ```python
-YOLO("ul://username/my-project/my-model").train(data="ul://username/datasets/my-dataset", epochs=100)
+YOLO("ul://owner/project/model").train(data="ul://owner/datasets/dataset", epochs=100)
 ```
 
-## REST
+### SDK
 
-Read `references/recipes.md` before writing a request. It carries working code for retro upload
-of a finished run, dataset upload and download, search, cloud training, export, deployment, and
-cleanup. Each section states whether it was run live or derived from the spec.
+Use a context manager and owner/name paths. Keep returned IDs for operations that require them,
+including image operations, upload `assetId`, training `modelId`, and export IDs.
 
-`references/api-reference.md` is the endpoint table plus the request shapes.
+Responses have resource-specific shapes, not a generic envelope. Create calls return `id`, `owner`,
+and the URL name at the top level. Detail calls wrap the resource under its type, such as `dataset`.
+A rename changes the URL name, so use the name returned by the update response.
 
-## Four things that break first-time requests
+Read [references/recipes.md](references/recipes.md) for live-run diagnosis, finished-run upload,
+dataset upload, and billable jobs.
 
-1. **`POST /api/models` and `GET /api/models` need the 24-char project ID, not the slug.** Every
-   other endpoint accepts a slug in the path. These two return `400 Invalid project ID` for a slug
-   even though the parameter is documented as "name or ID". Create the project first and keep the
-   returned `projectId`.
-2. **Top-level `metrics` is a closed key set**, listed in `references/api-reference.md`. Posting
-   a raw `results.csv` key like `metrics/mAP50-95(B)` returns `400 Unrecognized key`.
-   `trainResults[].metrics` is free-form, so csv rows go in there as is.
-3. **Uploads are three calls, not one.** `POST /api/upload/signed-url` to get the URL, plain
-   `PUT` of the bytes to that URL with no auth header, then `POST /api/upload/complete`. Skipping
-   the third call leaves the file unattached.
-4. **Deletes are soft.** `DELETE /api/projects/{id}` moves to trash and cascades to its models.
-   `DELETE /api/trash/empty` makes it permanent.
+## Invariants
+
+- Confirm the target workspace with `client.account.summary()` and read the exact resource before a
+  mutation. Team work requires an API key created in that workspace.
+- A direct upload is signed URL, `PUT` with the returned `headers`, upload completion, then dataset
+  ingest. Model uploads stop after completion.
+- Dataset ingest accepts one source: `sessionId`, `sourceUrl`, or a connected-storage `reference`.
+  Set `targetSplit` when every incoming image must enter one split.
+- Top-level model `metrics` accepts only the contract's named summary metrics. Per-epoch
+  `trainResults[].metrics` accepts numeric metric names from `results.csv`.
+- On `429`, wait for `Retry-After` before retrying. Do not invent fixed sleeps.
 
 ## Cost and destructive actions
 
-`POST /api/training/start`, `POST /api/exports`, and `POST /api/deployments` spend credits.
-The cost comes back in the create response, not from a lookup beforehand, so report
-`billing.estimatedCostDisplay` from the `POST` result before letting the job run.
-Confirm with the user before any create-with-cost or any delete.
+Cloud training, model exports, and deployments can spend credits. Get approval before calling
+`client.training.start`, `client.exports.create`, or `client.deployments.create`, then report the
+cost returned by the create response. Get approval before deletes. Resource deletes move projects,
+datasets, and models to 30-day trash. `client.lifecycle.delete_trash` is permanent.
