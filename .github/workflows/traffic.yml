@@ -1,7 +1,7 @@
 name: Traffic counts
 
-# GitHub's traffic API only keeps 14 days, so a "this month" number has to be collected
-# daily before it ages out. Counts land on the orphan `traffic-data` branch, which
+# GitHub's traffic API only keeps 14 days, so total traffic has to be collected daily
+# before it ages out. Counts land on the orphan `traffic-data` branch, which
 # shields.io reads as a badge endpoint. The API needs Administration:read, which the
 # default GITHUB_TOKEN cannot hold, hence the TRAFFIC_TOKEN secret.
 
