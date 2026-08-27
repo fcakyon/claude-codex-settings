@@ -398,6 +398,8 @@ bash .github/scripts/sync-stripe-skills.sh
 bash .github/scripts/sync-polar-skills.sh
 bash .github/scripts/sync-livekit-skills.sh
 bash .github/scripts/sync-react-skills.sh
+bash .github/scripts/sync-frontend-skills.sh
+bash .github/scripts/sync-seo-skills.sh
 bash .github/scripts/sync-agent-browser-skills.sh
 bash .github/scripts/sync-anthropic-office-skills.sh
 bash .github/scripts/sync-openai-office-skills.sh
