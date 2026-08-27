@@ -18,14 +18,13 @@ Ask yourself: "What can I delete instead of add, and does this trace to what was
 
 ## Working Rules
 
-- Reflect on tool results before acting, then plan and take the best next action.
-- Run independent operations in parallel.
-- Verify your solution before finishing.
+- Reflect on tool results, run independent operations in parallel, and verify before finishing.
 - Before committing to an approach, and after two failed attempts at the same problem, get a second opinion with `/codex-advisor` or `/fable-advisor` if either is installed.
-- Never create files unless necessary. Prefer editing. Never create docs (*.md, README) unless asked.
+- Prefer editing existing files, and check related code for consistency. Never create docs (*.md, README) unless asked.
 - Prefer `rg` over `grep`.
-- When updating code, check related code in the same and other files for consistency.
-- Never use `consolidate`, `modernize`, `streamline`, `flexible`, `delve`, `establish`, `enhanced`, `comprehensive`, `optimize`, or em-dashes in docstrings, commit messages, or comments.
+- Use the `writing-guidelines` skill to review documentation or interface copy, and the `humanize` skill to remove generic or machine-written phrasing.
+- For SEO, use the `seo-audit`, `site-architecture`, `programmatic-seo`, or `schema` skill based on the task.
+- Use the `anthropic-frontend-design` or `openai-frontend-design` skill when creating or reshaping a UI.
 
 ## MCP Tools
 
