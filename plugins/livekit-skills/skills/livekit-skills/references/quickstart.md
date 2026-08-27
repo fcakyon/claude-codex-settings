@@ -1,6 +1,6 @@
 ## /agents/start/voice-ai-quickstart
 
-LiveKit docs › Get Started › Voice AI quickstart
+LiveKit docs › Build Agents › Get Started › Voice AI quickstart
 
 ---
 
@@ -222,30 +222,16 @@ Use different modes and deployment options to test and deploy your agent.
 
 Start your agent server in development or production modes.
 
-- `console` mode: For Python only, runs your agent locally in your terminal.
+- `console` mode: Run your agent locally in your terminal.
 - `dev` mode: Run your agent in development mode for testing and debugging.
 - `start` mode: Run your agent in production mode.
 
 To learn more about these modes, see the [Server startup modes](https://docs.livekit.io/agents/server/startup-modes/) reference.
 
-**Python**:
-
-For Python agents, run the following command to start your agent in production mode:
+To run your agent in production mode:
 
 ```shell
-uv run src/agent.py start
-
-```
-
----
-
-**Node.js**:
-
-The Node.js starter includes `build` and `start` scripts. To run in production mode:
-
-```shell
-pnpm build
-pnpm start
+lk agent start
 
 ```
 

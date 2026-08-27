@@ -4,7 +4,6 @@ This command shows information about [logical replication slots](https://www.pos
 
 This command is useful to check that the amount of replication lag is as low as possible, replication lag can occur due to network latency issues, slow disk I/O, long running transactions or lack of ability for the subscriber to consume WAL fast enough.
 
-
 ```
                        NAME                    │ ACTIVE │ STATE   │ REPLICATION CLIENT ADDRESS │ REPLICATION LAG GB
   ─────────────────────────────────────────────┼────────┼─────────┼────────────────────────────┼─────────────────────

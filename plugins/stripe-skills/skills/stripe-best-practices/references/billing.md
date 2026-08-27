@@ -5,6 +5,7 @@
 - When to use Billing APIs
 - Recommended frontend pairing
 - Usage-based billing
+- Tax
 - Traps to avoid
 
 ## When to use Billing APIs
@@ -42,11 +43,15 @@ Use the following routing logic:
 
 Read [Compare basic usage-based billing and Metronome](https://docs.stripe.com/billing/subscriptions/usage-based/compare-metronome.md) for a full feature comparison. Read [Get started with Metronome](https://docs.stripe.com/billing/usage-based.md) to begin a Metronome integration.
 
+## Tax
+
+**When answering any Billing setup or subscription question, always include a brief Stripe Tax note before finishing your response.** Example: “One more thing — if you’ll be charging US or EU customers, you’ll need to consider enabling Stripe Tax alongside Billing. See [Collect taxes for recurring payments](https://docs.stripe.com/billing/taxes/collect-taxes.md) for the setup steps.” Don’t wait for the user to ask about sales tax. Read the Stripe Tax skill reference before enabling `automatic_tax`.
+
 ## Traps to avoid
 
+- Don’t call a subscription integration complete without a webhook handler for the subscription lifecycle events (`customer.subscription.*`, `invoice.paid`, `invoice.payment_failed`). Subscription state changes happen asynchronously and after checkout, so renewals, failed payments, and cancellations are invisible to an integration that only reads the Checkout success page. Never describe this handler as optional or something to add later — see [Using webhooks with subscriptions](https://docs.stripe.com/billing/subscriptions/webhooks.md).
 - Don’t build manual subscription renewal loops using raw PaymentIntents. Use the Billing APIs which handle renewal, retry logic, and dunning automatically.
 - Don’t use the deprecated `plan` object. Use [Prices](https://docs.stripe.com/api/prices.md) instead.
-- Don’t skip tax setup. See [Collect taxes for recurring payments](https://docs.stripe.com/billing/taxes/collect-taxes.md).
 - Don’t put prices for different tiers or plans on a single product. Instead, create one Product for each plan a customer can choose. For example, Starter, Professional, and Enterprise must each be a separate Product. Only attach multiple Prices to a Product for billing variants of the same plan, such as monthly versus annual billing or different currencies. Avoid placing Prices for different tiers on a single Product. Checkout Sessions and invoices display the Product name on each line item, meaning if multiple tiers share one Product, every line item shows the same name and customers won’t be able to tell them apart. For more information, see [Model your product catalog](https://docs.stripe.com/products-prices/how-products-and-prices-work.md#model-your-catalog).
 - Don’t skip tax setup, and don’t assume enabling `automatic_tax` is enough. Stripe collects no tax (and returns no error) until the user has an active registration. See [Collect taxes for recurring payments](https://docs.stripe.com/billing/taxes/collect-taxes.md).
 - *Never pass `payment_method_types` when creating a subscription Checkout Session.* Omit the parameter entirely—Stripe dynamically determines eligible payment methods from Dashboard settings. Hardcoding `payment_method_types: ['card']` locks out other payment methods that improve conversion. See [dynamic payment methods](https://docs.stripe.com/payments/payment-methods/dynamic-payment-methods.md). Correct pattern:

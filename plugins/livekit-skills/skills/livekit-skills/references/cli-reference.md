@@ -1,6 +1,6 @@
 ## /home/cli
 
-LiveKit docs › Understanding LiveKit › LiveKit CLI
+LiveKit docs › Introduction › Understanding LiveKit › LiveKit CLI
 
 ---
 

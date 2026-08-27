@@ -1,6 +1,6 @@
 ## /home/self-hosting
 
-LiveKit docs › Self-hosting › Running locally
+LiveKit docs › WebRTC Transport › Self-hosting › Running locally
 
 ---
 
