@@ -166,12 +166,12 @@
     {
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
-      "description": "Design skills from Anthropic and OpenAI for landing pages and web apps.",
-      "version": "1.0.2",
+      "description": "Design distinctive frontends and write clear interface copy.",
+      "version": "1.1.0",
       "license": "Apache-2.0",
-      "keywords": ["frontend", "design", "ui", "landing-page", "web-design"],
+      "keywords": ["frontend", "design", "ui", "landing-page", "web-design", "writing", "interface-copy"],
       "category": "frontend",
-      "tags": ["frontend", "design", "skills"]
+      "tags": ["frontend", "design", "writing"]
     },
     {
       "name": "mongodb-skills",
@@ -492,6 +492,16 @@
       "keywords": ["overleaf", "latex", "review", "comments", "academic", "writing"],
       "category": "research",
       "tags": ["research", "academic", "latex"]
+    },
+    {
+      "name": "seo-skills",
+      "source": "./plugins/seo-skills",
+      "description": "Audit SEO, plan scalable pages, validate schema, and improve site architecture.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["seo", "audit", "structured-data", "schema", "site-architecture", "organic-search"],
+      "category": "search",
+      "tags": ["seo", "search", "site-audit"]
     }
   ]
 }

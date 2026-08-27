@@ -357,7 +357,7 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 </details>
 
 <details>
-<summary><strong>frontend-design-skills</strong> - Official frontend design skills (Anthropic + OpenAI)</summary>
+<summary><strong>frontend-design-skills</strong> - Frontend design and writing skills (Anthropic + OpenAI + Vercel)</summary>
 
 | Claude Code                                                    | Codex CLI                                                 | Gemini CLI                                                          |
 | -------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -369,12 +369,13 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/frontend-design-skills --skill '*'
 ```
 
-Frontend design skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) and [openai/plugins](https://github.com/openai/plugins).
+Frontend design and writing skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official), [openai/plugins](https://github.com/openai/plugins), and [vercel-labs/writing-guidelines](https://github.com/vercel-labs/writing-guidelines).
 
 | Skill                                                                                                     | Description                                                                       | Install                                                                                                                                                                           |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`openai-frontend-design`](./plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md)       | Composition-first design: restrained layout, image-led hierarchy, tasteful motion | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openai-frontend-design.zip)    |
 | [`anthropic-frontend-design`](./plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md) | Bold aesthetic direction, distinctive typography, anti-generic AI aesthetics      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/anthropic-frontend-design.zip) |
+| [`writing-guidelines`](./plugins/frontend-design-skills/skills/writing-guidelines/SKILL.md)               | Review interface copy and text for clear, consistent writing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/writing-guidelines.zip)        |
 
 </details>
 
@@ -947,6 +948,32 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 
 </details>
 
+<details>
+<summary><strong>seo-skills</strong> - Audit search visibility, structured data, and site architecture</summary>
+
+| Claude Code                                        | Codex CLI                                     | Gemini CLI                                              |
+| -------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------- |
+| `claude plugin install seo-skills@claude-settings` | `codex plugin add seo-skills@claude-settings` | `gemini extensions install --path ./plugins/seo-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/seo-skills --skill '*'
+```
+
+SEO workflows from [vercel-labs/marketing-team-eve-template](https://github.com/vercel-labs/marketing-team-eve-template). Audit pages in evidence order, plan programmatic page sets, add valid JSON-LD, and improve hierarchy and internal linking. The schema skill includes a dependency-free Node validator for local JSON-LD checks.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill                                                                         | Description                                                    | ZIP                                                                                                                                                                       |
+| ----------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`seo-audit`](./plugins/seo-skills/skills/seo-audit/SKILL.md)                 | Prioritized technical, on-page, content, and credibility audit | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/seo-audit.zip)         |
+| [`programmatic-seo`](./plugins/seo-skills/skills/programmatic-seo/SKILL.md)   | Plan template-driven page sets without thin content            | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/programmatic-seo.zip)  |
+| [`schema`](./plugins/seo-skills/skills/schema/SKILL.md)                       | Add and validate JSON-LD structured data                       | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/schema.zip)            |
+| [`site-architecture`](./plugins/seo-skills/skills/site-architecture/SKILL.md) | Plan hierarchy, navigation, URLs, and internal links           | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/site-architecture.zip) |
+
+</details>
+
 ---
 
 ## Configuration
@@ -1086,7 +1113,7 @@ exec "$@" --thinking-display summarized
 - [x] Deployment: [Cloudflare](https://www.cloudflare.com) platform skill
 - [x] Deployment: [Hetzner Cloud](https://www.hetzner.com/cloud) CLI skill
 - [x] Deployment: [Dokploy](https://github.com/Dokploy/dokploy) deployment skill
-- [x] Frontend design: Anthropic + OpenAI frontend design skills (bundled as `frontend-design-skills`)
+- [x] Frontend design: Anthropic + OpenAI + Vercel skills (bundled as `frontend-design-skills`)
 - [ ] Frontend: [TanStack](https://tanstack.com) (Router, Query, Table, Form)
 - [x] Real-time: [LiveKit](https://livekit.io) voice/video agent skill
 - [x] Documents: Google Docs, PPTX, DOCX, Excel from OpenAI (bundled as `openai-office-skills`)

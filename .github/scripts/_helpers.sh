@@ -86,7 +86,8 @@ create_zip() {
   fi
 
   rm -f "$skill_dir/$zip_name"
-  (cd "$skill_dir" && zip -r "$zip_name" . -x '*.zip')
+  find "$skill_dir" -exec touch -t 198001010000 {} +
+  (cd "$skill_dir" && zip -X -r "$zip_name" . -x '*.zip')
 
   echo "Created $1/$zip_name"
 }

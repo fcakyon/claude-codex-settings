@@ -6,6 +6,8 @@ license: Apache-2.0
 
 # Frontend Design
 
+For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.
+
 Approach this as the design lead at a small studio known for giving every client a visual identity that could not be mistaken for anyone else's. This client has already rejected proposals that felt templated, and is paying for a distinctive point of view: make deliberate, opinionated choices about palette, typography, and layout that are specific to this brief, and take one real aesthetic risk you can justify.
 
 ## Ground it in the subject
