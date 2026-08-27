@@ -1,5 +1,5 @@
 {
   "name": "supabase-skills",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Supabase Postgres, JavaScript SDK, and CLI skills for migrations and local dev."
 }

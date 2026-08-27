@@ -7,7 +7,7 @@ source "$(dirname "$0")/_helpers.sh"
 
 clone_or_update https://github.com/supabase/cli supabase-cli develop
 SRC="$HOME/dev/supabase-cli"
-DOCS="$SRC/apps/cli-go/docs"
+DOCS="$SRC/apps/cli/docs"
 DST="plugins/supabase-skills/skills/supabase-cli"
 
 # Clean target

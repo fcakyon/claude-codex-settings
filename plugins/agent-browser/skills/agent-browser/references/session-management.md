@@ -8,6 +8,7 @@ Multiple isolated browser sessions with state persistence and concurrent browsin
 
 - [Named Sessions](#named-sessions)
 - [Session Isolation Properties](#session-isolation-properties)
+- [Tab Pinning in a Shared Browser](#tab-pinning-in-a-shared-browser)
 - [Session State Persistence](#session-state-persistence)
 - [Common Patterns](#common-patterns)
 - [Default Session](#default-session)
@@ -46,6 +47,28 @@ Each session has independent:
 - Cache
 - Browsing history
 - Open tabs
+
+## Tab Pinning in a Shared Browser
+
+Full isolation applies when each session launches its own browser. When sessions instead share one Chrome over `--cdp <port>`, cookies and storage are shared, and only the tab selection separates the sessions. Add `--pin-tab` so each session sticks to its own tab:
+
+```bash
+agent-browser --session agent1 --cdp 9222 --pin-tab open https://site-a.com
+agent-browser --session agent2 --cdp 9222 --pin-tab open https://site-b.com
+```
+
+Every session remembers which tab it is bound to (by CDP target id, persisted in the session's state directory), so a restarted daemon reattaches to the session's own tab instead of adopting the most recently active one. `--pin-tab` (env `AGENT_BROWSER_PIN_TAB=1`) additionally makes the binding strict:
+
+- Attaching with no binding opens a fresh tab instead of adopting an existing one
+- If the bound tab is closed, commands fail with a `tab_gone` error instead of silently acting on another tab. JSON output includes `"code": "tab_gone"`, `data.targetId`, and optional `data.lastUrl`
+- Recovery commands still work in that state: run `tab new <url>` to bind a fresh tab, or `tab list` and switch to an existing one
+- Tabs opened by other sessions or the user never steal the pinned session's active tab
+
+The flag is sticky per session: pass it once at session creation and later commands and daemon restarts keep the strict semantics. Pass `--no-pin-tab` to explicitly turn the pin off again. Use each tab's `targetId` from `tab list --json` when one session needs to reference another session's tab; target ids stay stable across daemon restarts.
+
+The structured `lastUrl` is limited to sanitized HTTP(S) URLs and `about:blank`. Credentials, query strings, and fragments are removed from HTTP(S) URLs. Opaque URLs such as `data:` are omitted. In batch JSON, the recovery object appears under `result` instead of `data`.
+
+When re-running a shared-tab script such as the repro from #1530, add `--pin-tab` to the first command for every session. Without it, `open` intentionally preserves the legacy behavior and navigates the shared active tab, so the original script still collides. The same rule applies when sessions attach with `--auto-connect` instead of `--cdp`.
 
 ## Session State Persistence
 

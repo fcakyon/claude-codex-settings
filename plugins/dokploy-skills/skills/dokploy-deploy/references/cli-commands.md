@@ -169,20 +169,63 @@ Generated from `Dokploy/cli` source files.
 - `dokploy destination test-connection` - destination testConnection
 - `dokploy destination update` - destination update
 
+## dns-provider
+
+- `dokploy dns-provider all` - dnsProvider all
+- `dokploy dns-provider create` - dnsProvider create
+- `dokploy dns-provider create-record` - dnsProvider createRecord
+- `dokploy dns-provider delete-record` - dnsProvider deleteRecord
+- `dokploy dns-provider list-records` - dnsProvider listRecords
+- `dokploy dns-provider list-zones` - dnsProvider listZones
+- `dokploy dns-provider one` - dnsProvider one
+- `dokploy dns-provider remove` - dnsProvider remove
+- `dokploy dns-provider test-connection` - dnsProvider testConnection
+- `dokploy dns-provider update` - dnsProvider update
+- `dokploy dns-provider update-record` - dnsProvider updateRecord
+
 ## docker
 
+- `dokploy docker delete-container-file` - docker deleteContainerFile
 - `dokploy docker get-config` - docker getConfig
 - `dokploy docker get-containers` - docker getContainers
 - `dokploy docker get-containers-by-app-label` - docker getContainersByAppLabel
 - `dokploy docker get-containers-by-app-name-match` - docker getContainersByAppNameMatch
+- `dokploy docker get-events` - docker getEvents
+- `dokploy docker get-server-health` - docker getServerHealth
 - `dokploy docker get-service-containers-by-app-name` - docker getServiceContainersByAppName
 - `dokploy docker get-stack-containers-by-app-name` - docker getStackContainersByAppName
 - `dokploy docker kill-container` - docker killContainer
+- `dokploy docker list-container-files` - docker listContainerFiles
+- `dokploy docker read-container-file` - docker readContainerFile
 - `dokploy docker remove-container` - docker removeContainer
 - `dokploy docker restart-container` - docker restartContainer
 - `dokploy docker start-container` - docker startContainer
 - `dokploy docker stop-container` - docker stopContainer
 - `dokploy docker upload-file-to-container` - docker uploadFileToContainer
+- `dokploy docker write-container-file` - docker writeContainerFile
+
+## docker-disk-usage
+
+- `dokploy docker-disk-usage get-build-cache` - dockerDiskUsage getBuildCache
+- `dokploy docker-disk-usage get-disk-usage` - dockerDiskUsage getDiskUsage
+- `dokploy docker-disk-usage prune-build-cache` - dockerDiskUsage pruneBuildCache
+
+## docker-image
+
+- `dokploy docker-image get-image-config` - dockerImage getImageConfig
+- `dokploy docker-image get-images` - dockerImage getImages
+- `dokploy docker-image remove-image` - dockerImage removeImage
+
+## docker-volume
+
+- `dokploy docker-volume delete-volume-file` - dockerVolume deleteVolumeFile
+- `dokploy docker-volume get-volume-config` - dockerVolume getVolumeConfig
+- `dokploy docker-volume get-volumes` - dockerVolume getVolumes
+- `dokploy docker-volume get-volumes-size` - dockerVolume getVolumesSize
+- `dokploy docker-volume list-volume-files` - dockerVolume listVolumeFiles
+- `dokploy docker-volume read-volume-file` - dockerVolume readVolumeFile
+- `dokploy docker-volume remove-volume` - dockerVolume removeVolume
+- `dokploy docker-volume write-volume-file` - dockerVolume writeVolumeFile
 
 ## domain
 
@@ -193,6 +236,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy domain delete` - domain delete
 - `dokploy domain generate-domain` - domain generateDomain
 - `dokploy domain one` - domain one
+- `dokploy domain toggle-enable` - domain toggleEnable
 - `dokploy domain update` - domain update
 - `dokploy domain validate-domain` - domain validateDomain
 
@@ -348,6 +392,17 @@ Generated from `Dokploy/cli` source files.
 - `dokploy mysql stop` - mysql stop
 - `dokploy mysql update` - mysql update
 
+## network
+
+- `dokploy network all` - network all
+- `dokploy network create` - network create
+- `dokploy network import` - network import
+- `dokploy network inspect` - network inspect
+- `dokploy network networks-to-sync` - network networksToSync
+- `dokploy network one` - network one
+- `dokploy network recreate` - network recreate
+- `dokploy network remove` - network remove
+
 ## notification
 
 - `dokploy notification all` - notification all
@@ -405,6 +460,12 @@ Generated from `Dokploy/cli` source files.
 - `dokploy organization set-default` - organization setDefault
 - `dokploy organization update` - organization update
 - `dokploy organization update-member-role` - organization updateMemberRole
+
+## overview
+
+- `dokploy overview backups` - overview backups
+- `dokploy overview domains` - overview domains
+- `dokploy overview services` - overview services
 
 ## patch
 
@@ -560,7 +621,6 @@ Generated from `Dokploy/cli` source files.
 - `dokploy settings clean-docker-builder` - settings cleanDockerBuilder
 - `dokploy settings clean-docker-prune` - settings cleanDockerPrune
 - `dokploy settings clean-monitoring` - settings cleanMonitoring
-- `dokploy settings clean-redis` - settings cleanRedis
 - `dokploy settings clean-sshprivate-key` - settings cleanSSHPrivateKey
 - `dokploy settings clean-stopped-containers` - settings cleanStoppedContainers
 - `dokploy settings clean-unused-images` - settings cleanUnusedImages
@@ -586,7 +646,6 @@ Generated from `Dokploy/cli` source files.
 - `dokploy settings read-traefik-env` - settings readTraefikEnv
 - `dokploy settings read-traefik-file` - settings readTraefikFile
 - `dokploy settings read-web-server-traefik-config` - settings readWebServerTraefikConfig
-- `dokploy settings reload-redis` - settings reloadRedis
 - `dokploy settings reload-server` - settings reloadServer
 - `dokploy settings reload-traefik` - settings reloadTraefik
 - `dokploy settings save-sshprivate-key` - settings saveSSHPrivateKey
@@ -679,12 +738,25 @@ Generated from `Dokploy/cli` source files.
 - `dokploy user get-server-metrics` - user getServerMetrics
 - `dokploy user get-user-by-token` - user getUserByToken
 - `dokploy user have-root-access` - user haveRootAccess
+- `dokploy user list-passkeys` - user listPasskeys
+- `dokploy user list-sessions` - user listSessions
 - `dokploy user one` - user one
 - `dokploy user remove` - user remove
+- `dokploy user revoke-session` - user revokeSession
 - `dokploy user send-invitation` - user sendInvitation
 - `dokploy user session` - user session
 - `dokploy user toggle-template-bookmark` - user toggleTemplateBookmark
 - `dokploy user update` - user update
+
+## vault-provider
+
+- `dokploy vault-provider all` - vaultProvider all
+- `dokploy vault-provider create` - vaultProvider create
+- `dokploy vault-provider list-secret-names` - vaultProvider listSecretNames
+- `dokploy vault-provider one` - vaultProvider one
+- `dokploy vault-provider remove` - vaultProvider remove
+- `dokploy vault-provider test-connection` - vaultProvider testConnection
+- `dokploy vault-provider update` - vaultProvider update
 
 ## volume-backups
 
