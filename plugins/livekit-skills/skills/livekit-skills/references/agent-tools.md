@@ -1,6 +1,6 @@
 ## /agents/build/tools
 
-LiveKit docs › Logic & Structure › Tool definition & use › Overview
+LiveKit docs › Build Agents › Logic & Structure › Tool definition & use › Overview
 
 ---
 
@@ -34,7 +34,7 @@ Available in:
 - [x] Node.js
 - [x] Python
 
-Many LLM providers, including OpenAI, Gemini, and xAI, include built-in server-side tools that are executed entirely within a single API call. Examples include web search, code execution, and file search. These tools, called "provider tools" in LiveKit Agents, can be added to any agent that uses a supported LLM. Where the underlying provider supports it, you can mix provider tools with function tools by passing them to the `tools` parameter on your `Agent`.
+Many LLM providers, including OpenAI, Gemini, and SpaceXAI, include built-in server-side tools that are executed entirely within a single API call. Examples include web search, code execution, and file search. These tools, called "provider tools" in LiveKit Agents, can be added to any agent that uses a supported LLM. Where the underlying provider supports it, you can mix provider tools with function tools by passing them to the `tools` parameter on your `Agent`.
 
 Node.js provider tools are currently available for OpenAI and Gemini.
 
@@ -73,7 +73,7 @@ Refer to the documentation for each model provider for usage details.
 | [Gemini](https://docs.livekit.io/agents/models/llm/gemini.md#provider-tools) | `GoogleSearch`, `GoogleMaps`, `URLContext`, `FileSearch`, `ToolCodeExecution` |
 | [Mistral AI](https://docs.livekit.io/agents/models/llm/mistralai.md#provider-tools) | `WebSearch`, `DocumentLibrary`, `CodeInterpreter` |
 | [OpenAI](https://docs.livekit.io/agents/models/llm/openai.md#provider-tools) | `WebSearch`, `FileSearch`, `CodeInterpreter` |
-| [xAI](https://docs.livekit.io/agents/models/llm/xai.md#provider-tools) | `WebSearch`, `XSearch`, `FileSearch` |
+| [SpaceXAI](https://docs.livekit.io/agents/models/llm/spacexai.md#provider-tools) | `WebSearch`, `XSearch`, `FileSearch` |
 
 ### Examples
 

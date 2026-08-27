@@ -11,4 +11,4 @@ On smaller compute plans (free, small, medium), a ratio of below 99% can indicat
   ─────────────────┼───────────
     index hit rate │ 0.996621
     table hit rate │ 0.999341
- ```
+```

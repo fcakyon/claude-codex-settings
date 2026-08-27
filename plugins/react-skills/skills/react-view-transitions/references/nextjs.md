@@ -26,7 +26,7 @@ When following [implementation.md](implementation.md), apply these additions:
 
 **After Step 2:** Enable the experimental flag above.
 
-**Step 4:** Use `transitionTypes` on `<Link>` — see [The `transitionTypes` Prop](#the-transitiontypes-prop-on-nextlink) for usage and availability.
+**Step 4:** Use `transitionTypes` on `<Link>` — see [The `transitionTypes` Prop](#the-transitiontypes-prop-on-nextlink). If the animation depends on dynamic destination content, also see [When Content Must Be Ready](#when-content-must-be-ready).
 
 **After Step 6:** For same-route dynamic segments (e.g., `/collection/[slug]`), use the `key` + `name` + `share` pattern — see [Same-Route Dynamic Segment Transitions](#same-route-dynamic-segment-transitions).
 
@@ -47,12 +47,34 @@ A bare `<ViewTransition>` in layout works only if pages have **no** VTs of their
 No wrapper component needed, works in Server Components:
 
 ```tsx
-<Link href="/products/1" transitionTypes={['transition-to-detail']}>View Product</Link>
+<Link href="/products/1" transitionTypes={['transition-to-detail']}>
+  View Product
+</Link>
 ```
 
 Replaces the manual pattern of `onNavigate` + `startTransition` + `addTransitionType` + `router.push()`. Reserve manual `startTransition` for non-link interactions (buttons, forms).
 
 **Availability:** `transitionTypes` shipped in **Next.js 16.2.0** (it is not gated on the `experimental.viewTransition` flag). If unavailable, use `startTransition` + `addTransitionType` + `router.push()` (see [Programmatic Navigation](#programmatic-navigation)). To check: `grep -r "transitionTypes" node_modules/next/dist/` — if no results, fall back to programmatic navigation.
+
+---
+
+## When Content Must Be Ready
+
+A page transition can animate whatever Next.js renders during navigation, including a loading fallback. A shared content-to-content morph only works when the incoming content is ready as the navigation commits; content that has not rendered yet cannot form the incoming half of the pair.
+
+When an animation depends on dynamic destination content, use Next.js prefetching and caching to make that content available ahead of time. `<Link>` automatically prefetches in production, but the default behavior for dynamic routes may only prefetch a shell or loading boundary. Set `prefetch={true}` to prefetch the full route, and cache the data needed to render the shared content.
+
+```tsx
+<Link href={nextHref} prefetch={true} transitionTypes={['nav-forward']}>
+  Next
+</Link>
+```
+
+With Cache Components, put reusable route data in a cached scope such as `use cache` so prefetching can include it. If the destination remains behind an unresolved Suspense boundary, the route transition animates the fallback instead. The content resolves in a separate Suspense transition without the original `nav-forward` or `nav-back` type, so give that content its own reveal animation when needed.
+
+Verify directional transitions in a production build with a cold client cache. Development mode does not run automatic `<Link>` prefetching.
+
+See the Next.js [View Transitions guide](https://nextjs.org/docs/app/guides/view-transitions) and [Prefetching guide](https://nextjs.org/docs/app/guides/prefetching).
 
 ---
 
@@ -62,21 +84,19 @@ Replaces the manual pattern of `onNavigate` + `startTransition` + `addTransition
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { startTransition, addTransitionType } from 'react';
 
 function DetailButton({ href }: { href: string }) {
   const router = useRouter();
 
-  function handleNavigate() {
-    startTransition(() => {
-      addTransitionType('nav-forward');
-      router.push(href);
-    });
-  }
-
-  return <button onClick={handleNavigate}>Open</button>;
+  return (
+    <button onClick={() => router.push(href, { transitionTypes: ['nav-forward'] })}>
+      Open
+    </button>
+  );
 }
 ```
+
+The `transitionTypes` option adds the types inside the router's navigation Transition. Use `startTransition` + `addTransitionType` for non-navigation state updates, or as a fallback on Next.js versions without the router option.
 
 ---
 
@@ -199,14 +219,14 @@ When navigating between dynamic segments of the same route (e.g., `/collection/[
 
 ```tsx
 <Suspense fallback={<Skeleton />}>
-  <ViewTransition key={slug} name={`collection-${slug}`} share="auto" default="none">
+  <ViewTransition key={slug} name="collection-content" share="auto" default="none">
     <Content slug={slug} />
   </ViewTransition>
 </Suspense>
 ```
 
 - `key={slug}` forces unmount/remount on change
-- `name` + `share="auto"` creates a shared element crossfade
+- The stable `name` pairs the outgoing and incoming containers; `share="auto"` creates the crossfade
 - VT inside `<Suspense>` (without keying Suspense) keeps old content visible during loading
 
 ---
@@ -219,4 +239,4 @@ Lifts the "nested VTs don't fire enter/exit inside a parent" rule: a nested VT c
 
 - `<ViewTransition>` works in both Server and Client Components
 - `<Link transitionTypes>` works in Server Components — no `'use client'` needed
-- `addTransitionType` and `startTransition` for programmatic nav require Client Components
+- `router.push(..., { transitionTypes })`, `addTransitionType`, and `startTransition` require Client Components

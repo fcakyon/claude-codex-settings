@@ -22,6 +22,16 @@ agent-browser snapshot -i       # 4. Re-snapshot after any page change
 
 Refs (`@e1`, `@e2`, ...) are assigned fresh on every snapshot. They become **stale the moment the page changes** — after clicks that navigate, form submits, dynamic re-renders, dialog opens. Always re-snapshot before your next ref interaction.
 
+## Always use your own session
+
+Before your first command, set a named session for the whole task:
+
+```bash
+export AGENT_BROWSER_SESSION="$(agent-browser session id --scope worktree --prefix task)"
+```
+
+The default (unnamed) session is a single shared browser: it is shared with every other agent on the machine and it persists across conversations, so working in it can hijack another agent's page mid-task or navigate away from something the human left open. Every example below assumes a named session is active. See [Run multiple browsers in parallel](#run-multiple-browsers-in-parallel) and `references/session-management.md`.
+
 ## Quickstart
 
 ```bash
@@ -288,7 +298,7 @@ agent-browser tab t2                   # switch to tab t2
 agent-browser tab close t2             # close tab t2
 ```
 
-Stable `tabId`s mean `t2` points at the same tab across commands even when other tabs open or close. After switching, refs from a prior snapshot on a different tab no longer apply — re-snapshot.
+Stable `tabId`s mean `t2` points at the same tab across commands even when other tabs open or close. After switching, refs from a prior snapshot on a different tab no longer apply — re-snapshot. `tab list --json` also reports each tab's CDP `targetId`, accepted anywhere a tab ref is accepted; target ids stay stable across daemon restarts, unlike `t<N>` ids.
 
 Switching has two special cases worth knowing:
 
@@ -307,6 +317,8 @@ agent-browser --session b fill @e1 "bob@test.com"
 ```
 
 `AGENT_BROWSER_SESSION=myapp` sets the default session for the current shell.
+
+When several sessions share one Chrome over `--cdp <port>`, add `--pin-tab` so each session sticks to its own tab. Every session remembers its bound tab across daemon restarts; with `--pin-tab` a command whose bound tab was closed fails with a `tab_gone` error instead of acting on another session's tab. JSON output includes `"code": "tab_gone"`, `data.targetId`, and an optional sanitized `data.lastUrl` for recovery. Recover with `tab new <url>` or pick a tab from `tab list`. The flag is sticky per session, so pass it once (`--no-pin-tab` turns it off again). See `references/session-management.md` for details.
 
 ### Mock network requests
 
@@ -433,6 +445,8 @@ EOF
 --profile <name|path>   # use a Chrome profile (login state survives)
 --headers <json>        # HTTP headers scoped to the URL's origin
 --proxy <url>           # proxy server
+--ca-cert <path>        # trust a CA in local Chromium on Linux (install --with-deps provides certutil)
+--no-ca-cert            # clear CA trust retained by the running session
 --state <path>          # load saved auth state from JSON
 --restore [name]        # auto-save/restore session state, defaults to --session
 --restore-save <policy> # auto, always, or never
@@ -445,6 +459,7 @@ EOF
 - **Slack workspace automation**: `agent-browser skills get slack`
 - **Exploratory testing / QA / bug hunts**: `agent-browser skills get dogfood`
 - **Vercel Sandbox microVMs**: `agent-browser skills get vercel-sandbox`
+- **Vercel deployment behind Authentication, SSO, or Deployment Protection**: `agent-browser skills get protected-vercel-deployments`
 - **AWS Bedrock AgentCore cloud browser**: `agent-browser skills get agentcore`
 
 ## Accessibility audits
@@ -499,7 +514,7 @@ That pulls in:
 - `references/session-management.md` — persistence, multi-session workflows
 - `references/profiling.md` — Chrome DevTools tracing and profiling
 - `references/video-recording.md` — video capture options
-- `references/streaming.md` covers live viewport streaming, remote input, per-client frame rate, and the encoding vars that set bandwidth cost
-- `references/proxy-support.md` — proxy configuration
+- `references/streaming.md` covers live viewport streaming, Chrome active main-frame URL updates, remote input, per-client frame rate, and the encoding vars that set bandwidth cost
+- `references/proxy-support.md`: proxy configuration and CA certificates for HTTPS interception proxies
 - `references/webgpu.md` — screenshots/video of WebGPU pages (three.js, Babylon.js), Linux/CI setup
 - `templates/*` — starter shell scripts for auth, capture, form automation
