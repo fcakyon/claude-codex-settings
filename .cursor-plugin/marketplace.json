@@ -76,7 +76,7 @@
       "name": "react-skills",
       "source": "./plugins/react-skills",
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "MIT"
     },
     {
@@ -111,7 +111,7 @@
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe skills for checkout, billing, Connect, and API upgrades.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "MIT"
     },
     {

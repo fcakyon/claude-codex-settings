@@ -2,6 +2,8 @@
 
 Ready-to-use CSS for `<ViewTransition>` props. Copy into your global stylesheet.
 
+This file contains the complete CSS recipe set for the patterns in this skill. Copy only what the app needs.
+
 ---
 
 ## Timing Variables
@@ -18,8 +20,8 @@ Ready-to-use CSS for `<ViewTransition>` props. Copy into your global stylesheet.
 
 ```css
 @keyframes fade {
-  from { filter: blur(3px); opacity: 0; }
-  to { filter: blur(0); opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes slide {
@@ -47,6 +49,8 @@ Ready-to-use CSS for `<ViewTransition>` props. Copy into your global stylesheet.
 ```
 
 Usage: `<ViewTransition enter="fade-in" exit="fade-out" />`
+
+Keep the shared fade keyframe opacity-only. If a specific morph needs softness, give that class its own blur keyframe so ordinary content reveals stay crisp.
 
 ---
 

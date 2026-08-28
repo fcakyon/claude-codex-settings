@@ -2,29 +2,19 @@
 
 ## Setup
 
-`<ViewTransition>` works out of the box — the bundled React canary ships it, and every `<Link>` navigation runs inside `React.startTransition`, so react-dom starts a view transition whenever affected `<ViewTransition>` components exist. Set the documented flag:
+`<ViewTransition>` works in the App Router with no configuration. The bundled React channel includes it, and Next.js navigations run in React Transitions. Do **not** add the old `experimental.viewTransition` flag or install `react@canary` into a Next.js app.
 
-```js
-// next.config.js
-const nextConfig = {
-  experimental: { viewTransition: true },
-};
-module.exports = nextConfig;
-```
-
-(Historically the flag switched React to the experimental channel — required before `ViewTransition` reached canary. It no longer does; the experimental channel is only needed for `useSwipeTransition` gestures and `parentEnter`/`parentExit`, selected by other flags like `gestureTransition`.)
+Read the current [Next.js View Transitions guide](https://nextjs.org/docs/app/guides/view-transitions) and the matching guide under `node_modules/next/dist/docs/` before editing. The installed version is authoritative for flags and API signatures.
 
 Because every link click is a transition, any VT with `default="auto"` fires on **every** navigation — use `default="none"` to prevent competing animations.
 
-Do **not** install `react@canary` — see [Availability](../SKILL.md#availability) for details.
+For unexpected or broken animation behavior, see [troubleshooting.md](troubleshooting.md).
 
 ---
 
 ## Next.js Implementation Additions
 
 When following [implementation.md](implementation.md), apply these additions:
-
-**After Step 2:** Enable the experimental flag above.
 
 **Step 4:** Use `transitionTypes` on `<Link>` — see [The `transitionTypes` Prop](#the-transitiontypes-prop-on-nextlink). If the animation depends on dynamic destination content, also see [When Content Must Be Ready](#when-content-must-be-ready).
 
@@ -34,7 +24,7 @@ When following [implementation.md](implementation.md), apply these additions:
 
 ## Layout-Level ViewTransition
 
-**Do NOT add a layout-level VT wrapping `{children}` if pages have their own VTs.** Nested VTs never fire enter/exit when inside a parent VT — page-level enter/exit will silently not work. Remove the layout VT entirely.
+**Do NOT add a layout-level VT wrapping `{children}` if pages have their own VTs.** A nested VT skips its own enter/exit only when it mounts or unmounts *as one unit* with a parent VT, which is exactly what a layout VT wrapping `{children}` causes — page-level enter/exit will silently not work. Remove the layout VT entirely. Nesting is otherwise fine and sometimes required: a child VT inside a *persistent* parent VT fires enter/exit normally, and two nested boundaries are the intended shape for [shared elements inside list items](../SKILL.md#composing-shared-elements-with-list-identity).
 
 A bare `<ViewTransition>` in layout works only if pages have **no** VTs of their own.
 
@@ -110,15 +100,22 @@ For search/sort/filter that re-renders on the server (via URL params), use `star
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
 
-function handleSort(sort: string) {
+function SortControl() {
   const router = useRouter();
-  startTransition(() => {
-    router.replace(`?sort=${sort}`);
-  });
+
+  function handleSort(sort: string) {
+    startTransition(() => {
+      router.replace(`?sort=${sort}`);
+    });
+  }
+
+  return <button onClick={() => handleSort('newest')}>Newest</button>;
 }
 ```
 
 List items wrapped in `<ViewTransition key={item.id}>` will animate reorder. This is the server-component alternative to the client-side [Searchable Grid](patterns.md#searchable-grid-with-usedeferredvalue) pattern.
+
+For immediate control feedback while the route commits, use `useOptimistic` for the button state but keep the animated list tied to the committed sort value. See [Exclude Elements with `useOptimistic`](patterns.md#exclude-elements-with-useoptimistic).
 
 ---
 
@@ -228,12 +225,6 @@ When navigating between dynamic segments of the same route (e.g., `/collection/[
 - `key={slug}` forces unmount/remount on change
 - The stable `name` pairs the outgoing and incoming containers; `share="auto"` creates the crossfade
 - VT inside `<Suspense>` (without keying Suspense) keeps old content visible during loading
-
----
-
-## Nested enter/exit — `parentEnter` / `parentExit` (experimental)
-
-Lifts the "nested VTs don't fire enter/exit inside a parent" rule: a nested VT can animate when its **parent** enters/exits (`parentEnter`/`parentExit`, `onParentEnter`/`onParentExit`; `parentEnter="none"` stops propagation). Experimental-channel only today; SSR support landed in React PR #36917 ([commit](https://github.com/facebook/react/commit/83840902c890f0eb85decda239ef6b1b14945779)). Verify it's in the React your app runs: `grep -c "parentEnter" node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.production.js` — 0 means unavailable (Next uses the experimental channel only when `gestureTransition`/`blockingSSR`/`taint`/`transitionIndicator` is set).
 
 ## Server Components
 
