@@ -11,20 +11,22 @@ interface Props {
   title: string
   description: string
   canonical: string
+  alternates?: Partial<Record<Locale, string>>
+  structuredData?: Record<string, unknown>
 }
 
-const { locale, variant, title, description, canonical } = Astro.props
+const { locale, variant, title, description, canonical, alternates, structuredData: pageStructuredData } = Astro.props
 const copy = translations[locale]
 const image = new URL(`/og-${variant}.webp`, Astro.site).href
 const localeData = locales[locale]
 const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
-const structuredData = {
+const defaultStructuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebSite",
       name: variant === "settings" ? "Claude Settings" : "Agent Plugins",
-      url: canonical,
+      url: site.url,
       description,
       inLanguage: locale,
       creator: { "@id": author.id },
@@ -49,6 +51,13 @@ const structuredData = {
     },
   ],
 }
+const alternateEntries = alternates
+  ? Object.entries(alternates)
+  : Object.entries(locales).map(([language, data]) => [language, `${site.url}${data.path}`])
+const pageGraph = Array.isArray(pageStructuredData?.["@graph"]) ? pageStructuredData["@graph"] : []
+const structuredData = pageGraph.length
+  ? { ...defaultStructuredData, "@graph": [...defaultStructuredData["@graph"], ...pageGraph] }
+  : defaultStructuredData
 ---
 
 <!doctype html>
@@ -61,8 +70,8 @@ const structuredData = {
     <meta name="theme-color" content={variant === "settings" ? "#ffffff" : "#070b10"} />
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
     <link rel="canonical" href={canonical} />
-    {Object.entries(locales).map(([language, data]) => <link rel="alternate" hreflang={language} href={`${site.url}${data.path}`} />)}
-    <link rel="alternate" hreflang="x-default" href={`${site.url}${locales.en.path}`} />
+    {alternateEntries.map(([language, href]) => <link rel="alternate" hreflang={language} href={href} />)}
+    {alternateEntries.length > 1 && <link rel="alternate" hreflang="x-default" href={alternates?.en || `${site.url}${locales.en.path}`} />}
     <link rel="icon" href={`/favicon-${variant}.svg`} type="image/svg+xml" />
     <title>{title}</title>
     <meta property="og:type" content="website" />
@@ -90,7 +99,7 @@ const structuredData = {
   </head>
   <body>
     <div class="page-shell">
-      <Header locale={locale} variant={variant} />
+      <Header locale={locale} variant={variant} showLanguage={alternateEntries.length > 1} />
       <main><slot /></main>
       <footer>
         <span>{copy.footer.credit} <a href={repositoryUrl} target="_blank" rel="noreferrer">claude-codex-settings</a></span>

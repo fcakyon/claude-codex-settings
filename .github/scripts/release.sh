@@ -41,16 +41,15 @@ print('Marketplace metadata.version is $VERSION')
 # Sync all plugin versions across platforms
 bash "$SCRIPTS_DIR/sync-versions.sh"
 
-# Re-run all sync scripts to ensure all zips exist
+# Re-run all sync scripts to ensure all vendor zips are current.
+find plugins -name '*.zip' -delete
 for sync_script in "$SCRIPTS_DIR"/sync-*-skills.sh; do
   [ -f "$sync_script" ] && bash "$sync_script"
 done
 
-# Local skill-only plugins have no vendor sync script, so zip their skills here for download assets
+# Package local skills that the vendor syncs did not cover.
 source "$SCRIPTS_DIR/_helpers.sh"
-for skill_dir in plugins/{python-skills,adhd-output-style,humanize,ultralytics-dev,ultralytics-branding}/skills/*/; do
-  create_zip "$skill_dir"
-done
+create_all_skill_zips
 
 # Collect zip files from skill directories
 ZIP_FILES=()
