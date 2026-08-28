@@ -7,6 +7,7 @@ import {
   rawRepositoryUrl,
   repositoryUrl,
   site,
+  skills,
   sourceDocuments,
 } from "../lib/content";
 import { translations } from "../lib/i18n";
@@ -31,13 +32,8 @@ export const GET: APIRoute = () => {
   const pluginCatalog = () =>
     plugins
       .map((plugin) => {
-        const installCommands = [
-          `- Claude Code install: \`${plugin.claudeCommand}\``,
-          plugin.codexCommand ? `- OpenAI Codex install: \`${plugin.codexCommand}\`` : "",
-          plugin.cursorCommand ? `- Cursor install: \`${plugin.cursorCommand}\`` : "",
-          plugin.geminiCommand ? `- Gemini CLI install: \`${plugin.geminiCommand}\`` : "",
-        ]
-          .filter(Boolean)
+        const installCommands = plugin.installCommands
+          .map(({ tool, command }) => `- ${tool} install: \`${command}\``)
           .join("\n");
         return `## ${plugin.name}
 
@@ -92,6 +88,10 @@ ${authorContext}
 ## Resource map
 
 - [Claude Settings website](${site.url}): Configuration overview and interactive source-file viewer.
+- [Settings reference](${site.url}/settings/): Claude Code, OpenAI Codex, and provider configuration pages.
+- [Plugin catalog](${site.url}/plugins/): Manifest-backed plugin pages with install commands and components.
+- [Skill downloads](${site.url}/skills/): Release ZIPs for ChatGPT and Claude.ai.
+- [Skill install guide](${site.url}/guides/install-agent-skills/): Current upload steps for ChatGPT and Claude.ai.
 - [GitHub repository](${repositoryUrl}): Canonical source history and repository files.
 - [Agent Plugins LLM catalog](https://agentplugins.net/llms.txt): Plugin descriptions, search terms, compatibility, components, and install commands.
 - [Claude marketplace](${rawRepositoryUrl}/.claude-plugin/marketplace.json): Canonical plugin metadata.
@@ -103,6 +103,24 @@ ${authorContext}
 ${sourceDocuments.claude}
 
 ${configurationCatalog}
+
+## Plugin catalog
+
+${pluginCatalog()}
+
+## Skill downloads
+
+${skills
+  .map(
+    (skill) => `### ${skill.name} (${skill.plugin})
+
+${skill.description}
+
+- [Download ZIP](${skill.downloadUrl})
+- [Source](${skill.sourceUrl})
+`,
+  )
+  .join("\n")}
 
 ## Cross-tool installation: INSTALL.md
 

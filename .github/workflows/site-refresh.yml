@@ -52,6 +52,7 @@ jobs:
       - name: Deploy claudesettings.com
         if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
         env:
+          PUBLIC_GOOGLE_ANALYTICS_ID: ${{ vars.CLAUDESETTINGS_GOOGLE_ANALYTICS_ID }}
           SITE_VARIANT: settings
         run: |
           npm run build --prefix site
@@ -59,6 +60,7 @@ jobs:
       - name: Deploy agentplugins.net
         if: steps.check.outputs.due == 'true' && env.CLOUDFLARE_API_TOKEN != ''
         env:
+          PUBLIC_GOOGLE_ANALYTICS_ID: ${{ vars.AGENTPLUGINS_GOOGLE_ANALYTICS_ID }}
           SITE_VARIANT: plugins
         run: |
           npm run build --prefix site

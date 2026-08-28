@@ -1,0 +1,34 @@
+---
+import Icon from "./Icon.astro"
+import type { Skill } from "../lib/content"
+
+interface Props {
+  skill: Skill
+  heading?: "h2" | "h3"
+  compact?: boolean
+}
+
+const { skill, heading = "h2", compact = false } = Astro.props
+const Heading = heading
+const detailUrl = skill.seo ? `/plugins/${skill.plugin}/skills/${skill.name}/` : undefined
+---
+
+<article class:list={["skill-download", { compact }]}>
+  <div class="skill-copy">
+    <Heading>{detailUrl ? <a href={detailUrl}>{skill.name}</a> : skill.name}</Heading>
+    <p>{skill.description}</p>
+    <div class="skill-labels" aria-label="Skill compatibility and package details">
+      <span>ChatGPT</span>
+      <span>Claude.ai</span>
+      <span>{skill.bundled.length ? `Includes ${skill.bundled.join(", ")}` : "Instructions only"}</span>
+      {skill.externalSetup && <span>May require external tools</span>}
+    </div>
+  </div>
+  <div class="skill-actions">
+    <a class="button primary download-button" href={skill.downloadUrl} data-download-asset={skill.asset}>
+      Download ZIP <Icon name="arrow" size={17} />
+    </a>
+    <a class="source-link" href={skill.sourceUrl}>View skill source</a>
+    <a class="source-link" href="/guides/install-agent-skills/">Install guide</a>
+  </div>
+</article>

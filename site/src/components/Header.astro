@@ -6,9 +6,10 @@ import { locales, translations, type Locale } from "../lib/i18n"
 interface Props {
   locale: Locale
   variant: SiteVariant
+  showLanguage?: boolean
 }
 
-const { locale, variant } = Astro.props
+const { locale, variant, showLanguage = true } = Astro.props
 const copy = translations[locale]
 const settings = variant === "settings"
 const stars = await repositoryStars()
@@ -23,7 +24,7 @@ const languageLocale = locales[locale].alternate
     <a href={repositoryUrl}>GitHub</a>
   </nav>
   <div class="header-actions">
-    <a class="language-link" href={locales[languageLocale].path} hreflang={languageLocale}>{copy.languageLabel}</a>
+    {showLanguage && <a class="language-link" href={locales[languageLocale].path} hreflang={languageLocale}>{copy.languageLabel}</a>}
     <a class="button primary header-cta" href={repositoryUrl} target="_blank" rel="noreferrer">
       <Icon name="github" size={21} />
       <span class="cta-label">{copy.github}</span>

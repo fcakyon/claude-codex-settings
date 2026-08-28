@@ -72,22 +72,49 @@ if len(parts) >= 3 and 'license:' not in parts[1]:
 "
 }
 
-# Create a zip of all files in the skill directory.
+# Create a skill zip with the skill directory at the archive root.
 # The zip is placed inside the skill directory. Pass an optional asset basename
-# (without .zip) when two skills share a directory name and need distinct
-# release asset names (e.g. the anthropic and openai "pdf" skills).
+# (without .zip) when two skills share a directory name and need distinct assets.
 create_zip() {
   local skill_dir="$REPO_ROOT/$1"
   local zip_name="${2:-$(basename "$skill_dir")}.zip"
+  local skill_name="$(basename "$skill_dir")"
+  local skill_parent="$(dirname "$skill_dir")"
+  local temp_zip="$skill_parent/.$skill_name-$zip_name.tmp.zip"
 
   if [ ! -f "$skill_dir/SKILL.md" ]; then
     echo "WARNING: no SKILL.md in $skill_dir, skipping zip" >&2
     return 0
   fi
 
-  rm -f "$skill_dir/$zip_name"
+  find "$skill_dir" -maxdepth 1 -name '*.zip' -delete
   find "$skill_dir" -exec touch -t 198001010000 {} +
-  (cd "$skill_dir" && zip -X -r "$zip_name" . -x '*.zip')
+  (cd "$skill_parent" && find "$skill_name" -not -name '*.zip' -print | LC_ALL=C sort | zip -X -q "$temp_zip" -@)
+  mv "$temp_zip" "$skill_dir/$zip_name"
 
   echo "Created $1/$zip_name"
+}
+
+# Create one release asset for every local skill. Existing asset names stay
+# stable. Repeated skill names use their plugin name as a prefix.
+create_all_skill_zips() {
+  local skill_md skill_dir skill_name plugin_name asset_name duplicate_names
+
+  duplicate_names="$(find "$REPO_ROOT/plugins" -path '*/skills/*/SKILL.md' -print \
+    | sed 's#^.*/skills/##; s#/SKILL.md$##' | LC_ALL=C sort | uniq -d)"
+
+  while IFS= read -r skill_md; do
+    skill_dir="$(dirname "$skill_md")"
+    skill_name="$(basename "$skill_dir")"
+    plugin_name="$(basename "$(dirname "$(dirname "$skill_dir")")")"
+    asset_name="$skill_name"
+
+    if [ "$skill_name" = "pdf" ] && [[ "$plugin_name" == *-office-skills ]]; then
+      asset_name="${plugin_name%-office-skills}-$skill_name"
+    elif printf '%s\n' "$duplicate_names" | grep -qx "$skill_name"; then
+      asset_name="$plugin_name-$skill_name"
+    fi
+
+    [ -f "$skill_dir/$asset_name.zip" ] || create_zip "${skill_dir#"$REPO_ROOT/"}" "$asset_name"
+  done < <(find "$REPO_ROOT/plugins" -path '*/skills/*/SKILL.md' | LC_ALL=C sort)
 }
