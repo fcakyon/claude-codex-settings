@@ -50,7 +50,7 @@ Reserve directional slides for hierarchical navigation (list → detail) and ord
 
 ## Implementation Workflow
 
-When adding view transitions to an existing app, **follow [references/implementation.md](references/implementation.md) step by step.** Start with the audit — do not skip it. Copy the CSS recipes from [references/css-recipes.md](references/css-recipes.md) into the global stylesheet — do not write your own animation CSS.
+When adding view transitions to an existing app, **follow [references/implementation.md](references/implementation.md) step by step.** Start with the audit — do not skip it. Use [references/css-recipes.md](references/css-recipes.md) for the applicable CSS and adapt it to the app.
 
 ---
 
@@ -303,13 +303,13 @@ They coexist because they fire at different moments. `default="none"` on both pr
 
 ### Nested VT Limitation
 
-When a parent VT mounts/unmounts **as one unit** with nested VTs inside it, the nested ones do not fire their own enter/exit — only the outermost VT animates. (A child VT mounted inside a *persistent* parent VT fires enter/exit normally.) Per-item staggered animations during page navigation are not possible today; the experimental opt-in is the `parentEnter`/`parentExit` props ([react#36690](https://github.com/facebook/react/pull/36690), experimental channel only).
+When a parent VT mounts/unmounts **as one unit** with nested VTs inside it, the nested ones do not fire their own enter/exit — only the outermost VT animates. (A child VT mounted inside a *persistent* parent VT fires enter/exit normally.) Per-item staggered animations during page navigation are not currently available in Next.js; see [troubleshooting](references/troubleshooting.md) for the upstream experimental status.
 
 ---
 
 ## Next.js Integration
 
-For Next.js setup (`experimental.viewTransition` flag, `transitionTypes` on `next/link` and `useRouter`, App Router patterns, Server Components), see [references/nextjs.md](references/nextjs.md).
+For Next.js integration (`transitionTypes` on `next/link` and `useRouter`, App Router patterns, Server Components), see [references/nextjs.md](references/nextjs.md).
 
 ---
 
@@ -322,7 +322,8 @@ Always add the reduced motion CSS from [references/css-recipes.md](references/cs
 ## Reference Files
 
 - **[references/implementation.md](references/implementation.md)** — Step-by-step implementation workflow.
-- **[references/patterns.md](references/patterns.md)** — Patterns, animation timing, events API, troubleshooting.
+- **[references/patterns.md](references/patterns.md)** — Patterns, animation timing, and events API.
+- **[references/troubleshooting.md](references/troubleshooting.md)** — Symptom-driven debugging and runtime limitations.
 - **[references/css-recipes.md](references/css-recipes.md)** — Ready-to-use CSS animation recipes.
 - **[references/nextjs.md](references/nextjs.md)** — Next.js App Router patterns and Server Component details.
 

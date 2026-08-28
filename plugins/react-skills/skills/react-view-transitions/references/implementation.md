@@ -2,6 +2,8 @@
 
 Follow these steps in order when adding view transitions to an app. Each step builds on the previous one.
 
+Use the official [React `<ViewTransition>` reference](https://react.dev/reference/react/ViewTransition) and [Next.js guide](https://nextjs.org/docs/app/guides/view-transitions) for API behavior. This file focuses on audit order, integration decisions, and verification.
+
 ## Step 1: Audit the App
 
 Before writing any code, scan the codebase thoroughly. Search for:
@@ -29,9 +31,9 @@ For each shared element (`name` prop), note every navigation where a pair forms 
 
 ## Step 2: Add CSS Recipes
 
-Copy the **complete** CSS recipe set from [css-recipes.md](css-recipes.md) into your global stylesheet. This includes timing variables, shared keyframes, fade, slide (vertical), directional navigation (forward/back), shared element morph, persistent element isolation, and reduced motion.
+Choose the animation pattern from the audit and this skill's guidance, then copy only the applicable sections from [css-recipes.md](css-recipes.md). Always include reduced motion. Add live-root, persistent-element, backdrop, or floating-element rules only when the audit found those surfaces.
 
-Do not write your own animation CSS — the recipes handle staggered timing, motion blur on morphs, and reduced motion that are easy to get wrong. You can customize timing variables (`--duration-exit`, `--duration-enter`, `--duration-move`) after the initial setup.
+Customize timing after the structure works. Keep ordinary crossfades opacity-only; scope blur to a specific shared morph when it is intentional.
 
 ## Step 3: Isolate Persistent Elements
 
@@ -120,11 +122,12 @@ For every `<Suspense>` boundary identified in Step 1, wrap the fallback and cont
 </Suspense>
 ```
 
-This example uses `slide-down` / `slide-up` for directional vertical motion. For a simpler reveal, a bare `<ViewTransition>` around the `<Suspense>` gives a cross-fade with zero configuration. Choose based on the spatial meaning — consult the "Choosing the Right Animation Style" table in the main skill file.
+This example uses `slide-down` / `slide-up` for directional vertical motion. For a simpler reveal, a bare `<ViewTransition>` around the `<Suspense>` gives a cross-fade with zero configuration. Choose based on the spatial meaning described in the main skill.
 
 **Rules:**
 - Always use `default="none"` on the content `<ViewTransition>` to prevent re-animation on revalidation or unrelated transitions.
 - Use simple string props (not type maps) on Suspense `<ViewTransition>`s — Suspense resolves fire as separate transitions with no type, so type-keyed props won't match.
+- A fallback/content `share` pair morphs between snapshots. Use it only when that interpolation is desired and does not distort layout or geometry.
 - If the same element appears in **both** the fallback and the content (a title, a heading), it flickers on reveal — an opacity dip. Render it **outside** the `<Suspense>` boundary (or pin it), so it isn't in both. See [Suspense reveal flicker](patterns.md#suspense-reveal-flicker).
 
 ## Step 6: Add Shared Element Transitions
@@ -145,7 +148,7 @@ For every shared visual element identified in Step 1, add matching named `<ViewT
 
 The `share="morph"` class uses the [Shared Element Morph](css-recipes.md#shared-element-morph) recipe (controlled duration + motion blur). For a simpler cross-fade, use `share="auto"` (browser default).
 
-When list items contain shared elements, compose both patterns with two nested `<ViewTransition>` layers — see [Composing Shared Elements with List Identity](../SKILL.md#composing-shared-elements-with-list-identity).
+When list items contain shared elements, compose both patterns with two nested `<ViewTransition>` layers — an outer keyed VT for list identity and an inner named VT for the cross-route pair. See [Composing Shared Elements with List Identity](../SKILL.md#composing-shared-elements-with-list-identity).
 
 **Rules:**
 - Names must be globally unique — use prefixes like `photo-${id}`.
@@ -162,23 +165,6 @@ Walk through every row in the navigation map from Step 1 and confirm:
 - Do persistent elements stay static (not sliding with page content)?
 - Do Suspense reveals animate independently from directional navigations?
 
-If any path produces no animation or competing animations, revisit the relevant step.
+If any path produces no animation or competing animations, use the symptom-driven [troubleshooting guide](troubleshooting.md).
 
----
-
-## Common Mistakes
-
-- **Bare `<ViewTransition>` without props** — without `default="none"`, it fires the browser's default cross-fade on every transition (every navigation, every Suspense resolve, every revalidation). Always set `default="none"` and explicitly enable only the triggers you want.
-- **Directional `<ViewTransition>` in a layout** — layouts persist across navigations and never unmount/remount. `enter`/`exit` props won't fire on route changes. Place the outer type-keyed `<ViewTransition>` in each page component.
-- **Fade-out exit with shared element morphs** — the page dissolving conflicts with the morph. Use a directional slide exit instead.
-- **Writing custom animation CSS** — the recipes in [css-recipes.md](css-recipes.md) handle staggered timing, motion blur on morphs, and reduced motion. Copy them; don't reinvent them.
-- **Missing `default: "none"` in type-keyed objects** — TypeScript requires a `default` key, and without it the fallback is `"auto"` which fires on every transition.
-- **Type maps on Suspense reveals** — Suspense resolves fire as separate transitions with no type. Type-keyed props won't match — use simple string props instead.
-- **Raw `viewTransitionName` CSS to trigger animations** — React only calls `document.startViewTransition` when `<ViewTransition>` components are in the tree. A bare `viewTransitionName` style is for isolating elements from a parent's snapshot, not for triggering animations.
-- **`update` trigger for same-route navigations** — nested VTs inside the content steal the mutation from the parent, so `update` never fires on the outer VT. Use `key` + `name` + `share` instead.
-- **Named VT in a reusable component** — if a component with a named VT is rendered in both a modal/popover *and* a page, both mount simultaneously and break the morph. Make the name conditional or move it to the specific consumer.
-- **`router.back()` for back navigation** — traversals carry no transition types, so type-keyed animations don't play (untyped morphs still can). Use `router.push()` with an explicit URL for a fully animated back affordance.
-
----
-
-For Next.js-specific implementation steps (config flag, `transitionTypes` on `<Link>`, same-route dynamic segments), see [nextjs.md](nextjs.md).
+For Next.js-specific implementation steps (`transitionTypes` on `<Link>`, prefetch behavior, and same-route dynamic segments), see [nextjs.md](nextjs.md).
