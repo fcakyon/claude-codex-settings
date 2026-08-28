@@ -19,6 +19,8 @@ This repo's guidelines are structured to fix exactly these pitfalls.
 
 [Installation](#installation) • [Plugins](#plugins) • [Configuration](#configuration) • [References](#references)
 
+[Claude Settings](https://claudesettings.com) has setup guides and skill downloads. [Agent Plugins](https://agentplugins.net) is the compact plugin directory.
+
 </div>
 
 ## Installation

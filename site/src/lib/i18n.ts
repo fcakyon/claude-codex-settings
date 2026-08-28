@@ -20,9 +20,10 @@ export const translations = {
           `Repository-backed settings for Claude Code and Codex CLI, including ${providers}, plus shared plugins, skills and hooks.`,
       },
       nav: [
-        ["Install", "#install"],
-        ["Plugins", "#plugins"],
-        ["Configuration", "#configuration"],
+        ["Settings", "/settings/"],
+        ["Plugins", "/plugins/"],
+        ["Skills", "/skills/"],
+        ["Install", "/guides/install-agent-skills/"],
       ],
       hero: {
         title: "Battle-tested settings for Claude Code, Codex and Cursor",
@@ -48,7 +49,7 @@ export const translations = {
       plugins: {
         title: "Plugins with a clear job",
         description: "Descriptions and links come from the repository manifests on every build.",
-        browse: "Browse every plugin",
+        browse: "Browse plugins on this site",
       },
     },
     plugins: {

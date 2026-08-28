@@ -1,0 +1,17 @@
+---
+import ContentPage from "../components/ContentPage.astro"
+import { contentPages, site, type ContentPage as ContentPageData } from "../lib/content"
+
+export const getStaticPaths = () =>
+  site.variant === "settings"
+    ? contentPages.map((page) => ({ params: { path: page.path }, props: { page } }))
+    : []
+
+interface Props {
+  page: ContentPageData
+}
+
+const { page } = Astro.props
+---
+
+<ContentPage {page} />
