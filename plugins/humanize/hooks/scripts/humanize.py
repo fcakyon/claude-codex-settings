@@ -62,7 +62,7 @@ PHRASES = [
 LIMIT = 3
 OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermore", "additionally", "aligns", "explore", "prompted"]
 
-MARKS = {"—": ("em-dash", "use commas or periods"), "§": ("section sign", "remove it"), ";": ("semicolon", "use a period or comma")}
+MARKS = {"—": ("em-dash", "use commas or periods"), "§": ("section sign", "remove it")}
 MARK_RE = re.compile("|".join(map(re.escape, MARKS)))
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
 OFTEN_RE = re.compile(r"\b(" + "|".join(OFTEN) + r")\b", re.IGNORECASE)

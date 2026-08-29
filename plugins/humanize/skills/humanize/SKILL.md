@@ -173,7 +173,7 @@ Do not begin paragraphs mechanically with `Additionally`, `Moreover`, `Furthermo
 - Use headings only when they help navigation. A short answer usually needs none.
 - Use bold for rare emphasis, not as a label on every bullet.
 - Avoid lists made of repeated `Label: explanation` items when a sentence reads better.
-- Do not use an em dash or semicolon. Use a comma, colon, parentheses, or a new sentence.
+- Do not use an em dash. Use a comma, colon, parentheses, or a new sentence.
 - Do not decorate headings or bullets with emoji.
 - Do not use a table for a few facts that fit in one sentence.
 - Do not place thematic separators between every section.

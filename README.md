@@ -112,7 +112,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 
 Before a Write or Edit saves, humanize scans the new text and blocks whatever reads like a machine wrote it, each hit paired with a plain-word swap. It reads markdown files whole and, in code, only the comments and docstrings, never the code:
 
-- **3 marks**: the em-dash, section sign, and stray semicolon (the en-dash stays)
+- **2 marks**: the em-dash and section sign (the en-dash stays)
 - **53 stock words** like `leverage`, `seamlessly`, `vibrant`, `game-changing`, each mapped to a plain swap
 - **16 openers and cliches** like `in conclusion`, `a testament to`, `aims to bridge`
 - **10 pile-up words** like `crucial` or `significant`, flagged at 3+ uses in one write
