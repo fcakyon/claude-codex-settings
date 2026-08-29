@@ -119,7 +119,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 | ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
 | `claude plugin install humanize@claude-settings` | `codex plugin add humanize@claude-settings` | `gemini extensions install --path ./plugins/humanize` |
 
-Before a Write or Edit saves, humanize scans the new text and blocks whatever reads like a machine wrote it, each hit paired with a plain-word swap. It reads markdown files whole and, in code, only the comments and docstrings, never the code:
+Before a Write or Edit saves, humanize scans the new text and blocks whatever reads like a machine wrote it, each hit paired with a plain-word swap. It reads Markdown files whole and checks comments and docstrings in code files while skipping source code and recognized code-shaped references:
 
 - **3 marks**: the em-dash, section sign, and stray semicolon (the en-dash stays)
 - **53 stock words** like `leverage`, `seamlessly`, `vibrant`, `game-changing`, each mapped to a plain swap

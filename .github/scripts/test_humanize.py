@@ -172,6 +172,32 @@ class HumanizeTest(unittest.TestCase):
         for tool, tool_input in cases:
             self.assertEqual(run_hook(tool, tool_input), "")
 
+    def test_allows_code_shaped_comment_references(self):
+        """Allow unformatted code-shaped references in comments and docstrings."""
+        cases = (
+            ("app.php", f"// call $db->begin(){SEMICOLON} then commit()\n"),
+            ("app.js", f"// previous code used const active = true{SEMICOLON} here\n"),
+            ("app.ts", f"// call client.start(){SEMICOLON} after setup\n"),
+            ("main.css", f"/* was: display: none{SEMICOLON} now in main.css */\n"),
+            ("main.scss", f"/* keep gap: var(--space){SEMICOLON} between items */\n"),
+            ("app.py", f'"""Call client.start(){SEMICOLON} after setup."""\n'),
+        )
+        for path, content in cases:
+            self.assertEqual(run_hook("Write", {"file_path": path, "content": content}), "")
+
+    def test_keeps_blocking_text_beside_code_references(self):
+        """Keep blocking text semicolons near code-shaped references."""
+        cases = (
+            ("app.php", f"// call $db->begin(){SEMICOLON} then wait{SEMICOLON} retry\n"),
+            ("app.js", f"// first do this{SEMICOLON} then that\n"),
+            ("main.css", f"/* Note: first{SEMICOLON} then second */\n"),
+            ("main.css", f"/* reason: unclear{SEMICOLON} try again */\n"),
+            ("app.py", f'"""First do this{SEMICOLON} then that."""\n'),
+            ("app.js", f"// {'a' * 10000}{SEMICOLON}\n"),
+        )
+        for path, content in cases:
+            self.assertTrue(run_hook("Write", {"file_path": path, "content": content}))
+
 
 if __name__ == "__main__":
     unittest.main()
