@@ -91,7 +91,7 @@ ${authorContext}
 - [Settings reference](${site.url}/settings/): Claude Code, OpenAI Codex, and provider configuration pages.
 - [Plugin catalog](${site.url}/plugins/): Manifest-backed plugin pages with install commands and components.
 - [Skill downloads](${site.url}/skills/): Release ZIPs for ChatGPT and Claude.ai.
-- [Skill install guide](${site.url}/guides/install-agent-skills/): Current upload steps for ChatGPT and Claude.ai.
+- [Skill and plugin install guide](${site.url}/guides/install-agent-skills/): Marketplace setup for Claude Code, OpenAI Codex, and Cursor, plus skill uploads for ChatGPT and Claude.ai.
 - [GitHub repository](${repositoryUrl}): Canonical source history and repository files.
 - [Agent Plugins LLM catalog](https://agentplugins.net/llms.txt): Plugin descriptions, search terms, compatibility, components, and install commands.
 - [Claude marketplace](${rawRepositoryUrl}/.claude-plugin/marketplace.json): Canonical plugin metadata.
