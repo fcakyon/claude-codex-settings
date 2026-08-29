@@ -40,6 +40,8 @@ claude plugin marketplace add fcakyon/claude-codex-settings
 claude plugin install fable-advisor@claude-settings
 ```
 
+In Claude Code desktop, select **+** beside the prompt, then **Plugins** and **Add plugin**.
+
 </details>
 
 <details>
@@ -52,6 +54,8 @@ codex plugin marketplace add fcakyon/claude-codex-settings
 # Install any plugin by name
 codex plugin add simplify@claude-settings
 ```
+
+In the Codex desktop app, open **Plugins**, find the plugin, and select **Install**.
 
 </details>
 
@@ -69,9 +73,14 @@ gemini extensions install --path ./plugins/simplify
 <summary><strong>Cursor</strong></summary>
 
 ```bash
-# Install any plugin by name
-cursor plugin install simplify@claude-settings
+# Add marketplace (one time)
+cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
+
+# Start the interactive CLI
+cursor-agent
 ```
+
+Enter `/plugin`, open the marketplace, and install the plugin at user or project scope. In the Cursor app, open **Customize** and select **Install**.
 
 </details>
 

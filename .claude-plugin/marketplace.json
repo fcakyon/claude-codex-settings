@@ -422,7 +422,7 @@
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Sync CLAUDE.md and the permissions allowlist, and refresh context on demand.",
-      "version": "2.1.3",
+      "version": "2.1.4",
       "author": {
         "name": "Fatih C. Akyon"
       },

@@ -4,6 +4,7 @@ import Icon from "./Icon.astro"
 import SkillDownload from "./SkillDownload.astro"
 import Layout from "../layouts/Layout.astro"
 import {
+  codingTools,
   configurationDocuments,
   pluginByName,
   plugins,
@@ -19,6 +20,7 @@ interface Props {
 }
 
 const { page } = Astro.props
+const marketplaceCommands = Object.fromEntries(codingTools.map((tool) => [tool.id, tool.marketplace]))
 const canonical = `${site.url}/${page.path}/`
 const homeCrumb = { label: "Home", href: "/" }
 const pluginCategories = Object.entries(Object.groupBy(plugins, (plugin) => plugin.category || "other")).sort(([a], [b]) =>
@@ -159,10 +161,10 @@ if (page.kind === "pluginHub") {
   intro = "A CLAUDE.md file gives coding agents repository-specific instructions. Use this guide to choose rules that are concrete, testable, and relevant to the codebase."
   breadcrumbs = [homeCrumb, { label: "CLAUDE.md" }]
 } else if (page.kind === "installGuide") {
-  title = "Install agent skills in ChatGPT and Claude.ai"
-  description = "Download an agent skill ZIP, review its contents, and upload it through the current ChatGPT or Claude.ai skills interface."
-  intro = "The same skill ZIP works in ChatGPT and Claude.ai. Keep the archive intact: it contains a named skill folder with SKILL.md and any supporting files."
-  breadcrumbs = [homeCrumb, { label: "Install agent skills" }]
+  title = "Install agent skills and plugins in Claude, Codex, and Cursor"
+  description = "Add the Claude Settings marketplace to Claude Code, OpenAI Codex, or Cursor, install plugins, and upload skill ZIPs to ChatGPT or Claude.ai."
+  intro = "Use plugin marketplaces with coding agents. Upload a skill ZIP when you work in ChatGPT or Claude.ai. This guide covers both paths and how to use what you install."
+  breadcrumbs = [homeCrumb, { label: "Install agent skills and plugins" }]
 }
 
 const breadcrumbSchema = {
@@ -191,10 +193,11 @@ if (page.kind === "installGuide") {
     name: title,
     description,
     step: [
-      { "@type": "HowToStep", name: "Choose and review a skill", text: "Choose a skill, open its source, and review every included file." },
-      { "@type": "HowToStep", name: "Download the ZIP", text: "Download the release ZIP without extracting it." },
-      { "@type": "HowToStep", name: "Upload the skill", text: "Open the Skills area in ChatGPT or Claude.ai, choose the upload action, and select the ZIP." },
-      { "@type": "HowToStep", name: "Test the skill", text: "Enable the skill and run a prompt that matches its description." },
+      { "@type": "HowToStep", name: "Choose the installation path", text: "Install a plugin in a coding agent, or upload a skill ZIP to ChatGPT or Claude.ai." },
+      { "@type": "HowToStep", name: "Add the marketplace", text: "Add the Claude Settings marketplace to Claude Code, OpenAI Codex, or Cursor." },
+      { "@type": "HowToStep", name: "Install a plugin", text: "Install the plugin from the marketplace in your terminal or desktop app." },
+      { "@type": "HowToStep", name: "Start a new session", text: "Start a new session, then ask the agent to use the installed skill or workflow." },
+      { "@type": "HowToStep", name: "Upload a skill ZIP", text: "Download a skill ZIP without extracting it, then upload it to ChatGPT or Claude.ai." },
     ],
   })
 }
@@ -355,9 +358,54 @@ const pluginSkills = plugin ? skills.filter((item) => item.plugin === plugin.nam
 
     {page.kind === "installGuide" && (
       <div class="content-sections install-guide">
+        <section class="content-section" id="choose-installation-path">
+          <h2>Choose the installation path for your app</h2>
+          <p>Install a plugin when you use a coding agent. Upload a ZIP when you use Skills in ChatGPT or Claude.ai.</p>
+          <div class="reference-grid">
+            <a class="reference-card" href="#coding-agent-plugins"><h3>Claude Code, Codex, and Cursor</h3><p>Add this repository as a marketplace, then install the plugins you need.</p><span>Install coding-agent plugins <Icon name="arrow" size={16} /></span></a>
+            <a class="reference-card" href="#web-skill-uploads"><h3>ChatGPT and Claude.ai</h3><p>Download one skill as a ZIP, then upload it through the Skills interface.</p><span>Upload a skill ZIP <Icon name="arrow" size={16} /></span></a>
+          </div>
+        </section>
+        <section class="content-section" id="coding-agent-plugins">
+          <h2>Add this marketplace to Claude Code</h2>
+          <p>Claude Code uses the same configured marketplaces in the terminal and desktop app for local sessions.</p>
+          <p>From the terminal, add the marketplace once, then install each plugin by name.</p>
+          <pre class="code-sample"><code>{`${marketplaceCommands.claude}
+claude plugin install simplify@claude-settings`}</code></pre>
+          <p>In Claude Code desktop, select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>. Choose a plugin from the configured marketplace.</p>
+          <p>Run <code>/reload-plugins</code> after an install in an open session. New sessions load installed plugins automatically.</p>
+          <a class="official-link" href="https://code.claude.com/docs/en/discover-plugins">Read the official Claude Code plugin guide</a>
+        </section>
         <section class="content-section">
+          <h2>Add this marketplace to OpenAI Codex</h2>
+          <p>Codex supports this marketplace in the terminal and the Codex desktop app. The Codex IDE extension doesn’t support plugins.</p>
+          <p>From the terminal, add the marketplace once, then install each plugin by name.</p>
+          <pre class="code-sample"><code>{`${marketplaceCommands.codex}
+codex plugin add simplify@claude-settings`}</code></pre>
+          <p>Enter <code>/plugins</code> in Codex CLI to browse configured marketplaces interactively. Start a new session after installing a plugin.</p>
+          <p>In the Codex desktop app, open <strong>Plugins</strong>, find the plugin, and select <strong>Install</strong>. Start a new task before you use its skills or tools.</p>
+          <a class="official-link" href="https://learn.chatgpt.com/docs/plugins">Read the official OpenAI plugin guide</a>
+        </section>
+        <section class="content-section">
+          <h2>Add this marketplace to Cursor</h2>
+          <p>Cursor installs personal plugins interactively. User-scope plugins work in the Cursor app and Cursor Agent CLI.</p>
+          <p>From the terminal, add the repository and start Cursor Agent. Enter <code>/plugin</code> to choose and install a plugin.</p>
+          <pre class="code-sample"><code>{`${marketplaceCommands.cursor}
+cursor-agent`}</code></pre>
+          <p>In the Cursor app, open <strong>Customize</strong>, find the plugin, and select <strong>Install</strong>. Choose user or project scope when prompted.</p>
+          <p>The marketplace command only adds the catalog.</p>
+          <a class="official-link" href="https://cursor.com/docs/plugins">Read the official Cursor plugin guide</a>
+        </section>
+        <section class="content-section">
+          <h2>Use an installed plugin in a new session</h2>
+          <p>Start a new session so the agent loads the plugin. Describe the task or name the skill in your prompt.</p>
+          <pre class="code-sample"><code>{`Use the simplify skill to review my staged diff.
+Use the humanize skill to revise this README.`}</code></pre>
+          <p>Some plugins also add slash commands. Open the <a href="/plugins/">plugin catalog</a> to see each plugin’s components and install commands.</p>
+        </section>
+        <section class="content-section" id="web-skill-uploads">
           <h2>Choose and review a skill</h2>
-          <p>Open the source before uploading code from any publisher. Check SKILL.md, scripts, references, and external tool requirements.</p>
+          <p>Open the source before uploading code from any publisher. Check <code>SKILL.md</code>, scripts, references, and external tool requirements.</p>
           <a class="button secondary" href="/skills/">Browse all skill downloads <Icon name="arrow" size={18} /></a>
         </section>
         <section class="content-section">

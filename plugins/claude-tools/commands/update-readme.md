@@ -24,9 +24,9 @@ Regenerate the Plugins section of README.md based on current plugin structure an
 <details>
 <summary><strong>plugin-name</strong> - Short description</summary>
 
-| Claude Code                                   | Codex CLI                                                                     | Gemini CLI                                               |
-| --------------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `/plugin install plugin-name@claude-settings` | Open `/plugins` -> `Claude & Codex Settings` -> install `plugin-name` | `gemini extensions install --path ./plugins/plugin-name` |
+| Claude Code                                         | Codex CLI                                      | Cursor                                                   | Gemini CLI                                               |
+| --------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
+| `claude plugin install plugin-name@claude-settings` | `codex plugin add plugin-name@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/plugin-name` |
 
 **Skills CLI**
 
@@ -69,5 +69,7 @@ One-line description.
 ```
 
 6. Also update the Installation section if plugin names have changed.
+   - Cursor installation is interactive. Do not invent a direct Cursor install command.
+   - Add the marketplace with `cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings`, then tell the reader to run `cursor-agent` and enter `/plugin`.
 
 7. Do NOT modify non-plugin sections (header, Configuration, Statusline, TODO, References, Star History).
