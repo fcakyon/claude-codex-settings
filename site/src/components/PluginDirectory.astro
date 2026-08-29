@@ -170,14 +170,5 @@ const initialCommand = plugins[0].claudeCommand
       }),
     )
 
-    browser.querySelectorAll("[data-copy-command]").forEach((button) =>
-      button.addEventListener("click", async (event) => {
-        const trigger = event.currentTarget as HTMLElement
-        const code = trigger.closest(".command-line")?.querySelector("code")
-        await navigator.clipboard.writeText(code?.textContent || "")
-        trigger.classList.add("is-copied")
-        setTimeout(() => trigger.classList.remove("is-copied"), 1200)
-      }),
-    )
   }
 </script>

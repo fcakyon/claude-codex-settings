@@ -224,7 +224,7 @@
       "version": "1.0.2",
       "license": "MIT",
       "keywords": ["livekit", "voice-ai", "agents", "webrtc", "realtime"],
-      "category": "ai",
+      "category": "voice-agents",
       "tags": ["voice-ai", "best-practices"]
     },
     {

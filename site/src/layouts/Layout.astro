@@ -114,5 +114,20 @@ const structuredData = pageGraph.length
         </div>
       </footer>
     </div>
+    <script>
+      document.addEventListener("click", async (event) => {
+        const button = (event.target as Element).closest<HTMLElement>("[data-copy], [data-copy-command]")
+        if (!button) return
+        const label = button.querySelector<HTMLElement>("[data-install-copy-label]")
+        const text = button.dataset.copy || button.closest(".command-line")?.querySelector("code")?.textContent || ""
+        await navigator.clipboard.writeText(text)
+        button.classList.add("is-copied")
+        if (label) label.textContent = "Copied"
+        window.setTimeout(() => {
+          button.classList.remove("is-copied")
+          if (label) label.textContent = "Copy command"
+        }, 1200)
+      })
+    </script>
   </body>
 </html>
