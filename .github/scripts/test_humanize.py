@@ -57,6 +57,7 @@ class HumanizeTest(unittest.TestCase):
         cases = (
             ("README.md", f"This sentence has a semicolon{SEMICOLON} replace it."),
             ("config.yml", f"# This comment has a semicolon{SEMICOLON} replace it."),
+            ("app.py", f'"""This docstring has a semicolon{SEMICOLON} replace it."""'),
             ("app.ts", f"{'/' * 2} This comment has a semicolon{SEMICOLON} replace it."),
         )
         for path, content in cases:
@@ -124,6 +125,8 @@ class HumanizeTest(unittest.TestCase):
     def test_labels_non_file_sources(self):
         """Label PR, Slack, and heredoc findings by their real source."""
         cases = (
+            ("Bash", {"command": f'git commit -m "One{SEMICOLON} two"'}, "commit message:1:4"),
+            ("Bash", {"command": f'gh pr create -t "One{SEMICOLON} two"'}, "PR title:1:4"),
             ("Bash", {"command": f'gh pr create -b "One{SEMICOLON} two"'}, "PR body:1:4"),
             (
                 "mcp__claude_ai_Slack__slack_send_message",
@@ -155,6 +158,45 @@ class HumanizeTest(unittest.TestCase):
         self.assertEqual(run_hook("Bash", {"command": "gh pr review 106 -c"}), "")
         self.assertEqual(run_hook("Bash", {"command": "gh pr close 106 && gh pr review 106 -c"}), "")
         self.assertEqual(run_hook("exec_command", {"cmd": "git status --short"}), "")
+
+    def test_allows_formatted_code_references(self):
+        """Allow semicolons in formatted code references."""
+        cases = (
+            ("Write", {"file_path": "app.py", "content": f'"""Call `run(){SEMICOLON}` after setup."""\n'}),
+            ("Write", {"file_path": "app.php", "content": f"// call `$db->begin(){SEMICOLON}` then commit()\n"}),
+            ("Write", {"file_path": "main.css", "content": f"/* keep `display: none{SEMICOLON}` for print */\n"}),
+            ("Bash", {"command": f"git commit -m 'Use `run(){SEMICOLON}` for startup'"}),
+            ("Bash", {"command": f"gh pr create -b 'Use `run(){SEMICOLON}` for startup'"}),
+            ("mcp__codex_apps__slack_slack_send_message", {"message": f"Use `run(){SEMICOLON}` for startup"}),
+        )
+        for tool, tool_input in cases:
+            self.assertEqual(run_hook(tool, tool_input), "")
+
+    def test_allows_code_shaped_comment_references(self):
+        """Allow unformatted code-shaped references in comments and docstrings."""
+        cases = (
+            ("app.php", f"// call $db->begin(){SEMICOLON} then commit()\n"),
+            ("app.js", f"// previous code used const active = true{SEMICOLON} here\n"),
+            ("app.ts", f"// call client.start(){SEMICOLON} after setup\n"),
+            ("main.css", f"/* was: display: none{SEMICOLON} now in main.css */\n"),
+            ("main.scss", f"/* keep gap: var(--space){SEMICOLON} between items */\n"),
+            ("app.py", f'"""Call client.start(){SEMICOLON} after setup."""\n'),
+        )
+        for path, content in cases:
+            self.assertEqual(run_hook("Write", {"file_path": path, "content": content}), "")
+
+    def test_keeps_blocking_text_beside_code_references(self):
+        """Keep blocking text semicolons near code-shaped references."""
+        cases = (
+            ("app.php", f"// call $db->begin(){SEMICOLON} then wait{SEMICOLON} retry\n"),
+            ("app.js", f"// first do this{SEMICOLON} then that\n"),
+            ("main.css", f"/* Note: first{SEMICOLON} then second */\n"),
+            ("main.css", f"/* reason: unclear{SEMICOLON} try again */\n"),
+            ("app.py", f'"""First do this{SEMICOLON} then that."""\n'),
+            ("app.js", f"// {'a' * 10000}{SEMICOLON}\n"),
+        )
+        for path, content in cases:
+            self.assertTrue(run_hook("Write", {"file_path": path, "content": content}))
 
 
 if __name__ == "__main__":

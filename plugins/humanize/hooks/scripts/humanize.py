@@ -64,6 +64,17 @@ OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermor
 
 MARKS = {"—": ("em-dash", "use commas or periods"), "§": ("section sign", "remove it"), ";": ("semicolon", "use a period or comma")}
 MARK_RE = re.compile("|".join(map(re.escape, MARKS)))
+CODE_REFERENCE_RE = re.compile(
+    r"(?<![\w$])(?:[$A-Za-z_]\w*(?:(?:->|::|\.)[$A-Za-z_]\w*)*(?:\([^;\n]*\))|"
+    r"[$A-Za-z_]\w*(?:(?:->|::|\.)[$A-Za-z_]\w*)+|"
+    r"[$A-Za-z_]\w*(?:\[[^;\n]*\])?\s*[-+*/%?]?=\s*[^;\n]+)\s*;"
+)
+CSS_REFERENCE_RE = re.compile(
+    r"\b[-A-Za-z_]\w*(?:-[-\w]+)*\s*:\s*(?:none|block|inline(?:-block)?|flex|grid|auto|inherit|initial|"
+    r"unset|transparent|currentcolor|[-+]?(?:\d*\.)?\d+(?:px|rem|em|%|vh|vw|s|ms)?|#[0-9a-f]{3,8}|"
+    r"(?:var|calc|url|rgba?|hsla?)\([^;\n]*\))\s*;",
+    re.IGNORECASE,
+)
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
 OFTEN_RE = re.compile(r"\b(" + "|".join(OFTEN) + r")\b", re.IGNORECASE)
 
@@ -134,6 +145,14 @@ def md_text(text):
     return masked(text, keep)
 
 
+def code_refs(text, ext):
+    """Mask code-shaped references in comments and docstrings without changing source offsets."""
+    patterns = (CODE_REFERENCE_RE, CSS_REFERENCE_RE) if ext in {".css", ".scss"} else (CODE_REFERENCE_RE,)
+    for pattern in patterns:
+        text = pattern.sub(lambda match: " " * len(match.group()), text)
+    return text
+
+
 def hash_comments(text):
     """Mask everything except docstrings and quote-aware hash comments."""
     keep = [False] * len(text)
@@ -197,9 +216,9 @@ def checked(path, text, selected=None):
     if ext in MD_EXT:
         text = md_text(text)
     elif ext in HASH_EXT:
-        text = hash_comments(text)
+        text = code_refs(md_text(hash_comments(text)), ext)
     elif ext in C_EXT:
-        text = c_comments(text)
+        text = code_refs(md_text(c_comments(text)), ext)
     else:
         return []
     if selected is not None:
