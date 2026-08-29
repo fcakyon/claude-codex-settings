@@ -40,6 +40,8 @@ claude plugin marketplace add fcakyon/claude-codex-settings
 claude plugin install fable-advisor@claude-settings
 ```
 
+In Claude Code desktop, select **+** beside the prompt, then **Plugins** and **Add plugin**.
+
 </details>
 
 <details>
@@ -52,6 +54,8 @@ codex plugin marketplace add fcakyon/claude-codex-settings
 # Install any plugin by name
 codex plugin add simplify@claude-settings
 ```
+
+In the Codex desktop app, open **Plugins**, find the plugin, and select **Install**.
 
 </details>
 
@@ -69,9 +73,14 @@ gemini extensions install --path ./plugins/simplify
 <summary><strong>Cursor</strong></summary>
 
 ```bash
-# Install any plugin by name
-cursor plugin install simplify@claude-settings
+# Add marketplace (one time)
+cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
+
+# Start the interactive CLI
+cursor-agent
 ```
+
+Enter `/plugin`, open the marketplace, and install the plugin at user or project scope. In the Cursor app, open **Customize** and select **Install**.
 
 </details>
 
@@ -138,7 +147,7 @@ Runs on Claude Code and Gemini. Unlike a markdown rule the model can ignore, the
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
 | `claude plugin install fable-advisor@claude-settings` | `codex plugin add fable-advisor@claude-settings` | `gemini extensions install --path ./plugins/fable-advisor` |
 
-Ask a Fable 5 reviewer to challenge a plan or conclusion before you commit, a drop-in for the built-in advisor when the Opus-main plus Fable-advisor pairing fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)). Claude Code uses a native Fable agent with the recent conversation attached. Codex, Cursor, and Gemini call the same model through an authenticated Claude Code CLI with `claude -p --model fable`.
+Ask a Fable 5 reviewer to challenge a plan or conclusion before you commit. Claude Code now supports Fable through its built-in advisor, while Codex, Cursor, and Gemini call the same model through an authenticated Claude Code CLI with `claude -p --model fable`.
 
 **Agents:**
 
@@ -985,12 +994,12 @@ SEO workflows from [vercel-labs/marketing-team-eve-template](https://github.com/
 
 Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-- **Model**: OpusPlan mode (plan: Opus 5, execute: Opus 5, fast: Sonnet 4.6) - [source](https://github.com/anthropics/claude-code/blob/4dc23d0275ff615ba1dccbdd76ad2b12a3ede591/CHANGELOG.md?plain=1#L61)
+- **Model**: Fable 5
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
-- **Advisor**: a stronger model reviews key decisions via the [advisor tool](https://code.claude.com/docs/en/advisor), paired as Opus main plus Opus advisor. Fable 5 as advisor currently fails with a bare "unavailable" ([#73365](https://github.com/anthropics/claude-code/issues/73365)), so for an on-demand Fable second opinion use the standalone [`fable-advisor`](./plugins/fable-advisor) plugin. The advisor only pairs Claude with Claude, so for a review from outside that family use [`codex-advisor`](./plugins/codex-advisor)
-- **Plugins**: All plugins enabled
+- **Advisor**: the built-in [advisor tool](https://code.claude.com/docs/en/advisor) uses Fable 5. For a review outside the Claude family, use [`codex-advisor`](./plugins/codex-advisor)
+- **Plugins**: Codex defaults plus `intelligent-compact` and `codex-advisor`. Standalone `fable-advisor` stays enabled only in Codex
 
 </details>
 

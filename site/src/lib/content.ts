@@ -178,7 +178,7 @@ export const plugins = marketplace.plugins
         : undefined;
     const claudeCommand = `claude plugin install ${plugin.name}@${marketplaceName}`;
     const codexCommand = hasCodex ? `codex plugin add ${plugin.name}@${marketplaceName}` : undefined;
-    const cursorCommand = hasCursor ? `cursor plugin install ${plugin.name}@${marketplaceName}` : undefined;
+    const cursorCommand = hasCursor ? `cursor-agent # enter /plugin, then install ${plugin.name}` : undefined;
     const geminiCommand = hasGemini ? `gemini extensions install --path ./plugins/${plugin.name}` : undefined;
     const components = directory
       ? {
@@ -341,7 +341,12 @@ export const codingTools = [
     marketplace: `claude plugin marketplace add ${marketplaceSlug}`,
   },
   { id: "codex", icon: "openai", label: "Codex CLI", marketplace: `codex plugin marketplace add ${marketplaceSlug}` },
-  { id: "cursor", icon: "cursor", label: "Cursor", marketplace: undefined },
+  {
+    id: "cursor",
+    icon: "cursor",
+    label: "Cursor",
+    marketplace: `cursor-agent plugin marketplace add ${repositoryUrl}`,
+  },
   { id: "gemini", icon: "gemini", label: "Gemini CLI", marketplace: undefined },
 ] as const;
 

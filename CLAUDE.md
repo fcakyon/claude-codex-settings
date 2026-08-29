@@ -269,12 +269,10 @@ Commands are Claude Code only. Gemini CLI uses TOML commands. Other tools use sk
 
 ### Installation
 
-```
-Claude Code: /plugin marketplace add fcakyon/claude-codex-settings
-Codex CLI:   codex plugin marketplace add fcakyon/claude-codex-settings, then codex plugin add <name>@claude-settings
-Cursor:      import marketplace or /add-plugin
-Gemini CLI:  gemini extensions install --path ./plugins/<name>
-```
+- Claude Code: run `claude plugin marketplace add fcakyon/claude-codex-settings`, then `claude plugin install plugin-name@claude-settings`
+- Codex CLI: run `codex plugin marketplace add fcakyon/claude-codex-settings`, then `codex plugin add plugin-name@claude-settings`
+- Cursor: run `cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings`, start `cursor-agent`, then enter `/plugin`
+- Gemini CLI: run `gemini extensions install --path ./plugins/plugin-name`
 
 ### Updating
 

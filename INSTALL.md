@@ -1,6 +1,6 @@
 # Installation Guide
 
-Complete installation guide for Claude Code, dependencies, and this configuration.
+Installation guide for Claude Code, OpenAI Codex, Cursor, Gemini CLI, dependencies, and this configuration.
 
 > Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and set up the shared guidance file.
 
@@ -55,6 +55,18 @@ Optionally install IDE extension:
 
 - [Codex VSCode extension](https://developers.openai.com/codex/ide) for IDE integration
 
+### Claude Code Plugins
+
+```bash
+# Add marketplace (one time)
+claude plugin marketplace add fcakyon/claude-codex-settings
+
+# Install any plugin by name
+claude plugin install simplify@claude-settings
+```
+
+In Claude Code desktop, select **+** beside the prompt, then **Plugins** and **Add plugin**.
+
 ### Codex Plugins
 
 ```bash
@@ -64,6 +76,20 @@ codex plugin marketplace add fcakyon/claude-codex-settings
 # Install any plugin by name
 codex plugin add simplify@claude-settings
 ```
+
+In the Codex desktop app, open **Plugins**, find the plugin, and select **Install**.
+
+### Cursor Plugins
+
+```bash
+# Add marketplace (one time)
+cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
+
+# Start the interactive CLI
+cursor-agent
+```
+
+Enter `/plugin`, open the marketplace, and install the plugin at user or project scope. In the Cursor app, open **Customize** and select **Install**.
 
 ### Gemini CLI
 

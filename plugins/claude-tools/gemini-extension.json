@@ -1,5 +1,5 @@
 {
   "name": "claude-tools",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "Sync CLAUDE.md and the permissions allowlist, and refresh context on demand."
 }
