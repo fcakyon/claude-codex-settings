@@ -227,8 +227,8 @@
   "ultracode": false,
   "enableWorkflows": true,
   "outputStyle": "Concise",
-  "model": "opus",
-  "advisorModel": "claude-opus-5",
+  "model": "fable",
+  "advisorModel": "fable",
   "autoScrollEnabled": false,
   "statusLine": {
     "type": "command",
@@ -238,9 +238,15 @@
   },
   "enabledPlugins": {
     "intelligent-compact@claude-settings": true,
-    "github-dev@claude-settings": true,
-    "humanize@claude-settings": true,
     "simplify@claude-settings": true,
+    "humanize@claude-settings": true,
+    "openai-office-skills@claude-settings": true,
+    "python-skills@claude-settings": true,
+    "agent-browser@claude-settings": true,
+    "frontend-design-skills@claude-settings": true,
+    "seo-skills@claude-settings": true,
+    "github-dev@claude-settings": true,
+    "ultralytics-dev@claude-settings": true,
     "codex-advisor@claude-settings": true
   },
   "extraKnownMarketplaces": {
