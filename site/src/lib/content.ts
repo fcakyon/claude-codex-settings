@@ -202,10 +202,42 @@ export const plugins = marketplace.plugins
       cursorCommand,
       geminiCommand,
       installCommands: [
-        { tool: "Claude Code", command: claudeCommand },
-        ...(codexCommand ? [{ tool: "OpenAI Codex", command: codexCommand }] : []),
-        ...(cursorCommand ? [{ tool: "Cursor", command: cursorCommand }] : []),
-        ...(geminiCommand ? [{ tool: "Gemini CLI", command: geminiCommand }] : []),
+        {
+          id: "claude",
+          tool: "Claude Code",
+          command: claudeCommand,
+          output: [`Resolving ${plugin.name}@claude-settings…`, `✓ Installed ${plugin.name}`],
+        },
+        ...(codexCommand
+          ? [
+              {
+                id: "codex",
+                tool: "OpenAI Codex",
+                command: codexCommand,
+                output: [`Resolving ${plugin.name}@claude-settings…`, `✓ Added ${plugin.name}`],
+              },
+            ]
+          : []),
+        ...(cursorCommand
+          ? [
+              {
+                id: "cursor",
+                tool: "Cursor",
+                command: cursorCommand,
+                output: [`Opening ${plugin.name} in Cursor Agent…`, `Type /plugin and choose ${plugin.name}`],
+              },
+            ]
+          : []),
+        ...(geminiCommand
+          ? [
+              {
+                id: "gemini",
+                tool: "Gemini CLI",
+                command: geminiCommand,
+                output: [`Reading ./plugins/${plugin.name}/gemini-extension.json…`, `✓ Installed ${plugin.name}`],
+              },
+            ]
+          : []),
       ],
     };
   })

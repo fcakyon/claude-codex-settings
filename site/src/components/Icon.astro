@@ -1,6 +1,6 @@
 ---
 export type IconName =
-  | "arrow" | "chevron" | "copy" | "file" | "folder" | "github" | "linkedin" | "search" | "star" | "x"
+  | "arrow" | "chevron" | "copy" | "file" | "folder" | "github" | "linkedin" | "pause" | "play" | "search" | "star" | "x"
   | "claude" | "openai" | "cursor" | "gemini";
 
 interface Props {
@@ -23,6 +23,8 @@ const { name, size = 20 } = Astro.props;
   {name === "arrow" && <path d="m9 18 6-6-6-6M5 12h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />}
   {name === "chevron" && <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />}
   {name === "copy" && <path d="M8 8h10v11H8zM5 5h10v3M5 5v11h3" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />}
+  {name === "pause" && <path d="M8 6v12M16 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />}
+  {name === "play" && <path d="m9 6 9 6-9 6Z" fill="currentColor" />}
   {name === "search" && <path d="m20 20-4.6-4.6M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />}
   {name === "folder" && <path d="M3 6.5h6l1.7 2H21v9.5H3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />}
   {name === "file" && <path d="M6 3h8l4 4v14H6zM14 3v5h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" />}

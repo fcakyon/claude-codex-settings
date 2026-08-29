@@ -112,13 +112,6 @@ const initialFile = lines[0]
     activate(editor.dataset.initialFile!)
   }
 
-  document.querySelectorAll<HTMLElement>("[data-copy]").forEach((button) =>
-    button.addEventListener("click", async () => {
-      await navigator.clipboard.writeText(button.dataset.copy || "")
-      button.classList.add("is-copied")
-      setTimeout(() => button.classList.remove("is-copied"), 1200)
-    }),
-  )
 </script>
 
 <style is:global>
