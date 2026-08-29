@@ -62,7 +62,7 @@ PHRASES = [
 LIMIT = 3
 OFTEN = ["crucial", "essential", "vital", "significant", "moreover", "furthermore", "additionally", "aligns", "explore", "prompted"]
 
-MARKS = {"—": ("em-dash", "use commas or periods"), "§": ("section sign", "remove it")}
+MARKS = {"—": ("em-dash", "use commas or periods"), "§": ("section sign", "remove it"), ";": ("semicolon", "use a period or comma")}
 MARK_RE = re.compile("|".join(map(re.escape, MARKS)))
 SWAP_RE = re.compile(r"\b(" + "|".join(SWAP) + r")\b", re.IGNORECASE)
 OFTEN_RE = re.compile(r"\b(" + "|".join(OFTEN) + r")\b", re.IGNORECASE)
@@ -197,9 +197,9 @@ def checked(path, text, selected=None):
     if ext in MD_EXT:
         text = md_text(text)
     elif ext in HASH_EXT:
-        text = hash_comments(text)
+        text = md_text(hash_comments(text))
     elif ext in C_EXT:
-        text = c_comments(text)
+        text = md_text(c_comments(text))
     else:
         return []
     if selected is not None:
