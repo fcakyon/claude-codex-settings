@@ -17,7 +17,7 @@ const detailUrl = skill.seo ? `/plugins/${skill.plugin}/skills/${skill.name}/` :
   <div class="skill-copy">
     <Heading>{detailUrl ? <a href={detailUrl}>{skill.name}</a> : skill.name}</Heading>
     <p>{skill.description}</p>
-    <div class="skill-labels" aria-label="Skill compatibility and package details">
+    <div class="skill-labels">
       <span>ChatGPT</span>
       <span>Claude.ai</span>
       <span>{skill.bundled.length ? `Includes ${skill.bundled.join(", ")}` : "Instructions only"}</span>
