@@ -92,15 +92,19 @@ const structuredData = pageGraph.length
     <meta name="twitter:image" content={image} />
     <meta name="twitter:creator" content={author.xHandle} />
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-    {googleAnalyticsId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />}
     {googleAnalyticsId && (
-      <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${googleAnalyticsId}');`} />
+      <>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} />
+        <script is:inline set:html={`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${googleAnalyticsId}');`} />
+      </>
     )}
   </head>
   <body>
+    <a class="skip-link" href="#main">{copy.skipToContent}</a>
     <div class="page-shell">
       <Header locale={locale} variant={variant} showLanguage={alternateEntries.length > 1} />
-      <main><slot /></main>
+      <main id="main"><slot /></main>
       <footer>
         <span>{copy.footer.credit} <a href={repositoryUrl} target="_blank" rel="noreferrer">claude-codex-settings</a></span>
         <div>
@@ -114,7 +118,9 @@ const structuredData = pageGraph.length
         </div>
       </footer>
     </div>
+    <span class="sr-only" aria-live="polite" data-copy-announcement data-copied={copy.copied}></span>
     <script>
+      const announcement = document.querySelector<HTMLElement>("[data-copy-announcement]")!
       document.addEventListener("click", async (event) => {
         const button = (event.target as Element).closest<HTMLElement>("[data-copy], [data-copy-command]")
         if (!button) return
@@ -123,9 +129,11 @@ const structuredData = pageGraph.length
         await navigator.clipboard.writeText(text)
         button.classList.add("is-copied")
         if (label) label.textContent = "Copied"
+        announcement.textContent = announcement.dataset.copied!
         window.setTimeout(() => {
           button.classList.remove("is-copied")
           if (label) label.textContent = "Copy command"
+          announcement.textContent = ""
         }, 1200)
       })
     </script>

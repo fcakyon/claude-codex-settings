@@ -9,6 +9,9 @@ export const translations = {
   en: {
     languageLabel: "简体中文",
     stars: "stars",
+    skipToContent: "Skip to main content",
+    copied: "Copied to clipboard",
+    primaryNav: "Primary navigation",
     footer: {
       credit: "Developed using web development plugins from",
       sitemap: "Sitemap",
@@ -78,7 +81,7 @@ export const translations = {
         ],
       },
       directory: {
-        search: "Search plugins and skills",
+        search: "Search plugins and skills…",
         available: "Available plugins",
         columns: ["#", "Plugin", "Description", "Supported tools", "Link"],
         view: "View plugin",
@@ -106,6 +109,9 @@ export const translations = {
   "zh-CN": {
     languageLabel: "English",
     stars: "个星标",
+    skipToContent: "跳到主要内容",
+    copied: "已复制到剪贴板",
+    primaryNav: "主导航",
     footer: {
       credit: "使用以下仓库中的网页开发插件构建：",
       sitemap: "网站地图",
@@ -167,7 +173,7 @@ export const translations = {
         ],
       },
       directory: {
-        search: "搜索插件和技能",
+        search: "搜索插件和技能…",
         available: "可用插件",
         columns: ["#", "插件", "说明", "支持的工具", "链接"],
         view: "查看插件",

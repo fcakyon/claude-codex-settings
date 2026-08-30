@@ -27,7 +27,7 @@ const initialFile = lines[0]
     <div class="tree-row root-row"><Icon name="folder" size={18} /><span>claude-codex-settings</span></div>
     {editorGroups.map((group) => (
       <>
-        <div class="tree-row folder-row"><span class="tree-caret">⌄</span><Icon name="folder" size={18} /><span>{group.name}</span></div>
+        <div class="tree-row folder-row"><span class="tree-caret" aria-hidden="true">⌄</span><Icon name="folder" size={18} /><span>{group.name}</span></div>
         {group.files.map((file) => (
           <button class:list={["tree-row", "tree-file", { "is-active": file.id === initialFile.id }]} type="button" data-file={file.id} title={file.path}>
             <Icon name="file" size={17} /><span>{file.label}</span>
@@ -61,6 +61,7 @@ const initialFile = lines[0]
         aria-labelledby={`tab-${file.id}`}
         data-panel={file.id}
         data-focus-line={file.focusLine}
+        tabindex="0"
         hidden={index !== 0}
       >
         <code>{file.lines.map((line, lineIndex) => <span class="code-line"><span class="line-number">{lineIndex + 1}</span><span>{line || " "}</span></span>)}</code>

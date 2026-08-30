@@ -343,7 +343,7 @@ const initialInstallDemo = installDemoCommands[0]
             <div class="install-terminal-body">
               <div class="install-command-line">
                 <span class="install-prompt" aria-hidden="true">$</span>
-                <code data-install-command aria-label={initialInstallDemo.command}>{initialInstallDemo.command}</code>
+                <code data-install-command>{initialInstallDemo.command}</code>
                 <span class="typing-cursor" aria-hidden="true"></span>
               </div>
               <div class="install-output" aria-hidden="true">
@@ -394,7 +394,7 @@ const initialInstallDemo = installDemoCommands[0]
         <section class="content-section">
           <h2>Use the skill for the right task</h2>
           <p>{skill.description}</p>
-          <p>The skill belongs to the <a href={`/plugins/${skill.plugin}/`}><code>{skill.plugin}</code> plugin</a>. Install the full plugin for coding-agent commands, hooks, or related skills.</p>
+          <p>The skill belongs to the <a class="inline-link" href={`/plugins/${skill.plugin}/`}><code>{skill.plugin}</code> plugin</a>. Install the full plugin for coding-agent commands, hooks, or related skills.</p>
         </section>
       </div>
     )}
@@ -469,7 +469,7 @@ gemini extensions install --path ./plugins/simplify`}</code></pre>
           <p>Start a new session so the agent loads the plugin. Describe the task or name the skill in your prompt.</p>
           <pre class="code-sample"><code>{`Use the simplify skill to review my staged diff.
 Use the humanize skill to revise this README.`}</code></pre>
-          <p>Some plugins also add slash commands. Open the <a href="/plugins/">plugin catalog</a> to see each plugin’s components and install commands.</p>
+          <p>Some plugins also add slash commands. Open the <a class="inline-link" href="/plugins/">plugin catalog</a> to see each plugin’s components and install commands.</p>
         </section>
         <section class="content-section" id="web-skill-uploads">
           <h2>Choose and review a skill</h2>
@@ -521,7 +521,7 @@ Use the humanize skill to revise this README.`}</code></pre>
     const announcement = demo.querySelector<HTMLElement>("[data-install-announcement]")!
     const progress = demo.querySelector<HTMLElement>("[data-install-progress]")!
     const count = demo.querySelector<HTMLElement>("[data-install-count]")!
-    const copyButton = demo.querySelector<HTMLButtonElement>("[data-install-copy]")!
+    const copyButton = demo.querySelector<HTMLButtonElement>("[data-copy]")!
     const toggle = demo.querySelector<HTMLButtonElement>("[data-install-toggle]")!
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
     let current = 0
@@ -557,7 +557,6 @@ Use the humanize skill to revise this README.`}</code></pre>
       })
       panel.setAttribute("aria-labelledby", tab.id)
       title.textContent = tab.textContent?.trim() || "Terminal"
-      command.setAttribute("aria-label", fullCommand)
       copyButton.dataset.copy = fullCommand
       copyButton.setAttribute("aria-label", `Copy ${title.textContent} install command`)
       copyButton.classList.remove("is-copied")
