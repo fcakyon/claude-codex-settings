@@ -19,7 +19,7 @@ const languageLocale = locales[locale].alternate
 
 <header class="site-header">
   <a class="brand" href={locales[locale].path}>{settings ? "Claude Settings" : "Agent Plugins"}</a>
-  <nav aria-label="Primary navigation">
+  <nav aria-label={copy.primaryNav}>
     {nav.map(([label, href]) => <a href={href}>{label}</a>)}
     <a href={repositoryUrl}>GitHub</a>
   </nav>

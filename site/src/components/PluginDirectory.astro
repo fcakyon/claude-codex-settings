@@ -17,7 +17,7 @@ const initialCommand = plugins[0].claudeCommand
   <label class="plugin-search">
     <Icon name="search" size={27} />
     <span class="sr-only">{copy.search}</span>
-    <input type="search" placeholder={copy.search} autocomplete="off" data-plugin-search />
+    <input type="search" name="q" placeholder={copy.search} autocomplete="off" data-plugin-search />
     <kbd>/</kbd>
   </label>
 
@@ -144,7 +144,7 @@ const initialCommand = plugins[0].claudeCommand
     })
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "/" && document.activeElement !== search) {
+      if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey && document.activeElement !== search) {
         event.preventDefault()
         search?.focus()
       }
