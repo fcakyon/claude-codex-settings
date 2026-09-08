@@ -1,0 +1,5 @@
+{
+  "name": "openship-skills",
+  "version": "1.0.0",
+  "description": "Deploy self-hosted OpenShip apps with the CLI and openship.json."
+}

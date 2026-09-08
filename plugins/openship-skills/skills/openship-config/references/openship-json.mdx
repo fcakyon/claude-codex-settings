@@ -1,0 +1,90 @@
+---
+title: Deploy with openship.json
+description: Add a declarative openship.json to your repo so Openship builds and deploys it the same way every time — in the wizard and headlessly on push.
+---
+
+Committing an `openship.json` to your repo root makes your deploy **reproducible**: the framework,
+build commands, env, domains, and scaling are declared in the repo instead of clicked through the
+wizard each time. It's the same idea as `vercel.json` or `railway.toml`.
+
+Openship still auto-detects everything — `openship.json` just **overrides** what you declare. So
+you only add the fields you want to pin. The full field list lives in the
+[reference](https://openship.io/docs/reference/openship-json).
+
+## 1. Scaffold it
+
+From your repo root:
+
+```bash
+openship config init
+```
+
+This writes a minimal `openship.json` with the `$schema` line (for editor autocomplete) plus any
+package manager / build command it can detect locally. Open it and add what you need.
+
+## 2. Declare your deploy
+
+A typical server app:
+
+```json
+{
+  "$schema": "https://openship.io/openship.schema.json",
+  "framework": "nextjs",
+  "buildCommand": "pnpm build",
+  "port": 3000,
+  "runtime": "docker",
+  "env": {
+    "NEXT_PUBLIC_API_URL": "https://api.acme.com",
+    "DATABASE_URL": { "value": "postgres://…", "secret": true }
+  },
+  "domains": ["app.acme.com"]
+}
+```
+
+- **Secrets** — wrap the value in `{ "value": "…", "secret": true }` so it's encrypted at rest.
+- **Custom domain** — a dotted hostname is treated as custom; a bare label is a free subdomain.
+- **Leave out** anything detection already gets right (most `installCommand`s, `outputDirectory`
+  for known frameworks, etc.).
+
+A static site is just:
+
+```json
+{
+  "$schema": "https://openship.io/openship.schema.json",
+  "framework": "vite",
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist",
+  "productionMode": "static"
+}
+```
+
+## 3. Validate
+
+```bash
+openship config validate
+```
+
+Fix any reported error (bad enum, out-of-range port, malformed service). Warnings (e.g. unknown
+keys) are non-fatal. Use `--json` for machine-readable output in CI.
+
+## 4. Deploy
+
+Deploy as usual — [from GitHub](https://openship.io/docs/guides/deploy-from-github), a
+[local folder](https://openship.io/docs/guides/deploy-local-folder), or the CLI. The wizard opens **pre-filled** from
+your `openship.json`; you can still tweak anything before deploying.
+
+Because [auto-deploy on push](https://openship.io/docs/guides/auto-deploy) and headless deploys run the same
+resolution, a push to your deploy branch honors `openship.json` with no wizard at all — which is
+the point: the repo describes its own deploy.
+
+<Callout title="Precedence">
+Detection runs first, then `openship.json` overrides field-by-field. If a deploy isn't picking up
+a value, confirm the field name against the [reference](https://openship.io/docs/reference/openship-json) and re-run
+`openship config validate`.
+</Callout>
+
+## Multi-service and monorepos
+
+Declare `services` for a compose project, or `monorepo` to override detected sub-apps — see the
+[reference](https://openship.io/docs/reference/openship-json#services-compose) for both. Note that `services` and
+`monorepo` are alternatives to a single-app config, not additions to it.
