@@ -1,0 +1,419 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://openship.io/openship.schema.json",
+  "title": "Openship deploy config",
+  "description": "openship.json — declarative deploy config for Openship. Auto-detection runs first; every field present here overrides it. Absent fields keep the detected value.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+
+    "framework": {
+      "description": "Stack/framework slug. Overrides auto-detection.",
+      "enum": [
+        "nextjs",
+        "nuxt",
+        "sveltekit",
+        "remix",
+        "astro",
+        "vite",
+        "angular",
+        "gatsby",
+        "cra",
+        "vue",
+        "react",
+        "express",
+        "fastify",
+        "hono",
+        "nestjs",
+        "koa",
+        "adonis",
+        "elysia",
+        "go",
+        "gin",
+        "fiber",
+        "echo",
+        "rust",
+        "actix",
+        "axum",
+        "rocket",
+        "python",
+        "django",
+        "flask",
+        "fastapi",
+        "rails",
+        "sinatra",
+        "laravel",
+        "symfony",
+        "springboot",
+        "quarkus",
+        "kotlin",
+        "dotnet",
+        "blazor",
+        "phoenix",
+        "node",
+        "static",
+        "docker",
+        "docker-compose",
+        "unknown",
+        "webmail"
+      ]
+    },
+    "packageManager": {
+      "description": "Package manager used for install/build.",
+      "enum": [
+        "npm",
+        "yarn",
+        "pnpm",
+        "bun",
+        "go",
+        "cargo",
+        "pip",
+        "poetry",
+        "pipenv",
+        "uv",
+        "bundler",
+        "composer",
+        "maven",
+        "gradle",
+        "dotnet",
+        "mix"
+      ]
+    },
+    "rootDirectory": {
+      "description": "Directory the app lives in, relative to the repo root (e.g. \"./\", \"apps/web\").",
+      "type": "string"
+    },
+    "composePath": {
+      "description": "Compose file kept outside the detected root — either the file itself (\"deploy/stack.yml\", which also covers non-standard filenames) or the directory holding it (\"deploy/docker-compose\"). Makes the project a compose deploy; service \"build\" contexts resolve relative to that directory, as compose does.",
+      "type": "string"
+    },
+    "installCommand": { "description": "Command that installs dependencies.", "type": "string" },
+    "buildCommand": { "description": "Command that builds the app.", "type": "string" },
+    "startCommand": {
+      "description": "Command that starts the server in production.",
+      "type": "string"
+    },
+    "outputDirectory": {
+      "description": "Directory the build writes to (e.g. \".next\", \"dist\").",
+      "type": "string"
+    },
+    "buildImage": {
+      "description": "Docker image used for the build (e.g. \"node:22\").",
+      "type": "string"
+    },
+    "productionPaths": {
+      "description": "Paths shipped to the runtime as the production artifact.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "volumes": {
+      "description": "Paths kept across deploys. A bare path is relative to the app (\"storage\"); a full mount also works (\"uploads:/app/storage\", \"/srv/data:/app/storage\"). Omit to inherit the framework's defaults; [] turns persistence off.",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+
+    "runtime": {
+      "description": "Runtime isolation for a single app. Services/docker projects are always \"docker\".",
+      "enum": ["bare", "docker"]
+    },
+    "productionMode": {
+      "description": "How the app is served. \"static\" ⇒ no server (files only).",
+      "enum": ["host", "static", "standalone"]
+    },
+    "port": {
+      "description": "Port the server listens on.",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 65535
+    },
+
+    "env": {
+      "description": "Environment variables. A string is a plain value; { \"value\", \"secret\" } marks a secret.",
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["value"],
+            "properties": {
+              "value": { "type": "string" },
+              "secret": { "type": "boolean" }
+            }
+          }
+        ]
+      }
+    },
+
+    "domains": {
+      "description": "Public domains. A string is a hostname (a bare label = free subdomain; a dotted name = custom).",
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["domain"],
+            "properties": {
+              "domain": { "type": "string" },
+              "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+              "targetPath": { "type": "string" },
+              "type": { "enum": ["free", "custom"] }
+            }
+          }
+        ]
+      }
+    },
+
+    "routes": {
+      "description": "Reverse-proxy routing rules compiled to OpenResty at deploy.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rewrites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "destination"],
+            "properties": {
+              "source": { "type": "string" },
+              "destination": { "type": "string" }
+            }
+          }
+        },
+        "redirects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "destination"],
+            "properties": {
+              "source": { "type": "string" },
+              "destination": { "type": "string" },
+              "permanent": { "type": "boolean" },
+              "statusCode": { "type": "integer", "minimum": 300, "maximum": 399 }
+            }
+          }
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "headers"],
+            "properties": {
+              "source": { "type": "string" },
+              "headers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["key", "value"],
+                  "properties": {
+                    "key": { "type": "string" },
+                    "value": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "cleanUrls": { "type": "boolean" },
+        "trailingSlash": { "type": "boolean" }
+      }
+    },
+
+    "resources": {
+      "description": "CPU/memory limits for this project's containers: a named tier OR explicit values (which becomes the custom tier). Self-hosted defaults to unlimited (the machine is the ceiling) and validates a non-zero value against the target machine's real capacity; cloud workspaces are metered and must be sized. 0 = no limit.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tier": { "enum": ["unlimited", "micro", "low", "medium", "high"] },
+        "cpuCores": { "type": "number", "minimum": 0, "maximum": 1024 },
+        "memoryMb": { "type": "integer", "minimum": 0, "maximum": 4194304 },
+        "diskMb": { "type": "integer", "minimum": 0, "maximum": 204800 }
+      }
+    },
+
+    "services": {
+      "description": "Compose services. Declaring services makes this a multi-service project.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "image": { "type": "string" },
+          "build": { "type": "string" },
+          "dockerfile": { "type": "string" },
+          "buildArgs": {
+            "description": "Per-service Docker build arguments. null inherits the same-named value from top-level env; string values override it. Do not put secrets directly in buildArgs.",
+            "type": "object",
+            "propertyNames": { "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
+            "additionalProperties": { "type": ["string", "null"] }
+          },
+          "ports": { "type": "array", "items": { "type": "string" } },
+          "volumes": { "type": "array", "items": { "type": "string" } },
+          "dependsOn": { "type": "array", "items": { "type": "string" } },
+          "env": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                { "type": "string" },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["value"],
+                  "properties": {
+                    "value": { "type": "string" },
+                    "secret": { "type": "boolean" }
+                  }
+                }
+              ]
+            }
+          },
+          "command": { "type": "string" },
+          "restart": { "enum": ["no", "always", "on-failure", "unless-stopped"] },
+          "exposed": { "type": "boolean" },
+          "exposedPort": { "type": "string" },
+          "domain": { "type": "string" },
+          "healthcheck": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "test": {
+                "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+              },
+              "interval": { "type": "string" },
+              "timeout": { "type": "string" },
+              "retries": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "startPeriod": { "type": "string" },
+              "disable": { "type": "boolean" }
+            }
+          },
+          "resources": {
+            "description": "Per-service cpu/memory caps, overriding the top-level resources field by field. Parity with compose mem_limit / deploy.resources.limits, which Openship also reads off the compose file. 0 = no limit.",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tier": { "enum": ["unlimited", "micro", "low", "medium", "high"] },
+              "cpuCores": { "type": "number", "minimum": 0, "maximum": 1024 },
+              "memoryMb": { "type": "integer", "minimum": 0, "maximum": 4194304 },
+              "diskMb": { "type": "integer", "minimum": 0, "maximum": 204800 }
+            }
+          }
+        }
+      }
+    },
+
+    "monorepo": {
+      "description": "Monorepo workspace + per-sub-app build overrides (matched to detected apps by rootDirectory).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "workspace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["packageManager"],
+          "properties": {
+            "packageManager": { "type": "string" },
+            "prepareCommand": { "type": "string" }
+          }
+        },
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "rootDirectory"],
+            "properties": {
+              "name": { "type": "string" },
+              "rootDirectory": { "type": "string" },
+              "framework": {
+                "enum": [
+                  "nextjs",
+                  "nuxt",
+                  "sveltekit",
+                  "remix",
+                  "astro",
+                  "vite",
+                  "angular",
+                  "gatsby",
+                  "cra",
+                  "vue",
+                  "react",
+                  "express",
+                  "fastify",
+                  "hono",
+                  "nestjs",
+                  "koa",
+                  "adonis",
+                  "elysia",
+                  "go",
+                  "gin",
+                  "fiber",
+                  "echo",
+                  "rust",
+                  "actix",
+                  "axum",
+                  "rocket",
+                  "python",
+                  "django",
+                  "flask",
+                  "fastapi",
+                  "rails",
+                  "sinatra",
+                  "laravel",
+                  "symfony",
+                  "springboot",
+                  "quarkus",
+                  "kotlin",
+                  "dotnet",
+                  "blazor",
+                  "phoenix",
+                  "node",
+                  "static",
+                  "docker",
+                  "docker-compose",
+                  "unknown",
+                  "webmail"
+                ]
+              },
+              "packageManager": {
+                "enum": [
+                  "npm",
+                  "yarn",
+                  "pnpm",
+                  "bun",
+                  "go",
+                  "cargo",
+                  "pip",
+                  "poetry",
+                  "pipenv",
+                  "uv",
+                  "bundler",
+                  "composer",
+                  "maven",
+                  "gradle",
+                  "dotnet",
+                  "mix"
+                ]
+              },
+              "installCommand": { "type": "string" },
+              "buildCommand": { "type": "string" },
+              "startCommand": { "type": "string" },
+              "outputDirectory": { "type": "string" },
+              "buildImage": { "type": "string" },
+              "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

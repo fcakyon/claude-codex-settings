@@ -1,0 +1,63 @@
+{
+  "repository": "https://github.com/oblien/openship",
+  "ref": "v0.7.2",
+  "commit": "541ba903fdcd8959054b1fb8805749632a1dafe9",
+  "files": {
+    ".claude/skills/openship-config/SKILL.md": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/.claude/skills/openship-config/SKILL.md",
+      "sha256": "a3f86d4b417ea06eb67c3e648b835c013ea6ac4b6f7fc25732363cbaf8a66df6"
+    },
+    ".claude/skills/openship-config/references/fields.md": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/.claude/skills/openship-config/references/fields.md",
+      "sha256": "583b8adb4c1fb51aa2ae1e2c28984430741a5dfbcbc72d33088cfb543b32ba15"
+    },
+    "LICENSE": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/LICENSE",
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    "apps/api/src/modules/deployments/prepare.service.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/api/src/modules/deployments/prepare.service.ts",
+      "sha256": "417765dfe614bd58d50a19a15cb5b9afbe8ee2359dc45877ffe4ba8b9e7156db"
+    },
+    "apps/cli/src/commands/config.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/cli/src/commands/config.ts",
+      "sha256": "c2d10f0af7968969054e395dbb4603afb0844698e8a02866df8dd8716314e90a"
+    },
+    "apps/cli/src/commands/server.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/cli/src/commands/server.ts",
+      "sha256": "278ac25a19577ea06d7edead59a9cf046ae2fee80ff66de47373ca1f1a52ef68"
+    },
+    "apps/cli/src/commands/service.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/cli/src/commands/service.ts",
+      "sha256": "9ef53a6e8f39edd0bac03759b81bb4aaa3fd0567220f702034b7c7bbf9caf212"
+    },
+    "apps/web/content/docs/guides/compose-multi-service.mdx": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/web/content/docs/guides/compose-multi-service.mdx",
+      "sha256": "829d13e15b296e4f0e18fe421864858d357cd58cd9a0743e8358c9e8be040db7"
+    },
+    "apps/web/content/docs/guides/environment-variables.mdx": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/web/content/docs/guides/environment-variables.mdx",
+      "sha256": "7afd882d19102abf747b91fddef0f82a176ee054c6dccc071ba95509ce876fbd"
+    },
+    "apps/web/content/docs/guides/openship-json.mdx": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/web/content/docs/guides/openship-json.mdx",
+      "sha256": "d674d25ff5c2b525b090fb74be9c0bea0fe53e2db953f2d36303b03cf9562637"
+    },
+    "apps/web/public/openship.schema.json": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/apps/web/public/openship.schema.json",
+      "sha256": "a8830ea052a389b4d010cb8d9cdc0dbc72bec183ed638d7606d6ca195f1e53b9"
+    },
+    "packages/core/src/openship-config/parse.test.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/packages/core/src/openship-config/parse.test.ts",
+      "sha256": "9173184da7c4849b3dbe5a49ad9ca890f799606daddeab8b5a75eb4745966146"
+    },
+    "packages/core/src/openship-config/parse.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/packages/core/src/openship-config/parse.ts",
+      "sha256": "e56afac4917516f496476653fc71a0b65d42c4435bc87cf58daf064ccb182c62"
+    },
+    "packages/core/src/openship-config/schema.ts": {
+      "url": "https://github.com/oblien/openship/blob/541ba903fdcd8959054b1fb8805749632a1dafe9/packages/core/src/openship-config/schema.ts",
+      "sha256": "1728161dd2746677218036c96d45663c0cab185d82552be21e280032ab15dbc7"
+    }
+  }
+}

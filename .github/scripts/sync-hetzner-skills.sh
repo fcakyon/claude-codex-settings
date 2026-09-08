@@ -15,7 +15,7 @@ mkdir -p "$REPO_ROOT/$DST/references"
 
 # Copy getting-started docs from tutorials/guides/reference
 mkdir -p "$REPO_ROOT/$DST/references/getting-started"
-cp "$SRC/docs/tutorials/setup-hcloud-cli.md" "$REPO_ROOT/$DST/references/getting-started/setup.md"
+sed 's/[[:blank:]]*$//' "$SRC/docs/tutorials/setup-hcloud-cli.md" > "$REPO_ROOT/$DST/references/getting-started/setup.md"
 cp "$SRC/docs/tutorials/create-a-server.md" "$REPO_ROOT/$DST/references/getting-started/create-a-server.md"
 cp "$SRC/docs/guides/using-output-options.md" "$REPO_ROOT/$DST/references/getting-started/output-options.md"
 cp "$SRC/docs/reference/configuration.md" "$REPO_ROOT/$DST/references/getting-started/configuration.md"

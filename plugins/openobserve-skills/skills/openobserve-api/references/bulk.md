@@ -32,26 +32,61 @@ Create record
 { "index" : { "_index" : "stream1" } } 
 ```
 
-We only support `create` action.
+We support `create`, `index`, and `update` actions. `delete` is not supported.
 
 The `_index` is stream name what you want to use.
 
 ## Response
 
+The response follows the same shape as the Elasticsearch `_bulk` API, not the simplified `code`/`status` shape shown in older versions of this page:
+
 ```json
 {
-	"code": 200,
-	"status": [
-		{
-			"name": "stream1",
-			"successful": 2,
-			"failed": 0
-		}
-	]
+  "took": 0,
+  "errors": false,
+  "items": [
+    {
+      "index": {
+        "_index": "stream1",
+        "_id": "5uhtM5kBRQHIfnE6L6mm",
+        "_version": 1,
+        "result": "created",
+        "_shards": { "total": 1, "successful": 1, "failed": 0 },
+        "_seq_no": 1,
+        "_primary_term": 1,
+        "status": 200
+      }
+    }
+  ]
 }
 ```
 
-Returns successful and failed count for each stream.
+`items` has one entry per submitted record, each keyed by the action it was submitted with (`index`, `create`, or `update`). `errors` is `true` if any item failed. `took` is always `0` — OpenObserve does not currently populate it with elapsed time.
+
+`_version`, `_shards`, `_seq_no`, and `_primary_term` are fixed placeholder values kept for Elasticsearch API compatibility; they don't carry real per-record metadata.
+
+A failed item has `status` >= 400 and carries `error` and `originalRecord` instead of `result`/`_shards`/`_seq_no`/`_primary_term`:
+
+```json
+{
+  "index": {
+    "_index": "stream1",
+    "_id": "5uhtM5kBRQHIfnE6L6mm",
+    "status": 422,
+    "error": {
+      "type": "Too old data, only last 5 hours data can be ingested. Data discarded.",
+      "reason": "Too old data, only last 5 hours data can be ingested. Data discarded.",
+      "index_uuid": "1",
+      "shard": "1",
+      "index": "stream1"
+    },
+    "originalRecord": {
+      "kubernetes.container_name": "prometheus",
+      "log": "..."
+    }
+  }
+}
+```
 
 ## Restriction on number of fields/columns per record
 > Applicable to cloud version

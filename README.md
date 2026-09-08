@@ -987,6 +987,37 @@ SEO workflows from [vercel-labs/marketing-team-eve-template](https://github.com/
 
 ---
 
+<details>
+<summary><strong>openship-skills</strong> - Deploy self-hosted OpenShip apps with the CLI and openship.json</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install openship-skills@claude-settings` | `codex plugin add openship-skills@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/openship-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/openship-skills --skill '*'
+```
+
+Deploy applications to your own OpenShip instance with guidance drawn from its official documentation and source code.
+
+- Use native CLI commands first, with API calls for missing functionality.
+- Design small `openship.json` files for builds, services, domains, and storage.
+- Verify the active deployment and public URL after deployment.
+- Keep server upgrades, backups, and restoration separate from application deploys.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| --- | --- | --- |
+| [`openship-deploy`](./plugins/openship-skills/skills/openship-deploy/SKILL.md) | Deploy and operate self-hosted OpenShip through the CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openship-deploy.zip) |
+| [`openship-config`](./plugins/openship-skills/skills/openship-config/SKILL.md) | Design and validate openship.json | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openship-config.zip) |
+
+References are tied to one upstream release. The two skills work together and can also be downloaded separately.
+
+</details>
+
 ## Configuration
 
 <details>
