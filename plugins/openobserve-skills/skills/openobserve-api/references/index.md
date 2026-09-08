@@ -41,6 +41,7 @@ Make sure that you are sending the requests over HTTPS.
     1. [Delete](user/delete.md)
     1. [List](user/list.md)
 1. [Metrics](metrics.md)
+1. [Cluster](https://openobserve.ai/docs/reference/api/cluster/cluster-info/)
 
 ## Next steps
 

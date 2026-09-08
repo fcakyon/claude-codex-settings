@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.7.1"
+    "version": "2.8.0"
   },
   "plugins": [
     {
@@ -157,7 +157,7 @@
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Browser automation CLI for AI agents to navigate pages, fill forms, and test apps.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "Apache-2.0",
       "keywords": ["browser", "automation", "testing", "web", "screenshots", "e2e"],
       "category": "web-testing",
@@ -167,7 +167,7 @@
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Design distinctive frontends and write clear interface copy.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "license": "Apache-2.0",
       "keywords": ["frontend", "design", "ui", "landing-page", "web-design", "writing", "interface-copy"],
       "category": "frontend",
@@ -189,7 +189,7 @@
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
       "description": "Supabase Postgres, JavaScript SDK, and CLI skills for migrations and local dev.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
@@ -201,7 +201,7 @@
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe skills for checkout, billing, Connect, and API upgrades.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "license": "MIT",
       "keywords": ["stripe", "payments", "billing", "subscriptions", "connect"],
       "category": "payment",
@@ -231,7 +231,7 @@
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
       "description": "Official Cloudflare skill for Workers, R2, D1, KV, AI, and 50+ services.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "Apache-2.0",
       "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
       "category": "deployment",
@@ -241,7 +241,7 @@
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance audits with Core Web Vitals and Chrome DevTools.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0",
       "keywords": ["web-performance", "core-web-vitals", "lighthouse", "chrome-devtools", "accessibility"],
       "category": "web-testing",
@@ -251,7 +251,7 @@
       "name": "openobserve-skills",
       "source": "./plugins/openobserve-skills",
       "description": "Search logs, metrics, and traces and build OpenObserve dashboards via curl.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0",
       "keywords": ["openobserve", "observability", "logs", "metrics", "traces", "dashboards", "otlp", "telemetry"],
       "category": "observability",
@@ -261,7 +261,7 @@
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "MIT",
       "keywords": ["hetzner", "hcloud", "server", "cloud", "deploy", "dns", "firewall"],
       "category": "deployment",
@@ -271,7 +271,7 @@
       "name": "dokploy-skills",
       "source": "./plugins/dokploy-skills",
       "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "MIT",
       "keywords": ["dokploy", "deploy", "cloud", "docker", "compose", "dashboard", "paas"],
       "category": "deployment",
@@ -502,6 +502,16 @@
       "keywords": ["seo", "audit", "structured-data", "schema", "site-architecture", "organic-search"],
       "category": "search",
       "tags": ["seo", "search", "site-audit"]
+    },
+    {
+      "name": "openship-skills",
+      "description": "Deploy self-hosted OpenShip apps with the CLI and openship.json.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "source": "./plugins/openship-skills",
+      "keywords": ["deployment", "self-hosted", "cli", "docker"],
+      "category": "deployment",
+      "tags": ["deployment", "self-hosted"]
     }
   ]
 }

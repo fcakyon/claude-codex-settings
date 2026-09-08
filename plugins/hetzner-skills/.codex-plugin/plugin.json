@@ -1,6 +1,6 @@
 {
   "name": "hetzner-skills",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage.",
   "license": "MIT"
 }

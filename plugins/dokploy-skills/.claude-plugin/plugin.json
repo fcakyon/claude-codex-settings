@@ -1,6 +1,6 @@
 {
   "name": "dokploy-skills",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
   "license": "MIT"
 }

@@ -31,6 +31,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy application create` - application create
 - `dokploy application delete` - application delete
 - `dokploy application deploy` - application deploy
+- `dokploy application deploy-nginx-quickstart` - application deployNginxQuickstart
 - `dokploy application disconnect-git-provider` - application disconnectGitProvider
 - `dokploy application drop-deployment` - application dropDeployment
 - `dokploy application kill-build` - application killBuild
@@ -402,6 +403,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy network one` - network one
 - `dokploy network recreate` - network recreate
 - `dokploy network remove` - network remove
+- `dokploy network resync` - network resync
 
 ## notification
 
@@ -519,9 +521,11 @@ Generated from `Dokploy/cli` source files.
 
 - `dokploy project all` - project all
 - `dokploy project all-for-permissions` - project allForPermissions
+- `dokploy project complete-onboarding` - project completeOnboarding
 - `dokploy project create` - project create
 - `dokploy project duplicate` - project duplicate
 - `dokploy project home-stats` - project homeStats
+- `dokploy project onboarding-status` - project onboardingStatus
 - `dokploy project one` - project one
 - `dokploy project remove` - project remove
 - `dokploy project search` - project search
@@ -600,6 +604,7 @@ Generated from `Dokploy/cli` source files.
 - `dokploy server get-default-command` - server getDefaultCommand
 - `dokploy server get-server-metrics` - server getServerMetrics
 - `dokploy server get-server-time` - server getServerTime
+- `dokploy server get-services` - server getServices
 - `dokploy server one` - server one
 - `dokploy server public-ip` - server publicIp
 - `dokploy server remove` - server remove
@@ -695,9 +700,11 @@ Generated from `Dokploy/cli` source files.
 - `dokploy stripe can-create-more-servers` - stripe canCreateMoreServers
 - `dokploy stripe create-checkout-session` - stripe createCheckoutSession
 - `dokploy stripe create-customer-portal-session` - stripe createCustomerPortalSession
+- `dokploy stripe get-billing-status` - stripe getBillingStatus
 - `dokploy stripe get-current-plan` - stripe getCurrentPlan
 - `dokploy stripe get-invoices` - stripe getInvoices
 - `dokploy stripe get-products` - stripe getProducts
+- `dokploy stripe start-free-trial` - stripe startFreeTrial
 - `dokploy stripe update-invoice-notifications` - stripe updateInvoiceNotifications
 - `dokploy stripe upgrade-subscription` - stripe upgradeSubscription
 

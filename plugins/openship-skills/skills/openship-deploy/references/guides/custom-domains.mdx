@@ -1,0 +1,313 @@
+---
+title: Custom domains, DNS & SSL
+description: Put your app on your own address like app.example.com, with automatic HTTPS — add the domain, point your DNS, verify, done.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+When you first deploy, Openship gives your app a working web address for free. This guide is about the next
+step: putting it on a name **you** own, like `app.example.com`, with the little padlock (HTTPS) turned on
+automatically.
+
+Here's the idea in plain terms. A **domain** is the name people type to reach your app. **DNS** is the
+internet's phone book — it's how a name like `app.example.com` gets connected to the actual computer running
+your app. **SSL** (that padlock) is what makes the address start with `https://` and keeps traffic private.
+Openship handles the padlock for you; your only real job is adding a couple of entries to your domain's phone
+book. This guide walks you through all of it.
+
+<Callout title="What you need first">
+- A project already deployed in Openship (see [Your first deployment](https://openship.io/docs/getting-started/first-deployment)).
+- A domain you own, bought from a **registrar** (Namecheap, Cloudflare, GoDaddy, Google Domains, etc.).
+- Access to that registrar's **DNS settings** — the page where you add records. That's where you'll paste
+  the two lines Openship gives you.
+</Callout>
+
+## The click-by-click way
+
+<Steps>
+
+<Step>
+
+### Open your project's Domains tab
+
+Go to your project and open the **Domains** tab. This is home base for everything about addresses and HTTPS.
+
+<Callout title="Screenshot">Project page, the **Domains** tab selected, showing the current access URL and an **Add domain** button. *(screenshot pending)*</Callout>
+
+</Step>
+
+<Step>
+
+### Add your domain
+
+Press **Add domain**. In the form that opens, choose **Custom domain**, then type the full address you want,
+like `app.example.com`.
+
+If your project runs a server, you'll also see a **Maps to port** field — this is which internal port the
+domain sends traffic to. Openship pre-fills it with your app's port, so you can usually leave it.
+
+There are two optional toggles:
+
+- **Include www** — also claim the `www.` version of your domain. It becomes a domain in its own right: it
+  gets its own DNS record, its own **Verify**, and its own certificate, and by default it sends visitors on to
+  the bare domain with a `301` redirect (see [Redirect one domain to another](#redirect-one-domain-to-another)
+  if you'd rather have it the other way round, or have both serve the app).
+- **External ingress & TLS** — turn this on **only** if your own edge (like a Cloudflare Tunnel or a load
+  balancer) already handles HTTPS. Most people leave it off. See [DNS setup, three ways](#dns-setup-three-ways)
+  below.
+
+<Callout title="www needs its own DNS record" type="warn">
+Because `www.example.com` is a separate domain, it needs a separate DNS record — Openship lists it alongside
+the bare domain's in the next step. Skip it and `www` will stay Pending: it can't be verified, so it never gets
+a certificate.
+</Callout>
+
+When the form is filled in, press the **Add domain** button at the bottom of the form to save it. (Yes,
+it's the same label as the button you just clicked — the first one opens the form, this one saves it.)
+
+<Callout title="Adding a domain doesn't put it live yet" type="info">
+Saving the domain just registers your intent. It stays **Pending** until you add the DNS records and verify —
+that's the next two steps.
+</Callout>
+
+<Callout title="Screenshot">The Add domain form: **Custom domain** selected, the domain-name field filled in, the "Maps to port" field, and the Include-www / External-ingress toggles. *(screenshot pending)*</Callout>
+
+</Step>
+
+<Step>
+
+### Copy the DNS records Openship shows you
+
+Right after you add the domain, a **DNS Records** panel appears with the exact entries to create at your
+registrar. Each row has a **Type**, a **Host**, and a **Value**, and a **Copy** button next to it.
+
+There are usually two records:
+
+- A **routing record** (an `A` or `CNAME` — Openship picks the right one for you, see below) that points the
+  name at your app.
+- A **TXT** record with host `_openship-challenge`. This is a secret code that proves you own the domain.
+  Nobody else can add it, so it's how Openship knows the domain is really yours.
+
+Copy each value exactly as shown — don't retype it, use the Copy button.
+
+<Callout title="Screenshot">The DNS Records panel with the routing record and the `_openship-challenge` TXT record, each with a Copy button. *(screenshot pending)*</Callout>
+
+</Step>
+
+<Step>
+
+### Paste them into your registrar
+
+Open your domain registrar in another tab and find its **DNS** or **DNS records** page. Add each record from
+Openship — matching the Type, Host, and Value. Save.
+
+<Callout title="What does “Host” mean at my registrar?" type="info">
+Registrars phrase it differently — you might see "Host", "Name", or "@". Paste the host exactly as Openship
+shows it. If your registrar rejects `@`, it usually means "the root of the domain"; and a host like
+`_openship-challenge` is added as a subdomain entry. When in doubt, copy Openship's value verbatim.
+</Callout>
+
+</Step>
+
+<Step>
+
+### Verify
+
+Back in Openship, click **Verify** next to the domain (it reads **Verify app.example.com**). Openship looks up
+your DNS and checks two things: the routing record points the right way, and the `_openship-challenge` TXT
+matches its secret code.
+
+If both check out, the domain flips to **Verified** and Openship starts setting up HTTPS in the background —
+you don't do anything for that part.
+
+<Callout title="DNS is not instant" type="info">
+After you save records at your registrar, they can take a few minutes — occasionally up to 48 hours — to
+spread across the internet. If Verify doesn't work on the first try, wait a bit and click it again. Openship
+also re-checks pending domains on its own in the background.
+</Callout>
+
+</Step>
+
+<Step>
+
+### Watch HTTPS turn on
+
+Once verified, the **SSL** status shows **Provisioning** while Openship requests a free certificate from
+Let's Encrypt (a trusted certificate authority). When it lands, the status becomes **Active** and your app is
+reachable at `https://app.example.com` with the padlock. Certificates also renew automatically before they
+expire, so this is a one-time setup.
+
+<Callout title="Screenshot">A verified custom domain row showing **Verified** status and **SSL: Active**, with a **Visit** action. *(screenshot pending)*</Callout>
+
+</Step>
+
+</Steps>
+
+## DNS setup, three ways
+
+Openship figures out which records you need based on where your project runs. You don't choose the first two —
+they're picked for you. The records panel tells you which one applies.
+
+<Tabs items={['Self-hosted (A record)', 'Openship Cloud (CNAME)', 'External edge (TXT only)']}>
+
+<Tab value="Self-hosted (A record)">
+
+Your project runs on your own server, so the domain points straight at that machine's public IP address.
+
+| Type | Host | Value |
+|---|---|---|
+| `A` | `@` | your server's public IP |
+| `TXT` | `_openship-challenge` | a long verification string |
+
+Openship checks that the `A` record resolves to your server and that the TXT matches, then issues the HTTPS
+certificate for you.
+
+</Tab>
+
+<Tab value="Openship Cloud (CNAME)">
+
+Your project runs on Openship Cloud, so the domain points at a Cloud address using a `CNAME` (a "this name is
+an alias for that name" record).
+
+| Type | Host | Value |
+|---|---|---|
+| `CNAME` | `@` | an Openship Cloud target |
+| `TXT` | `_openship-challenge` | a long verification string |
+
+Openship confirms the `CNAME` and the TXT, then handles HTTPS for you.
+
+</Tab>
+
+<Tab value="External edge (TXT only)">
+
+For advanced setups where **your own edge already terminates HTTPS** — a Cloudflare Tunnel, a load balancer, or
+another reverse proxy in front of Openship. Turn on **External ingress & TLS** when adding the domain.
+
+| Type | Host | Value |
+|---|---|---|
+| `TXT` | `_openship-challenge` | a long verification string |
+
+Here Openship only checks the TXT record to confirm you own the name. It does **not** require the domain to
+point at it and does **not** issue a certificate — your edge is doing that job. The SSL status will read
+**External TLS**.
+
+</Tab>
+
+</Tabs>
+
+## Redirect one domain to another
+
+Any domain on a project can send its visitors to another domain on the same project instead of serving the
+app. Openship answers a `301` (or `302`, if you pick it) and keeps the rest of the URL, so
+`https://www.example.com/pricing?ref=x` lands on `https://example.com/pricing?ref=x`.
+
+Open your project's **Domains** tab, press **Edit**, and set **Redirect** on the domain you want to send
+*away*. Pick the destination from the list — it only offers this project's own domains — and choose whether
+it's permanent (`301`) or temporary (`302`). Choose **Serve the app here** to turn a redirect off again.
+
+The two common uses:
+
+- **Pick a canonical hostname.** `www.example.com` → `example.com`, or the reverse. This is what **Include www**
+  sets up for you (pointing `www` at the bare domain), and you can flip it either way. Without a redirect both
+  hostnames serve the same app, which search engines treat as duplicate content.
+- **Move to a new domain.** Keep the old one verified and redirect it to the new one, so existing links and
+  bookmarks keep working.
+
+<Callout title="A redirecting domain still needs DNS, verification and a certificate" type="info">
+It has to answer `https://` before it can redirect anyone, so it goes through the same setup as any other
+domain. That's also why it keeps showing its own **Status** and **SSL** rows.
+</Callout>
+
+Two things Openship won't let you do, because both break the site rather than the setting: redirecting to a
+domain outside the project (that would turn a domain you own into an open redirect for someone else's traffic),
+and creating a loop — `A` → `B` → `A` would bounce every request until the browser gave up.
+
+Redirects are rendered into your server's own edge configuration, so they're a self-hosted feature. On Openship
+Cloud the managed edge owns routing; point the extra hostname at the same app instead.
+
+## Bring your own certificate
+
+For setups where your upstream needs the **origin** to present a real certificate too — most commonly
+**Cloudflare Full (strict)** — upload your own instead of using Let's Encrypt.
+
+1. On a verified domain, open its menu and choose **Upload certificate**.
+2. Paste the **certificate** (full chain, PEM) and the matching **private key** (PEM). A free
+   [Cloudflare Origin CA](https://developers.cloudflare.com/ssl/origin-configuration/origin-ca/) certificate
+   (15-year) is a great fit here.
+3. Openship serves HTTPS from that certificate and stops running Let's Encrypt for this domain.
+
+<Callout title="Uploaded certificates don't auto-renew" type="info">
+There's nothing for Openship to renew, so it watches the expiry and reminds you — upload a fresh certificate
+before it lapses.
+</Callout>
+
+## Prefer the terminal?
+
+Every step above has a CLI equivalent. The `add` command prints the DNS records and the domain's ID; use that
+ID to verify.
+
+```bash
+# See exactly which records a domain will need (nothing is saved)
+openship domain preview app.example.com
+
+# Add the domain to a project (prints the records + the domain ID)
+openship domain add app.example.com --project <projectId>
+
+# Once your DNS is in place, verify it
+openship domain verify <domainId>
+
+# List a project's domains and their status
+openship domain list --project <projectId>
+```
+
+<Callout title="Other domain commands" type="info">
+`openship domain records <domainId>` reprints the records for an existing domain, `openship domain primary
+<domainId>` makes a domain the project's main address, and `openship domain renew <domainId>` /
+`openship domain verify-ssl <domainId>` manage the certificate. Full details are in the
+[Domains API reference](https://openship.io/docs/api/domains).
+</Callout>
+
+## If something goes wrong
+
+<Callout title="Verify keeps failing" type="warn">
+Openship tells you which of the two checks is still missing. If the **routing record** (`A`/`CNAME`) is the
+problem, it hasn't resolved to your app yet. If the **TXT** is the problem, the `_openship-challenge` record is
+missing or its value doesn't match. Open the DNS Records panel again, compare each record against your
+registrar character-for-character (copy/paste, don't retype), fix any mismatch, then click Verify again.
+</Callout>
+
+<Callout title="DNS is not propagating" type="error">
+This is the most common hold-up and it's usually just time. DNS changes can take minutes, and occasionally up
+to 48 hours, to spread worldwide. Save the records, then wait and retry Verify — Openship also re-checks
+pending domains automatically in the background. A frequent cause of "never propagates": a typo in the host,
+or leaving an old conflicting record in place. Delete any stale record for the same name before adding the new
+one.
+</Callout>
+
+<Callout title="Verified, but SSL is stuck on “Provisioning”" type="warn">
+The certificate is still being issued, or a request to Let's Encrypt hasn't completed. Give it a minute, then
+open the domain's **⋯** menu and click **Recheck SSL** — a quick, no-cost check that flips the status to
+**Active** once the certificate is actually in place. If it never provisions, use **Renew SSL** to try again;
+the error message will name the real reason.
+</Callout>
+
+<Callout title="The bare domain works but www doesn't (or the other way round)" type="warn">
+They're two separate domains, so they're set up separately. Check the **Domains** tab: whichever one is still
+**Pending** is missing its DNS record. Openship listed both records when you added the domain — open the failing
+domain's DNS panel again, add the one it's asking for, then press its own **Verify**. A working apex tells you
+nothing about `www`; each has its own record, verification and certificate.
+</Callout>
+
+<Callout title="Verify failed and you want the actual reason" type="info">
+On a self-hosted install, Verify streams the certificate request live and the log stays on screen whatever the
+outcome — that log names the real cause (DNS not resolving, port 80 unreachable, a proxy answering `404`). Use
+**Copy log** if you want to keep it, and **Try again** to re-run without closing the window.
+</Callout>
+
+## What next?
+
+<Cards>
+  <Card title="Domains API reference" href="https://openship.io/docs/api/domains" description="Every domain endpoint — add, preview, verify, primary, and SSL — with request shapes." />
+  <Card title="Deploy from GitHub" href="https://openship.io/docs/guides/deploy-from-github" description="The full flow for getting a repo online, if you haven't yet." />
+  <Card title="Environment variables" href="https://openship.io/docs/guides/environment-variables" description="Give your app its secrets and settings, safely." />
+</Cards>

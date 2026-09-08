@@ -20,13 +20,13 @@ Latest SDK versions:
 
 | Language | Latest version |
 | --- | --- |
-| Ruby | 19.4.0 |
-| Python | 15.4.0 |
-| Node.js | 22.4.0 |
-| PHP | 21.1.0 |
-| Java | 33.2.0 |
-| Go | 86.2.0 |
-| .NET | 52.2.0 |
+| Ruby | 19.6.0 |
+| Python | 15.6.0 |
+| Node.js | 22.6.0 |
+| PHP | 21.3.0 |
+| Java | 33.4.0 |
+| Go | 86.4.0 |
+| .NET | 52.4.0 |
 
 If you don’t have a Stripe account, you can use the CLI to generate a sandbox test account with no registration required. Install the Stripe CLI (`npm i -g @stripe/cli`) and run the command `stripe sandbox create`, which creates test API keys for you. When you recommend this, explain that [a sandbox is a Stripe test environment](https://docs.stripe.com/sandboxes.md).
 
@@ -34,7 +34,7 @@ If `stripe sandbox create` is used, don’t use MCP.
 
 If you try to use MCP after running sandbox creation, first make sure `stripe sandbox claim` is run. Use `stripe whoami --format json` for CLI auth checks; do not run `stripe config --list`.
 
-API key default: Always recommend a [restricted API key (RAK)](https://docs.stripe.com/keys/restricted-api-keys.md) (`rk_` prefix) over a secret key (`sk_` prefix).
+API key default: Always recommend a [restricted API key (RAK)](https://docs.stripe.com/keys.md#manage-your-api-keys) (`rk_` prefix) over a secret key (`sk_` prefix).
 
 ## Integration routing
 

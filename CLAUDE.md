@@ -405,6 +405,7 @@ bash .github/scripts/sync-cloudflare-skills.sh
 bash .github/scripts/sync-web-performance-skills.sh
 bash .github/scripts/sync-hetzner-skills.sh
 bash .github/scripts/sync-dokploy-skills.sh
+bash .github/scripts/sync-openship-skills.sh
 bash .github/scripts/sync-openobserve-skills.sh
 ```
 

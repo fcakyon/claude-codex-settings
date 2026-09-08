@@ -1,0 +1,201 @@
+---
+title: Deploying
+description: Ship a project, manage its deployments, and follow the logs — the full deploy loop from the terminal.
+---
+
+The deploy loop is three commands: `openship deploy` ships the current project, `openship deployment`
+inspects and manages the deployments it produces, and `openship logs` streams what happened. Everything
+here runs against the project [linked in `.openship/project.json`](https://openship.io/docs/cli/access) unless you pass an
+explicit `--project`.
+
+<Callout title="Global --json">
+  Any command accepts the top-level `--json` flag (`openship --json deploy …`) to print
+  machine-readable data on stdout instead of the human table/spinner output. Set it before the
+  subcommand.
+</Callout>
+
+## `openship deploy`
+
+Triggers a deployment for the current project. The path is auto-selected by your working directory:
+
+- **Inside a git repo** — builds the linked project from its git source.
+- **Outside a git repo** — packages the current folder and uploads it (the same folder-deploy pipeline the
+  dashboard uses; see [Deploy a local folder](https://openship.io/docs/guides/deploy-local-folder)).
+
+Passing any git-only flag (`--commit`, `--service-ids`, `--smart-route`, `--refresh`) forces the git path.
+
+```bash
+# Ship the linked project on the current branch
+openship deploy
+
+# Ship and watch the build to completion
+openship deploy --watch
+
+# Deploy a specific project to the preview environment
+openship deploy --project proj_123 --env preview
+
+# Deploy to a registered SSH server and follow the server-backed build
+openship deploy --project proj_123 --server srv_123 --watch
+```
+
+| Flag                  | Purpose                                                                                |
+| --------------------- | -------------------------------------------------------------------------------------- |
+| `--project <id>`      | Project ID. Defaults to the linked project in `.openship/project.json`.                |
+| `--branch <name>`     | Git branch to deploy. Defaults to the current branch.                                  |
+| `--commit <sha>`      | Specific commit SHA. Defaults to the latest commit on the branch.                      |
+| `--env <environment>` | Target environment: `production` or `preview`. Defaults to `production`.               |
+| `--force-all`         | Rebuild every enabled service (skip smart per-service routing).                        |
+| `--service-ids <ids>` | Comma-separated service IDs to deploy (smart routing).                                 |
+| `--smart-route`       | Rebuild only services changed since the active deploy.                                 |
+| `--refresh`           | Re-apply current env to the active deploy — no git pull, no rebuild.                   |
+| `--name <name>`       | Project name for a folder (non-git) deploy. Defaults to the directory name.            |
+| `--server <id>`       | Target a registered server (`openship server list`); works for Git and folder deploys. |
+| `--watch`             | Stream the deployment logs until it finishes.                                          |
+
+The API verifies `--server` belongs to the active organization before any
+workload is created. A successful deployment stores the target as the project's
+durable binding; a failed attempt leaves the prior binding unchanged.
+
+<Callout title="Not watching? Follow it later" type="info">
+Without `--watch`, the command queues the build and prints its deployment ID plus the exact
+`openship logs <id> --follow` line to attach to it.
+</Callout>
+
+## `openship deployment`
+
+Manage existing deployments. Aliased as `openship deployments`. Every subcommand takes a deployment ID
+(except `list`, which is scoped to a project or the whole org).
+
+| Subcommand            | Purpose                                                       |
+| --------------------- | ------------------------------------------------------------- |
+| `list`                | List deployments, org-wide or scoped to a project.            |
+| `get <id>`            | Show a single deployment.                                     |
+| `info <id>`           | Show container info for a deployment.                         |
+| `usage <id>`          | Show container resource usage for a deployment.               |
+| `redeploy <id>`       | Redeploy from an existing deployment.                         |
+| `rollback <id>`       | Roll back to a previous deployment.                           |
+| `pin <id>`            | Pin (or unpin) a deployment's rollback artifact.              |
+| `cancel <id>`         | Cancel an in-progress deployment.                             |
+| `restart <id>`        | Restart a deployment's container.                             |
+| `keep <id>`           | Keep a finished deployment awaiting a keep/reject decision.   |
+| `reject <id>`         | Reject a finished deployment awaiting a keep/reject decision. |
+| `rm <id>`             | Delete a deployment.                                          |
+| `ssl status <domain>` | Check SSL certificate status for a domain.                    |
+| `ssl renew <domain>`  | Renew (issue) an SSL certificate for a domain.                |
+
+### list
+
+```bash
+openship deployment list
+openship deployment list --project proj_123 --env production --limit 20
+```
+
+| Flag                  | Purpose                                             |
+| --------------------- | --------------------------------------------------- |
+| `--project <id>`      | Scope to a project. Defaults to the linked project. |
+| `--env <environment>` | Filter by environment: `production` or `preview`.   |
+| `--limit <n>`         | Max rows to fetch (default `50`, capped at 100).    |
+
+The table columns are `id`, `status`, `env`, `branch`, `commit`, `active` (a `*` marks the live deploy),
+and `created`.
+
+### redeploy
+
+```bash
+openship deployment redeploy dep_123 --use-existing-commit
+```
+
+| Flag                    | Purpose                                                      |
+| ----------------------- | ------------------------------------------------------------ |
+| `--use-existing-commit` | Rebuild the same commit instead of the latest on the branch. |
+
+### pin
+
+```bash
+openship deployment pin dep_123        # pin
+openship deployment pin dep_123 --off  # unpin
+```
+
+| Flag    | Purpose               |
+| ------- | --------------------- |
+| `--off` | Unpin instead of pin. |
+
+### rm
+
+```bash
+openship deployment rm dep_123 --yes
+```
+
+| Flag          | Purpose                       |
+| ------------- | ----------------------------- |
+| `-y`, `--yes` | Skip the confirmation prompt. |
+
+<Callout title="Keep / reject" type="info">
+  Some deployments finish in a state that waits for your call — for example a partial compose
+  deploy. Use `keep` to accept it or `reject` to roll it back. See [Rollback &
+  redeploy](https://openship.io/docs/guides/rollback-redeploy) for when this happens.
+</Callout>
+
+### ssl
+
+SSL certificate operations, keyed by domain rather than deployment ID.
+
+```bash
+openship deployment ssl status app.example.com
+openship deployment ssl renew app.example.com --www
+```
+
+| Command               | Flag    | Purpose                                                          |
+| --------------------- | ------- | ---------------------------------------------------------------- |
+| `ssl status <domain>` | —       | Check SSL certificate status for a domain.                       |
+| `ssl renew <domain>`  | `--www` | Renew (issue) the certificate; also include the `www` subdomain. |
+
+For attaching and verifying domains themselves, see [Custom domains](https://openship.io/docs/guides/custom-domains) and the
+[Domains API](https://openship.io/docs/api/domains).
+
+## `openship logs`
+
+View or stream a deployment's logs. The deployment ID is optional — leave it out and the CLI resolves the
+latest deployment of the linked project.
+
+```bash
+# Latest deployment of the linked project
+openship logs
+
+# Print the last 100 lines and exit
+openship logs dep_123 --tail 100
+
+# Stream live until the deployment finishes
+openship logs dep_123 --follow
+```
+
+| Flag             | Purpose                                         |
+| ---------------- | ----------------------------------------------- |
+| `-f`, `--follow` | Stream live logs until the deployment finishes. |
+| `--tail <n>`     | Show only the last N log lines (snapshot mode). |
+
+<Callout title="Follow vs tail">
+  `--follow` opens a live stream and blocks until the build ends; `--tail` fetches a one-shot
+  snapshot and returns. Without either flag you get the full snapshot. For runtime (post-build) logs
+  and monitoring, see [Logs & monitoring](https://openship.io/docs/guides/logs-monitoring).
+</Callout>
+
+## What next?
+
+<Cards>
+  <Card
+    title="Deploy from GitHub"
+    href="https://openship.io/docs/guides/deploy-from-github"
+    description="Link a repo and ship it — click-by-click and one-command."
+  />
+  <Card
+    title="Rollback & redeploy"
+    href="https://openship.io/docs/guides/rollback-redeploy"
+    description="Pin artifacts, roll back, and handle keep/reject decisions."
+  />
+  <Card
+    title="Logs & monitoring"
+    href="https://openship.io/docs/guides/logs-monitoring"
+    description="Follow builds and watch a running app."
+  />
+</Cards>
