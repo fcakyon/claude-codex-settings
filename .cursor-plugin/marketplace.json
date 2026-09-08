@@ -131,8 +131,8 @@
     {
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
-      "description": "Official Cloudflare skill for Workers, R2, D1, KV, AI, and 50+ services.",
-      "version": "1.0.2",
+      "description": "Choose Cloudflare services and load specialist guidance when needed.",
+      "version": "1.1.0",
       "license": "Apache-2.0"
     },
     {
