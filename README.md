@@ -517,7 +517,7 @@ Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports
 </details>
 
 <details>
-<summary><strong>cloudflare-skills</strong> - Official Cloudflare skill for Workers, R2, D1, KV, AI, and 50+ services</summary>
+<summary><strong>cloudflare-skills</strong> - Choose Cloudflare services and load specialist guidance when needed</summary>
 
 | Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
@@ -529,13 +529,30 @@ Voice AI agent development with the LiveKit Agents SDK. Cloud-agnostic: supports
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/cloudflare-skills --skill '*'
 ```
 
-Cloudflare developer platform skill with decision trees for product selection across Workers, Durable Objects, R2, D1, KV, Workers AI, and 50+ services. From [cloudflare/skills](https://github.com/cloudflare/skills).
+Choose the Cloudflare services your project needs, then load the relevant specialist skill. From [cloudflare/skills](https://github.com/cloudflare/skills).
+
+- Includes Workers, Wrangler, Durable Objects, Agents SDK, Sandbox, and Turnstile guidance.
+- Covers Next.js deployment, email, Zero Trust, migrations, and web performance.
+- Keeps detailed references inside each skill so they are read only when needed.
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
 | Skill                                                                                | Description                                                     | ZIP                                                                                                                                                                       |
 | ------------------------------------------------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`cloudflare-deploy`](./plugins/cloudflare-skills/skills/cloudflare-deploy/SKILL.md) | Cloudflare platform: compute, storage, AI, networking, security | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/cloudflare-deploy.zip) |
+| [`agents-sdk`](./plugins/cloudflare-skills/skills/agents-sdk/SKILL.md) | Build applications with the Agents SDK | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/agents-sdk.zip) |
+| [`cloudflare-email-service`](./plugins/cloudflare-skills/skills/cloudflare-email-service/SKILL.md) | Configure email sending and routing | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/cloudflare-email-service.zip) |
+| [`cloudflare-one`](./plugins/cloudflare-skills/skills/cloudflare-one/SKILL.md) | Configure Zero Trust and SASE | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/cloudflare-one.zip) |
+| [`cloudflare-one-migrations`](./plugins/cloudflare-skills/skills/cloudflare-one-migrations/SKILL.md) | Plan migrations to Cloudflare One | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/cloudflare-one-migrations.zip) |
+| [`durable-objects`](./plugins/cloudflare-skills/skills/durable-objects/SKILL.md) | Build persistent state and coordination | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/durable-objects.zip) |
+| [`nextjs-on-cloudflare`](./plugins/cloudflare-skills/skills/nextjs-on-cloudflare/SKILL.md) | Deploy Next.js with vinext | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/nextjs-on-cloudflare.zip) |
+| [`sandbox-migrate-to-next`](./plugins/cloudflare-skills/skills/sandbox-migrate-to-next/SKILL.md) | Migrate Sandbox stable to preview | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/sandbox-migrate-to-next.zip) |
+| [`sandbox-next`](./plugins/cloudflare-skills/skills/sandbox-next/SKILL.md) | Build with the Sandbox preview SDK | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/sandbox-next.zip) |
+| [`sandbox-stable`](./plugins/cloudflare-skills/skills/sandbox-stable/SKILL.md) | Maintain stable Sandbox applications | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/sandbox-stable.zip) |
+| [`turnstile-spin`](./plugins/cloudflare-skills/skills/turnstile-spin/SKILL.md) | Set up and verify Turnstile | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/turnstile-spin.zip) |
+| [`web-perf`](./plugins/cloudflare-skills/skills/web-perf/SKILL.md) | Audit loading and interaction performance | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/web-perf.zip) |
+| [`workers-best-practices`](./plugins/cloudflare-skills/skills/workers-best-practices/SKILL.md) | Write and review production Workers | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/workers-best-practices.zip) |
+| [`wrangler`](./plugins/cloudflare-skills/skills/wrangler/SKILL.md) | Configure and operate the Wrangler CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/wrangler.zip) |
 
 </details>
 
