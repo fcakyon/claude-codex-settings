@@ -2,6 +2,7 @@
 """Test humanize extraction and source locations."""
 
 import json
+import shlex
 import subprocess
 import tempfile
 import unittest
@@ -11,11 +12,11 @@ HOOK = Path(__file__).parents[2] / "plugins/humanize/hooks/scripts/humanize.py"
 SEMICOLON = chr(59)
 
 
-def run_hook(tool, tool_input):
+def run_hook(tool, tool_input, cwd="."):
     """Run humanize with one tool payload."""
     output = subprocess.run(
         ["python3", HOOK],
-        input=json.dumps({"tool_name": tool, "tool_input": tool_input}),
+        input=json.dumps({"tool_name": tool, "tool_input": tool_input, "cwd": cwd}),
         capture_output=True,
         check=True,
         text=True,
@@ -158,6 +159,66 @@ class HumanizeTest(unittest.TestCase):
         self.assertEqual(run_hook("Bash", {"command": "gh pr review 106 -c"}), "")
         self.assertEqual(run_hook("Bash", {"command": "gh pr close 106 && gh pr review 106 -c"}), "")
         self.assertEqual(run_hook("exec_command", {"cmd": "git status --short"}), "")
+
+    def test_checks_review_json_files(self):
+        """Check nested review bodies from JSON files in both shell tools."""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "review payload.json"
+            path.write_text(json.dumps({"comments": [{"body": f"First{SEMICOLON} second"}]}))
+            for tool, field in (("Bash", "command"), ("exec_command", "cmd")):
+                for flag in (
+                    f"--input {shlex.quote(path.name)}",
+                    f"--input={shlex.quote(path.name)}",
+                ):
+                    reason = run_hook(
+                        tool,
+                        {field: f"gh api repos/o/r/pulls/1/reviews {flag}"},
+                        directory,
+                    )
+                    self.assertIn(f"{path} (body):1:6", reason)
+            path.write_text(
+                json.dumps(
+                    {
+                        "query": f"query{SEMICOLON}",
+                        "variables": {"body": "Use `run();` here"},
+                    }
+                )
+            )
+            self.assertEqual(run_hook("Bash", {"command": f"gh api graphql --input '{path}'"}), "")
+            path.write_text(json.dumps({"variables": {"body": f"First{SEMICOLON} second"}}))
+            self.assertIn(
+                "semicolon",
+                run_hook("Bash", {"command": f"gh api graphql --input '{path}'"}),
+            )
+
+    def test_checks_github_body_files(self):
+        """Read body files while keeping raw field values literal."""
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "body.txt"
+            path.write_text(f"First{SEMICOLON} second")
+            for args in (
+                f"pr create --body-file '{path}'",
+                f"pr review 1 --body-file='{path}'",
+                f"api repos/o/r/pulls/comments/1 -F body=@'{path}'",
+                f"api graphql --field=body=@'{path}'",
+            ):
+                self.assertIn(f"{path}:1:6", run_hook("exec_command", {"cmd": f"gh {args}"}))
+            self.assertEqual(run_hook("Bash", {"command": f"gh api graphql -f body=@'{path}'"}), "")
+            path.write_text("Use `run();` here")
+            self.assertEqual(run_hook("Bash", {"command": f"gh pr create --body-file '{path}'"}), "")
+        for command in (
+            "gh api graphql --input -",
+            "gh pr create --body-file -",
+            "gh api graphql -F body=@-",
+        ):
+            self.assertEqual(run_hook("Bash", {"command": command}), "")
+
+    def test_reads_files_only_for_github_commands(self):
+        """Leave other commands' input files alone."""
+        for separator in (" && ", "|", SEMICOLON, "\n"):
+            self.assertEqual(
+                run_hook("Bash", {"command": f"gh pr list{separator}converter --input missing.json"}), ""
+            )
 
     def test_allows_formatted_code_references(self):
         """Allow semicolons in formatted code references."""
