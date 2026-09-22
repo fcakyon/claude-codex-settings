@@ -2,6 +2,7 @@
 """Block AI buzzwords before a write, shell, or tool call lands, so text reads human.
 
 Scans markdown whole, code files only in comments and docstrings, shell only in commit and PR text
+including GitHub JSON inputs and body files resolved from the hook working directory
 plus heredoc bodies that cat or tee writes to a file, patches only in added lines, and MCP calls
 only in message fields. Always blocks a few marks and stock words with a plain swap, and flags
 common words only when they pile up. En-dash is allowed.
@@ -246,7 +247,7 @@ def heredoc_writes(command):
     return out
 
 
-def bash_text(command):
+def bash_text(command, cwd="."):
     """Return labeled commit, PR, and comment messages from a shell command."""
     git_commit = re.search(r"\bgit\b[^|&]*\bcommit\b", command)
     gh = re.search(r"\bgh\b", command)
@@ -263,29 +264,48 @@ def bash_text(command):
     if gh:
         flags |= {"-b": body_source, "--body": body_source, "-t": "PR title", "--title": "PR title"}
     try:
-        tokens = shlex.split(stripped, comments=False)
+        lexer = shlex.shlex(stripped, posix=True, punctuation_chars=";&|\n")
+        lexer.whitespace_split = True
+        lexer.whitespace = " \t\r"
+        lexer.commenters = ""
+        tokens = list(lexer)
     except ValueError:
         tokens = stripped.split()
     close_comment = False
+    gh_command = False
+    command_start = True
     for i, tok in enumerate(tokens):
-        if tok in {"&&", "||", ";", "|", "&"}:
+        if tok and all(char in ";&|\n" for char in tok):
             close_comment = False
+            command_start = True
             continue
+        if command_start:
+            gh_command = tok == "gh"
+            command_start = False
         if tokens[i : i + 3] in (["gh", "pr", "close"], ["gh", "issue", "close"]):
             close_comment = True
         key, sep, val = tok.partition("=")
-        if tok in flags and i + 1 < len(tokens):
-            parts.append((flags[tok], tokens[i + 1]))
-        elif sep and key in flags:
-            parts.append((flags[key], val))
-        elif close_comment and tok in {"-c", "--comment"} and i + 1 < len(tokens):
-            parts.append(("GitHub comment", tokens[i + 1]))
-        elif close_comment and sep and key in {"-c", "--comment"}:
-            parts.append(("GitHub comment", val))
-        elif gh and tok in FIELD_FLAGS and i + 1 < len(tokens):
-            field, _, value = tokens[i + 1].partition("=")
-            if field in {"body", "title"} and not value.startswith("@"):
-                parts.append((body_source if field == "body" else "PR title", value))
+        value = val if sep else tokens[i + 1] if i + 1 < len(tokens) else ""
+        if gh_command and key in {"--input", "--body-file"} and value != "-":
+            path = Path(cwd) / value
+            content = path.read_text()
+            if key == "--input":
+                parts.extend((f"{path} ({field})", text) for field, text in mcp_text(json.loads(content)))
+            else:
+                parts.append((str(path), content))
+        elif key in flags:
+            parts.append((flags[key], value))
+        elif close_comment and key in {"-c", "--comment"}:
+            parts.append(("GitHub comment", value))
+        elif gh_command and key in FIELD_FLAGS:
+            field, _, text = value.partition("=")
+            if field in {"body", "title"}:
+                if key in {"-F", "--field"} and text.startswith("@"):
+                    if text != "@-":
+                        path = Path(cwd) / text[1:]
+                        parts.append((str(path), path.read_text()))
+                else:
+                    parts.append((body_source if field == "body" else "PR title", text))
     return parts
 
 
@@ -359,7 +379,7 @@ def mcp_text(obj):
             yield from mcp_text(value)
 
 
-def extract(tool, tool_input):
+def extract(tool, tool_input, cwd="."):
     """Return source-preserving regions for a tool call."""
     command = tool_input.get("command", tool_input.get("cmd", ""))
     if isinstance(command, list):  # Codex sends the shell tool an argv array, Claude Code a string
@@ -373,7 +393,7 @@ def extract(tool, tool_input):
             regions.append(Region(f"{server.replace('_', ' ').title()} {kind}", md_text(text)))
         return regions
     if tool in {"Bash", "exec_command"}:
-        return [Region(source, md_text(text)) for source, text in bash_text(command)] + heredoc_writes(command)
+        return [Region(source, md_text(text)) for source, text in bash_text(command, cwd)] + heredoc_writes(command)
     if tool == "apply_patch":
         return patch_regions(command)
     path = tool_input.get("file_path", "")
@@ -443,7 +463,7 @@ def format_findings(findings, piles):
 
 
 data = json.load(sys.stdin)
-findings, piles = detect(extract(data.get("tool_name", ""), data.get("tool_input") or {}))
+findings, piles = detect(extract(data.get("tool_name", ""), data.get("tool_input") or {}, data.get("cwd", ".")))
 
 if findings or piles:
     print(
