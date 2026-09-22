@@ -5,7 +5,7 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
     "DISABLE_BUG_COMMAND": "1",
     "DISABLE_ERROR_REPORTING": "1",
-    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-5",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-5-5",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-sonnet-5",
     "MAX_MCP_OUTPUT_TOKENS": "40000",
@@ -227,7 +227,7 @@
   "ultracode": false,
   "enableWorkflows": true,
   "outputStyle": "Concise",
-  "model": "fable",
+  "model": "opus",
   "advisorModel": "fable",
   "autoScrollEnabled": false,
   "statusLine": {

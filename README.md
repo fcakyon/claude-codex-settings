@@ -1042,7 +1042,7 @@ References are tied to one upstream release. The two skills work together and ca
 
 Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-- **Model**: Fable 5.1 with medium effort
+- **Model**: Opus 5.5 with medium effort
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
