@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 // Sends a review request to the Codex CLI and prints only the reviewer's answer.
 // The question arrives on standard input. --transcript <file> prepends the recent conversation.
-// Set CODEX_ADVISOR_MODEL to review with a model other than the pinned default.
 
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
@@ -10,7 +9,7 @@ const args = process.argv.slice(2);
 const transcriptIndex = args.indexOf("--transcript");
 const question = readFileSync(0, "utf8").trim();
 if (!question)
-  throw new Error("ask_codex: pass the review request on standard input");
+  throw new Error("ask_astra: pass the review request on standard input");
 
 const clip = (s, n) => (s.length > n ? s.slice(0, n) + " …[truncated]" : s);
 const renderBlock = (role, b) => {
@@ -93,7 +92,7 @@ const result = spawnSync(
     "exec",
     // Pinned so the verdict does not drift with whatever ~/.codex/config.toml happens to set.
     "--model",
-    process.env.CODEX_ADVISOR_MODEL ?? "gpt-5.6-sol",
+    "gpt-6-astra",
     "-c",
     'model_reasoning_effort="medium"',
     "--sandbox",

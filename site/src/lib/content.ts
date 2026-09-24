@@ -131,7 +131,7 @@ const codexPlugins = new Set(
 const cursorPlugins = new Set(
   (JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
 );
-export const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
+export const featured = ["simplify", "humanize", "astra-advisor", "fable-advisor", "adhd-output-style"];
 const componentNames = (directory: string, folder: string, skill = false) => {
   const path = resolve(directory, folder);
   if (!existsSync(path)) return [];

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// SubagentStart hook: forwards the transcript path and command to the codex-advisor relay.
+// SubagentStart hook: forwards the transcript path and command to the astra-advisor relay.
 // Node-only, exits 0 on any failure.
 
 import { accessSync, constants, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const script = fileURLToPath(
-  new URL("../../skills/codex-advisor/scripts/ask_codex.mjs", import.meta.url),
+  new URL("../../skills/astra-advisor/scripts/ask_astra.mjs", import.meta.url),
 );
 const quote = (value) => `'${value.replaceAll("'", "'\\''")}'`;
 const run = (transcript) =>

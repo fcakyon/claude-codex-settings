@@ -1,0 +1,11 @@
+{
+  "name": "astra-advisor",
+  "version": "1.2.0",
+  "description": "Get a second opinion from GPT-6 Astra via Codex CLI before big decisions.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "agents": "./claude-agents/astra-advisor.md",
+  "hooks": "./claude-hooks/hooks.json",
+  "license": "Apache-2.0"
+}

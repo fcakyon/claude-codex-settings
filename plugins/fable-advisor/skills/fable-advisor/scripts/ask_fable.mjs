@@ -11,7 +11,7 @@ const result = spawnSync(
   [
     "-p",
     "--model",
-    "fable",
+    "claude-fable-5-1",
     "--effort",
     "high",
     "--tools",

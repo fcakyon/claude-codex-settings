@@ -104,3 +104,6 @@ enabled = true
 
 [plugins."fable-advisor@claude-settings"]
 enabled = true
+
+[plugins."astra-advisor@claude-settings"]
+enabled = true
