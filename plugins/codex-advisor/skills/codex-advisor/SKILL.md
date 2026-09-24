@@ -1,22 +1,22 @@
 ---
-name: astra-advisor
-description: This skill should be used when the user asks for a "GPT second opinion", wants a "cross-model review", needs to "check a plan before committing", wants another view after repeated failures, or explicitly invokes "astra-advisor".
+name: codex-advisor
+description: This skill should be used when the user asks for a "GPT second opinion", wants a "cross-model review", needs to "check a plan before committing", wants another view after repeated failures, or explicitly invokes "codex-advisor".
 ---
 
-# Astra Advisor
+# Codex Advisor
 
 Get a focused second opinion from GPT-6 Astra through the Codex CLI, without handing the
 work over to it.
 
 ## Route by tool
 
-1. In Claude Code, delegate to the native `astra-advisor` agent. It receives the
+1. In Claude Code, delegate to the native `codex-advisor` agent. It receives the
    recent conversation automatically, so do not paste the history yourself.
 2. Elsewhere, run this exact shape from this skill's directory so the request
    reaches standard input:
 
    ```
-   node scripts/ask_astra.mjs <<'REVIEW'
+   node scripts/ask_codex.mjs <<'REVIEW'
    the review request
    REVIEW
    ```

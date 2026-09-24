@@ -19,7 +19,7 @@ Ask yourself: "What can I delete instead of add, and does this trace to what was
 ## Working Rules
 
 - Reflect on tool results, run independent operations in parallel, and verify before finishing.
-- Before committing to an approach, and after two failed attempts at the same problem, get a second opinion with `/astra-advisor` or `/fable-advisor` if either is installed.
+- Before committing to an approach, and after two failed attempts at the same problem, get a second opinion with `/codex-advisor` or `/fable-advisor` if either is installed.
 - Prefer editing existing files, and check related code for consistency. Never create docs (*.md, README) unless asked.
 - Prefer `rg` over `grep`.
 - Use the `writing-guidelines` skill to review documentation or interface copy, and the `humanize` skill to remove generic or machine-written phrasing.

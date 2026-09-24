@@ -160,21 +160,21 @@ Ask a Fable 5.1 reviewer to challenge a plan or conclusion before you commit. Cl
 </details>
 
 <details>
-<summary><strong>astra-advisor</strong> - Get a second opinion from GPT-6 Astra via Codex CLI before big decisions</summary>
+<summary><strong>codex-advisor</strong> - Get a second opinion from GPT-6 Astra via Codex CLI before big decisions</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install astra-advisor@claude-settings` | `codex plugin add astra-advisor@claude-settings` | `gemini extensions install --path ./plugins/astra-advisor` |
+| `claude plugin install codex-advisor@claude-settings` | `codex plugin add codex-advisor@claude-settings` | `gemini extensions install --path ./plugins/codex-advisor` |
 
-Ask GPT-6 Astra to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the astra advisor" is enough. Codex, Cursor, and Gemini reach the same reviewer. Needs the Codex CLI signed in.
+Ask GPT-6 Astra to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the codex advisor" is enough. Codex, Cursor, and Gemini reach the same reviewer. Needs the Codex CLI signed in.
 
 **Agents:**
 
-- [`astra-advisor`](./plugins/astra-advisor/claude-agents/astra-advisor.md) - Sends the recent conversation to GPT-6 Astra and returns the verdict verbatim
+- [`codex-advisor`](./plugins/codex-advisor/claude-agents/codex-advisor.md) - Sends the recent conversation to GPT-6 Astra and returns the verdict verbatim
 
 **Skills:**
 
-- [`astra-advisor`](./plugins/astra-advisor/skills/astra-advisor/SKILL.md) - Routes Claude Code to its native agent and other tools to `codex exec`
+- [`codex-advisor`](./plugins/codex-advisor/skills/codex-advisor/SKILL.md) - Routes Claude Code to its native agent and other tools to `codex exec`
 
 </details>
 
@@ -1046,8 +1046,8 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
-- **Advisor**: the built-in [advisor tool](https://code.claude.com/docs/en/advisor) uses Fable 5.1. For a review outside the Claude family, use [`astra-advisor`](./plugins/astra-advisor)
-- **Plugins**: `astra-advisor` is enabled in both Claude Code and Codex. Claude Code also enables `intelligent-compact`. Standalone `fable-advisor` stays enabled only in Codex
+- **Advisor**: the built-in [advisor tool](https://code.claude.com/docs/en/advisor) uses Fable 5.1. For a review outside the Claude family, use [`codex-advisor`](./plugins/codex-advisor)
+- **Plugins**: `codex-advisor` is enabled in both Claude Code and Codex. Claude Code also enables `intelligent-compact`. Standalone `fable-advisor` stays enabled only in Codex
 
 </details>
 

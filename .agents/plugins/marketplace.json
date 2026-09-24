@@ -41,10 +41,10 @@
       "category": "developer-tools"
     },
     {
-      "name": "astra-advisor",
+      "name": "codex-advisor",
       "source": {
         "source": "local",
-        "path": "./plugins/astra-advisor"
+        "path": "./plugins/codex-advisor"
       },
       "policy": {
         "installation": "AVAILABLE",

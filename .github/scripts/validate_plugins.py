@@ -549,7 +549,7 @@ def validate_advisor_context_handoff() -> list[str]:
         env = {**os.environ, "TMPDIR": temp_dir, "TMP": temp_dir, "TEMP": temp_dir}
 
         scripts = {
-            "codex": REPO_ROOT / "plugins/astra-advisor/claude-hooks/scripts/forward_transcript.mjs",
+            "codex": REPO_ROOT / "plugins/codex-advisor/claude-hooks/scripts/forward_transcript.mjs",
             "fable": REPO_ROOT / "plugins/fable-advisor/claude-hooks/scripts/inject_transcript.mjs",
         }
         outputs = {}
@@ -568,8 +568,8 @@ def validate_advisor_context_handoff() -> list[str]:
             quoted_transcript = str(transcript).replace("'", "'\\''")
             if f"--transcript '{quoted_transcript}'" not in context:
                 errors.append(
-                    "plugins/astra-advisor/claude-hooks/scripts/forward_transcript.mjs must pass the original "
-                    "transcript path to ask_astra.mjs with shell-safe quoting"
+                    "plugins/codex-advisor/claude-hooks/scripts/forward_transcript.mjs must pass the original "
+                    "transcript path to ask_codex.mjs with shell-safe quoting"
                 )
         if "fable" in outputs:
             context = json.loads(outputs["fable"])["hookSpecificOutput"]["additionalContext"]
@@ -583,14 +583,14 @@ def validate_advisor_context_handoff() -> list[str]:
                     "plugins/fable-advisor/claude-hooks/scripts/inject_transcript.mjs output must stay below "
                     "50,000 characters so Claude Code injects it directly instead of saving a preview"
                 )
-        for prefix in ("astra-advisor-", "fable-advisor-"):
+        for prefix in ("codex-advisor-", "fable-advisor-"):
             if any(temp_root.glob(f"{prefix}*")):
                 errors.append(
                     f"{prefix.removesuffix('-')} context handoff must not leave {prefix}* directories. "
                     "Use the original transcript or bounded additionalContext"
                 )
 
-    for name in ("astra-advisor", "fable-advisor"):
+    for name in ("codex-advisor", "fable-advisor"):
         skill = (REPO_ROOT / f"plugins/{name}/skills/{name}/SKILL.md").read_text()
         script = f"ask_{name.removesuffix('-advisor')}.mjs"
         if f"node scripts/{script} <<'REVIEW'" not in skill:

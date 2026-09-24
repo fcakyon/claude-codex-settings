@@ -24,8 +24,8 @@
       "license": "Apache-2.0"
     },
     {
-      "name": "astra-advisor",
-      "source": "./plugins/astra-advisor",
+      "name": "codex-advisor",
+      "source": "./plugins/codex-advisor",
       "description": "Get a second opinion from GPT-6 Astra via Codex CLI before big decisions.",
       "version": "1.2.0",
       "license": "Apache-2.0"

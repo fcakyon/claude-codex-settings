@@ -1,9 +1,9 @@
 {
-  "description": "Stages the real conversation for the astra-advisor reviewer instead of only the caller's prompt",
+  "description": "Stages the real conversation for the codex-advisor reviewer instead of only the caller's prompt",
   "hooks": {
     "SubagentStart": [
       {
-        "matcher": "^(astra-advisor:)?astra-advisor$",
+        "matcher": "^(codex-advisor:)?codex-advisor$",
         "hooks": [
           {
             "type": "command",

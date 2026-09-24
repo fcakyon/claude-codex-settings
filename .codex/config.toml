@@ -105,5 +105,5 @@ enabled = true
 [plugins."fable-advisor@claude-settings"]
 enabled = true
 
-[plugins."astra-advisor@claude-settings"]
+[plugins."codex-advisor@claude-settings"]
 enabled = true

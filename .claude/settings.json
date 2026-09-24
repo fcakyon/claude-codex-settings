@@ -247,7 +247,7 @@
     "seo-skills@claude-settings": true,
     "github-dev@claude-settings": true,
     "ultralytics-dev@claude-settings": true,
-    "astra-advisor@claude-settings": true
+    "codex-advisor@claude-settings": true
   },
   "extraKnownMarketplaces": {
     "claude-settings": {

@@ -9,7 +9,7 @@ const args = process.argv.slice(2);
 const transcriptIndex = args.indexOf("--transcript");
 const question = readFileSync(0, "utf8").trim();
 if (!question)
-  throw new Error("ask_astra: pass the review request on standard input");
+  throw new Error("ask_codex: pass the review request on standard input");
 
 const clip = (s, n) => (s.length > n ? s.slice(0, n) + " …[truncated]" : s);
 const renderBlock = (role, b) => {
