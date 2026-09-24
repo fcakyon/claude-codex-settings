@@ -782,7 +782,7 @@ Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formattin
 
 | Skill                                                                                    | Description                                                  | ZIP                                                                                                                                                                          |
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`ultralytics-platform`](./plugins/ultralytics-dev/skills/ultralytics-platform/SKILL.md) | Platform API: model upload, datasets, search, cloud training | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-platform.zip) |
+| [`ultralytics-platform`](./plugins/ultralytics-dev/skills/ultralytics-platform/SKILL.md) | Platform API: uploads, training, hosted inference, Moondream and AI annotation | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ultralytics-platform.zip) |
 | [`yolo-training`](./plugins/ultralytics-dev/skills/yolo-training/SKILL.md)               | YOLO26 training diagnosis: read the curves, pick the knob    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/yolo-training.zip)        |
 
 **Hooks:**
