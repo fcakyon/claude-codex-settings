@@ -5,7 +5,7 @@ description: This skill should be used when the user asks for a "GPT second opin
 
 # Codex Advisor
 
-Get a focused second opinion from GPT through the Codex CLI, without handing the
+Get a focused second opinion from GPT-6 Astra through the Codex CLI, without handing the
 work over to it.
 
 ## Route by tool
@@ -31,8 +31,7 @@ place.
 
 ## Reviewer
 
-Pinned to `gpt-5.6-sol` at medium reasoning effort. Inside Codex that may be the
-model already doing the work, so set `CODEX_ADVISOR_MODEL` to a different one.
+Pinned to `gpt-6-astra` at medium reasoning effort.
 
 ## Weighing the answer
 

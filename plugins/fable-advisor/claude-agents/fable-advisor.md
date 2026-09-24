@@ -1,8 +1,8 @@
 ---
 name: fable-advisor
 description: |-
-  Second-opinion reviewer backed by Fable 5, a stand-in for the built-in advisor when the Fable-5 advisor is unavailable (see anthropics/claude-code#73365). Consult it before committing to an approach, when an error keeps recurring, or before declaring a task done. State the specific decision to challenge plus any evidence not in the conversation. It receives the recent conversation automatically and verifies claims with read-only access, then returns a verdict.
-model: fable
+  Second-opinion reviewer backed by Fable 5.1, a stand-in for the built-in advisor when the Fable-5.1 advisor is unavailable (see anthropics/claude-code#73365). Consult it before committing to an approach, when an error keeps recurring, or before declaring a task done. State the specific decision to challenge plus any evidence not in the conversation. It receives the recent conversation automatically and verifies claims with read-only access, then returns a verdict.
+model: claude-fable-5-1
 color: purple
 tools: [Read, Grep, Glob]
 ---
