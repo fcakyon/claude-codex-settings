@@ -5,7 +5,7 @@ description: This skill should be used when the user asks for a "Fable second op
 
 # Fable Advisor
 
-Get a focused second opinion from Claude Fable 5 without substituting the host
+Get a focused second opinion from Claude Fable 5.1 without substituting the host
 tool's model.
 
 ## Route by tool

@@ -141,13 +141,13 @@ Runs on Claude Code and Gemini. Unlike a markdown rule the model can ignore, the
 </details>
 
 <details>
-<summary><strong>fable-advisor</strong> - Get a second opinion from Claude Fable 5 before big decisions</summary>
+<summary><strong>fable-advisor</strong> - Get a second opinion from Claude Fable 5.1 before big decisions</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
 | `claude plugin install fable-advisor@claude-settings` | `codex plugin add fable-advisor@claude-settings` | `gemini extensions install --path ./plugins/fable-advisor` |
 
-Ask a Fable 5 reviewer to challenge a plan or conclusion before you commit. Claude Code now supports Fable through its built-in advisor, while Codex, Cursor, and Gemini call the same model through an authenticated Claude Code CLI with `claude -p --model fable`.
+Ask a Fable 5.1 reviewer to challenge a plan or conclusion before you commit. Claude Code uses the native plugin agent, while Codex, Cursor, and Gemini call the same model through an authenticated Claude Code CLI with `claude -p --model claude-fable-5-1`.
 
 **Agents:**
 
@@ -160,17 +160,17 @@ Ask a Fable 5 reviewer to challenge a plan or conclusion before you commit. Clau
 </details>
 
 <details>
-<summary><strong>codex-advisor</strong> - Get a second opinion from GPT via Codex CLI before big decisions</summary>
+<summary><strong>codex-advisor</strong> - Get a second opinion from GPT-6 Astra via Codex CLI before big decisions</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
 | `claude plugin install codex-advisor@claude-settings` | `codex plugin add codex-advisor@claude-settings` | `gemini extensions install --path ./plugins/codex-advisor` |
 
-Ask GPT to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the codex advisor" is enough. Codex, Cursor, and Gemini reach the same reviewer. Needs the Codex CLI signed in.
+Ask GPT-6 Astra to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the codex advisor" is enough. Codex, Cursor, and Gemini reach the same reviewer. Needs the Codex CLI signed in.
 
 **Agents:**
 
-- [`codex-advisor`](./plugins/codex-advisor/claude-agents/codex-advisor.md) - Sends the recent conversation to GPT and returns the verdict verbatim
+- [`codex-advisor`](./plugins/codex-advisor/claude-agents/codex-advisor.md) - Sends the recent conversation to GPT-6 Astra and returns the verdict verbatim
 
 **Skills:**
 
@@ -1047,7 +1047,7 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
 - **Advisor**: the built-in [advisor tool](https://code.claude.com/docs/en/advisor) uses Fable 5.1. For a review outside the Claude family, use [`codex-advisor`](./plugins/codex-advisor)
-- **Plugins**: Codex defaults plus `intelligent-compact` and `codex-advisor`. Standalone `fable-advisor` stays enabled only in Codex
+- **Plugins**: `codex-advisor` is enabled in both Claude Code and Codex. Claude Code also enables `intelligent-compact`. Standalone `fable-advisor` stays enabled only in Codex
 
 </details>
 

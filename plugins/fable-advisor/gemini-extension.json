@@ -1,5 +1,5 @@
 {
   "name": "fable-advisor",
-  "version": "1.4.1",
-  "description": "Get a second opinion from Claude Fable 5 before big decisions."
+  "version": "1.4.2",
+  "description": "Get a second opinion from Claude Fable 5.1 before big decisions."
 }

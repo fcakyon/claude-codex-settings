@@ -1,7 +1,7 @@
 {
   "name": "codex-advisor",
-  "version": "1.1.2",
-  "description": "Get a second opinion from GPT via Codex CLI before big decisions.",
+  "version": "1.2.0",
+  "description": "Get a second opinion from GPT-6 Astra via Codex CLI before big decisions.",
   "author": {
     "name": "Fatih C. Akyon"
   },
