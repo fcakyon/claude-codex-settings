@@ -411,6 +411,18 @@
         "authentication": "ON_INSTALL"
       },
       "category": "deployment"
+    },
+    {
+      "name": "test-audit",
+      "source": {
+        "source": "local",
+        "path": "./plugins/test-audit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "developer-tools"
     }
   ]
 }
