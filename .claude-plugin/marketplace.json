@@ -512,6 +512,16 @@
       "keywords": ["deployment", "self-hosted", "cli", "docker"],
       "category": "deployment",
       "tags": ["deployment", "self-hosted"]
+    },
+    {
+      "name": "test-audit",
+      "source": "./plugins/test-audit",
+      "description": "Keep only tests that catch real bugs, and prune ones that just restate the code.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["testing", "test-quality", "code-review", "refactoring"],
+      "category": "developer-tools",
+      "tags": ["testing", "code-quality"]
     }
   ]
 }

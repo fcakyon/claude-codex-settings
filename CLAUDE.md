@@ -407,6 +407,7 @@ bash .github/scripts/sync-hetzner-skills.sh
 bash .github/scripts/sync-dokploy-skills.sh
 bash .github/scripts/sync-openship-skills.sh
 bash .github/scripts/sync-openobserve-skills.sh
+bash .github/scripts/sync-openclaw-skills.sh
 ```
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.

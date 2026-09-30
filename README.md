@@ -1035,6 +1035,34 @@ References are tied to one upstream release. The two skills work together and ca
 
 </details>
 
+<details>
+<summary><strong>test-audit</strong> - Keep only tests that catch real bugs, and prune ones that just restate the code</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install test-audit@claude-settings` | `codex plugin add test-audit@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/test-audit` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/test-audit --skill '*'
+```
+
+The test review playbook from [openclaw/openclaw](https://github.com/openclaw/openclaw), adapted to work in any repository.
+
+- Before a new test lands, it must name the bug it catches and why existing tests miss it.
+- Finds tests that copy source, mock the behavior they assert, or repeat a stronger test.
+- Deletes test-only exports and dead code once their last test is gone.
+- A campaign mode prunes a whole subsystem's tests with a per-test ledger and a final review for lost coverage.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| --- | --- | --- |
+| [`test-audit`](./plugins/test-audit/skills/test-audit/SKILL.md) | Gate new tests and prune low-value or duplicate ones | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/test-audit.zip) |
+
+</details>
+
 ## Configuration
 
 <details>
