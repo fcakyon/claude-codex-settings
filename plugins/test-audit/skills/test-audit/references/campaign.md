@@ -2,7 +2,7 @@
 
 Campaign mode prunes one subsystem's whole test surface in one PR: a plugin
 such as `extensions/telegram`, or one core area. The value bar, retention bar,
-candidate evidence, and validation in [SKILL.md](SKILL.md) apply to every
+candidate evidence, and validation in [SKILL.md](../SKILL.md) apply to every
 lane. This file adds the order of work and the lessons of a full campaign.
 Each step ends on its completion criterion; do not start the next step early.
 
@@ -108,7 +108,7 @@ Expect review tooling to see a truncated file list on a diff this large.
 Record maintainer decisions for generic compatibility flags in the PR evidence
 rather than editing gates.
 
-Hand off with the [SKILL.md](SKILL.md) report, plus:
+Hand off with the [SKILL.md](../SKILL.md) report, plus:
 
 - baseline and final test/support line counts, with production counted separately;
 - lanes, retired layers, and keepers;

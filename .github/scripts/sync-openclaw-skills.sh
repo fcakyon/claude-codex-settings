@@ -11,16 +11,23 @@ TARGET=plugins/test-audit/skills/test-audit
 STAGING="$(mktemp -d)"
 trap 'rm -rf "$STAGING"' EXIT
 
-for file in .agents/skills/test-audit/SKILL.md .agents/skills/test-audit/CAMPAIGN.md LICENSE; do
-  gh api "repos/$UPSTREAM/contents/$file?ref=$SHA" --jq .content | base64 -d > "$STAGING/$(basename "$file")"
-done
+fetch() { gh api "repos/$UPSTREAM/contents/$1?ref=$SHA" --jq .content | base64 -d > "$STAGING/$2"; }
+mkdir "$STAGING/references"
+fetch .agents/skills/test-audit/SKILL.md SKILL.md
+fetch .agents/skills/test-audit/CAMPAIGN.md references/campaign.md
+fetch LICENSE LICENSE
 
-python3 - "$STAGING/SKILL.md" <<'PY'
+python3 - "$STAGING" <<'PY'
 import re
 import sys
 from pathlib import Path
 
-path = Path(sys.argv[1])
+staging = Path(sys.argv[1])
+campaign = staging / "references/campaign.md"
+if campaign.read_text().count("](SKILL.md)") != 2:
+    raise SystemExit("Upstream changed, SKILL.md links in CAMPAIGN.md")
+campaign.write_text(campaign.read_text().replace("](SKILL.md)", "](../SKILL.md)"))
+path = staging / "SKILL.md"
 text = path.read_text()
 replacements = {
     r'^description: .*$': 'description: This skill should be used when the user asks to "write a test", "review these tests", "audit tests", "prune low-value tests", or "find duplicate tests", and whenever writing, changing, reviewing, or sweeping tests. Gates new tests and audits low-value, implementation-coupled, or duplicative tests and the test-only production seams they demand.',
@@ -32,6 +39,7 @@ replacements = {
     r'4\. Classify with\n   `node scripts/check-changed\.mjs --dry-run -- <changed-paths>`, then run the\n   actual changed gate required by repository policy\.':
         '4. Run the changed-file or CI gate required by repository policy.',
     r'6\. After final audit edits, run mandatory `\$autoreview`\.': '6. After final audit edits, run a code review of the full diff.',
+    r'read \[CAMPAIGN\.md\]\(CAMPAIGN\.md\)': 'read [references/campaign.md](references/campaign.md)',
     r' Use\n`\$openclaw-pr-maintainer` and the repository `scripts/pr` flow\.': '',
 }
 for pattern, replacement in replacements.items():
@@ -43,6 +51,6 @@ if leftover := re.findall(r"\$openclaw|\$crabbox|\$autoreview|scripts/\S+\.mjs|V
 path.write_text(text)
 PY
 
-sync_dir "$STAGING" "$TARGET" SKILL.md CAMPAIGN.md LICENSE
+sync_dir "$STAGING" "$TARGET" SKILL.md references/ LICENSE
 create_zip "$TARGET"
 echo "Done syncing test-audit from $UPSTREAM@$SHA."

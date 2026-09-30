@@ -11,7 +11,7 @@ duplicate stronger proof, couple behavior to implementation, or keep test-only
 production seams alive. Continue broad audits as separate coherent follow-up
 PRs; optimize for confidence, not deletion count. Campaign mode prunes one
 whole subsystem's test surface (every test file a plugin or core area owns);
-before starting one, read [CAMPAIGN.md](CAMPAIGN.md).
+before starting one, read [references/campaign.md](references/campaign.md).
 
 ## Authoring gate
 
