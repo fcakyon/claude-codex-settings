@@ -1,6 +1,6 @@
 {
   "name": "openship-skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deploy self-hosted OpenShip apps with the CLI and openship.json.",
   "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
   "repository": "https://github.com/fcakyon/claude-codex-settings",

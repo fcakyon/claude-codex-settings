@@ -31,11 +31,6 @@ Go to your project and open the **Configuration** tab. Find the **Environment va
 **Edit**. A panel opens showing the variables you already have (empty is fine — a brand-new app often has
 none).
 
-<Callout title="Screenshot">
-  Project → **Configuration** tab, the "Environment variables" card with its **Edit** button.
-  *(screenshot pending)*
-</Callout>
-
 </Step>
 
 <Step>
@@ -57,11 +52,22 @@ Some values are sensitive — passwords, API keys, tokens. For each of those, pr
 row to **mark it as secret**. A secret's value is stored the same way, but from then on it shows as dots
 (`••••••••`) instead of plain text, so it stays hidden whenever you reopen the editor.
 
-<Callout title="Everything is encrypted at rest" type="info">
+<Callout title="Environment values are encrypted at rest" type="info">
   Whether or not you mark a variable secret, Openship **encrypts every value before saving it**.
   Marking a value secret adds the on-screen masking on top — it controls what *you* can see later,
   not whether it's protected on disk.
 </Callout>
+
+Inline service environment values and build arguments are also encrypted, including their copies in
+saved deployment snapshots and Compose drift baselines. Existing plaintext service configuration is
+converted when the API or native engine starts after upgrading. Keep your `BETTER_AUTH_SECRET` with
+your database backup: it is needed to read these values. To downgrade to a version from before this
+protection, restore its matching database backup as well.
+
+When moving to an installation with a different key, use **Settings → Data Transfer** with secrets
+included. It re-encrypts the configuration for the destination. Transfers or recovery manifests that
+omit secrets also omit inline environment, build arguments and protected service configuration; set
+those values again before deploying.
 
 </Step>
 
@@ -129,6 +135,40 @@ file is only used after you choose **Import .env**.
   flow rather than committing it to `openship.json` or baking it into the image.
 </Callout>
 
+## Service overrides and credential rotation
+
+Open **Services → select a service → Environment** to see its effective saved
+variables. The list includes Compose values, shared project variables and explicit
+service overrides, with a source label on each row. Openship stores these values;
+the list remains available when the deployment server is offline.
+
+Editing an inherited value creates an override for that service. Saving changes
+only the rows you edited; it does not copy the other inherited values into
+overrides. Removing an override restores the inherited value, if one exists.
+Remove inherited keys at their Compose or project source. Conflicting edits from
+another session are rejected before anything is saved.
+
+On a normal service deployment, the highest-priority value wins in this order:
+
+1. A service-scoped variable from its environment editor.
+2. A literal in that service's Compose `environment` or `openship.json` `env` map.
+3. The project's environment, captured when the deployment starts.
+
+Compose expressions such as `TOKEN: ${TOKEN}` resolve against the configured values;
+they do not pin a previous scan's value. A rollback instead replays its captured
+project values, including their precedence over present-day service overrides.
+
+`openship project env set` warns when a changed or deleted key still has a service
+override. The API and SDK return the same `warnings` array, and deployment logs name
+keys whose service values win. These messages contain names only. Saving the project
+value succeeds, but it cannot replace a service-owned credential. Update the service
+value, or remove its override to inherit the project value, then deploy. Deleting a
+project variable does not delete a service's copy.
+
+For example, if `web` pins `TOKEN=old`, setting the project's `TOKEN=new` will warn
+about `web`; a rebuild alone still uses the pinned value. In the service editor,
+remove that override before relying on the project's rotated token.
+
 ## Reveal, hide, and replace a secret
 
 Inside the editor, each value has an **eye icon** to show or hide it. A secret you saved earlier comes back
@@ -141,8 +181,24 @@ Openship keeps variables **per environment**, so your test setup and your live s
 build can point at a test database while `production` points at the real one). The three environments are
 `production`, `preview`, and `development`.
 
-The dashboard editor manages your **production** values. To set values for `preview` or `development`, use
-the CLI (below) with the `--environment` flag.
+The project editor manages **production** values. A service's Environment tab uses
+its active deployment's environment, or production before the first deployment.
+The CLI also supports `preview` and `development` through `--environment`.
+
+These are variable sets within a project. Runtime isolation comes from selecting a separate
+non-production project environment and deploying its project ID. Passing `--env preview` against
+a production project is rejected; it cannot promote that preview onto the production runtime.
+See [preview deployment](https://openship.io/docs/cli/deploy) for the complete flow.
+
+## Download environment variables
+
+In a service's **Environment** tab, choose **Download .env** beside **Upload .env**.
+The file contains the listed variables and their real saved secret values. Downloading
+does not reveal those secrets in the editor, save edits, or restart the service.
+Unsaved edits shown in the editor are included in the download.
+
+The file uses Compose-compatible `.env` quoting. **Upload .env** restores its literal
+values, including dollar signs, quotes, and multiline values, without expanding variable references.
 
 ## Apply without a full rebuild
 
@@ -153,14 +209,39 @@ Press it and Openship recreates the running container from the image it already 
 injected. No git clone, no build — just a quick restart. It's the fastest way to roll out a changed key or a
 rotated secret.
 
-<Callout title="Screenshot">
-  The env editor after saving, showing the "Apply without a rebuild" notice and the **Apply
-  (restart, no rebuild)** button. *(screenshot pending)*
-</Callout>
+From the terminal, `openship deploy --refresh` (shown below) applies environment
+changes through a deployment without rebuilding.
 
-The same thing from the terminal is `openship deploy --refresh` (shown below).
+For one service, open its **Environment** tab, press **Save**, then
+**Apply environment changes** in the toolbar above the variables. It refreshes only
+that service using the image already running on its target. The editor stays open
+and shows completion after the service starts. This is a dedicated service action
+(`POST /api/projects/:id/services/:serviceId/apply-env`); it creates no deployment or
+build session. Docker gets a graceful stop, and the replacement retains the existing
+ports, project network address, volumes, commands, and resource limits. If startup
+fails, Openship restores the previous container and leaves the changes pending.
+The toolbar offers Apply only when a comparison with the deployed container finds
+saved changes, including removed variables. **Check running service** refreshes
+that comparison. An unavailable server is reported as an unknown state, while the
+saved variables remain editable.
 
-## Prefer the terminal?
+For an older or migrated service, Docker may still hold variables that were never
+saved in Openship. **Recover from running service** reads those missing values
+from that service's container, excluding image defaults, and adds them to the
+editor for review. Press **Save** to store them encrypted in Openship. Recovery
+never overwrites an already saved value. Before applying, recover these values or
+explicitly choose to remove them from the running service.
+
+This action supports Docker services on a server or an Openship Cloud Docker
+workspace. Legacy cloud workspaces and adopted containers on Docker's default bridge
+require **Redeploy**. Namespace-sharing services must be refreshed together through
+a deployment.
+
+A normal **Restart** keeps the container's existing variables. When saved changes are
+pending, Openship opens the service's **Environment** panel so you can apply them there.
+Variables used during a build still require a rebuild.
+
+## CLI
 
 Everything above works from the CLI. Secret values always come back **masked** when you list them.
 
@@ -220,7 +301,7 @@ openship service env set web -p my-stack -e preview API_URL=https://staging.exam
 
 </Tabs>
 
-## If something goes wrong
+## Troubleshooting
 
 <Callout title="I saved a variable but my app still doesn't see it" type="warn">
   Saving stores the value; the **running app** only picks it up on a deploy. Use **Apply (restart,
@@ -240,7 +321,7 @@ openship service env set web -p my-stack -e preview API_URL=https://staging.exam
   more.
 </Callout>
 
-## What next?
+## Related guides
 
 <Cards>
   <Card
