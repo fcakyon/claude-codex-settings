@@ -17,8 +17,6 @@ import sys
 from collections import namedtuple
 from pathlib import Path
 
-# TODO: build a companion guidance skill from that page's pitfalls, not only its word list
-
 # fmt: off
 # always blocked on any hit, each mapped to a plain swap or a short "drop it" note
 SWAP = {

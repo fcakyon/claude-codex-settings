@@ -69,6 +69,18 @@ Better: NME praised the percussion, while Pitchfork criticized the vocal mix.
 
 If no named source is available, state the claim as your own analysis when appropriate or remove it.
 
+Do not prove importance by listing the kinds of outlets that covered a subject. Say what a named source reported.
+
+State relationships directly. `Associated with`, `connected to`, and `in connection with` usually hide a plain role or action.
+
+```text
+Bad: The startup has received independent coverage from national and tech media outlets.
+Better: The Financial Times reported the startup's 2025 funding round.
+
+Bad: In 2017, Doe was associated with the leadership of the company.
+Better: In 2017, Doe was the company's CEO.
+```
+
 ### Empty challenges and future outlooks
 
 Do not end with a stock `Challenges`, `Future prospects`, or `Despite these challenges` section. Include a limitation only when it is specific and relevant.
@@ -80,7 +92,7 @@ Better: The organization lost its city grant in 2025 and cut weekend service fro
 
 ### Unsupported claims about missing information
 
-Do not guess why a fact is absent. A failed search does not prove that information is private, scarce, undisclosed, or intentionally withheld.
+Do not guess why a fact is absent. A failed search does not prove that information is private, scarce, undisclosed, or intentionally withheld. Do not tell the reader how to treat a source either.
 
 ```text
 Bad: Details about her early life are not widely available, likely because she maintains a low profile.
@@ -88,6 +100,9 @@ Better: The two biographies reviewed do not discuss her early life.
 
 Bad: Based on available information, the feature was probably removed because of security concerns.
 Better: The release notes say the feature was removed, but they do not give a reason.
+
+Bad: The figure should be treated as a rough estimate rather than a confirmed total.
+Better: The report calls the figure an estimate and does not say how it was calculated.
 ```
 
 ## Language and sentence patterns
@@ -97,10 +112,10 @@ Better: The release notes say the feature was removed, but they do not give a re
 Watch for clusters of these terms, especially when they replace a plain verb or make a weak claim sound important:
 
 ```text
-Additionally, aligns with, boasts, bolstered, crucial, delve, emphasizing,
-enduring, enhance, fostering, garner, highlighting, interplay, intricate,
-key, landscape, meticulous, pivotal, robust, showcase, tapestry, testament,
-underscore, valuable, vibrant
+Additionally, aligns with, boasts, bolstered, crucial, deep dive, delve,
+emphasizing, enduring, enhance, fostering, garner, highlighting, interplay,
+intricate, key, landscape, meticulous, pivotal, robust, showcase, tapestry,
+testament, underscore, valuable, vibrant
 ```
 
 Also remove stock phrases such as:
@@ -154,15 +169,6 @@ Bad: The program promotes learning, growth, and empowerment.
 Better: The program pays course fees for 80 apprentices each year.
 ```
 
-### Elegant variation
-
-Repeat the same clear noun when it refers to the same thing. Do not rotate through synonyms to avoid repetition.
-
-```text
-Bad: The company opened in 1998. The firm expanded in 2004. The organization entered Canada in 2007.
-Better: The company opened in 1998, expanded in 2004, and entered Canada in 2007.
-```
-
 ### Canned transitions and conclusions
 
 Do not begin paragraphs mechanically with `Additionally`, `Moreover`, `Furthermore`, or `Notably`. Do not finish with `In conclusion`, `In summary`, or a restatement of every point. Use a transition only when it names the relationship between ideas.
@@ -178,6 +184,7 @@ Do not begin paragraphs mechanically with `Additionally`, `Moreover`, `Furthermo
 - Do not use a table for a few facts that fit in one sentence.
 - Do not place thematic separators between every section.
 - Keep heading levels in order.
+- Do not open with a heading that repeats the title, and do not leave a heading empty above its subheadings.
 
 ```text
 Bad:
@@ -229,7 +236,7 @@ Better: The 2024 trial reported a 6% reduction in recovery time on page 18.
 
 ## Change summaries and short messages
 
-Describe the concrete change. Do not write a formal paragraph claiming compliance, neutrality, clarity, or careful preservation.
+Describe the concrete change. Do not write a formal paragraph claiming compliance, neutrality, clarity, or careful preservation, and do not list what you avoided, kept, or ensured.
 
 ```text
 Bad: Revised the section to improve clarity and ensure compliance while preserving all relevant information.
@@ -237,6 +244,9 @@ Better: Removed the repeated paragraph and corrected the 2023 revenue figure.
 
 Bad: Enhanced readability, improved sourcing, and maintained the original intent.
 Better: Replaced the dead link with the publisher's archive copy.
+
+Bad: Refactored the parser while preserving existing behavior and avoiding breaking changes.
+Better: Moved date parsing into `parse_date` so both importers share it.
 ```
 
 ## Final check
@@ -248,7 +258,6 @@ Before responding, silently ask:
 - Are importance and opinion claims supported?
 - Are names, numbers, quotations, and citations verified?
 - Did I use a stock contrast, group of three, or summary without needing it?
-- Did I vary wording so aggressively that the subject changed names?
 - Is the formatting useful for this amount of content?
 - Did I include chat filler, a placeholder, or an offer the user did not request?
 - Can any sentence be shorter without losing meaning?
