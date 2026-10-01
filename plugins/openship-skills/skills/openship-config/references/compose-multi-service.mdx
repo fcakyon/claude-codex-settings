@@ -30,10 +30,8 @@ glance:
   only the other services can reach it (a database is almost always Internal).
 - A **status** dot: **Running**, **Stopped**, **Starting**, **Failed**, or **Disabled**.
 
-Click any row to open that service's full screen. If the repo changed a value you'd edited, the row also
-shows an **Upstream change** badge — more on that in [Drift](#when-the-repo-and-your-edits-disagree-drift).
-
-<Callout title="Screenshot">Project → **Services** tab: the list of service rows, each with its Public/Internal badge and status. *(screenshot pending)*</Callout>
+Click any row to open that service's full screen. Repo updates preserve your explicit edits and apply
+other changes automatically — see [how Compose changes merge](#when-the-repo-and-your-edits-disagree-drift).
 
 ## How services get into a stack
 
@@ -99,6 +97,51 @@ never changed. If you want the file itself to reflect a change (so a teammate or
 the file in your repo and push.
 </Callout>
 
+#### Database access during a Next.js build
+
+If `next build` reports `getaddrinfo ENOTFOUND db`, followed by an error such as
+`Failed to collect page data for /api/hours`, code evaluated during the build tried to resolve
+the `db` hostname. Check the named route and its imported helpers for database initialization.
+
+Use `"dependsOn": ["db"]` in `openship.json` (or `depends_on: [db]` in Compose). This orders
+container startup; it does not start Postgres before image builds or attach the builder to the
+services' network. Even an already-running database is not automatically reachable by its
+service name from the builder.
+
+For a route that needs data only when handling a request, move Payload initialization into the
+existing `GET` or `POST` handler, or a helper called by that handler. Next.js can import route
+modules during the build, so `export const dynamic = 'force-dynamic'` alone does not prevent
+module-level `await getPayload(...)` or an eagerly created initialization promise from running.
+Check imported helpers and configuration for the same side effects.
+
+For example, this Next.js 15 / Payload 3 handler initializes Payload when a request arrives.
+It assumes an `hours` collection; when adapting your own route, keep its existing authentication,
+query options, access checks, and response shape:
+
+```ts
+import config from "@payload-config";
+import { getPayload } from "payload";
+
+export const dynamic = "force-dynamic";
+
+export async function GET() {
+  const payload = await getPayload({ config });
+  const result = await payload.find({
+    collection: "hours",
+    overrideAccess: false,
+  });
+  return Response.json(result);
+}
+```
+
+`overrideAccess: false` applies the collection's access rules; retain any existing authenticated
+user context in your own queries. Keep the runtime connection string pointing at `db:5432`
+when both running services share the project network.
+
+If a page intentionally queries data during static generation, deferring an API handler will
+not remove that requirement. Supply a data source reachable from the build environment, or
+change that page to load its data at request time if that matches the application.
+
 ### 2. Added by hand
 
 Any project can get extra services from a built-in catalog of common images — databases, caches, search,
@@ -121,8 +164,6 @@ On the **Services** tab, press **Add Service**.
 You land on a catalog. Browse a category on the left (Databases, Caches, Search, Vector & AI, Queues &
 Streams, Object Storage, Auth & Identity, Mail & SMTP, Runtimes), search by name, or choose **Custom image**
 to type any image tag yourself. Click the one you want.
-
-<Callout title="Screenshot">The Add Service catalog: category rail on the left, a grid of service cards, and the **Custom image** tile. *(screenshot pending)*</Callout>
 
 </Step>
 
@@ -194,8 +235,6 @@ Click a service row to open its screen. Across the top is a row of tabs:
 - **Backup** — schedule and run backups. This tab shows only for compose services (the stateful containers),
   not for source-built sub-apps.
 
-<Callout title="Screenshot">A single service's detail screen showing the Overview / Terminal / Logs / Environment / Settings / Backup tab strip. *(screenshot pending)*</Callout>
-
 ## Start, stop, restart
 
 The lifecycle buttons live on the service's **Settings** tab. Which ones appear depends on the state:
@@ -231,10 +270,8 @@ Target a service by its name or its `svc_…` id.
 
 ## When the repo and your edits disagree: drift
 
-Here's the tricky bit, made simple. You can edit a service in the dashboard **and** keep a
-`docker-compose.yml` in your repo. What happens when both change the same value?
-
-On each deploy Openship does a **three-way compare** for every service:
+On each deploy Openship merges the current Compose source with your saved service configuration,
+comparing each field against the previously imported version:
 
 - **base** — the compose values it last read in,
 - **yours** — the service's current values (including your dashboard edits),
@@ -242,31 +279,32 @@ On each deploy Openship does a **three-way compare** for every service:
 
 | Repo changed? | You edited it? | What Openship does |
 | --- | --- | --- |
-| no | — | nothing — your values stand |
+| no | — | keeps your values |
 | yes | no | **applies the repo's value** automatically |
-| yes | yes | **keeps your value** and flags it as **drift** for you to review |
+| yes | yes | **keeps the edited field** and applies the other repo changes |
 | new service in the repo | — | adds it automatically |
-| removed from the repo | no | removes it |
-| removed from the repo | yes | keeps it — your work is never silently deleted |
+| removed from the repo | no | removes it only if it has no saved environment |
+| removed from the repo | yes | keeps it until you explicitly delete it |
 
-So services you never touched track the repo on their own, and your edits are never overwritten without
-asking. When a value you'd edited changes in the repo, the Services tab shows an amber **drift banner** with a
-per-field `from → to` diff and two choices per service:
+Routine Compose changes do not require **Accept upstream** or **Keep mine** before redeploying.
+Saved project and service environment values remain in place. A key omitted from the repo is retained
+as a local override, and an unresolved expression cannot replace the only saved value for that key.
+Remove a saved variable explicitly from the environment editor when you no longer need it.
 
-- **Accept upstream** — take the repo's value and move your baseline to it.
-- **Keep mine** — keep your value; the flag clears so it stops nagging, but your edit stays in effect.
-
-<Callout title="Screenshot">The Services tab drift banner: a service name, its `from → to` field diffs, and the **Keep mine** / **Accept upstream** buttons. *(screenshot pending)*</Callout>
+If an older version left a pending review, the next deploy reconciles it automatically. The legacy
+resolution actions remain available: **Accept upstream** applies source configuration while preserving
+saved environment values; **Keep mine** retains the current configuration.
 
 <Tabs items={['Dashboard', 'CLI']}>
 
 <Tab value="Dashboard">
-On the **Services** tab, use the drift banner's **Keep mine** or **Accept upstream** button for each service.
+Redeploy the project to apply current source changes. You can also resolve a review left by an older
+version from its existing banner.
 </Tab>
 
 <Tab value="CLI">
 ```bash
-# Take the repo's values, discarding your edits
+# Accept a legacy source review; saved environment values are preserved
 openship service drift accept --project my-app web
 
 # Keep your edits and stop flagging the change
@@ -301,7 +339,7 @@ that declares a volume — get an amber reminder that their data isn't kept acro
 backups. Later, on the **Services** tab, a cloud service's **Overview** shows a **Workspace ID** in place of
 the Container ID.
 
-## Prefer the terminal?
+## CLI
 
 Every service action has a CLI command. All of them target a stack with `-p / --project` (id, slug, or name)
 and a service by name or `svc_…` id.
@@ -319,7 +357,7 @@ openship service drift accept --project my-app web        # resolve drift
 openship service delete  --project my-app cache           # remove a service
 ```
 
-## If something goes wrong
+## Troubleshooting
 
 <Callout title="I added a service but nothing is running" type="warn">
 Adding a service saves it, but a container only starts on a deploy. If the project already had a live
@@ -333,14 +371,13 @@ on the machine where you run the command, then try again. You can always add or 
 dashboard instead.
 </Callout>
 
-<Callout title="A service keeps re-flagging the same drift" type="warn">
-That means the repo file and your dashboard edit still disagree. Pick one source of truth: press **Accept
-upstream** to take the repo's value, or **Keep mine** to lock in your edit. To make the change permanent for
-everyone, edit `docker-compose.yml` in your repo and push — once your value matches the repo, the drift
-clears on its own.
+<Callout title="An old Compose review banner is still visible" type="info">
+Redeploy to reconcile it with the current source. Your explicit overrides remain in effect and other
+repo changes apply automatically. A genuinely missing required variable still needs a value in the
+environment editor; the deployment error identifies its service and key.
 </Callout>
 
-## What next?
+## Related guides
 
 <Cards>
   <Card title="Deploy from GitHub" href="https://openship.io/docs/guides/deploy-from-github" description="Get your repo — compose file and all — online in the first place." />

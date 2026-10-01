@@ -1,8 +1,6 @@
 # Hybrid Search
 
-This guide covers hybrid search patterns in MongoDB Atlas: combining vector and lexical search using `$rankFusion` and `$scoreFusion`, and using lexical prefilters with the `vectorSearch` operator inside `$search`.
-
-**Scope**: This guide covers hybrid pipelines. For pure vector search indexes and `$vectorSearch` query construction, see vector-search.md. For lexical index definitions and query patterns, see lexical-search-indexing.md and lexical-search-querying.md.
+**Scope**: This guide covers hybrid search patterns in MongoDB Atlas: combining vector and lexical search using `$rankFusion` and `$scoreFusion`, and using lexical prefilters with the `vectorSearch` operator inside `$search`. For pure vector search indexes and `$vectorSearch` query construction, see `vector-search.md`. For lexical index definitions and query patterns, see `lexical-search-indexing.md` and `lexical-search-querying.md`. For automated embedding (`autoEmbed`) index and query syntax used inside a hybrid pipeline, see `automated-embedding.md`.
 
 ## Table of Contents
 
@@ -44,8 +42,9 @@ Hybrid search combines multiple search methods on the same collection and merges
 | Pre-filter vector search with fuzzy, phrase, wildcard, or compound | `$search` + `vectorSearch` operator |
 | Pre-filter vector search with simple equality or range | `filter` fields in `$vectorSearch` (see vector-search.md) |
 | Cross-collection hybrid search | `$unionWith` + `$vectorSearch` (not `$rankFusion`/`$scoreFusion`) |
+| Combine lexical + semantic search without writing embedding code | `$rankFusion` or `$scoreFusion` with an `autoEmbed`-type `$vectorSearch` pipeline (see automated-embedding.md) |
 
-**Version requirements**: `$rankFusion` requires MongoDB 8.0+. `$scoreFusion` requires MongoDB 8.2+. Only proceed with this guide if the use case is lexical prefilters, or if the cluster meets the version requirement for the fusion stage of interest. Otherwise do not proceed.
+**Version requirements**: `$rankFusion` requires MongoDB 8.0+. `$scoreFusion` requires MongoDB 8.3+. Only proceed with this guide if the use case is lexical prefilters, or if the cluster meets the version requirement for the fusion stage of interest. Otherwise do not proceed — inform the user the feature is unavailable and suggest upgrading, and offer to help them build the individual lexical or vector search components separately in the meantime.
 
 ---
 
@@ -82,6 +81,8 @@ db.collection.createSearchIndex(
   }
 )
 ```
+
+**Using automated embedding instead:** If you want MongoDB to generate and manage the embeddings rather than supplying your own, create an `autoEmbed`-type vectorSearch index instead of the `vector`-type index shown above. See `automated-embedding.md` for the index definition and query syntax — the fusion-stage rules below apply the same way regardless of which index type backs the vector pipeline.
 
 ---
 
@@ -317,6 +318,57 @@ db.embedded_movies.aggregate([
 
 ---
 
+### Example 4: Automated Embedding (autoEmbed) + Lexical Search
+
+If the vector pipeline targets an `autoEmbed`-type index, pass plain text via `query` instead of a numeric array via `queryVector` — MongoDB generates the embedding automatically:
+
+```javascript
+db.movies.aggregate([
+  {
+    $rankFusion: {
+      input: {
+        pipelines: {
+          semanticPipeline: [
+            {
+              $vectorSearch: {
+                index: "<autoembed-index-name>",
+                path: "<text-field>",
+                query: "<query-text>",    // Plain text — no embedding vector needed
+                numCandidates: 100,
+                limit: 20
+              }
+            }
+          ],
+          textPipeline: [
+            {
+              $search: {
+                index: "<search-index-name>",
+                text: {
+                  query: "<query-term>",
+                  path: "<text-field>"
+                }
+              }
+            },
+            { $limit: 20 }
+          ]
+        }
+      },
+      combination: {
+        weights: {
+          semanticPipeline: 0.7,
+          textPipeline: 0.3
+        }
+      }
+    }
+  },
+  { $limit: 10 }
+])
+```
+
+The only difference from Example 2 is the vector pipeline's `query` field: it takes a text string instead of a `queryVector` array. Weighting, the `$limit` inside `$search`, and RRF scoring all work identically. See `automated-embedding.md` for model selection and index setup.
+
+---
+
 ### Surfacing scoreDetails
 
 Set `scoreDetails: true` on the stage, then project via `$meta: "scoreDetails"`. The output includes a `value` (final RRF score), `description`, and a `details` array — one entry per input pipeline — containing `inputPipelineName`, `rank`, `weight`, and optionally `value` (raw pipeline score). See the `$scoreFusion` scoreDetails section below for a concrete structure example; `$rankFusion` follows the same pattern with `rank` instead of `inputPipelineRawScore`.
@@ -490,6 +542,10 @@ db.embedded_movies.aggregate([
 ```
 
 **Note**: `combination.expression` and `combination.weights` are mutually exclusive. When using `expression`, embed weights directly via `$multiply` as shown above.
+
+---
+
+**Using autoEmbed pipelines:** As with `$rankFusion`, pass `query` (text) instead of `queryVector` (array) in the `$vectorSearch` stage when it targets an `autoEmbed`-type index — see [Example 4 under $rankFusion](#example-4-automated-embedding-autoembed--lexical-search) and `automated-embedding.md` for the full syntax.
 
 ---
 

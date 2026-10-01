@@ -52,6 +52,7 @@ CATEGORIES = {
     'completion': 'config',
     'version': 'config',
     'all': 'all',
+    'api': 'api',
 }
 
 # Collect files per category: {category: {'parent': path|None, 'children': [paths]}}
@@ -344,6 +345,7 @@ hcloud server list --output columns=id,name,status  # Custom table columns
 |----------|-----------|
 | Config, Context, Completion | `references/config/` |
 | All Resources | `references/all/` |
+| Raw API Calls | `references/api/` |
 
 ### Getting Started
 | Resource | Reference |

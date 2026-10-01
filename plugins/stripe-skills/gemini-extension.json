@@ -1,5 +1,5 @@
 {
   "name": "stripe-skills",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Official Stripe skills for checkout, billing, Connect, and API upgrades."
 }

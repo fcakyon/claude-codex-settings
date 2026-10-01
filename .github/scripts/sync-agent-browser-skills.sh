@@ -7,7 +7,7 @@ source "$(dirname "$0")/_helpers.sh"
 
 clone_or_update https://github.com/vercel-labs/agent-browser agent-browser
 
-# Upstream renamed agent-browser to core and moved both skills under skill-data/.
+# Upstream renamed agent-browser to core and moved its skills under skill-data/.
 SRC="$HOME/dev/agent-browser/skill-data"
 
 sync_dir "$SRC/core" "plugins/agent-browser/skills/agent-browser" "SKILL.md" "references/" "templates/"
@@ -18,8 +18,9 @@ sed -i '' \
 ensure_license "plugins/agent-browser/skills/agent-browser" Apache-2.0
 create_zip "plugins/agent-browser/skills/agent-browser"
 
-sync_dir "$SRC/electron" "plugins/agent-browser/skills/electron" "SKILL.md"
-ensure_license "plugins/agent-browser/skills/electron" Apache-2.0
-create_zip "plugins/agent-browser/skills/electron"
+# Hosting-specific skills (agentcore, vercel-sandbox, protected-vercel-deployments) and slack stay out.
+for skill in derive-client dogfood electron webmcp-gen; do
+  sync_skill "$SRC/$skill" "plugins/agent-browser/skills/$skill" Apache-2.0
+done
 
 echo "Done syncing agent-browser skills."

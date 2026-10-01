@@ -1,14 +1,12 @@
 # Vector Search - Indexing and Querying
 
-This guide covers how to configure MongoDB Vector Search indexes and construct queries for semantic similarity search.
-
-**Scope**: This guide covers pure vector search indexes. For hybrid search (combining lexical and vector search), see hybrid-search.md.
+**Scope**: This guide covers configuring MongoDB Vector Search indexes and constructing queries for semantic similarity search where the user **brings their own pre-generated embeddings**. For hybrid search (combining lexical and vector search), see `hybrid-search.md`. If the user wants MongoDB to generate and manage embeddings automatically (no embedding code), see `automated-embedding.md` instead.
 
 ## Table of Contents
 
 - [Vector Search Index Definition](#vector-search-index-definition)
 - [Index Configuration Parameters](#index-configuration-parameters)
-- [Filter Fields (Pre-filtering)](#filter-fields-pre-filtering)
+- [Filter Fields](#filter-fields)
 - [Query Construction](#query-construction)
 - [Query Optimization](#query-optimization)
 
@@ -149,9 +147,7 @@ Most vector search indexes only need the vector field:
   "path": "plot_embedding",
   "numDimensions": 1536,
   "similarity": "cosine",
-  "quantization": {
-    "type": "scalar"
-  }
+  "quantization": "scalar"
 }
 ```
 
@@ -197,17 +193,20 @@ Most vector search indexes only need the vector field:
 
 ---
 
-## Filter Fields (Pre-filtering)
-
-### About Filter Fields
-
-**Definition**: Additional fields indexed to enable pre-filtering before vector similarity computation. This narrows the search scope and improves performance.
-
-**Use Case**: Filter by specific criteria (e.g., category, date range, user ID) BEFORE computing vector similarity.
+## Filter Fields
 
 **Performance**: Filtering before similarity computation is much faster than post-filtering with `$match`.
 
+**Recommendation**: Use pre-filtering whenever possible for best performance. Reserve post-filtering for complex or ad-hoc queries.
+
+### Important Notes for Pre-filtering
+
+**Definition**: Additional fields indexed to enable pre-filtering before vector similarity computation. This narrows the search scope and improves performance.
+**Use Case**: You have multi-tenant data that needs isolation or you need to filter by specific criteria (e.g., category, date range, user ID), by exact values (category = "Action"), or by range (year >= 2020) BEFORE computing vector similarity.
 **Supported Field Types**: boolean, date, objectId, numeric (int32, int64, double), string, UUID, and arrays of these types.
+**Requirements**: You must add fields as type "filter" in your index definition to use them in the filter option. Fields not indexed cannot be used for pre-filtering.
+**Supported Filter Operators**: $eq, $ne, $gt, $lt, $gte, $lte, $in, $nin, $exists, $and, $or, $not, $nor
+**Pre-filtering does NOT affect scores**: The vectorSearchScore returned for documents is based only on vector similarity, not on how well they matched the filter criteria.
 
 ---
 
@@ -236,40 +235,7 @@ Most vector search indexes only need the vector field:
 
 ---
 
-### When to Use Filter Fields
-
-**Use filter fields when**:
-- You need to filter by exact values (category = "Action")
-- You need range filtering (year >= 2020)
-- Filter criteria are known at query time
-- You want maximum query performance (filters before computing similarity)
-- You have multi-tenant data that needs isolation
-
-**Use post-filtering ($match) when**:
-- Filters are ad-hoc and change frequently
-- Complex aggregation logic is needed
-- Fields are not worth indexing (rarely used)
-- Combining with other aggregation stages
-
----
-
-### Supported Filter Operators
-
-MongoDB Vector Search supports the following MQL operators in the `filter` option:
-
-| Type | Operators |
-|------|-----------|
-| Equality | `$eq`, `$ne` |
-| Range | `$gt`, `$lt`, `$gte`, `$lte` |
-| In set | `$in`, `$nin` |
-| Existence | `$exists` |
-| Logical | `$not`, `$nor`, `$and`, `$or` |
-
-**Note**: Other query operators, aggregation pipeline operators, and MongoDB Search operators are NOT supported in the filter option.
-
----
-
-### Filter Examples
+### Pre-Filter Examples
 
 **Index with filter fields**:
 ```javascript
@@ -344,13 +310,41 @@ MongoDB Vector Search supports the following MQL operators in the `filter` optio
 
 ---
 
-### Important Notes
+### Important Notes for Post-Filtering
 
-**Pre-filtering does NOT affect scores**: The vectorSearchScore returned for documents is based only on vector similarity, not on how well they matched the filter criteria.
+**Definition**: Filtering after vector similarity computation. 
+**Use Case**: Use post-filtering when you need to filter by criteria that are not known until query time, or when you need to combine vector search with other aggregation stages. No need to index fields.
+**Advantages**: More flexible, can combine with other aggregation stages, no need to index fields.
+**Performance**: Slower than pre-filtering, computes similarity for all candidates first.
 
-**Filter fields must be indexed**: You must add fields as type "filter" in your index definition to use them in the filter option. Fields not indexed cannot be used for pre-filtering.
+---
 
-**Arrays are supported**: You can filter on fields that contain arrays. MongoDB automatically handles array matching.
+### Post-Filter Examples
+
+**Post-filtering with $match**
+
+For ad-hoc filters or complex logic not indexed as filter fields, use `$match` after `$vectorSearch`:
+
+```javascript
+db.collection.aggregate([
+  {
+    $vectorSearch: {
+      index: "vector_index",
+      path: "plot_embedding",
+      queryVector: [<array>],
+      numCandidates: 150,
+      limit: 50  // Get more candidates for post-filtering
+    }
+  },
+  {
+    $match: {
+      category: "Electronics",
+      "reviews.rating": { $gte: 4.5 }  // Complex nested field
+    }
+  },
+  { $limit: 10 }
+])
+```
 
 ---
 
@@ -435,11 +429,7 @@ MongoDB Vector Search supports the following MQL operators in the `filter` optio
 
 ### Optional Fields
 
-**filter** (Object, Optional):
-- MQL expression to pre-filter documents before vector search
-- Only works with fields indexed as type "filter"
-- Supported operators: $eq, $ne, $gt, $lt, $gte, $lte, $in, $nin, $exists, $and, $or, $not, $nor
-- See Filter Fields section for details and examples
+**filter** (Object, Optional): See Filter Fields section for details and examples
 
 **exact** (Boolean, Optional):
 - Set to `true` for ENN (Exact Nearest Neighbor) search
@@ -546,38 +536,6 @@ Use `$meta: "vectorSearchScore"` in a `$project` stage to include similarity sco
 **Important**:
 - Scores are in range [0, 1] where 1 = most similar
 - You can ONLY use `vectorSearchScore` after a `$vectorSearch` stage
-- Pre-filtering does NOT affect the score (only vector similarity affects score)
-
----
-
-### Post-filtering with $match
-
-For ad-hoc filters or complex logic not indexed as filter fields, use `$match` after `$vectorSearch`:
-
-```javascript
-db.collection.aggregate([
-  {
-    $vectorSearch: {
-      index: "vector_index",
-      path: "plot_embedding",
-      queryVector: [<array>],
-      numCandidates: 150,
-      limit: 50  // Get more candidates for post-filtering
-    }
-  },
-  {
-    $match: {
-      category: "Electronics",
-      "reviews.rating": { $gte: 4.5 }  // Complex nested field
-    }
-  },
-  { $limit: 10 }
-])
-```
-
-**Performance Note**: Post-filtering is slower than pre-filtering because it computes similarity for all candidates first.
-
----
 
 ## Query Optimization
 
@@ -652,26 +610,6 @@ db.collection.aggregate([
 - Collection has less than 10K documents
 - Very selective filters (less than 5% of data matches)
 - You need guaranteed best matches
-
----
-
-### Pre-filtering vs Post-filtering Performance
-
-**Pre-filtering (filter option)**:
-- Fastest: Filters BEFORE computing similarity
-- Use for exact matches, range queries, known criteria
-- Requires fields indexed as type "filter"
-- Limited to supported MQL operators ($eq, $ne, $gt, $lt, $gte, $lte, $in, $nin, $exists, $and, $or, $not, $nor)
-
-**Post-filtering ($match stage)**:
-- Slower: Computes similarity for all candidates first
-- Use for ad-hoc filters, complex logic, unindexed fields
-- Full MQL operator support
-- Can combine with other aggregation stages
-
-**Recommendation**: Use pre-filtering whenever possible for best performance. Reserve post-filtering for complex or ad-hoc queries.
-
----
 
 ### Parallel Query Execution
 

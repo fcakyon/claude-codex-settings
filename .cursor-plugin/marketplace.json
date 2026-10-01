@@ -83,7 +83,7 @@
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Browser automation CLI for AI agents to navigate pages, fill forms, and test apps.",
-      "version": "1.0.4",
+      "version": "1.1.0",
       "license": "Apache-2.0"
     },
     {
@@ -97,42 +97,42 @@
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
       "description": "Official MongoDB skills for schema design, query tuning, and search.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "Apache-2.0"
     },
     {
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
       "description": "Supabase Postgres, JavaScript SDK, and CLI skills for migrations and local dev.",
-      "version": "1.0.4",
+      "version": "1.1.0",
       "license": "MIT"
     },
     {
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe skills for checkout, billing, Connect, and API upgrades.",
-      "version": "1.0.6",
+      "version": "1.1.0",
       "license": "MIT"
     },
     {
       "name": "polar-skills",
       "source": "./plugins/polar-skills",
       "description": "Official Polar skills for billing, subscriptions, and local development.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "livekit-skills",
       "source": "./plugins/livekit-skills",
       "description": "LiveKit Agents SDK skills for voice AI agents on Cloud or self-hosted deployments.",
-      "version": "1.0.2",
+      "version": "1.1.0",
       "license": "MIT"
     },
     {
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
       "description": "Choose Cloudflare services and load specialist guidance when needed.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "license": "Apache-2.0"
     },
     {
@@ -146,21 +146,21 @@
       "name": "openobserve-skills",
       "source": "./plugins/openobserve-skills",
       "description": "Search logs, metrics, and traces and build OpenObserve dashboards via curl.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "Apache-2.0"
     },
     {
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "MIT"
     },
     {
       "name": "dokploy-skills",
       "source": "./plugins/dokploy-skills",
       "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "license": "MIT"
     },
     {
@@ -236,7 +236,7 @@
     {
       "name": "openship-skills",
       "description": "Deploy self-hosted OpenShip apps with the CLI and openship.json.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0",
       "source": "./plugins/openship-skills"
     },
