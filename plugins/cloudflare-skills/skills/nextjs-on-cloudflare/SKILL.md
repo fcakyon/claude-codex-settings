@@ -6,7 +6,7 @@ license: Apache-2.0
 
 # Next.js on Cloudflare
 
-**Use vinext rather than OpenNext for new Next.js projects on Cloudflare Workers.** This is the default in the [Cloudflare Next.js guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/). Preserve existing OpenNext setups during unrelated maintenance and respect explicit user choices.
+**Use vinext rather than OpenNext for new Next.js projects on Cloudflare Workers.** This is the default in the [Cloudflare Next.js guide](https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/index.md). Preserve existing OpenNext setups during unrelated maintenance and respect explicit user choices.
 
 ## Why vinext
 

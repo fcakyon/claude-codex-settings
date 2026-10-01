@@ -1,0 +1,321 @@
+---
+title: Deployment & build failures
+description: The build went red — here's how to read the failure and fix the usual causes, from a wrong build command to a compose deploy that needs a decision.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+A failed deploy is almost never a mystery. Openship checks your configuration *before* it spends any
+resources, and once the build starts it streams every line to the build screen. So the reason is
+usually right there in front of you — you just need to know where to look.
+
+<Callout title="First move: read the last red lines">
+Open the build screen (from the project, or the link in your [deploy history](https://openship.io/docs/guides/rollback-redeploy))
+and scroll to the bottom. The real error is in the last few red lines. Everything above it is usually
+noise. If the deploy stopped *before any build output appeared*, it failed a pre-deploy check — see
+[right below](#pre-deploy-checks-failed).
+</Callout>
+
+## "Pre-deploy checks failed"
+
+**What you see** — the deploy is rejected almost instantly, with a message like:
+
+<Callout type="error">
+`Pre-deploy checks failed: Build configuration: Missing required fields: install command, start command`
+</Callout>
+
+**What it means** — Openship runs a set of *preflight* checks the moment you press Deploy, before it
+clones anything or starts a build. If any check fails, nothing is provisioned and you get a `403` with
+the exact problems listed. This is a good failure: it's cheap, fast, and tells you precisely what to
+fix. The most common ones are covered in the sections below.
+
+---
+
+## The framework was detected wrong, or the build command is off
+
+<Callout type="error">
+The build runs a command that doesn't match your app — for example it tries `next build` on a plain
+Vite app, or the deploy "succeeds" but serves the wrong files.
+</Callout>
+
+**What it means** — when you import a repo, Openship inspects it and guesses the framework, package
+manager, and the install/build/start commands. It's right the vast majority of the time, but an unusual
+project layout (or a repo it can't recognize, detected as **`unknown`**) can lead to a wrong guess.
+
+**How to fix it**
+
+<Steps>
+
+<Step>
+Open your project and press **Deploy** to reopen the [deploy wizard](https://openship.io/docs/dashboard/deploy-wizard). The
+current detected values are also shown, read-only, on the project's **Configuration** tab.
+</Step>
+
+<Step>
+On the build/configuration step, correct the **Framework**, **Install command**, **Build command**, and
+**Start command** to match what your app actually uses locally. If you build your app with
+`npm run build` and start it with `npm start`, those are the values that belong here.
+</Step>
+
+<Step>
+Deploy again. Openship remembers these values for future deploys and redeploys.
+</Step>
+
+</Steps>
+
+<Callout type="info" title="Static sites don't run a start command">
+If your project is a static site, a leftover start command is harmless — it's ignored, the deploy
+continues, and the files are served from the edge.
+</Callout>
+
+## A required command (or the port) is missing
+
+<Callout type="error">
+`Pre-deploy checks failed: Build configuration: Missing required fields: ...` — where the list may
+include `install command`, `start command`, `port`, or `build image`.
+</Callout>
+
+**What it means** — a server app needs to know how to install dependencies, how to start, and which port
+to run on, and every app needs a build image. If any of those is blank, preflight stops the deploy rather
+than letting it fail deep into the build. (A missing *build command* is only a warning, not a failure —
+see the section above.) For a project made of [multiple services](https://openship.io/docs/guides/compose-multi-service),
+the same check reports per sub-app, e.g. *`sub-app "web" missing install command`*.
+
+**How to fix it**
+
+<Steps>
+
+<Step>
+Press **Deploy** to reopen the wizard and fill in whichever field the message named. Every field it
+lists must have a value.
+</Step>
+
+<Step>
+If your app **doesn't** need a build step, that's fine — but say so, so Openship doesn't expect a build
+command. Likewise, a static site needs no start command or port.
+</Step>
+
+<Step>
+Deploy again.
+</Step>
+
+</Steps>
+
+## The app isn't listening on the right port
+
+<Callout type="error">
+The build finishes, then the deploy fails at the end with:
+`Health check failed: the app never accepted a connection on port 3000 within 45s — it likely crashed on
+startup (check the runtime logs).`
+</Callout>
+
+**What it means** — after starting your app, Openship waits up to 45 seconds for it to accept a
+connection on the configured port (the default is `3000`). If nothing ever answers, either the app
+crashed on startup or it's listening on a *different* port than the one Openship expects. This readiness
+gate runs for **Local** deploys; on a remote **Server** or **Cloud** the symptom instead is that the app
+builds and starts but the URL never responds.
+
+**How to fix it**
+
+<Steps>
+
+<Step>
+Read the runtime logs (the build screen, or the project's **Logs** tab — see
+[Logs & monitoring](https://openship.io/docs/guides/logs-monitoring)). If your app logged an error and exited, fix that
+first — the "port" message is often just the symptom of a crash.
+</Step>
+
+<Step>
+Make your app bind to the port Openship gives it. Read the port from the environment
+(`process.env.PORT` in Node, the equivalent in your language) rather than hard-coding one, and bind to
+`0.0.0.0`, not only `127.0.0.1`.
+</Step>
+
+<Step>
+Confirm the **port** on the project's **Configuration** tab matches the port your app actually listens
+on. Correct it in the [deploy wizard](https://openship.io/docs/dashboard/deploy-wizard) if it doesn't, then redeploy.
+</Step>
+
+</Steps>
+
+<Callout type="warn" title="A different “port” problem: the port is already taken">
+On a Local or Server deploy, if another process already holds the port, the deploy pauses and asks what
+to do — a **Port In Use** prompt saying *"Port 3000 is occupied by … This may not be a previous
+deployment."* with **Free Port & Continue** or **Cancel Deploy**. Choose *Free Port* only if you
+recognize the occupant as a stale deployment; otherwise cancel and change the port. If it can't be freed
+you'll see *"Deploy aborted: port 3000 is in use by …"*.
+</Callout>
+
+## The app needs a bigger machine than this one
+
+<Callout type="error">
+`Pre-deploy checks failed: Host capacity: PostHog needs 8 GB of RAM (this machine has 2 GB) and
+4 vCPU (this machine has 2 vCPU). Install it on a bigger machine, or pick a different destination.`
+</Callout>
+
+**What it means** — a few catalog apps are genuinely heavy (a nine-container analytics stack, a
+Postgres fork that wants 8 GB) and declare a host floor. Openship reads what your destination's
+Docker daemon reports and compares. This is the *first* install of that app, so it stops rather than
+letting you watch nine containers get OOM-killed one by one.
+
+**How to fix it**
+
+<Steps>
+
+<Step>
+**Pick a bigger destination.** Reopen the app's install wizard — it states the floor next to the
+destination picker and flags a server that's short *before* you install anything.
+</Step>
+
+<Step>
+**Or resize the server** you already chose, then deploy again. The reading is cached briefly, so give
+it a minute after a resize.
+</Step>
+
+</Steps>
+
+<Callout type="info" title="It only ever stops a first install">
+Once an app has deployed successfully, a shortfall is a warning, never a refusal — otherwise an app
+running on a box that turned out to be undersized could never be redeployed. Likewise, a machine
+Openship can't measure is never treated as too small, and Openship Cloud is sized from its tier, not
+from host hardware. See [Host requirements](https://openship.io/docs/reference/app-catalog).
+</Callout>
+
+## The build ran out of memory
+
+<Callout type="error">
+The build dies partway through — often with `JavaScript heap out of memory`, a bare `Killed`, or a plain
+`exited with code 1`. Openship adds the hint: *"Build process was killed - typically because the target
+ran out of memory during the build."*
+</Callout>
+
+**What it means** — building a modern app (bundling, type-checking, image optimization) can briefly use a
+lot of RAM. When the machine runs out, the kernel kills the build process, and the underlying tool often
+reports only a generic non-zero exit. Openship scans the output for the tell-tale signs and surfaces the
+real cause.
+
+**How to fix it** — the hint itself spells out the three options:
+
+<Steps>
+
+<Step>
+**Give the build more memory.** Raise the build memory limit for the project (build limits are separate
+from runtime limits — see [Sleep mode & resources](https://openship.io/docs/guides/sleep-mode-resources) and the
+[Projects API resources endpoint](https://openship.io/docs/api/projects)). On Openship Cloud, pick a larger resource tier.
+</Step>
+
+<Step>
+**Add swap** on your own server so short memory spikes during the build don't get killed.
+</Step>
+
+<Step>
+**Build locally and ship the result.** Switch the build to *"Build on this machine"* in the wizard, or
+[deploy a pre-built folder](https://openship.io/docs/guides/deploy-local-folder) so the heavy build happens on your own
+hardware.
+</Step>
+
+</Steps>
+
+## A build-time environment variable is missing
+
+<Callout type="error">
+The build fails with an error *from your framework* — a reference to an undefined variable, a
+`process.env.SOMETHING` that's `undefined`, or a client bundle that's missing a value it needed. A common
+case is a `NEXT_PUBLIC_...` value that wasn't set.
+</Callout>
+
+**What it means** — your environment variables are passed to the build, not just to the running app. Some
+frameworks **bake certain values in at build time** (anything a browser bundle reads, like Next.js
+`NEXT_PUBLIC_*`). If that variable isn't set when the build runs, the value is baked in as empty — or the
+build errors outright.
+
+**How to fix it**
+
+<Steps>
+
+<Step>
+Add the variable to the project's environment — see
+[Environment variables](https://openship.io/docs/guides/environment-variables). Set it for the environment you're deploying
+(production vs. preview).
+</Step>
+
+<Step>
+**Redeploy.** Build-time values are frozen into the artifact, so simply adding the variable isn't enough —
+you have to rebuild for it to take effect.
+</Step>
+
+</Steps>
+
+## Some services deployed, some failed ("Action Required")
+
+<Callout type="error">
+A [multi-service / compose](https://openship.io/docs/guides/compose-multi-service) project finishes with a banner reading
+**Action Required**, and a note like *"Some services failed — see service deployments for details."* The
+log shows *"Deployed 2/3 services. 1 service still need attention."*
+</Callout>
+
+**What it means** — when a project runs several services, Openship deploys each one independently. If at
+least one succeeds but others fail, the deploy lands in a special **partial failure** state: the healthy
+services are already live, but the deployment is *held for your decision* rather than reported as a clean
+success. Nothing is rolled back automatically — Openship waits for you to choose.
+
+**How to fix it**
+
+<Steps>
+
+<Step>
+Open the deployment and look at the per-service results to find which service failed and why. Each failed
+service has its own logs — treat it exactly like a single-app failure and use the sections above.
+</Step>
+
+<Step>
+Decide what to do with the deploy:
+- **Keep** — accept the services that succeeded and clear the banner. The healthy services stay live.
+- **Reject** — roll back the services this deploy changed, returning to the previous state.
+</Step>
+
+<Step>
+If you've fixed the underlying problem, just **redeploy** — starting a new deployment automatically
+resolves any pending keep/reject decision, so the banner clears on its own.
+</Step>
+
+</Steps>
+
+<Callout type="info">
+You can only keep or reject a deployment that's actually waiting on a decision — acting on any other
+deployment returns *"Only a deployment awaiting a decision can be kept."* That's expected; it just means
+there's nothing pending.
+</Callout>
+
+## A couple of other things you might hit
+
+<Callout type="warn" title="“A deployment is already in progress”">
+`A deployment is already in progress (dep_…). Cancel it first or wait for it to complete.` — Openship runs
+one deploy per project at a time. Wait for the current one to finish, or cancel it from the build screen,
+then try again.
+</Callout>
+
+<Callout type="warn" title="“Docker build failed…” / a non-zero exit code">
+`Docker build failed: docker build exited with code 1` (or a similar generic non-zero exit) means the
+failure is inside your build itself, not Openship. Scroll up in the build log to the first red error —
+that line is the real cause (a failing test, a TypeScript error, a missing dependency).
+</Callout>
+
+<Callout type="warn" title="“This operation targets the HOST machine, but no host channel is configured”">
+Not a build failure at all: this containerized install can't reach the machine it runs on, so the one
+step that needs the host (a `:80`/`:443` takeover, the mail engine, a catalog app whose config file is
+written on the host) refuses rather than run against the wrong filesystem. Ordinary deploys are
+unaffected. The repair differs by install shape —
+[Host control channel](https://openship.io/docs/troubleshooting/host-channel).
+</Callout>
+
+## Related
+
+<Cards>
+  <Card title="Deploy from GitHub" href="https://openship.io/docs/guides/deploy-from-github" description="The end-to-end path that most of these failures happen on." />
+  <Card title="The deploy wizard" href="https://openship.io/docs/dashboard/deploy-wizard" description="Where you correct the framework, commands, port, and build settings." />
+  <Card title="Environment variables" href="https://openship.io/docs/guides/environment-variables" description="Set values that your build and your app need — including build-time ones." />
+  <Card title="Logs & monitoring" href="https://openship.io/docs/guides/logs-monitoring" description="Read the runtime logs when an app crashes on startup." />
+  <Card title="Rollback & redeploy" href="https://openship.io/docs/guides/rollback-redeploy" description="Get back to a known-good deploy while you investigate." />
+  <Card title="Multi-service & compose" href="https://openship.io/docs/guides/compose-multi-service" description="How projects with several services build and deploy." />
+</Cards>

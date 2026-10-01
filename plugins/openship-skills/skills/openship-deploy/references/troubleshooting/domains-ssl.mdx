@@ -1,0 +1,247 @@
+---
+title: Domains, DNS & SSL
+description: Fix domain verification, DNS propagation, missing routes, SSL provisioning, and external ingress.
+---
+
+A working custom domain needs DNS to reach its ingress, a route to the intended application, and TLS at
+the server or an external proxy. Verification depends on where the project runs. This page explains the
+failure messages and which part to check.
+
+If you haven't added a domain yet, start with the [custom domains guide](https://openship.io/docs/guides/custom-domains) — this
+page is for when something is already stuck.
+
+<Callout title="Check the verification mode">
+Openship Cloud checks a routing record and an ownership TXT record; with external ingress it checks only
+the TXT record. Self-hosted verification obtains or reuses a valid certificate through ACME, without
+comparing the public IP or checking an ownership TXT record. Self-hosted external ingress accepts the
+operator's configuration and leaves TLS to the proxy.
+</Callout>
+
+## DNS and SSL are verified, but the app still returns 404 or 502
+
+DNS verification and certificate issuance do not prove that a domain has a working upstream.
+For a Compose project, open **Domains & Routes** and map the domain to the intended service's
+container port. An unmapped project-level domain is skipped with a warning naming the available
+ports; it must not inherit a stale project port from another service. Then retry routing or set
+up the project's edge. Review any route warnings even when the edge itself is healthy.
+
+On an Openship control-plane project, an instance administrator can use these repair actions to
+route the adopted dashboard to its configured loopback port. The repair preserves the dashboard
+service's existing port claim. Project membership alone does not grant access to reserved host
+ports, and organization-bound or restricted API tokens cannot perform this instance action.
+
+If setup recorded `OPENSHIP_PUBLIC_URL` as **external ingress**, boot assumes an existing proxy
+terminates TLS. That record alone does not provision Openship's edge. Use the self-hosted setup
+flow to configure Openship's edge when changing who owns ingress; retain external ingress when
+your existing proxy should continue serving the domain.
+
+A static route needs the absolute release directory of its active deployment. A container ID,
+image tag or artifact hash cannot serve as a document root. A warning that no static root exists
+means the deployment's artifact or workload metadata needs repair or a new successful deployment.
+
+## Verification keeps failing
+
+<Callout type="error" title="Symptom / what you see">
+You click **Verify** and it doesn't turn green. The **"Verification failed"** toast contains the reason
+Openship returned. On Openship Cloud, DNS failures name one or both records:
+
+- `CNAME record not found for app.example.com`
+- `TXT record _openship-challenge.app.example.com must equal "…"`
+
+(If Openship can't produce a specific reason it falls back to the generic *"\{hostname} could not be verified yet."*)
+
+From the API, `POST /api/domains/:id/verify` returns **422** with the failure message. For Cloud DNS checks,
+`cnameVerified` and `txtVerified` identify the failing record. On self-hosted instances, read the message
+for certificate or server connectivity failures; those flags do not represent separate DNS lookups.
+</Callout>
+
+**What it means.** Cloud DNS verification could not confirm the requested routing or ownership record.
+Fix each record named in the message.
+
+| Message you see | Which record | What's wrong |
+|---|---|---|
+| `CNAME record not found for …` | Routing (`CNAME`) — Openship Cloud | The `CNAME` is missing or doesn't point at the Cloud target. |
+| `TXT record _openship-challenge.… must equal "…"` | Ownership (`TXT`) | The `_openship-challenge` TXT record is missing, or its value doesn't match the secret code. |
+
+### If the Cloud routing record is failing
+
+**How to fix**
+
+1. Open your project's **Domains** tab and reopen the **DNS Records** panel for the domain (or run
+   `openship domain records <domainId>`).
+2. Compare the routing row against your registrar's record. Cloud expects a `CNAME` pointing at the
+   **Openship Cloud target** shown in the panel.
+3. Fix any mismatch — copy the value from Openship, don't retype it. Delete any old, conflicting record for the
+   same name first (a stale `A`/`CNAME` left in place is a common cause).
+4. Wait for the change to take effect, then click **Verify** again.
+
+<Callout title="Self-hosted: check the certificate challenge" type="info">
+For HTTP-01, the hostname must reach the server's challenge endpoint on port 80, including through any
+proxy or NAT. DNS-01 uses a connected DNS provider or the **Manual TXT** flow in **DNS-verified HTTPS**.
+Neither mode compares the hostname's public IP with the server's IP. If another proxy owns TLS, use
+**External ingress & TLS** and configure that proxy to forward application requests.
+</Callout>
+
+## Wildcard or manual TXT setup is waiting
+
+Wildcard certificates require DNS-01. The routing `A` or `CNAME` record does not replace the certificate's
+`_acme-challenge` TXT record. Open the domain's **DNS-verified HTTPS** panel to see the active attempt,
+its deadline and **Certificate logs**.
+
+| State or message | What to do |
+|---|---|
+| No DNS provider connected | Connect Cloudflare in **Settings → DNS**, or choose **Manual TXT** and generate a TXT record. |
+| TXT record not visible | Compare both name and value. If the provider appends your zone name, enter only the relative part. Keep other TXT values, allow propagation, then **Check TXT & enable HTTPS**. |
+| Connection interrupted | Reopen the panel or use **Refresh status**. An accepted operation continues on the server; the saved attempt can resume after a restart. |
+| TXT challenge expired or CA order invalid | Cancel the old attempt if needed and start again. Publish the new value; remove only the previous attempt's value. |
+| Certificate authority changed | Start a new challenge using the current HTTPS settings. An order belongs to the authority that created it. |
+| Server connection or certificate installation failed | Restore access to the current deployment server, then retry the same saved challenge before its deadline. Existing TLS is retained. |
+
+Manual TXT setup does not retry on a schedule: it waits for the operator to publish and check DNS.
+Within 14 days of expiry, the domain details request renewal. Use **Renew SSL** to obtain and confirm a
+fresh TXT value, or switch to **Automatic provider** for unattended renewal. See the
+[wildcard setup guide](https://openship.io/docs/guides/custom-domains#wildcard-domains).
+
+### If the Cloud TXT ownership record is failing
+
+**How to fix**
+
+1. At your registrar, add (or correct) a **TXT** record with host `_openship-challenge` — Openship looks it up
+   at `_openship-challenge.<your-domain>`.
+2. Set its value to the exact string from the **DNS Records** panel. Use the **Copy** button; a single extra
+   space or a missing character will fail the match.
+3. Save, wait for propagation, and click **Verify** again.
+
+<Callout title="Already verified?" type="info">
+If you re-run Verify on a domain that's already done, Openship simply replies **"Already verified"** and
+changes nothing — that's expected, not an error.
+</Callout>
+
+## DNS hasn't propagated yet
+
+<Callout type="error" title="Symptom / what you see">
+The records look correct at your registrar, but Verify still reports the routing or TXT record as not found —
+sometimes minutes after you saved them.
+</Callout>
+
+**What it means.** DNS isn't instant. After you save a record, it has to spread across the internet's caches
+before Openship's lookup can see it. As the DNS Records panel itself notes: *"DNS changes can take up to 48
+hours to propagate globally."* Usually it's a few minutes; occasionally it's much longer.
+
+**How to fix**
+
+1. Double-check there are no typos in the **Host** field and no leftover conflicting record for the same name.
+2. Wait. Save the records, give it several minutes, then click **Verify** again — re-clicking once DNS
+   resolves is the reliable path.
+3. Openship's enabled-by-default **Domain DNS verification** job runs every 13 minutes. Once a pending
+   domain is at least 10 minutes old, the job retries verification and certificate issuance automatically.
+   This also runs in Openship Desktop against the project's connected deployment server. Clicking
+   **Verify** is the faster, explicit retry; it is not required for the normal background lifecycle.
+   Manual TXT domains are excluded from this job and wait for **Check TXT & enable HTTPS** instead.
+
+<Callout title="What the first deployment does" type="info">
+A new custom domain starts **Pending**. Its deployment prepares the route and SSL toolchain. A DNS-01
+certificate needs a connected provider, or manual TXT setup after deployment. A missing credential or
+certificate failure remains actionable in the domain details; it does not erase the deployed application.
+</Callout>
+
+<Callout title="Confirm propagation yourself" type="info">
+To check what the world currently sees, look the record up directly — e.g. `dig TXT _openship-challenge.app.example.com`
+or `dig A app.example.com`. If your own lookup doesn't return the new value yet, Openship won't see it either;
+that's a propagation delay, not an Openship problem.
+</Callout>
+
+## SSL stuck on "Provisioning" (or no certificate issued)
+
+<Callout type="error" title="Symptom / what you see">
+The domain is **Verified**, but the **SSL** pill stays on **Provisioning** instead of moving to **Active** —
+so `https://` doesn't work yet.
+</Callout>
+
+**What it means.** On a self-hosted or Desktop-connected server, **Verify** obtains the certificate before
+reporting success and rewrites the existing route with TLS. On Openship Cloud, verification can start
+certificate issuance in the background. **Provisioning** means issuance is still in progress, its result has
+not been observed yet, or the first attempt failed.
+
+**How to fix**
+
+1. Give it a moment, then open the domain's **⋯** menu and click **Recheck SSL**. This is a read-only check
+   (no certificate is re-issued, no rate limit is spent) that flips the status to **Active** as soon as the
+   certificate is actually in place.
+2. If Recheck reports *"No valid certificate found for \{hostname} yet. If you just deployed, give Let's Encrypt
+   a moment, then recheck."* — the certificate genuinely isn't there yet. Wait a little longer and recheck
+   again.
+3. The same scheduled domain job retries incomplete issuance with backoff. If you want an immediate retry,
+   click **Renew SSL**; any real failure reason (DNS, blocked ports, rate limit, ACME outage) surfaces on
+   that action.
+
+<Callout title="Renewing certificates" type="info">
+Once a certificate is **Active** you normally never touch it again. Renewal targets certificates within about
+two weeks of expiry: on Openship Cloud, and on self-hosted setups where your proxy or edge (Traefik, Caddy, a
+load balancer) owns TLS, this is handled for you; a self-hosted operator can also point a scheduled job at the
+renew endpoint. **Renew SSL** is the manual fallback if a certificate ever lapses. If you chose manual TXT,
+this opens DNS setup for a fresh record; those certificates cannot renew unattended.
+</Callout>
+
+<Callout title="“Recheck / Renew SSL” errors that the domain must be verified" type="warn">
+SSL actions require a **verified** domain — attempting them on a pending one returns
+*"Domain must be verified before SSL can be managed"*. Finish verification first (above), then manage the
+certificate.
+</Callout>
+
+<Callout title="Verify should not require a redeploy" type="warn">
+The first deployment prepares certbot even while the domain is pending. After a successful **Verify**, the
+certificate provider re-registers the existing route with TLS, so no redeploy is expected. If a current
+deployment only starts serving HTTPS after redeploying, preserve both the deployment log and the Verify log;
+that indicates a separate edge/route reconciliation failure.
+</Callout>
+
+## External ingress: your edge terminates TLS
+
+<Callout type="error" title="Symptom / what you see">
+Your app already sits behind a Cloudflare Tunnel, a load balancer, or another reverse proxy that handles
+HTTPS — but Openship keeps asking for an `A`/`CNAME` and tries to issue its own certificate, which you don't
+want.
+</Callout>
+
+**What it means.** Standard verification lets Openship manage the certificate. With an external proxy,
+that proxy owns public TLS. External ingress keeps certificate issuance out of domain verification;
+Cloud still checks ownership, while self-hosted installations accept the operator's configuration.
+
+**How to fix**
+
+1. When adding the domain, turn on **External ingress & TLS**. From the API, pass
+   `"externalIngress": true` on `POST /api/domains`.
+2. On **Openship Cloud**, add the requested `_openship-challenge` TXT record. On **self-hosted instances**,
+   no DNS record is requested or checked. Configure DNS to reach your proxy, including internal DNS for
+   a homelab behind Nginx Proxy Manager; a rotating WAN IP does not block this verification mode.
+3. Click **Verify**. Openship confirms *"Domain verified — TLS is handled by your external ingress;
+   no certificate is issued here."* Your proxy must forward requests to the Openship server and serve HTTPS.
+
+<Callout title="What the SSL pill shows" type="info">
+An external-ingress domain reads **External TLS** for its SSL status. Verification does not request a
+certificate from Openship; maintain the public certificate at your proxy. Any separately configured
+origin certificate protects the proxy-to-server connection.
+</Callout>
+
+<Callout title="Turn it on only if you mean it" type="warn">
+If your edge does **not** handle HTTPS, leave External ingress off — otherwise the domain will verify but
+serve plain HTTP, with no certificate from anyone. When in doubt, leave it off and let Openship issue the
+certificate.
+</Callout>
+
+## Still stuck?
+
+<Callout title="One more thing to check: the hostname itself" type="info">
+If **Add domain** is rejected before you even reach verification, the hostname failed a basic check — e.g.
+`Domain "app.example.com" is already in use` (it's attached elsewhere) or
+`"…" is not a valid public hostname.` (a bare IP, `localhost`, a single-label name, or a dot-separated label
+longer than 63 characters). Free `*.opsh.io`-style subdomains aren't added here either — those live in the
+project's public endpoints, not as custom domains.
+</Callout>
+
+<Cards>
+  <Card title="Custom domains guide" href="https://openship.io/docs/guides/custom-domains" description="The full add → point DNS → verify → HTTPS walkthrough, click by click." />
+  <Card title="Domains API reference" href="https://openship.io/docs/api/domains" description="Every domain endpoint, the preview/verify responses, and the cnameVerified / txtVerified flags." />
+  <Card title="Project Domains tab" href="https://openship.io/docs/dashboard/projects" description="Where domains, verification status, and the SSL pill live in the dashboard." />
+</Cards>

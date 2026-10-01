@@ -27,10 +27,12 @@ docs = "apps/web/content/docs/"
 selections = {
     "openship-deploy": {
         **{f"references/cli/{name}.mdx": f"{docs}cli/{name}.mdx" for name in
-           ("index", "access", "deploy", "projects", "edge", "run", "self-host")},
+           ("index", "access", "automation", "deploy", "projects", "edge", "run", "self-host")},
         **{f"references/guides/{name}.mdx": f"{docs}guides/{name}.mdx" for name in
-           ("self-hosted-github-app", "custom-domains", "persistent-storage",
-            "backups-restore", "updating", "migrate-control-plane")},
+           ("self-hosted-github-app", "custom-domains", "persistent-storage", "rollback-redeploy",
+            "logs-monitoring", "backups-restore", "updating", "migrate-control-plane")},
+        **{f"references/troubleshooting/{name}.mdx": f"{docs}troubleshooting/{name}.mdx" for name in
+           ("deployments", "domains-ssl")},
     },
     "openship-config": {
         "references/fields.md": ".claude/skills/openship-config/references/fields.md",
@@ -47,7 +49,7 @@ source_paths = [
     "packages/core/src/openship-config/schema.ts",
     "packages/core/src/openship-config/parse.ts",
     "packages/core/src/openship-config/parse.test.ts",
-    "apps/api/src/modules/deployments/prepare.service.ts",
+    "packages/platform/src/engine/modules/deployments/prepare.service.ts",
 ]
 def fetch(src):
     """Fetch one required file at the resolved commit."""

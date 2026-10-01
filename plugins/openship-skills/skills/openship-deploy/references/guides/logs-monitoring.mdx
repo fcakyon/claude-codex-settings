@@ -1,0 +1,195 @@
+---
+title: Logs & monitoring
+description: See what your app is doing — its runtime logs, its incoming web requests, and its traffic — and know exactly where to look when something breaks.
+---
+
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+Once your app is online, the next question is always the same: *what is it actually doing right now?* Logs are
+how you find out. Think of them like a diary the app keeps — every time it starts, prints a message, or handles
+a visitor, it writes a line. When something goes wrong, that diary is the first place to look.
+
+Openship gives you two kinds of diary and one big-picture view:
+
+- **Runtime logs** — what your app itself prints (startup messages, errors, `console.log`). This is what you
+  want when the app is crashing or misbehaving.
+- **Request logs** — a line for every web request that reached your app: who asked, for what page, and what
+  answer they got. This is what you want when you're asking "is anyone visiting?" or "why are people getting
+  errors?"
+- **Analytics** — the same request data rolled up into totals and a traffic chart, so you can see trends
+  instead of individual lines.
+
+<Callout title="What you need first">
+- A project that has been deployed at least once (you can see it in the dashboard).
+- For **runtime logs**: the app has to actually be running — a static site has no running process, so it has no
+  runtime logs to show.
+- For **request logs and analytics**: some real traffic. A brand-new app with no visitors has nothing to show yet.
+</Callout>
+
+## Open the Logs tab
+
+<Steps>
+
+<Step>
+
+### Go to your project
+
+From the dashboard, open the project you want to inspect. The project page has a row of tabs along the side —
+**Overview**, **Services**, **Domains**, **Deployments**, **Source**, **Configuration**, **Logs**, and so on.
+
+</Step>
+
+<Step>
+
+### Click **Logs**
+
+This is your live window into the running app. Inside it you'll find two sub-tabs at the top: **Terminal** and
+**Server**. The next two sections explain each one.
+
+</Step>
+
+</Steps>
+
+## Runtime logs — the **Terminal** sub-tab
+
+The **Terminal** sub-tab is a live view of everything your app prints while it runs — the same output you'd see
+in a terminal if the app were running on your own machine. If your code calls `console.log`, throws an error, or
+prints a startup banner, it shows up here.
+
+A few things worth knowing:
+
+- **It streams by itself.** When you open the tab it starts tailing new lines automatically. A small green dot
+  and a **Stop** button tell you it's live; press **Stop** to freeze it, **Start** to stream again.
+- **Search.** There's a search box at the top — type to highlight matches, press **Enter** / **Shift+Enter** to
+  jump between them.
+- **Copy, Download, Clear.** The buttons on the right let you copy the visible logs to your clipboard, save them
+  to a `.txt` file, or clear the view.
+
+<Callout title="More than one service? Pick which one to watch" type="info">
+If your project runs several services (a docker-compose stack, for example), a small **Runtime log target**
+picker appears above the terminal. Choose the project runtime or a specific service to see just its output.
+</Callout>
+
+<Callout title="Static sites don't have a Terminal tab" type="info">
+A static site is just files — there's no process running to print anything — so there are no runtime logs and
+the **Terminal** sub-tab is hidden. On **Openship Cloud**, a static site still gets request logs, shown on a
+single sub-tab labelled **Requests**. On a **self-hosted** static deploy there's no runtime to stream, so the
+Logs tab simply reads *"No runtime logs."* That's expected, not a bug.
+</Callout>
+
+## Request logs — the **Server** sub-tab
+
+The **Server** sub-tab (titled **HTTP Request Logs**) shows one line for every web request that reached your app.
+Each line tells you:
+
+- the **method** (GET, POST, …) and the **path** that was requested,
+- the **status code** the app sent back (green for 2xx, blue for 3xx, amber for 4xx, red for 5xx),
+- how long it took (**response time** in milliseconds),
+- the visitor's **IP address** and country, the bytes in and out, and their browser (user agent).
+
+Like the Terminal, this view is **live** — new requests appear at the top as they happen.
+
+<Callout title="Reading status codes" type="info">
+The colour is the quick tell. **Green (2xx)** means success. **Amber (4xx)** means the visitor asked for
+something that isn't there or isn't allowed (a 404, say). **Red (5xx)** means *your app* errored while handling
+the request — that's the one to chase, and the Terminal tab usually has the matching error.
+</Callout>
+
+If your project answers on more than one domain, a **domain switcher** appears in the header so you can look at
+one domain's requests at a time.
+
+## The bigger picture — analytics on the **Overview** tab
+
+Individual request lines are great for "what just happened," but for "how's it doing overall" you want the rollup.
+Open the project's **Overview** tab and you'll see it:
+
+- **Stat cards** across the top: **Server Requests**, **Unique IPs**, **Avg Response** (average response time),
+  and **Bandwidth Out**.
+- A **Traffic** chart showing requests over time.
+- A **Top Paths** list — the pages and endpoints getting the most hits.
+
+This is the same request data as the Server sub-tab, just counted up. Empty at first — it fills in as traffic
+arrives.
+
+## Where to look when something is wrong
+
+A quick map so you don't have to guess:
+
+- **The app won't start, or it's crashing** → **Logs → Terminal**. Read the last lines; the error is almost
+  always right there.
+- **Visitors are getting errors** → **Logs → Server**. Look for red (5xx) lines, note the path, then check the
+  Terminal for the matching stack trace.
+- **"Is anyone even using this?"** → **Overview** analytics.
+- **The deployment itself failed** (it never went live) → open that deployment from the **Deployments** tab and
+  read its build log — that's a separate stream from the runtime logs above.
+
+## CLI
+
+Everything above is available from the CLI too. First grab your project's ID with `openship project list`, then:
+
+```bash
+# Runtime (container) logs — what your app prints
+openship project logs <project-id>              # recent lines
+openship project logs <project-id> --tail 200   # last 200 lines
+openship project logs <project-id> -f           # follow / stream live
+
+# HTTP request logs — every web request that hit the app
+openship project server-logs <project-id>                 # recent entries (JSON)
+openship project server-logs <project-id> --limit 200     # up to 200 entries
+openship project server-logs <project-id> --domain yourapp.com   # one domain only
+openship project server-logs <project-id> -f              # stream live
+
+# A specific deployment's build/run log (grab the id with: openship deployment list)
+openship logs <deployment-id>          # snapshot
+openship logs <deployment-id> --tail 100
+openship logs <deployment-id> -f       # stream until the deployment finishes
+```
+
+<Callout title="Live request streaming is self-hosted only (for now)" type="info">
+`openship project server-logs -f` streams live on self-hosted projects. For Openship Cloud projects the CLI
+prints the recent entries instead and points you to the dashboard for the live tail — the **Server** sub-tab
+there streams cloud requests fine.
+</Callout>
+
+<Callout title="Managing the edge itself" type="info">
+The commands above read one project. To manage the reverse proxy those requests pass through — a traffic
+overview and per-domain analytics, route rules, registering domains on a port, or taking over a proxy
+that's already on `:80/:443` — see [The edge](https://openship.io/docs/guides/the-edge) guide (or the
+[`openship edge`](https://openship.io/docs/cli/edge) command reference).
+</Callout>
+
+## Troubleshooting
+
+<Callout title="The Terminal tab is empty or says “Press Start”" type="warn">
+Either the app hasn't printed anything yet, or it isn't running. Make sure the deployment is live (check the
+**Deployments** tab), then press **Start**. If the project is a **static site**, there's no Terminal at all —
+on Openship Cloud use the **Requests** sub-tab; a self-hosted static deploy has no runtime logs to show.
+</Callout>
+
+<Callout title="“Container exited with code …” pops up" type="error">
+Your app started and then quit. A non-zero exit code means it crashed — read the last few lines in the
+**Terminal** tab, which hold the reason. The usual suspects are a missing environment variable, a failed
+database connection, or the app listening on the wrong port. Fix it and redeploy.
+</Callout>
+
+<Callout title="No request logs appear" type="warn">
+Request logs are recorded at the edge, so two things have to be true: your app must be receiving **real
+traffic** (open its URL in a browser to generate some), and the request-logging must be in place for that
+deployment. If the panel shows an error, its hint — *"make sure the server has analytics scripts deployed"* —
+points at that second case.
+</Callout>
+
+<Callout title="The CLI says “Failed to connect to terminal logs”" type="error">
+This means the project isn't running, so there's no live stream to attach to. Confirm the deployment is up
+(`openship project list` shows its status), start it if needed, then try `openship project logs <project-id> -f`
+again.
+</Callout>
+
+## Related guides
+
+<Cards>
+  <Card title="Roll back or redeploy" href="https://openship.io/docs/guides/rollback-redeploy" description="Found a bad release in the logs? Get back to a working version fast." />
+  <Card title="Environment variables" href="https://openship.io/docs/guides/environment-variables" description="Most startup crashes trace back to a missing secret or setting." />
+  <Card title="Custom domains" href="https://openship.io/docs/guides/custom-domains" description="Put your app on your own name — and see its requests per domain." />
+  <Card title="Core concepts" href="https://openship.io/docs/getting-started/core-concepts" description="Projects, deployments, services — the words behind the screens." />
+</Cards>

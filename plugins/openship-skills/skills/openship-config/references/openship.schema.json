@@ -94,6 +94,11 @@
       "description": "Command that starts the server in production.",
       "type": "string"
     },
+    "releaseCommands": {
+      "description": "Commands run ONCE per deploy, after the build and before the new version goes live, typically database migrations. A non-zero exit fails the deploy and the previous version keeps serving. On Docker they run in a throwaway container, so only effects outside it persist: the database, or a mounted volume. Warm caches in the start command instead. Laravel: [\"php artisan migrate --force\"]. Rails: [\"bundle exec rails db:prepare\"]. Single-app projects only for now. Omit for no release phase (the default).",
+      "type": "array",
+      "items": { "type": "string" }
+    },
     "outputDirectory": {
       "description": "Directory the build writes to (e.g. \".next\", \"dist\").",
       "type": "string"

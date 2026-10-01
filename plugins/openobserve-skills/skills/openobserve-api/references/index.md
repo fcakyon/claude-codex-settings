@@ -46,7 +46,7 @@ Make sure that you are sending the requests over HTTPS.
 ## Next steps
 
 - [Quickstart](../../getting-started.md): get OpenObserve running and grab your credentials.
-- [Ingestion](../../ingestion/index.md): start sending logs, metrics, and traces.
+- [Ingestion](../../ingestion/index.md): start sending logs, metrics, traces, and profiles.
 - [OpenTelemetry / OTLP](../../ingestion/logs/otlp.md): the recommended modern ingestion path.
 
 **Need some help?**

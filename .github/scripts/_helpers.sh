@@ -72,6 +72,14 @@ if len(parts) >= 3 and 'license:' not in parts[1]:
 "
 }
 
+# Copy a whole upstream skill directory, add its license if missing, and zip it.
+# Usage: sync_skill <source-dir> <target-dir> <license>
+sync_skill() {
+  sync_dir "$1" "$2" .
+  ensure_license "$2" "$3"
+  create_zip "$2"
+}
+
 # Create a skill zip with the skill directory at the archive root.
 # The zip is placed inside the skill directory. Pass an optional asset basename
 # (without .zip) when two skills share a directory name and need distinct assets.

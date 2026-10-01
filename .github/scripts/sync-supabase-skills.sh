@@ -9,11 +9,8 @@ clone_or_update https://github.com/supabase/agent-skills supabase-agent-skills
 
 SRC="$HOME/dev/supabase-agent-skills/skills"
 
-sync_dir "$SRC/supabase-postgres-best-practices" \
-  plugins/supabase-skills/skills/supabase-postgres-best-practices \
-  "SKILL.md" "references/"
-
-ensure_license plugins/supabase-skills/skills/supabase-postgres-best-practices MIT
-create_zip plugins/supabase-skills/skills/supabase-postgres-best-practices
+for dir in "$SRC"/*/; do
+  sync_skill "${dir%/}" "plugins/supabase-skills/skills/$(basename "$dir")" MIT
+done
 
 echo "Done syncing supabase-skills."
