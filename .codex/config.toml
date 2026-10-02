@@ -1,11 +1,11 @@
-model = "gpt-6-astra"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "medium"
 approval_policy = "on-request"
 approvals_reviewer = "auto_review"
 sandbox_mode = "workspace-write"
 web_search = "live"
 personality = "pragmatic"
-model_auto_compact_token_limit = 400000
+model_auto_compact_token_limit = 500000
 model_auto_compact_token_limit_scope = "body_after_prefix"
 service_tier = "default"
 
