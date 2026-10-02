@@ -1168,7 +1168,7 @@ For Codex CLI, see the recipe at [`.codex/config-minimax.toml`](./.codex/config-
 
 Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 
-- **Model**: `gpt-6-astra` with `model_reasoning_effort` set to "medium"
+- **Model**: `gpt-6.1-sol` with `model_reasoning_effort` set to "medium"
 - **Sandbox**: `workspace-write` with network access enabled
 - **Auto mode**: the "Approve for me" option under `/approvals`, set by `approvals_reviewer = "auto_review"`. A reviewer subagent judges each escalation against the `[auto_review] policy` block in [`.codex/config.toml`](./.codex/config.toml) instead of stopping to ask you, so it trades tokens for far fewer prompts. The policy mirrors the `autoMode` block in [`.claude/settings.json`](./.claude/settings.json)
 - **Plugins**: a curated set enabled from this marketplace (`simplify`, `github-dev`, `python-skills`, and more)
