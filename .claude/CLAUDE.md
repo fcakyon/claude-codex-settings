@@ -77,8 +77,8 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 - PR titles: NO type prefix (unlike commits) - start with capital letter + verb
 - Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
-- PR body: open on why, short scannable bullets (one point each), a diff or snippet, numbers over adjectives. Single section, no headers
-- No test plans, no changed files list, no line-number links in PR body
+- PR body: concise trigger, actual/expected behavior, fix, and verified results. Use short bullets, readable before/after examples, and small sections when useful
+- Include completed checks and material limits, not future test plans or changed file lists. Preserve uploaded visuals, bot context, and valid evidence when editing
 - Self-assign with `-a @me`
 - Find reviewers: `gh pr list --repo <owner>/<repo> --author @me --limit 5`
 

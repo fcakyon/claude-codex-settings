@@ -5,99 +5,105 @@ description: This skill should be used when user asks to "create a PR", "make a 
 
 # Create PR
 
-Complete workflow for creating pull requests following project standards.
+Create a PR a reviewer can understand without reading the conversation. Use extra invocation
+text and session findings to explain the problem, final behavior, and evidence. Follow the
+user's requested format and the target repo's guidance.
 
-When explicitly invoked with extra text, treat that text as additional context for branch
-naming, commit context, and PR title and body generation. Compress it into a short
-plain-language branch name rather than copying the full text.
+## Workflow
 
-## Process
+1. **Inspect the scope and base**
+   - Read repository guidance and inspect `git status`, staged changes, and the current branch.
+   - Honor staged-only requests. Never stage unrelated work or require a new commit when the
+     branch already contains the requested changes.
+   - Confirm the target remote and base branch. Before creating a branch from main/master,
+     fetch that remote and fast-forward the local base with `git merge --ff-only <remote>/<base>`.
+     Preserve dirty work and stop if fast-forwarding fails. Do not reset it away.
+   - Create a short branch using the repo's naming convention. Never commit directly to main.
 
-**First, run the `/simplify` skill on the staged diff and apply its findings before committing. Docs-only diffs are a no-op.**
+2. **Finish and inspect the change**
+   - Run `/simplify` on the staged diff before committing and apply its findings. Docs-only
+     diffs are a no-op. Follow `commit-staged` for any staged changes.
+   - Update existing documentation only when the requested change makes it inaccurate.
+   - Review `git diff <remote>/<base>...HEAD` across all commits. For an existing PR, use its
+     actual base and head, or `gh pr diff <pr>` if this checkout is on another branch.
+   - Run appropriate checks and collect their actual results. Verify session findings against
+     the final change, including links, counts, errors, and benchmark provenance.
 
-1. **Preferred execution**
-   - If subagents are available, use `github-dev:pr-creator` for the full workflow.
-   - Pass along any extra invocation text plus session findings and motivation as additional context.
-   - Otherwise follow the manual steps below.
+3. **Write and publish**
+   - Use the title and body guidance below. If a PR already exists, use `update-pr-summary`
+     rather than opening a duplicate.
+   - Write the exact body to a temporary file outside the repo and pass `--body-file` to `gh`.
+     Never interpolate text into a shell command or include command output by accident.
+   - Push the branch and create with an explicit base, `--title`, `--body-file`, and `-a @me`.
+   - Add a reviewer only if explicitly requested or recent PRs by this author have reviewers:
+     `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`.
+   - Read back the published title and body with `gh pr view <pr> --json title,body,url`.
+     Check code fences, tables, links, and preserved media. For visual changes, open the PR
+     and verify the images render. Report the URL and any incomplete verification.
 
-2. **Verify staged changes** exist with `git diff --cached --name-only`
+## Title and body
 
-3. **Branch setup**
-   - If on main/master, create a short branch first: `feature/short-topic`, `fix/short-topic`, or `docs/short-topic`
-   - Keep the branch suffix to 2-4 short words
-   - Avoid long, overly specific, or sentence-like branch names
-   - Use `github-dev:commit-creator` subagent to handle staged changes if needed, and pass session findings and motivation into the commit context
+- Title: start with a capitalized verb and name the concrete behavior, such as
+  `Fix copied session text losing line breaks`. No type prefix, internal brand names, or
+  vague claims. Rewrite the title and body when the final scope changes.
+- Lead with the trigger and consequence: when does the bug happen, what goes wrong, and why
+  does the fix matter? For a feature, show what the user can now do. Skip "This PR" openers.
+- Keep distinct points in short bullets, usually 1-3. Do not squeeze several ideas into a
+  paragraph or cut useful evidence to satisfy a word count. Small changes may need only
+  one sentence and a snippet. Use short sections when reproduction, fix, and results need
+  separation. Omit empty or boilerplate sections.
+- For bugs, include the smallest useful reproduction, the actual error/output and expected
+  behavior, then explain how the final change fixes it. Use exact logs where they show the
+  failure. Skip setup noise, raw tool output, and the debugging diary.
+- Show behavior with a copyable usage/reproduction snippet, a compact Before/After table,
+  or separately labeled fenced Before and After outputs. Prefer these to red/green diff
+  lines that force the reviewer to infer the outcome. Do not force snippets onto copy edits.
+- Put measurements and main-versus-branch comparisons in a small table. State the dataset,
+  workload, or sample count needed to interpret them. Link relevant issues, commits, docs,
+  and result artifacts where they support the claim, rather than listing changed files.
+- Include concise **completed validation**: the relevant command or check, its result, and
+  material limitations or pre-existing failures. A future test checklist is not evidence.
+  Do not claim full-run success from a focused check, or understate verified full runs.
+- Include only implementation detail that explains the fix or a tradeoff. Mention net line
+  counts or base-branch noise when they help distinguish the actual review scope.
+- Never add AI attribution, session links, redundant captions, or a concluding sales pitch.
 
-4. **Documentation check**
-   - Update README.md or docs based on changes compared to target branch
-   - For config/API changes, use `mcp__tavily__tavily_search` to verify info and include sources
+## Visual evidence and existing content
 
-5. **Analyze all commits**
-   - Use `git diff <base-branch>...HEAD` to review complete changeset
-   - PR message must describe all commits, not just latest
-   - Focus on what changed from reviewer perspective
+- UI/design changes need readable Before/After images or GIFs in a two-column table. Match
+  viewport and scenario, and inspect the visuals before using them. Analysis/plot changes
+  need representative outputs and measured results readable at the displayed size.
+- Never commit PR screenshots or generated figures into the branch. Follow the user's and
+  repo's hosting rules. Where release uploads are permitted, use an existing appropriate
+  release and embed its asset URLs. Preserve existing GitHub attachment URLs as well.
+- For Ultralytics repos, never upload visuals to release assets. Give the user absolute local
+  paths, the PR link, and the sentence/table cell where each image belongs for manual upload.
+  Do not invent attachment URLs or claim pending uploads are visible.
+- When editing a body, preserve user-uploaded images/GIFs, bot-added context, related links,
+  and still-valid evidence unless the user asks to remove them. Edit the relevant portion
+  rather than replacing the whole body. Keep proof in the body instead of duplicating it
+  in a separate comment.
 
-6. **Create PR**
-   - Use `gh` for GitHub operations and `git` only for local branch management
-   - Use `github-dev:pr-creator` or `gh pr create` with parameters:
-     - `-t` (title): a short human headline, capital first letter, no `fix:` or `feat:` prefix.
-       Lead with the outcome in plain words, one idea not a list of everything the branch touched.
-       Punchy beats exhaustive. A title is a headline, not a summary.
-       Robotic: `Align Claude Code install commands to the CLI form and tidy humanize docs`
-       Cooler: `Put Claude Code on the same install CLI as everything else`
-     - `-b` (body): write it like a sharp teammate would, not a changelog. See PR Body Guidelines below.
-     - `-a @me` (self-assign)
-     - `-r <reviewer>`: Only add if the user explicitly asks OR recent PRs by this author have reviewers.
-       Check with: `gh pr list --repo <owner>/<repo> --author @me --limit 5 --json reviewRequests`
-       If recent PRs have no reviewers, skip `-r` entirely.
+## Example: bug with completed checks
 
-7. **PR Body Guidelines**
-   - One-line why it exists, not "This PR...". No second intro paragraph.
-   - Three bullets max, one point each, under ~12 words. Need a fourth? You are over-explaining, cut it.
-   - Lead with the most visual proof, don't just describe it. A webpage, UI, or design change MUST carry before/after images in a two-column table, never text describing the change. Benchmarks get a table, anything else gets a `diff` or runnable CLI snippet.
-   - Numbers win: put benchmarks, counts, speedups and comparisons in a markdown table, not a paragraph.
-   - One read, one section, no headers. Plain words, no buzzwords, no test plans or file lists.
-   - **Embedding images**: never commit them into the repo. Upload to a release and link that URL, which outlives the branch:
-     ```bash
-     gh release upload <tag> before.png after.png --clobber
-     # ![before](https://github.com/OWNER/REPO/releases/download/<tag>/before.png)
-     ```
-     Capture both shots at the same window size so the pair is comparable. Release assets serve as `application/octet-stream`, so `curl -sI` looks wrong even when fine. Open the PR and confirm the images render.
+````markdown
+Copying a multiline command into a session loses its line breaks.
 
-## Examples
-
-### Why-first with a diff
-
-````
-Codex, Cursor, and Gemini each install from their own CLI. Claude Code was the odd one out on the in-REPL slash form, so this lines everyone up.
-
-```diff
-- /plugin install fable-advisor@claude-settings
-+ claude plugin install fable-advisor@claude-settings
-```
-
-Same swap across all 30 plugin tables. No behavior change, just one house style everywhere.
-````
-
-### CLI snippet
-
-```
-Add a compare command for side-by-side model runs
-
-Point it at a folder and a few models and it stitches the panels together, so you can eyeball which one wins without juggling tabs.
-
-`ultrannotate compare --source ./images --models sam3.pt,yoloe-26x-seg.pt --phrases "person,car"`
-```
-
-### Design change, before and after
-
-```
-The install panel only ever printed Codex commands, even though the site lists four tools.
-
-| before | after |
+| Before | After |
 |---|---|
-| ![before](https://github.com/fcakyon/claude-codex-settings/releases/download/v2.4.0/install-panel-before.png) | ![after](https://github.com/fcakyon/claude-codex-settings/releases/download/v2.4.0/install-panel-after.png) |
+| Pasted command becomes one line | Original line breaks survive |
 
-- marketplace setup is its own step, shown only for tools that need one
-- unsupported plugins say so instead of a dead command
+- Preserve clipboard newlines at paste time
+- Reuse the existing text insertion path
+
+**Reproduce**
+```sh
+printf 'first\nsecond\n' | pbcopy
+# Paste into an open session.
 ```
+
+**Checked:** paste regression passes for multiline and single-line commands.
+````
+
+Adapt this shape to the evidence. For UI changes, comparison cells should carry the actual
+screenshots/GIFs. For long outputs, use separate fenced blocks outside the table.
