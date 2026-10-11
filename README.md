@@ -1099,10 +1099,10 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 <details>
 <summary><strong>Z.ai GLM-5.3 (1M context)</strong></summary>
 
-Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/scenario-example/develop-tools/claude):
+Configuration in [`.claude/settings-zai.json`](./.claude/settings-zai.json) using [Z.ai GLM models via Anthropic-compatible API](https://docs.z.ai/devpack/tool/claude):
 
 - **Main model**: GLM-5.3 with 1M context (dialogue, planning, coding, complex reasoning)
-- **Fast model**: GLM-4.7 (file search, syntax checking)
+- **Fast model**: GLM-5.3-Flash (file search, syntax checking)
 - **Cost savings**: much cheaper than frontier Claude models
 - **API key**: Get from [z.ai/model-api](https://z.ai/model-api)
 
