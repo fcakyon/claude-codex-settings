@@ -451,17 +451,17 @@
     {
       "name": "paper-search-tools",
       "source": "./plugins/paper-search-tools",
-      "description": "Paper search MCP for arXiv, PubMed, IEEE, Scopus, and more. Requires Docker.",
-      "version": "2.0.4",
+      "description": "Search academic papers, look up DOIs, and download PDFs with Paper Search CLI.",
+      "version": "3.0.0",
       "author": {
         "name": "Fatih C. Akyon"
       },
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
-      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "mcp"],
+      "keywords": ["paper-search", "arxiv", "pubmed", "ieee", "academic", "research", "cli"],
       "category": "research",
-      "tags": ["research", "mcp", "integration"]
+      "tags": ["research", "cli", "integration"]
     },
     {
       "name": "tavily-tools",

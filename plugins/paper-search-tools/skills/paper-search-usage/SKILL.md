@@ -1,27 +1,32 @@
 ---
 name: paper-search-usage
-description: This skill should be used when user asks to "search for papers", "find research papers", "search arXiv", "search PubMed", "find academic papers", "search IEEE", "search Scopus", or "look up scientific literature".
+description: This skill should be used when the user asks to "search for papers", "find research papers", "search arXiv", "search PubMed", "look up a DOI", "download a paper", "search IEEE", or "search Scopus".
 ---
 
-# Paper Search MCP
+# Search and read papers
 
-Search academic papers across multiple platforms.
+Run [Paper Search CLI](https://github.com/fcakyon/paper-search-cli) through the shell. If `paper-search` is unavailable, follow [setup](../setup/SKILL.md).
 
-## Supported Platforms
+## Find papers
 
-- arXiv (preprints)
-- PubMed (biomedical)
-- IEEE Xplore (engineering)
-- Scopus (multidisciplinary)
-- ACM Digital Library (computer science)
-- Semantic Scholar (AI-powered)
+```bash
+paper-search search 'object detection' -s fast -n 5
+paper-search search 'object detection' -s arxiv,crossref -n 5
+paper-search sources
+```
 
-## Usage
+Search returns JSON. Check `errors` for partial failures and retain source identifiers and URLs. Try alternate terms and multiple sources before concluding that no papers exist. Discover source names with `paper-search sources`; use explicit `-s ieee`, `-s scopus`, or `-s wos` only with configured credentials.
 
-Use `mcp__paper-search__*` tools to search papers by keywords, authors, or topics.
+## Look up, download, and read
 
-## Best Practices
+```bash
+paper-search tool get_crossref_paper_by_doi 10.1038/nature12373
+paper-search download arxiv 1706.03762 -o ./downloads
+paper-search read arxiv 1706.03762 -o ./downloads
+paper-search tool get_citing_papers 10.1038/nature12373
+paper-search tool get_referenced_papers 10.1038/nature12373
+```
 
-- Start with broad searches, then narrow down
-- Use platform-specific searches for domain-specific papers
-- Combine multiple sources for comprehensive literature reviews
+Citation commands accept a DOI or OpenAlex work ID, not a title. Check pagination and truncation metadata before treating a citation list as complete. Use `paper-search tool --help` and `paper-search tool <operation> --help` to discover other operations and their arguments.
+
+Verify author names, venue, and year against the published paper or official record. For numerical claims, inspect the PDF's actual table or figure; extracted text can lose layout. Do not treat a search snippet as evidence for a result.
