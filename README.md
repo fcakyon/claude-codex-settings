@@ -910,7 +910,7 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 </details>
 
 <details>
-<summary><strong>paper-search-tools</strong> - Paper Search MCP & Skills</summary>
+<summary><strong>paper-search-tools</strong> - Paper Search CLI & Skills</summary>
 
 | Claude Code                                                | Codex CLI                                             | Gemini CLI                                                      |
 | ---------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
@@ -922,7 +922,7 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/paper-search-tools --skill '*'
 ```
 
-Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:setup` after install. Requires Docker.
+Search papers, look up DOIs, download PDFs, and follow citations with [Paper Search CLI](https://github.com/fcakyon/paper-search-cli). Run `/paper-search-tools:setup` after install. Requires uv and Python 3.10+; no Docker or MCP server.
 
 **Skills:**
 
@@ -931,9 +931,9 @@ Search papers across arXiv, PubMed, IEEE, Scopus, ACM. Run `/paper-search-tools:
 
 **Commands:**
 
-- [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Configure Paper Search MCP
+- [`/paper-search-tools:setup`](./plugins/paper-search-tools/commands/setup.md) - Install and verify Paper Search CLI
 
-**MCP:** [`.mcp.json`](./plugins/paper-search-tools/.mcp.json) | [mcp/paper-search](https://hub.docker.com/r/mcp/paper-search)
+**CLI:** [fcakyon/paper-search-cli](https://github.com/fcakyon/paper-search-cli)
 
 </details>
 
@@ -1208,7 +1208,7 @@ exec "$@" --thinking-display summarized
 
 **Zero-MCP goal:**
 
-- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, tavily, gcloud, azure, paper-search)
+- [ ] Replace MCP-based plugins with CLI alternatives where possible (mongodb, tavily, gcloud, azure)
 
 **New plugins/skills:**
 
