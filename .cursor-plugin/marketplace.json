@@ -83,7 +83,7 @@
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Browser automation CLI for AI agents to navigate pages, fill forms, and test apps.",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "license": "Apache-2.0"
     },
     {
