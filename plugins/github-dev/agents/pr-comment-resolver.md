@@ -35,11 +35,7 @@ understand which comments are already addressed.
 ## Workflow
 
 1. **Fetch unresolved comments**:
-   - If PR number provided, use it directly
-   - Otherwise auto-detect: `gh pr view --json number,headRefName`
-   - Get inline comments: `gh api repos/{owner}/{repo}/pulls/{number}/comments`
-   - Get review-level comments: `gh pr view <number> --json reviews,comments`
-   - Filter to unresolved/pending threads
+   - Follow the loaded `resolve-pr-comments` skill's **Fetch unresolved comments** step for paginated thread state and reply context
 
 2. **For each comment, decide**:
    - **Valid concern needing code change**: fix it, AND search codebase for same problem

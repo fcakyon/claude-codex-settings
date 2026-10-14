@@ -18,11 +18,37 @@ reference is provided, infer it from the current branch.
    - Otherwise follow the manual steps below.
 
 2. **Fetch unresolved comments**
-   - If a PR number or URL is provided, use it directly.
-   - Otherwise auto-detect the PR from the current branch with `gh pr view --json number,headRefName`.
-   - Fetch inline comments with `gh api repos/{owner}/{repo}/pulls/{number}/comments`.
-   - Fetch review-level comments with `gh pr view <number> --json reviews,comments`.
-   - Filter to unresolved or pending threads.
+   - Use the supplied PR number or URL, or auto-detect with `gh pr view --json number,url`.
+   - Set `owner`, `repo`, and `number` from the target PR's base repository. Fetch unresolved inline threads with:
+
+     ```bash
+     gh api graphql --paginate \
+       -f owner="$owner" -f repo="$repo" -F number="$number" \
+       -f query='
+     query($owner: String!, $repo: String!, $number: Int!,
+           $endCursor: String) {
+       repository(owner: $owner, name: $repo) {
+         pullRequest(number: $number) {
+           reviewThreads(first: 100, after: $endCursor) {
+             pageInfo { hasNextPage endCursor }
+             nodes {
+               id isResolved isOutdated path line
+               comments(first: 1) {
+                 nodes { id databaseId url body author { login } }
+               }
+             }
+           }
+         }
+       }
+     }' \
+       --jq '.data.repository.pullRequest.reviewThreads.nodes
+              | map(select(.isResolved == false))'
+     ```
+
+   - Collect the JSON array from every page. Keep unresolved threads even when `isOutdated` is true. Outdated describes the diff location, not resolution.
+   - Stop and report any failed page or GraphQL error. Only a successful complete fetch can establish that no unresolved threads remain.
+   - The query includes each thread's root comment. Read replies with `gh api "repos/$owner/$repo/pulls/$number/comments" --paginate --slurp`, matching the root `databaseId` and replies' `in_reply_to_id`. REST comments supply context, not resolution state.
+   - Fetch review bodies and conversation comments separately with `gh pr view "$number" --repo "$owner/$repo" --json reviews,comments`. These have no inline-thread resolution flag.
 
 3. **Resolve each comment**
    - If the comment is valid, fix the code and search the codebase for the same problem in other locations.
