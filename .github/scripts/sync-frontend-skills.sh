@@ -5,27 +5,35 @@
 set -euo pipefail
 source "$(dirname "$0")/_helpers.sh"
 
-# --- OpenAI frontend skill ---
+# --- OpenAI frontend skills ---
 # No ensure_license: openai/plugins repo has no LICENSE file.
 clone_or_update https://github.com/openai/plugins openai-plugins
 
-sync_dir "$HOME/dev/openai-plugins/plugins/build-web-apps/skills/frontend-app-builder" \
-  "plugins/frontend-design-skills/skills/openai-frontend-design" \
-  "SKILL.md" "agents/" "references/"
+for skill in frontend-app-builder frontend-testing-debugging; do
+  local_name="$skill"
+  [ "$skill" = frontend-app-builder ] && local_name=openai-frontend-design
+  skill_dir="plugins/frontend-design-skills/skills/$local_name"
+  sync_dir "$HOME/dev/openai-plugins/plugins/build-web-apps/skills/$skill" "$skill_dir" .
 
-# Patch frontmatter name to match local directory name (upstream uses frontend-app-builder)
-python3 -c "
-p = '$REPO_ROOT/plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md'
-t = open(p).read()
-open(p, 'w').write(t.replace('name: frontend-app-builder', 'name: openai-frontend-design'))
-"
+  python3 - "$REPO_ROOT/$skill_dir/SKILL.md" << 'PYEOF'
+import sys
+from pathlib import Path
 
-sed -i '' '/^# Frontend App Builder$/a\
-\
-For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.
-' "$REPO_ROOT/plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md"
+p = Path(sys.argv[1])
+t = p.read_text().replace('frontend-app-builder', 'openai-frontend-design')
+t = t.replace('Build Web Apps', 'Frontend Design Skills')
+t = t.replace(
+    '# Frontend App Builder\n',
+    '# Frontend App Builder\n\n'
+    'For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.\n'
+    'For rendered UI testing and debugging, use the installed `frontend-testing-debugging` skill.\n',
+    1,
+)
+p.write_text(t)
+PYEOF
 
-create_zip "plugins/frontend-design-skills/skills/openai-frontend-design"
+  create_zip "$skill_dir"
+done
 
 # --- Anthropic frontend skill ---
 clone_or_update https://github.com/anthropics/claude-plugins-official anthropic-claude-plugins-official
