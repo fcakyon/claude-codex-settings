@@ -1,0 +1,19 @@
+---
+import ToolIcons from "./ToolIcons.astro"
+import type { plugins } from "../lib/content"
+
+interface Props {
+  plugin: (typeof plugins)[number]
+}
+
+const { plugin } = Astro.props
+---
+
+<a class="plugin-card" href={`/plugins/${plugin.name}/`}>
+  <strong style={`view-transition-name: plugin-name-${plugin.name}`}>{plugin.name}</strong>
+  <span class="plugin-card-description">{plugin.description}</span>
+  <span class="plugin-card-meta">
+    <ToolIcons {plugin} />
+    <span>{plugin.summary}</span>
+  </span>
+</a>

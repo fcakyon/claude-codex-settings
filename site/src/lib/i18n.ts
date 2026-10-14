@@ -37,22 +37,19 @@ export const translations = {
       },
       configuration: {
         title: "One setup, four coding tools",
-        description: "A single, practical configuration that works across the tools you already use.",
+        description: "Add the marketplace once in the tool you use, then install only the plugins you need.",
+        copyCommand: "Copy the command for",
         tools: [
           "Settings, hooks, commands and agents",
           "Plugins, skills and shared guidance",
           "Portable plugins and project rules",
-          "Extensions, skills and shared guidance",
+          "Gemini CLI installs plugin folders from a clone of the repository.",
         ],
-      },
-      install: {
-        title: "Start with one command",
-        description: "Add the marketplace once, then install only the plugins you need.",
       },
       plugins: {
         title: "Plugins with a clear job",
         description: "Descriptions and links come from the repository manifests on every build.",
-        browse: "Browse plugins on this site",
+        browse: "Browse all plugins",
       },
     },
     plugins: {
@@ -125,7 +122,6 @@ export const translations = {
       nav: [
         ["安装", "#install"],
         ["插件", "#plugins"],
-        ["配置", "#configuration"],
       ],
       hero: {
         title: "适用于 Claude Code、Codex 和 Cursor 的实用配置",
@@ -135,12 +131,9 @@ export const translations = {
       },
       configuration: {
         title: "一套配置，支持四种编程工具",
-        description: "直接使用仓库中的配置，在常用的 AI 编程工具之间保持一致。",
-        tools: ["设置、钩子、命令和智能体", "插件、技能和共享指引", "可移植插件和项目规则", "扩展、技能和共享指引"],
-      },
-      install: {
-        title: "从一条命令开始",
-        description: "添加一次插件市场，然后只安装需要的插件。",
+        description: "在你使用的工具中添加一次插件市场，然后只安装需要的插件。",
+        copyCommand: "复制以下工具的命令：",
+        tools: ["设置、钩子、命令和智能体", "插件、技能和共享指引", "可移植插件和项目规则", "Gemini CLI 从克隆的仓库中安装插件目录。"],
       },
       plugins: {
         title: "每个插件都有明确用途",

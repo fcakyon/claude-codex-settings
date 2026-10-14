@@ -1,7 +1,8 @@
 ---
 import Editor from "./Editor.astro"
 import Icon from "./Icon.astro"
-import { codingTools, featured, plugins, repositoryStars, repositoryUrl } from "../lib/content"
+import PluginCard from "./PluginCard.astro"
+import { codingTools, pluginByName, plugins, repositoryStars, repositoryUrl } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -23,31 +24,31 @@ const stars = await repositoryStars()
         <Icon name="github" size={23} />{copy.hero.repository}
         {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale)}<span class="sr-only"> {translations[locale].stars}</span></span>}
       </a>
-      <a class="button secondary" href="#install">{copy.hero.install} <Icon name="arrow" size={19} /></a>
+      <a class="button secondary" href="/guides/install-agent-skills/">{copy.hero.install} <Icon name="arrow" size={19} /></a>
     </div>
   </div>
   <Editor locale={locale} />
 </section>
 
-<section class="section tool-section" id="configuration">
+<section class="section tool-band" id="install">
   <div class="section-intro">
     <h2>{copy.configuration.title}</h2>
     <p>{copy.configuration.description}</p>
   </div>
-  <div class="tool-rail">
-    {codingTools.map(({ icon, label }, index) => (
-      <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.configuration.tools[index]}</span></div>
-    ))}
-  </div>
-</section>
-
-<section class="section install-section" id="install">
-  <div>
-    <h2>{copy.install.title}</h2>
-    <p>{copy.install.description}</p>
-  </div>
-  <div class="install-steps">
-    {codingTools.filter((tool) => tool.marketplace).map((tool) => <div><span>{tool.label}</span><code>{tool.marketplace}</code></div>)}
+  <div class="tool-band-grid">
+    {codingTools.map(({ icon, label, marketplace }, index) => {
+      const command = marketplace ?? pluginByName.get("simplify")!.geminiCommand
+      return (
+        <div class="tool-band-item">
+          <strong><Icon name={icon} size={24} />{label}</strong>
+          <span>{copy.configuration.tools[index]}</span>
+          <div class="command-line">
+            <code>{command}</code>
+            <button class="icon-button" type="button" data-copy={command} aria-label={`${copy.configuration.copyCommand} ${label}`}><Icon name="copy" size={18} /></button>
+          </div>
+        </div>
+      )
+    })}
   </div>
 </section>
 
@@ -56,8 +57,6 @@ const stars = await repositoryStars()
     <h2>{copy.plugins.title}</h2>
     <p>{copy.plugins.description}</p>
   </div>
-  <div class="plugin-rail">
-    {plugins.slice(0, featured.length).map((plugin) => <a href={`/plugins/${plugin.name}/`}><strong>{plugin.name}</strong><span>{plugin.description}</span><Icon name="arrow" size={18} /></a>)}
-  </div>
-  <a class="text-link" href="/plugins/">{copy.plugins.browse} <Icon name="arrow" size={18} /></a>
+  <div class="plugin-grid">{plugins.slice(0, 6).map((plugin) => <PluginCard {plugin} />)}</div>
+  <a class="text-link" href="/plugins/">{copy.plugins.browse} ({plugins.length}) <Icon name="arrow" size={18} /></a>
 </section>
