@@ -1,18 +1,11 @@
 ---
 import Icon from "./Icon.astro"
-import { codingTools, plugins } from "../lib/content"
+import PluginCard from "./PluginCard.astro"
+import { plugins } from "../lib/content"
 
 const pluginCategories = Object.entries(Object.groupBy(plugins, (plugin) => plugin.category || "other")).sort(([a], [b]) =>
   a.localeCompare(b),
 )
-const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`
-const componentSummary = (item: (typeof plugins)[number]) =>
-  [
-    item.components?.skills.length && plural(item.components.skills.length, "skill"),
-    item.components?.agents.length && plural(item.components.agents.length, "agent"),
-    item.components?.commands.length && plural(item.components.commands.length, "command"),
-    item.components?.hooks && "hooks",
-  ].filter(Boolean).join(", ")
 ---
 
 <div class="hub" data-plugin-hub>
@@ -29,28 +22,14 @@ const componentSummary = (item: (typeof plugins)[number]) =>
       ))}
     </div>
   </div>
-  <ul class="hub-grid" role="list">
+  <ul class="plugin-grid" role="list">
     {plugins.map((item) => (
       <li
         style={`view-transition-name: plugin-${item.name}`}
         data-category={item.category || "other"}
         data-search={item.search}
       >
-        <a href={`/plugins/${item.name}/`}>
-          <strong>{item.name}</strong>
-          <span class="hub-description">{item.description}</span>
-          <span class="hub-meta">
-            <span class="hub-tools">
-              {codingTools.map((tool) => (
-                <span class:list={{ "is-off": !item[`${tool.id}Command`] }} title={`${tool.label}${item[`${tool.id}Command`] ? "" : " not supported"}`}>
-                  <Icon name={tool.icon} size={15} />
-                </span>
-              ))}
-              <span class="sr-only">Works with {item.tools.join(", ")}</span>
-            </span>
-            <span>{componentSummary(item)}</span>
-          </span>
-        </a>
+        <PluginCard plugin={item} />
       </li>
     ))}
   </ul>

@@ -1,0 +1,20 @@
+---
+import Icon from "./Icon.astro"
+import { codingTools, type plugins } from "../lib/content"
+
+interface Props {
+  plugin: (typeof plugins)[number]
+  size?: number
+}
+
+const { plugin, size = 15 } = Astro.props
+---
+
+<span class="tool-icons">
+  {codingTools.map((tool) => (
+    <span class:list={{ "is-off": !plugin[`${tool.id}Command`] }} title={`${tool.label}${plugin[`${tool.id}Command`] ? "" : " not supported"}`}>
+      <Icon name={tool.icon} size={size} />
+    </span>
+  ))}
+  <span class="sr-only">Works with {plugin.tools.join(", ")}</span>
+</span>

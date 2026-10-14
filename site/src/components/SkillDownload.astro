@@ -25,7 +25,7 @@ const detailUrl = skill.seo ? `/plugins/${skill.plugin}/skills/${skill.name}/` :
     </div>
   </div>
   <div class="skill-actions">
-    <a class="button primary download-button" href={skill.downloadUrl} data-download-asset={skill.asset}>
+    <a class:list={["button download-button", compact ? "secondary" : "primary"]} href={skill.downloadUrl} data-download-asset={skill.asset}>
       Download ZIP <Icon name="arrow" size={17} />
     </a>
     <a class="source-link" href={skill.sourceUrl}>View skill source</a>

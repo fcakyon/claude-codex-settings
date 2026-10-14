@@ -131,6 +131,8 @@ const codexPlugins = new Set(
 const cursorPlugins = new Set(
   (JSON.parse(read(".cursor-plugin/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
 );
+const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`;
+
 export const featured = ["simplify", "humanize", "codex-advisor", "fable-advisor", "adhd-output-style"];
 const componentNames = (directory: string, folder: string, skill = false) => {
   const path = resolve(directory, folder);
@@ -196,6 +198,16 @@ export const plugins = marketplace.plugins
       index,
       tools,
       components,
+      summary: [
+        components?.skills.length && plural(components.skills.length, "skill"),
+        components?.agents.length && plural(components.agents.length, "agent"),
+        components?.commands.length && plural(components.commands.length, "command"),
+        components?.outputStyles.length && plural(components.outputStyles.length, "output style"),
+        components?.hooks && "hooks",
+        components?.mcp && "MCP server",
+      ]
+        .filter(Boolean)
+        .join(", "),
       search: [
         plugin.name,
         plugin.description,
@@ -218,6 +230,7 @@ export const plugins = marketplace.plugins
       installCommands: [
         {
           id: "claude",
+          icon: "claude",
           tool: "Claude Code",
           command: claudeCommand,
           output: [`Resolving ${plugin.name}@claude-settings…`, `✓ Installed ${plugin.name}`],
@@ -226,6 +239,7 @@ export const plugins = marketplace.plugins
           ? [
               {
                 id: "codex",
+                icon: "openai",
                 tool: "OpenAI Codex",
                 command: codexCommand,
                 output: [`Resolving ${plugin.name}@claude-settings…`, `✓ Added ${plugin.name}`],
@@ -236,6 +250,7 @@ export const plugins = marketplace.plugins
           ? [
               {
                 id: "cursor",
+                icon: "cursor",
                 tool: "Cursor",
                 command: cursorCommand,
                 output: [`Opening ${plugin.name} in Cursor Agent…`, `Type /plugin and choose ${plugin.name}`],
@@ -246,6 +261,7 @@ export const plugins = marketplace.plugins
           ? [
               {
                 id: "gemini",
+                icon: "gemini",
                 tool: "Gemini CLI",
                 command: geminiCommand,
                 output: [`Reading ./plugins/${plugin.name}/gemini-extension.json…`, `✓ Installed ${plugin.name}`],
@@ -350,6 +366,7 @@ export const skills = plugins
 
 export type Skill = (typeof skills)[number];
 export const seoSkills = skills.filter((skill) => skill.seo);
+export const skillsByPlugin = Object.groupBy(skills, (skill) => skill.plugin);
 
 export const contentPages = [
   { path: "plugins", kind: "pluginHub" as const, sitemap: "plugins" },

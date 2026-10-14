@@ -1,0 +1,240 @@
+---
+import Icon from "./Icon.astro"
+import PluginCard from "./PluginCard.astro"
+import SkillDownload from "./SkillDownload.astro"
+import ToolIcons from "./ToolIcons.astro"
+import { featured, plugins, skillsByPlugin } from "../lib/content"
+
+interface Props {
+  plugin: (typeof plugins)[number]
+}
+
+const { plugin } = Astro.props
+const pluginSkills = skillsByPlugin[plugin.name] ?? []
+const initialInstallDemo = plugin.installCommands[0]
+const extras = [
+  ["Agents", plugin.components?.agents],
+  ["Commands", plugin.components?.commands],
+  ["Output styles", plugin.components?.outputStyles],
+  ["Hooks", plugin.components?.hooks && "Run automatically while you work"],
+  ["MCP server", plugin.components?.mcp && "Bundled server config"],
+].filter(([, items]) => items?.length) as [string, string | string[]][]
+const sameCategory = plugins.filter((item) => item.category === plugin.category && item.name !== plugin.name)
+const related = (sameCategory.length ? sameCategory : plugins.filter((item) => featured.includes(item.name) && item.name !== plugin.name)).slice(0, 3)
+---
+
+<div class="plugin-hero">
+  <div class="plugin-hero-copy">
+    <h1>
+      <span class="plugin-title-name" style={`view-transition-name: plugin-name-${plugin.name}`}>{plugin.name}</span>{" "}
+      <span class="plugin-title-tail">plugin for AI coding agents</span>
+    </h1>
+    <p>{plugin.description}</p>
+    <dl class="plugin-facts">
+      <div><dt>Works with</dt><dd><ToolIcons {plugin} size={18} /></dd></div>
+      <div><dt>Includes</dt><dd>{plugin.summary || "Instructions only"}</dd></div>
+      <div><dt>Version</dt><dd>{plugin.version}</dd></div>
+      <div><dt>License</dt><dd>{plugin.license || "See source"}</dd></div>
+    </dl>
+    <div class="plugin-hero-links">
+      <a class="official-link" href={plugin.href}>Open the source on GitHub <Icon name="arrow" size={16} /></a>
+      <a class="official-link" href="/guides/install-agent-skills/#claude-code">Add the marketplace first <Icon name="arrow" size={16} /></a>
+    </div>
+  </div>
+  <section class="install-terminal-section" data-install-terminal aria-label="Install commands">
+    <div class="install-tool-tabs" role="tablist" aria-label="Choose a coding agent">
+      {plugin.installCommands.map(({ tool, command, icon, output }, index) => (
+        <button
+          id={`install-tab-${plugin.name}-${index}`}
+          class:list={["install-tool-tab", { "is-active": index === 0 }]}
+          type="button"
+          role="tab"
+          aria-controls={`install-terminal-${plugin.name}`}
+          aria-selected={index === 0 ? "true" : "false"}
+          tabindex={index === 0 ? 0 : -1}
+          data-install-tab
+          data-command={command}
+          data-output-primary={output[0]}
+          data-output-secondary={output[1]}
+        >
+          <Icon name={icon} size={22} />
+          <span>{tool}</span>
+        </button>
+      ))}
+    </div>
+    <div
+      id={`install-terminal-${plugin.name}`}
+      class="install-terminal"
+      role="tabpanel"
+      aria-labelledby={`install-tab-${plugin.name}-0`}
+      data-install-panel
+    >
+      <div class="install-terminal-bar">
+        <span class="terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="install-terminal-title">Terminal · <strong data-install-title>{initialInstallDemo.tool}</strong></span>
+        <button class="terminal-copy" type="button" data-copy={initialInstallDemo.command} aria-label={`Copy ${initialInstallDemo.tool} install command`}>
+          <Icon name="copy" size={18} />
+          <span data-install-copy-label>Copy command</span>
+        </button>
+      </div>
+      <div class="install-terminal-body">
+        <div class="install-command-line">
+          <span class="install-prompt" aria-hidden="true">$</span>
+          <code data-install-command>{initialInstallDemo.command}</code>
+          <span class="typing-cursor" aria-hidden="true"></span>
+        </div>
+        <div class="install-output" aria-hidden="true">
+          <p data-install-output-primary>{initialInstallDemo.output[0]}</p>
+          <p class="install-success" data-install-output-secondary>{initialInstallDemo.output[1]}</p>
+        </div>
+        <span class="sr-only" aria-live="polite" data-install-announcement></span>
+      </div>
+      <div class="install-terminal-progress">
+        <span class="install-progress-track" aria-hidden="true"><i data-install-progress></i></span>
+        <span data-install-count>1 of {plugin.installCommands.length}</span>
+        <button type="button" data-install-toggle aria-label="Pause installation demo" title="Pause installation demo">
+          <span class="pause-glyph"><Icon name="pause" size={16} /></span>
+          <span class="play-glyph"><Icon name="play" size={16} /></span>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+{(pluginSkills.length > 0 || extras.length > 0) && (
+  <section class="content-section">
+    <h2>What's inside</h2>
+    {pluginSkills.length > 0 && (
+      <>
+        <p>Each skill ZIP works in ChatGPT and Claude.ai. Read the source before you upload it.</p>
+        <div class="skill-grid">{pluginSkills.map((item) => <SkillDownload skill={item} heading="h3" compact />)}</div>
+      </>
+    )}
+    {extras.length > 0 && (
+      <dl class="plugin-extras">
+        {extras.map(([label, items]) => (
+          <div><dt>{label}</dt><dd>{typeof items === "string" ? items : items.map((item) => <code>{item}</code>)}</dd></div>
+        ))}
+      </dl>
+    )}
+  </section>
+)}
+
+<section class="content-section related-plugins">
+  <h2>{sameCategory.length ? `More ${plugin.category?.replaceAll("-", " ")} plugins` : "Popular plugins"}</h2>
+  <div class="plugin-grid">{related.map((item) => <PluginCard plugin={item} />)}</div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-install-terminal]").forEach((demo) => {
+    const tabs = [...demo.querySelectorAll<HTMLButtonElement>("[data-install-tab]")]
+    const panel = demo.querySelector<HTMLElement>("[data-install-panel]")!
+    const title = demo.querySelector<HTMLElement>("[data-install-title]")!
+    const command = demo.querySelector<HTMLElement>("[data-install-command]")!
+    const primaryOutput = demo.querySelector<HTMLElement>("[data-install-output-primary]")!
+    const secondaryOutput = demo.querySelector<HTMLElement>("[data-install-output-secondary]")!
+    const announcement = demo.querySelector<HTMLElement>("[data-install-announcement]")!
+    const progress = demo.querySelector<HTMLElement>("[data-install-progress]")!
+    const count = demo.querySelector<HTMLElement>("[data-install-count]")!
+    const copyButton = demo.querySelector<HTMLButtonElement>("[data-copy]")!
+    const toggle = demo.querySelector<HTMLButtonElement>("[data-install-toggle]")!
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    let current = 0
+    let paused = false
+    let visible = false
+    const timers = new Set<number>()
+
+    const clearTimers = () => {
+      timers.forEach(window.clearTimeout)
+      timers.clear()
+    }
+    const later = (callback: () => void, delay: number) => {
+      const timer = window.setTimeout(() => {
+        timers.delete(timer)
+        callback()
+      }, delay)
+      timers.add(timer)
+    }
+    const showComplete = (tab: HTMLButtonElement) => {
+      demo.dataset.phase = "complete"
+      announcement.textContent = tab.dataset.outputSecondary || "Installation complete"
+    }
+    const activate = (index: number) => {
+      clearTimers()
+      current = (index + tabs.length) % tabs.length
+      const tab = tabs[current]
+      const fullCommand = tab.dataset.command || ""
+      tabs.forEach((item, tabIndex) => {
+        const active = tabIndex === current
+        item.classList.toggle("is-active", active)
+        item.setAttribute("aria-selected", String(active))
+        item.tabIndex = active ? 0 : -1
+      })
+      panel.setAttribute("aria-labelledby", tab.id)
+      title.textContent = tab.textContent?.trim() || "Terminal"
+      copyButton.dataset.copy = fullCommand
+      copyButton.setAttribute("aria-label", `Copy ${title.textContent} install command`)
+      copyButton.classList.remove("is-copied")
+      count.textContent = `${current + 1} of ${tabs.length}`
+      progress.classList.remove("is-counting")
+      demo.dataset.phase = "typing"
+      announcement.textContent = ""
+      command.textContent = fullCommand
+      primaryOutput.textContent = tab.dataset.outputPrimary || ""
+      secondaryOutput.textContent = tab.dataset.outputSecondary || ""
+
+      if (reducedMotion.matches || paused) {
+        showComplete(tab)
+        return
+      }
+
+      command.textContent = ""
+      let character = 0
+      const typeNext = () => {
+        command.textContent = fullCommand.slice(0, ++character)
+        if (character < fullCommand.length) later(typeNext, 24)
+        else later(() => {
+          demo.dataset.phase = "output"
+          later(() => {
+            demo.dataset.phase = "complete"
+            announcement.textContent = tab.dataset.outputSecondary || "Installation complete"
+            progress.classList.add("is-counting")
+            if (tabs.length > 1) later(() => activate(current + 1), 2600)
+          }, 620)
+        }, 320)
+      }
+      later(typeNext, 260)
+    }
+    const resume = () => {
+      clearTimers()
+      if (visible && !document.hidden && !paused) activate(current)
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activate(index))
+      tab.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return
+        event.preventDefault()
+        const next = index + (event.key === "ArrowRight" ? 1 : -1)
+        tabs[(next + tabs.length) % tabs.length].focus()
+        activate(next)
+      })
+    })
+    toggle.addEventListener("click", () => {
+      paused = !paused
+      demo.toggleAttribute("data-paused", paused)
+      toggle.setAttribute("aria-label", `${paused ? "Play" : "Pause"} installation demo`)
+      toggle.title = `${paused ? "Play" : "Pause"} installation demo`
+      if (paused) {
+        clearTimers()
+        showComplete(tabs[current])
+      } else activate(current)
+    })
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      resume()
+    }).observe(demo)
+    document.addEventListener("visibilitychange", resume)
+    reducedMotion.addEventListener("change", resume)
+  })
+</script>
