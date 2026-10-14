@@ -374,7 +374,7 @@ The locally maintained `ui-regression` skill checks known workflows on local, st
 </details>
 
 <details>
-<summary><strong>frontend-design-skills</strong> - Frontend design and writing skills (Anthropic + OpenAI + Vercel)</summary>
+<summary><strong>frontend-design-skills</strong> - Frontend design, testing, and writing skills (Anthropic + OpenAI + Vercel)</summary>
 
 | Claude Code                                                    | Codex CLI                                                 | Gemini CLI                                                          |
 | -------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -386,11 +386,12 @@ The locally maintained `ui-regression` skill checks known workflows on local, st
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/frontend-design-skills --skill '*'
 ```
 
-Frontend design and writing skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official), [openai/plugins](https://github.com/openai/plugins), and [vercel-labs/writing-guidelines](https://github.com/vercel-labs/writing-guidelines).
+Frontend design, testing, and writing skills from [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official), [openai/plugins](https://github.com/openai/plugins), and [vercel-labs/writing-guidelines](https://github.com/vercel-labs/writing-guidelines).
 
 | Skill                                                                                                     | Description                                                                       | Install                                                                                                                                                                           |
 | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`openai-frontend-design`](./plugins/frontend-design-skills/skills/openai-frontend-design/SKILL.md)       | Composition-first design: restrained layout, image-led hierarchy, tasteful motion | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/openai-frontend-design.zip)    |
+| [`frontend-testing-debugging`](./plugins/frontend-design-skills/skills/frontend-testing-debugging/SKILL.md) | Test rendered apps, debug interactions, and check responsive layouts | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/frontend-testing-debugging.zip) |
 | [`anthropic-frontend-design`](./plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md) | Bold aesthetic direction, distinctive typography, anti-generic AI aesthetics      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/anthropic-frontend-design.zip) |
 | [`writing-guidelines`](./plugins/frontend-design-skills/skills/writing-guidelines/SKILL.md)               | Review interface copy and text for clear, consistent writing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/writing-guidelines.zip)        |
 

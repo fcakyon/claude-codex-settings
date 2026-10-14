@@ -6,6 +6,7 @@ description: Use for new frontend applications, dashboards, games, creative webs
 # Frontend App Builder
 
 For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.
+For rendered UI testing and debugging, use the installed `frontend-testing-debugging` skill.
 
 Use this skill to create polished frontend apps, dashboards, games, creative websites, hero sections, redesigns, and other visually driven UI. Act first as a senior front-end designer, then as an engineer implementing an approved design spec.
 
