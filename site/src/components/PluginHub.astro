@@ -1,0 +1,91 @@
+---
+import Icon from "./Icon.astro"
+import { codingTools, plugins } from "../lib/content"
+
+const pluginCategories = Object.entries(Object.groupBy(plugins, (plugin) => plugin.category || "other")).sort(([a], [b]) =>
+  a.localeCompare(b),
+)
+const plural = (count: number, word: string) => `${count} ${word}${count === 1 ? "" : "s"}`
+const componentSummary = (item: (typeof plugins)[number]) =>
+  [
+    item.components?.skills.length && plural(item.components.skills.length, "skill"),
+    item.components?.agents.length && plural(item.components.agents.length, "agent"),
+    item.components?.commands.length && plural(item.components.commands.length, "command"),
+    item.components?.hooks && "hooks",
+  ].filter(Boolean).join(", ")
+---
+
+<div class="hub" data-plugin-hub>
+  <div class="hub-filters">
+    <label class="hub-search">
+      <Icon name="search" size={20} />
+      <span class="sr-only">Search plugins</span>
+      <input type="search" name="q" placeholder={`Search ${plugins.length} plugins by name, skill, or task…`} autocomplete="off" data-hub-search />
+    </label>
+    <div class="hub-chips" role="group" aria-label="Filter by category">
+      <button type="button" aria-pressed="true" data-hub-category="">All <span>{plugins.length}</span></button>
+      {pluginCategories.map(([category, categoryPlugins]) => (
+        <button type="button" aria-pressed="false" data-hub-category={category}>{category.replaceAll("-", " ")} <span>{categoryPlugins?.length}</span></button>
+      ))}
+    </div>
+  </div>
+  <ul class="hub-grid" role="list">
+    {plugins.map((item) => (
+      <li
+        style={`view-transition-name: plugin-${item.name}`}
+        data-category={item.category || "other"}
+        data-search={item.search}
+      >
+        <a href={`/plugins/${item.name}/`}>
+          <strong>{item.name}</strong>
+          <span class="hub-description">{item.description}</span>
+          <span class="hub-meta">
+            <span class="hub-tools">
+              {codingTools.map((tool) => (
+                <span class:list={{ "is-off": !item[`${tool.id}Command`] }} title={`${tool.label}${item[`${tool.id}Command`] ? "" : " not supported"}`}>
+                  <Icon name={tool.icon} size={15} />
+                </span>
+              ))}
+              <span class="sr-only">Works with {item.tools.join(", ")}</span>
+            </span>
+            <span>{componentSummary(item)}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p class="hub-empty" data-hub-empty hidden>No plugins match. Try a shorter word or pick All.</p>
+  <p class="sr-only" aria-live="polite" data-hub-count></p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-plugin-hub]").forEach((hub) => {
+    const search = hub.querySelector<HTMLInputElement>("[data-hub-search]")!
+    const chips = [...hub.querySelectorAll<HTMLButtonElement>("[data-hub-category]")]
+    const items = [...hub.querySelectorAll<HTMLElement>("[data-search]")]
+    const empty = hub.querySelector<HTMLElement>("[data-hub-empty]")!
+    const count = hub.querySelector<HTMLElement>("[data-hub-count]")!
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
+    let category = ""
+    const filter = () => {
+      const query = search.value.trim().toLowerCase()
+      let visible = 0
+      items.forEach((item) => {
+        item.hidden = (category !== "" && item.dataset.category !== category) || !item.dataset.search?.includes(query)
+        visible += Number(!item.hidden)
+      })
+      empty.hidden = visible > 0
+      count.textContent = visible ? `${visible} plugin${visible === 1 ? "" : "s"} shown` : empty.textContent
+    }
+    search.addEventListener("input", filter)
+    chips.forEach((chip) =>
+      chip.addEventListener("click", () => {
+        category = chip.dataset.hubCategory || ""
+        chips.forEach((item) => item.setAttribute("aria-pressed", String(item === chip)))
+        // a skipped transition (rapid clicks, hidden tab) rejects `ready` after still running filter
+        if (document.startViewTransition && !reducedMotion.matches) document.startViewTransition(filter).ready.catch(() => {})
+        else filter()
+      }),
+    )
+  })
+</script>

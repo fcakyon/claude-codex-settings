@@ -347,7 +347,7 @@ When writing README or docs content for this repo:
 
 ### Plugin descriptions
 
-The `description` field in `plugin.json` and marketplace entries faces non-technical marketplace browsers. Lead with concrete user-visible outcomes, not the mechanism. Drop jargon (OTel, hook event names, internal config field names). Single sentence.
+The `description` field in `plugin.json` and marketplace entries faces non-technical marketplace browsers. Lead with concrete user-visible outcomes, not the mechanism. Drop jargon (OTel, hook event names, internal config field names). Write one sentence of at least 40 chars ending in a period, short enough that name plus description fits the 100-char README row. CI enforces this shape.
 
 - Bad: "PreCompact hook that injects a priority list so conversation summaries preserve unanswered questions."
 - Good: "Stop Claude Code from forgetting file paths, root causes, and open questions when it auto-summarizes long sessions."

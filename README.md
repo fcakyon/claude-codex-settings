@@ -113,7 +113,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 </details>
 
 <details>
-<summary><strong>humanize</strong> - Block a curated list of AI buzzwords on every write with a hook</summary>
+<summary><strong>humanize</strong> - Write naturally and block AI buzzwords in files, commits, and messages</summary>
 
 | Claude Code                                      | Codex CLI                                   | Gemini CLI                                            |
 | ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
@@ -342,7 +342,7 @@ React and frontend best practices from [vercel-labs/agent-skills](https://github
 </details>
 
 <details>
-<summary><strong>agent-browser</strong> - Browser automation and UI regression checks</summary>
+<summary><strong>agent-browser</strong> - Drive browsers and Electron apps, run UI QA, and turn websites into API clients</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
@@ -398,7 +398,7 @@ Frontend design, testing, and writing skills from [anthropics/claude-plugins-off
 </details>
 
 <details>
-<summary><strong>mongodb-skills</strong> - Official MongoDB agent skills for schema design, query tuning, and Atlas Search</summary>
+<summary><strong>mongodb-skills</strong> - Official MongoDB skills for schema design, queries, indexing, and Atlas Search</summary>
 
 | Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
@@ -410,7 +410,7 @@ Frontend design, testing, and writing skills from [anthropics/claude-plugins-off
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/mongodb-skills --skill '*'
 ```
 
-Official MongoDB agent skills for schema design, query tuning, Atlas Search, and connections. From [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
+Official MongoDB agent skills for schema design, queries, indexing, Atlas Search, and connections. From [mongodb/agent-skills](https://github.com/mongodb/agent-skills).
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
@@ -427,7 +427,7 @@ Official MongoDB agent skills for schema design, query tuning, Atlas Search, and
 </details>
 
 <details>
-<summary><strong>supabase-skills</strong> - Supabase Postgres best practices, JavaScript SDK, and CLI skills</summary>
+<summary><strong>supabase-skills</strong> - Supabase skills for Postgres, Auth, Edge Functions, the JS SDK, and the CLI</summary>
 
 | Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
@@ -453,7 +453,7 @@ Supabase skills covering Postgres query/schema best practices from [supabase/age
 </details>
 
 <details>
-<summary><strong>stripe-skills</strong> - Official Stripe agent skills for payments, billing, Connect, and API upgrades</summary>
+<summary><strong>stripe-skills</strong> - Official Stripe skills for payments, billing, Connect, Apps, and API upgrades</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
@@ -507,7 +507,7 @@ Official Polar agent skills for billing system, Stripe integration, subscription
 </details>
 
 <details>
-<summary><strong>livekit-skills</strong> - LiveKit voice AI agent development (Cloud + self-hosted)</summary>
+<summary><strong>livekit-skills</strong> - Build, test, simulate, and deploy LiveKit voice AI agents</summary>
 
 | Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
@@ -536,7 +536,7 @@ Voice AI agent development with the LiveKit Agents SDK, from design and live tes
 </details>
 
 <details>
-<summary><strong>cloudflare-skills</strong> - Choose Cloudflare services and load specialist guidance when needed</summary>
+<summary><strong>cloudflare-skills</strong> - Pick Cloudflare products and build with Workers, Durable Objects, and Wrangler</summary>
 
 | Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
@@ -791,7 +791,7 @@ Git and GitHub automation. Run the `setup` skill after install.
 </details>
 
 <details>
-<summary><strong>ultralytics-dev</strong> - Ultralytics Platform + YOLO26 training skills, auto-formatting hooks</summary>
+<summary><strong>ultralytics-dev</strong> - YOLO training and Ultralytics Platform skills, with format and force-push hooks</summary>
 
 | Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
@@ -837,7 +837,7 @@ Official colors, Archivo typography, logo and naming rules, tone of voice, and p
 </details>
 
 <details>
-<summary><strong>azure-tools</strong> - Azure MCP & Skills</summary>
+<summary><strong>azure-tools</strong> - Query and manage Azure resources through the Azure MCP server and Azure CLI login</summary>
 
 | Claude Code                                         | Codex CLI                                      | Gemini CLI                                               |
 | --------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
@@ -849,7 +849,7 @@ Official colors, Archivo typography, logo and naming rules, tone of voice, and p
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/azure-tools --skill '*'
 ```
 
-40+ Azure services with Azure CLI authentication. Run `/azure-tools:setup` after install.
+Uses your Azure CLI login. Run `/azure-tools:setup` after install.
 
 **Skills:**
 
@@ -886,7 +886,7 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 </details>
 
 <details>
-<summary><strong>gcloud-tools</strong> - GCloud MCP & Skills</summary>
+<summary><strong>gcloud-tools</strong> - Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP</summary>
 
 | Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
 | ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
@@ -942,7 +942,7 @@ Search papers, look up DOIs, download PDFs, and follow citations with [Paper Sea
 </details>
 
 <details>
-<summary><strong>tavily-tools</strong> - Tavily MCP & Skills</summary>
+<summary><strong>tavily-tools</strong> - Search the web and extract pages with Tavily, and route built-in web tools to it</summary>
 
 | Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
 | ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |

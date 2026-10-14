@@ -400,6 +400,7 @@ def validate_cross_tool_manifests(plugin_dir: Path) -> list[str]:
 
     ref_name = claude.get("name", "")
     ref_version = claude.get("version", "")
+    errors.extend(description_errors(f"[{plugin_dir.name}] claude", claude.get("description", "")))
 
     for label, manifest_path in [
         ("codex", plugin_dir / ".codex-plugin" / "plugin.json"),
@@ -415,6 +416,7 @@ def validate_cross_tool_manifests(plugin_dir: Path) -> list[str]:
             continue
         if data.get("name") != ref_name:
             errors.append(f"[{plugin_dir.name}] {label}: name '{data.get('name')}' != claude '{ref_name}'")
+        errors.extend(description_errors(f"[{plugin_dir.name}] {label}", data.get("description", "")))
         if data.get("version", "") and ref_version and data["version"] != ref_version:
             errors.append(f"[{plugin_dir.name}] {label}: version '{data['version']}' != claude '{ref_version}'")
 
@@ -463,18 +465,36 @@ def validate_marketplace_alignment() -> list[str]:
 
 
 MAX_PLUGIN_SUMMARY_CHARS = 100
+MIN_PLUGIN_DESCRIPTION_CHARS = 40
 
 
-def validate_plugin_summary_length() -> list[str]:
-    """Fail when a Claude marketplace entry makes an over-long README row.
+def description_errors(where: str, description: str) -> list[str]:
+    """Return errors when a plugin description would make a weak search snippet.
 
-    update-readme.md writes each row as `<summary><strong>{name}</strong> - {description}</summary>`, so the
-    row is the name plus a 3-char separator plus the description. This is an editorial limit that keeps rows
-    short enough to read as one line, not a rendering guarantee.
+    The websites reuse each description as the page meta description, so it must be one plain sentence of at
+    least 40 chars ending in a period.
     """
     errors = []
-    data = load_json(CLAUDE_MARKETPLACE)
-    for entry in (data or {}).get("plugins", []):
+    if len(description) < MIN_PLUGIN_DESCRIPTION_CHARS:
+        errors.append(f"{where}: description shorter than {MIN_PLUGIN_DESCRIPTION_CHARS} chars ({len(description)})")
+    if not description.endswith(".") or ". " in description or "\u2014" in description:
+        errors.append(f"{where}: description must be one sentence ending in a period, with no em dashes")
+    return errors
+
+
+def validate_marketplace_descriptions() -> list[str]:
+    """Fail on weak marketplace descriptions or an over-long README row.
+
+    update-readme.md writes each Claude marketplace row as `<summary><strong>{name}</strong> - {description}</summary>`,
+    so name plus a 3-char separator plus description must stay within 100 chars, which also keeps the plugin page
+    meta description under 160 chars.
+    """
+    errors = []
+    claude = load_json(CLAUDE_MARKETPLACE) or {}
+    for label, data in (("claude", claude), ("cursor", load_json(CURSOR_MARKETPLACE) or {})):
+        for entry in data.get("plugins", []):
+            errors.extend(description_errors(f"{label} marketplace/{entry.get('name')}", entry.get("description", "")))
+    for entry in claude.get("plugins", []):
         length = len(entry.get("name", "")) + 3 + len(entry.get("description", ""))
         if length > MAX_PLUGIN_SUMMARY_CHARS:
             errors.append(
@@ -632,7 +652,7 @@ def main():
 
     all_errors.extend(validate_symlinks())
     all_errors.extend(validate_marketplace_alignment())
-    all_errors.extend(validate_plugin_summary_length())
+    all_errors.extend(validate_marketplace_descriptions())
     all_errors.extend(validate_advisor_context_handoff())
     all_errors.extend(validate_version_bumps())
 

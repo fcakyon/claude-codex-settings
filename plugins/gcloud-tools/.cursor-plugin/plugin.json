@@ -1,7 +1,7 @@
 {
   "name": "gcloud-tools",
-  "version": "2.0.4",
-  "description": "Google Cloud Observability MCP for logs, metrics, and traces, plus best practices.",
+  "version": "2.0.5",
+  "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP.",
   "author": {
     "name": "Fatih C. Akyon"
   },

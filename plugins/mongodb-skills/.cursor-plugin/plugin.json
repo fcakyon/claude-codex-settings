@@ -1,6 +1,6 @@
 {
   "name": "mongodb-skills",
-  "version": "1.0.2",
-  "description": "Official MongoDB skills for schema design, query tuning, and search.",
+  "version": "1.0.3",
+  "description": "Official MongoDB skills for schema design, queries, indexing, and Atlas Search.",
   "license": "Apache-2.0"
 }

@@ -26,8 +26,8 @@
     {
       "name": "humanize",
       "source": "./plugins/humanize",
-      "description": "Block a curated list of AI buzzwords on every write with a hook.",
-      "version": "1.2.5",
+      "description": "Write naturally and block AI buzzwords in files, commits, and messages.",
+      "version": "1.2.6",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -156,8 +156,8 @@
     {
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
-      "description": "Browser automation CLI for AI agents to navigate pages, fill forms, and test apps.",
-      "version": "1.2.0",
+      "description": "Drive browsers and Electron apps, run UI QA, and turn websites into API clients.",
+      "version": "1.2.1",
       "license": "Apache-2.0",
       "keywords": ["browser", "automation", "testing", "web", "screenshots", "e2e"],
       "category": "web-testing",
@@ -176,8 +176,8 @@
     {
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
-      "description": "Official MongoDB skills for schema design, query tuning, and search.",
-      "version": "1.0.2",
+      "description": "Official MongoDB skills for schema design, queries, indexing, and Atlas Search.",
+      "version": "1.0.3",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
@@ -188,8 +188,8 @@
     {
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
-      "description": "Supabase Postgres, JavaScript SDK, and CLI skills for migrations and local dev.",
-      "version": "1.1.0",
+      "description": "Supabase skills for Postgres, Auth, Edge Functions, the JS SDK, and the CLI.",
+      "version": "1.1.1",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
@@ -200,8 +200,8 @@
     {
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
-      "description": "Official Stripe skills for checkout, billing, Connect, and API upgrades.",
-      "version": "1.1.0",
+      "description": "Official Stripe skills for payments, billing, Connect, Apps, and API upgrades.",
+      "version": "1.1.1",
       "license": "MIT",
       "keywords": ["stripe", "payments", "billing", "subscriptions", "connect"],
       "category": "payment",
@@ -220,8 +220,8 @@
     {
       "name": "livekit-skills",
       "source": "./plugins/livekit-skills",
-      "description": "LiveKit Agents SDK skills for voice AI agents on Cloud or self-hosted deployments.",
-      "version": "1.1.0",
+      "description": "Build, test, simulate, and deploy LiveKit voice AI agents.",
+      "version": "1.1.1",
       "license": "MIT",
       "keywords": ["livekit", "voice-ai", "agents", "webrtc", "realtime"],
       "category": "voice-agents",
@@ -230,8 +230,8 @@
     {
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
-      "description": "Choose Cloudflare services and load specialist guidance when needed.",
-      "version": "1.2.0",
+      "description": "Pick Cloudflare products and build with Workers, Durable Objects, and Wrangler.",
+      "version": "1.2.1",
       "license": "Apache-2.0",
       "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
       "category": "deployment",
@@ -376,8 +376,8 @@
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
-      "description": "Ultralytics Platform API and YOLO26 training skills, format hooks, push guard.",
-      "version": "2.4.0",
+      "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
+      "version": "2.4.1",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -406,8 +406,8 @@
     {
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
-      "description": "Azure MCP Server integration for 40+ Azure services with Azure CLI authentication.",
-      "version": "2.0.3",
+      "description": "Query and manage Azure resources through the Azure MCP server and Azure CLI login.",
+      "version": "2.0.4",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -436,8 +436,8 @@
     {
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
-      "description": "Google Cloud Observability MCP for logs, metrics, and traces, plus best practices.",
-      "version": "2.0.4",
+      "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP.",
+      "version": "2.0.5",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -466,8 +466,8 @@
     {
       "name": "tavily-tools",
       "source": "./plugins/tavily-tools",
-      "description": "Tavily web search and content extraction MCP with hooks for smart tool selection.",
-      "version": "2.0.4",
+      "description": "Search the web and extract pages with Tavily, and route built-in web tools to it.",
+      "version": "2.0.5",
       "author": {
         "name": "Fatih C. Akyon"
       },

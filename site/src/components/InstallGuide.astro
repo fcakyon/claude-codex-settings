@@ -1,0 +1,201 @@
+---
+import Icon from "./Icon.astro"
+import { codingTools, repositoryUrl } from "../lib/content"
+
+const marketplaceCommands = Object.fromEntries(codingTools.map((tool) => [tool.id, tool.marketplace]))
+const guideTabs = [
+  {
+    id: "claude-code",
+    aliases: ["coding-agent-plugins"],
+    label: "Claude Code",
+    icon: "claude",
+    title: "Add this marketplace to Claude Code",
+    intro: "Add this marketplace once, then install each plugin by name. The terminal and desktop app share it.",
+    code: `${marketplaceCommands.claude}\nclaude plugin install simplify@claude-settings`,
+    terminal: "Run <code>/reload-plugins</code> in an open session. New sessions load installed plugins automatically.",
+    app: "Select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>. Choose a plugin from the marketplace.",
+    docs: ["Claude Code plugin guide", "https://code.claude.com/docs/en/discover-plugins"],
+  },
+  {
+    id: "codex",
+    label: "Codex",
+    icon: "openai",
+    title: "Add this marketplace to OpenAI Codex",
+    intro: "Works in the Codex CLI and desktop app. The Codex IDE extension doesn’t support plugins.",
+    code: `${marketplaceCommands.codex}\ncodex plugin add simplify@claude-settings`,
+    terminal: "Enter <code>/plugins</code> to browse marketplaces interactively. Start a new session after installing.",
+    app: "Open <strong>Plugins</strong>, find the plugin, and select <strong>Install</strong>. Start a new task before you use it.",
+    docs: ["OpenAI plugin guide", "https://learn.chatgpt.com/docs/plugins"],
+  },
+  {
+    id: "cursor",
+    label: "Cursor",
+    icon: "cursor",
+    title: "Add this marketplace to Cursor",
+    intro: "Plugins installed for your user work in the Cursor app and Cursor Agent CLI. The marketplace command only adds the catalog.",
+    code: `${marketplaceCommands.cursor}\ncursor-agent`,
+    terminal: "In Cursor Agent, enter <code>/plugin</code> to choose and install a plugin.",
+    app: "Open <strong>Customize</strong>, find the plugin, and select <strong>Install</strong>. Choose user or project scope when prompted.",
+    docs: ["Cursor plugin guide", "https://cursor.com/docs/plugins"],
+  },
+  {
+    id: "gemini-cli",
+    label: "Gemini CLI",
+    icon: "gemini",
+    title: "Install a local extension in Gemini CLI",
+    intro: "Gemini CLI installs extensions from local folders. Clone the repository and run the command from its root.",
+    code: `git clone ${repositoryUrl}.git\ncd claude-codex-settings\ngemini extensions install --path ./plugins/simplify`,
+    terminal: "Replace <code>simplify</code> with the plugin you want, then start a new Gemini CLI session.",
+    docs: ["Gemini CLI extension reference", "https://geminicli.com/docs/extensions/reference/"],
+  },
+  {
+    id: "chatgpt",
+    aliases: ["web-skill-uploads"],
+    label: "ChatGPT",
+    icon: "openai",
+    title: "Upload a skill to ChatGPT",
+    intro: "Personal Skills work on eligible ChatGPT plans. Workspace admins can turn off skill uploads.",
+    steps: [
+      "Open <strong>chatgpt.com/skills</strong>",
+      "Select <strong>+</strong>, then <strong>Upload a skill</strong>",
+      "Choose the downloaded ZIP and wait for the security check",
+      "Run a prompt that matches the skill description",
+    ],
+    image: ["/tutorials/install-skill-chatgpt.webp", "ChatGPT Skills page with the upload menu and ZIP upload screen"],
+    docs: ["OpenAI Skills guide", "https://help.openai.com/en/articles/20001066-skills-in-chatgpt"],
+  },
+  {
+    id: "claude-ai",
+    label: "Claude.ai",
+    icon: "claude",
+    title: "Upload a skill to Claude.ai",
+    intro: "Custom skills work on supported Claude plans with code execution turned on.",
+    steps: [
+      "Open <strong>Customize</strong>, then <strong>Skills</strong>",
+      "Select <strong>Add</strong>, then <strong>Upload skill</strong>",
+      "Choose the downloaded ZIP and select <strong>Save</strong>",
+      "Run a prompt that matches the skill description",
+    ],
+    image: ["/tutorials/install-skill-claude.webp", "Claude Skills settings with the Add menu and ZIP upload screen"],
+    docs: ["Claude Skills guide", "https://support.claude.com/en/articles/12512180-use-skills-in-claude"],
+  },
+] as const
+---
+
+<section class="guide-tabs" data-guide-tabs>
+  <div class="install-tool-tabs" role="tablist" aria-label="Choose where you install">
+    {guideTabs.map((tab, index) => (
+      <button
+        id={`tab-${tab.id}`}
+        class:list={["install-tool-tab", { "is-active": index === 0, "is-group-start": index > 0 && ("steps" in tab) !== ("steps" in guideTabs[index - 1]) }]}
+        type="button"
+        role="tab"
+        aria-controls={tab.id}
+        aria-selected={index === 0 ? "true" : "false"}
+        tabindex={index === 0 ? 0 : -1}
+        data-aliases={"aliases" in tab ? tab.aliases.join(" ") : undefined}
+      >
+        <Icon name={tab.icon} size={20} />
+        <span>{tab.label}</span>
+      </button>
+    ))}
+  </div>
+  {guideTabs.map((tab, index) => (
+    <div id={tab.id} class="guide-panel" role="tabpanel" aria-labelledby={`tab-${tab.id}`} hidden={index > 0}>
+      <div class="guide-main">
+        <h2>{tab.title}</h2>
+        <p>{tab.intro}</p>
+        {"code" in tab && (
+          <>
+            <pre class="code-sample"><code>{tab.code}</code><button class="icon-button code-copy" type="button" data-copy={tab.code} aria-label={`Copy ${tab.label} commands`}><Icon name="copy" size={17} /></button></pre>
+            <p set:html={tab.terminal} />
+          </>
+        )}
+        {"steps" in tab && <ol class="steps-list">{tab.steps.map((step) => <li set:html={step} />)}</ol>}
+        <div class="guide-links">
+          <a class="official-link" href={tab.docs[1]}>Read the {tab.docs[0]} <Icon name="arrow" size={16} /></a>
+          {"steps" in tab && <a class="official-link" href="/skills/">Browse skill downloads <Icon name="arrow" size={16} /></a>}
+        </div>
+      </div>
+      {"app" in tab && tab.app && (
+        <div class="guide-aside">
+          <h3>In the desktop app</h3>
+          <p set:html={tab.app} />
+        </div>
+      )}
+      {"image" in tab && (
+        <figure class="tutorial-figure">
+          <img src={tab.image[0]} alt={tab.image[1]} width="1200" height="760" loading="lazy" />
+        </figure>
+      )}
+    </div>
+  ))}
+</section>
+<section class="content-section guide-notes">
+  <div>
+    <h2>Use a plugin in a new session</h2>
+    <p>Start a new session so the agent loads the plugin, then name the skill or describe the task.</p>
+    <pre class="code-sample"><code>{`Use the simplify skill to review my staged diff.
+Use the humanize skill to revise this README.`}</code></pre>
+  </div>
+  <div>
+    <h2>Keep the folder inside the ZIP</h2>
+    <p>Claude.ai needs the named skill folder inside the archive. Every download here keeps it. Read <code>SKILL.md</code> and any scripts before you upload.</p>
+    <pre class="code-sample"><code>{`skill-name.zip
+└── skill-name/
+    ├── SKILL.md
+    ├── scripts/
+    └── references/`}</code></pre>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-guide-tabs]").forEach((guide) => {
+    const tabs = [...guide.querySelectorAll<HTMLButtonElement>("[role=tab]")]
+    const panels = tabs.map((tab) => document.getElementById(tab.getAttribute("aria-controls")!)!)
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
+    const select = (index: number) =>
+      tabs.forEach((tab, tabIndex) => {
+        const active = tabIndex === index
+        tab.classList.toggle("is-active", active)
+        tab.setAttribute("aria-selected", String(active))
+        tab.tabIndex = active ? 0 : -1
+        panels[tabIndex].hidden = !active
+      })
+    const stop = () => guide.classList.remove("is-cycling")
+    const fromHash = () => {
+      const id = location.hash.slice(1)
+      const index = tabs.findIndex((tab) => tab.getAttribute("aria-controls") === id || tab.dataset.aliases?.split(" ").includes(id))
+      if (index < 0) return false
+      stop()
+      select(index)
+      guide.scrollIntoView()
+      return true
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => {
+        stop()
+        select(index)
+        history.replaceState(null, "", `#${tab.getAttribute("aria-controls")}`)
+      })
+      tab.addEventListener("keydown", (event) => {
+        const next = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: tabs.length - 1 }[event.key]
+        if (next === undefined) return
+        event.preventDefault()
+        const target = (next + tabs.length) % tabs.length
+        tabs[target].focus()
+        tabs[target].click()
+      })
+    })
+    guide.addEventListener("pointerdown", stop)
+    guide.addEventListener("keydown", stop)
+    window.addEventListener("scroll", stop, { once: true, passive: true })
+    guide.addEventListener("animationend", (event) => {
+      if (!guide.classList.contains("is-cycling") || !tabs.includes(event.target as HTMLButtonElement)) return
+      select((tabs.indexOf(event.target as HTMLButtonElement) + 1) % tabs.length)
+    })
+    window.addEventListener("hashchange", fromHash)
+    if (!fromHash() && !reducedMotion.matches) guide.classList.add("is-cycling")
+  })
+</script>
