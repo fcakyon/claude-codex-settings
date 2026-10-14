@@ -196,6 +196,20 @@ export const plugins = marketplace.plugins
       index,
       tools,
       components,
+      search: [
+        plugin.name,
+        plugin.description,
+        plugin.category,
+        ...(plugin.keywords || []),
+        ...(plugin.tags || []),
+        ...(components?.skills || []),
+        ...(components?.commands || []),
+        ...(components?.agents || []),
+        ...(components?.outputStyles || []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase(),
       href: localSource ? `${repositoryUrl}/tree/main/${localSource.replace(/^\.\//, "")}` : externalUrl,
       claudeCommand,
       codexCommand,

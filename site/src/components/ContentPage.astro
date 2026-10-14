@@ -1,5 +1,7 @@
 ---
 import Breadcrumbs from "./Breadcrumbs.astro"
+import InstallGuide from "./InstallGuide.astro"
+import PluginHub from "./PluginHub.astro"
 import Icon, { type IconName } from "./Icon.astro"
 import SkillDownload from "./SkillDownload.astro"
 import Layout from "../layouts/Layout.astro"
@@ -20,12 +22,8 @@ interface Props {
 }
 
 const { page } = Astro.props
-const marketplaceCommands = Object.fromEntries(codingTools.map((tool) => [tool.id, tool.marketplace]))
 const canonical = `${site.url}/${page.path}/`
 const homeCrumb = { label: "Home", href: "/" }
-const pluginCategories = Object.entries(Object.groupBy(plugins, (plugin) => plugin.category || "other")).sort(([a], [b]) =>
-  a.localeCompare(b),
-)
 const skillGroups = Object.entries(Object.groupBy(skills, (skill) => skill.plugin)).sort(([a], [b]) => a.localeCompare(b))
 const settingsCards = [
   {
@@ -108,7 +106,7 @@ let provider: (typeof providerCopy)[keyof typeof providerCopy] | undefined
 if (page.kind === "pluginHub") {
   title = "Find plugins for Claude Code, Codex, Cursor, and Gemini"
   description = `Explore ${plugins.length} repository-backed plugins with install commands, supported tools, included skills, and direct source links.`
-  intro = "Choose a plugin by the job you need to complete. Each page lists its real components, supported coding agents, install commands, and downloadable skills."
+  intro = "Search by task or filter by category. Each plugin page lists its skills, supported agents, and install commands."
   breadcrumbs = [homeCrumb, { label: "Plugins" }]
 } else if (page.kind === "skillHub") {
   title = "Download agent skills for ChatGPT and Claude"
@@ -124,7 +122,7 @@ if (page.kind === "pluginHub") {
   plugin = pluginByName.get(page.plugin)
   if (!plugin) throw new Error(`Unknown plugin: ${page.plugin}`)
   title = `${plugin.name} plugin for AI coding agents`
-  description = `${plugin.description} Review supported tools, install commands, components, source, and skill ZIP downloads.`
+  description = `${plugin.description} See supported agents, install commands, and skill downloads.`
   intro = plugin.description
   breadcrumbs = [homeCrumb, { label: "Plugins", href: "/plugins/" }, { label: plugin.name }]
 } else if (page.kind === "skill") {
@@ -163,7 +161,7 @@ if (page.kind === "pluginHub") {
 } else if (page.kind === "installGuide") {
   title = "Install agent skills and plugins in Claude, Codex, and Cursor"
   description = "Add the Claude Settings marketplace to Claude Code, OpenAI Codex, or Cursor, install plugins, and upload skill ZIPs to ChatGPT or Claude.ai."
-  intro = "Use plugin marketplaces with coding agents. Upload a skill ZIP when you work in ChatGPT or Claude.ai. This guide covers both paths and how to use what you install."
+  intro = "Pick your app. Coding agents install plugins from this marketplace. ChatGPT and Claude.ai take a skill ZIP."
   breadcrumbs = [homeCrumb, { label: "Install agent skills and plugins" }]
 }
 
@@ -193,12 +191,31 @@ if (page.kind === "installGuide") {
     name: title,
     description,
     step: [
-      { "@type": "HowToStep", name: "Choose the installation path", text: "Install a plugin in a coding agent, or upload a skill ZIP to ChatGPT or Claude.ai." },
+      { "@type": "HowToStep", name: "Choose your app", text: "Pick Claude Code, Codex, Cursor, or Gemini CLI to install a plugin, or ChatGPT or Claude.ai to upload a skill ZIP." },
       { "@type": "HowToStep", name: "Add the marketplace", text: "Add the Claude Settings marketplace to Claude Code, OpenAI Codex, or Cursor." },
       { "@type": "HowToStep", name: "Install a plugin", text: "Install the plugin from the marketplace in your terminal or desktop app." },
       { "@type": "HowToStep", name: "Start a new session", text: "Start a new session, then ask the agent to use the installed skill or workflow." },
       { "@type": "HowToStep", name: "Upload a skill ZIP", text: "Download a skill ZIP without extracting it, then upload it to ChatGPT or Claude.ai." },
     ],
+  })
+}
+const hubItems =
+  page.kind === "pluginHub"
+    ? plugins.map((item) => ({ name: item.name, href: `/plugins/${item.name}/` }))
+    : page.kind === "skillHub"
+      ? skills.map((item) => ({ name: item.name, href: item.seo ? `/plugins/${item.plugin}/skills/${item.name}/` : item.downloadUrl }))
+      : []
+if (hubItems.length) {
+  graph.push({
+    "@type": "ItemList",
+    name: title,
+    numberOfItems: hubItems.length,
+    itemListElement: hubItems.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: new URL(item.href, site.url).href,
+    })),
   })
 }
 const structuredData = { "@context": "https://schema.org", "@graph": graph }
@@ -221,25 +238,9 @@ const initialInstallDemo = installDemoCommands[0]
       <h1>{title}</h1>
       <p>{intro}</p>
       {page.kind === "skillHub" && <a class="button primary" href="/guides/install-agent-skills/">Read the install guide <Icon name="arrow" size={18} /></a>}
-      {page.kind === "pluginHub" && <a class="button secondary" href="https://agentplugins.net">Search the compact directory <Icon name="arrow" size={18} /></a>}
     </header>
 
-    {page.kind === "pluginHub" && (
-      <div class="content-sections">
-        {pluginCategories.map(([category, categoryPlugins]) => (
-          <section class="catalog-section">
-            <div class="section-heading"><h2>{category.replaceAll("-", " ")}</h2><span>{categoryPlugins?.length || 0} plugins</span></div>
-            <div class="catalog-list">
-              {categoryPlugins?.map((item) => (
-                <a class="catalog-row" href={`/plugins/${item.name}/`}>
-                  <strong>{item.name}</strong><span>{item.description}</span><small>{item.tools.join(" · ")}</small><Icon name="arrow" size={18} />
-                </a>
-              ))}
-            </div>
-          </section>
-        ))}
-      </div>
-    )}
+    {page.kind === "pluginHub" && <PluginHub />}
 
     {page.kind === "skillHub" && (
       <div class="content-sections">
@@ -304,7 +305,7 @@ const initialInstallDemo = installDemoCommands[0]
       <div class="content-sections">
         <section class="content-section install-terminal-section" data-install-terminal>
           <h2>Install the plugin in your coding agent</h2>
-          <p><a class="inline-link" href="/guides/install-agent-skills/#coding-agent-plugins">Add the marketplace once</a>, then run the command for your tool.</p>
+          <p><a class="inline-link" href="/guides/install-agent-skills/#claude-code">Add the marketplace once</a>, then run the command for your tool.</p>
           <div class="install-tool-tabs" role="tablist" aria-label="Choose a coding agent">
             {installDemoCommands.map(({ tool, command, icon, output }, index) => (
               <button
@@ -415,98 +416,7 @@ const initialInstallDemo = installDemoCommands[0]
       </div>
     )}
 
-    {page.kind === "installGuide" && (
-      <div class="content-sections install-guide">
-        <section class="content-section" id="choose-installation-path">
-          <h2>Choose the installation path for your app</h2>
-          <p>Install a plugin when you use a coding agent. Upload a ZIP when you use Skills in ChatGPT or Claude.ai.</p>
-          <div class="reference-grid">
-            <a class="reference-card" href="#coding-agent-plugins"><h3>Claude Code, Codex, Cursor, and Gemini CLI</h3><p>Add the marketplace where supported, or install a local Gemini extension.</p><span>Install coding-agent plugins <Icon name="arrow" size={16} /></span></a>
-            <a class="reference-card" href="#web-skill-uploads"><h3>ChatGPT and Claude.ai</h3><p>Download one skill as a ZIP, then upload it through the Skills interface.</p><span>Upload a skill ZIP <Icon name="arrow" size={16} /></span></a>
-          </div>
-        </section>
-        <section class="content-section" id="coding-agent-plugins">
-          <h2>Add this marketplace to Claude Code</h2>
-          <p>Claude Code uses the same configured marketplaces in the terminal and desktop app for local sessions.</p>
-          <p>From the terminal, add the marketplace once, then install each plugin by name.</p>
-          <pre class="code-sample"><code>{`${marketplaceCommands.claude}
-claude plugin install simplify@claude-settings`}</code></pre>
-          <p>In Claude Code desktop, select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>. Choose a plugin from the configured marketplace.</p>
-          <p>Run <code>/reload-plugins</code> after an install in an open session. New sessions load installed plugins automatically.</p>
-          <a class="official-link" href="https://code.claude.com/docs/en/discover-plugins">Read the official Claude Code plugin guide</a>
-        </section>
-        <section class="content-section">
-          <h2>Add this marketplace to OpenAI Codex</h2>
-          <p>Codex supports this marketplace in the terminal and the Codex desktop app. The Codex IDE extension doesn’t support plugins.</p>
-          <p>From the terminal, add the marketplace once, then install each plugin by name.</p>
-          <pre class="code-sample"><code>{`${marketplaceCommands.codex}
-codex plugin add simplify@claude-settings`}</code></pre>
-          <p>Enter <code>/plugins</code> in Codex CLI to browse configured marketplaces interactively. Start a new session after installing a plugin.</p>
-          <p>In the Codex desktop app, open <strong>Plugins</strong>, find the plugin, and select <strong>Install</strong>. Start a new task before you use its skills or tools.</p>
-          <a class="official-link" href="https://learn.chatgpt.com/docs/plugins">Read the official OpenAI plugin guide</a>
-        </section>
-        <section class="content-section">
-          <h2>Add this marketplace to Cursor</h2>
-          <p>Cursor installs personal plugins interactively. User-scope plugins work in the Cursor app and Cursor Agent CLI.</p>
-          <p>From the terminal, add the repository and start Cursor Agent. Enter <code>/plugin</code> to choose and install a plugin.</p>
-          <pre class="code-sample"><code>{`${marketplaceCommands.cursor}
-cursor-agent`}</code></pre>
-          <p>In the Cursor app, open <strong>Customize</strong>, find the plugin, and select <strong>Install</strong>. Choose user or project scope when prompted.</p>
-          <p>The marketplace command only adds the catalog.</p>
-          <a class="official-link" href="https://cursor.com/docs/plugins">Read the official Cursor plugin guide</a>
-        </section>
-        <section class="content-section">
-          <h2>Install a local extension in Gemini CLI</h2>
-          <p>Gemini CLI installs extensions from local plugin folders. Clone the repository, then run the extension command from its root.</p>
-          <pre class="code-sample"><code>{`git clone ${repositoryUrl}.git
-cd claude-codex-settings
-gemini extensions install --path ./plugins/simplify`}</code></pre>
-          <p>Replace <code>simplify</code> with the plugin you want. Start a new Gemini CLI session after installation.</p>
-          <a class="official-link" href="https://geminicli.com/docs/extensions/reference/">Read the official Gemini CLI extension reference</a>
-        </section>
-        <section class="content-section">
-          <h2>Use an installed plugin in a new session</h2>
-          <p>Start a new session so the agent loads the plugin. Describe the task or name the skill in your prompt.</p>
-          <pre class="code-sample"><code>{`Use the simplify skill to review my staged diff.
-Use the humanize skill to revise this README.`}</code></pre>
-          <p>Some plugins also add slash commands. Open the <a class="inline-link" href="/plugins/">plugin catalog</a> to see each plugin’s components and install commands.</p>
-        </section>
-        <section class="content-section" id="web-skill-uploads">
-          <h2>Choose and review a skill</h2>
-          <p>Open the source before uploading code from any publisher. Check <code>SKILL.md</code>, scripts, references, and external tool requirements.</p>
-          <a class="button secondary" href="/skills/">Browse all skill downloads <Icon name="arrow" size={18} /></a>
-        </section>
-        <section class="content-section">
-          <h2>Upload a skill to ChatGPT</h2>
-          <p>Personal Skills are available on eligible ChatGPT plans. Workspace administrators can control skill uploads.</p>
-          <figure class="tutorial-figure">
-            <img src="/tutorials/install-skill-chatgpt.webp" alt="Live ChatGPT interface showing the Skills page, upload menu, and ZIP upload screen" width="1200" height="760" loading="lazy" />
-            <figcaption>Current ChatGPT Skills upload flow, recorded from the live interface.</figcaption>
-          </figure>
-          <ol class="steps-list"><li>Open <strong>chatgpt.com/skills</strong></li><li>Select the <strong>Skills</strong> tab</li><li>Select <strong>+</strong>, then <strong>Upload a skill</strong></li><li>Choose the downloaded ZIP and wait for the security check</li><li>Run a prompt that matches the skill description</li></ol>
-          <a class="official-link" href="https://help.openai.com/en/articles/20001066-skills-in-chatgpt">Read the official OpenAI Skills guide</a>
-        </section>
-        <section class="content-section">
-          <h2>Upload a skill to Claude.ai</h2>
-          <p>Custom skills are available on supported Claude plans with code execution enabled.</p>
-          <figure class="tutorial-figure">
-            <img src="/tutorials/install-skill-claude.webp" alt="Live Claude interface showing the Add menu and ZIP upload screen" width="1200" height="760" loading="lazy" />
-            <figcaption>Current Claude Skills upload flow, recorded from the live interface.</figcaption>
-          </figure>
-          <ol class="steps-list"><li>Open <strong>Customize</strong>, then <strong>Skills</strong></li><li>Select <strong>Add</strong>, then <strong>Upload skill</strong></li><li>Choose the downloaded ZIP</li><li>Select <strong>Save</strong> and wait for the security scan</li><li>Run a prompt that matches the skill description</li></ol>
-          <a class="official-link" href="https://support.claude.com/en/articles/12512180-use-skills-in-claude">Read the official Claude Skills guide</a>
-        </section>
-        <section class="content-section package-structure">
-          <h2>Keep the named folder inside the ZIP</h2>
-          <p>Claude requires the archive to contain the named skill directory. Every release asset on this site follows that structure.</p>
-          <pre class="code-sample"><code>{`skill-name.zip
-└── skill-name/
-    ├── SKILL.md
-    ├── scripts/
-    └── references/`}</code></pre>
-        </section>
-      </div>
-    )}
+    {page.kind === "installGuide" && <InstallGuide />}
   </article>
 </Layout>
 

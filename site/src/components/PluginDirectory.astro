@@ -36,17 +36,7 @@ const initialCommand = plugins[0].claudeCommand
           data-cmd-codex={plugin.codexCommand}
           data-cmd-gemini={plugin.geminiCommand}
           data-cmd-cursor={plugin.cursorCommand}
-          data-search={[
-            plugin.name,
-            plugin.description,
-            plugin.category,
-            ...(plugin.keywords || []),
-            ...(plugin.tags || []),
-            ...(plugin.components?.skills || []),
-            ...(plugin.components?.commands || []),
-            ...(plugin.components?.agents || []),
-            ...(plugin.components?.outputStyles || []),
-          ].filter(Boolean).join(" ").toLowerCase()}
+          data-search={plugin.search}
         >
           <span class="plugin-number">{String(index + 1).padStart(2, "0")}</span>
           <button class="plugin-name" type="button" data-plugin-select>{plugin.name}</button>
@@ -113,10 +103,12 @@ const initialCommand = plugins[0].claudeCommand
     const count = browser.querySelector<HTMLElement>("[data-result-count]")
     const empty = browser.querySelector<HTMLElement>("[data-empty]")
 
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
+    const installContent = browser.querySelector<HTMLElement>(".install-content")!
     let activeRow = rows[0]
     let activeTab = tabs[0]
 
-    const render = () => {
+    const render = (animate = true) => {
       const label = activeTab.textContent || ""
       const marketplace = activeTab.dataset.marketplace
       const install = activeRow.getAttribute(`data-cmd-${activeTab.dataset.installTab}`)
@@ -128,9 +120,12 @@ const initialCommand = plugins[0].claudeCommand
       installCommand.textContent = install ?? ""
       unavailable.hidden = Boolean(install)
       unavailable.textContent = `${activeRow.dataset.plugin} ${browser.dataset.unavailable} ${label}.`
+      if (animate && !reducedMotion.matches) {
+        installContent.animate([{ opacity: 0.35, transform: "translateY(4px)" }, { opacity: 1, transform: "none" }], { duration: 200, easing: "ease-out" })
+      }
     }
 
-    render()
+    render(false)
 
     search?.addEventListener("input", () => {
       const query = search.value.trim().toLowerCase()
