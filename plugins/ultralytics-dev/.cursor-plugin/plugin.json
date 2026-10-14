@@ -1,7 +1,7 @@
 {
   "name": "ultralytics-dev",
-  "version": "2.4.0",
-  "description": "Ultralytics Platform API and YOLO26 training skills, format hooks, push guard.",
+  "version": "2.4.1",
+  "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
   "author": {
     "name": "Fatih C. Akyon"
   },
