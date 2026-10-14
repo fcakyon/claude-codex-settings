@@ -342,7 +342,7 @@ React and frontend best practices from [vercel-labs/agent-skills](https://github
 </details>
 
 <details>
-<summary><strong>agent-browser</strong> - Official browser automation CLI for AI agents</summary>
+<summary><strong>agent-browser</strong> - Browser automation and UI regression checks</summary>
 
 | Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
@@ -365,6 +365,9 @@ Browser automation via CLI instead of MCP. [93% less context usage](https://medi
 | [`derive-client`](./plugins/agent-browser/skills/derive-client/SKILL.md) | Build a direct API client from a site's recorded browser traffic             | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/derive-client.zip) |
 | [`dogfood`](./plugins/agent-browser/skills/dogfood/SKILL.md)             | Explore a web app to find bugs and UX issues                                 | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/dogfood.zip)       |
 | [`webmcp-gen`](./plugins/agent-browser/skills/webmcp-gen/SKILL.md)       | Expose a page's workflows as WebMCP tools                                    | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/webmcp-gen.zip)    |
+| [`ui-regression`](./plugins/agent-browser/skills/ui-regression/SKILL.md) | Verify actions, recovery, locales, accessibility, and real integrations | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/ui-regression.zip) |
+
+The locally maintained `ui-regression` skill checks known workflows on local, staging, and deployed UIs, including browser extensions. Use `dogfood` for exploratory bug discovery.
 
 **CLI Tool:** [agent-browser](https://github.com/vercel-labs/agent-browser) - install via `npm i -g agent-browser && agent-browser install`
 
