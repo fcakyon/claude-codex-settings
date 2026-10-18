@@ -221,6 +221,29 @@ class SimplifyGuardTest(unittest.TestCase):
         )
         self.assertFalse((self.repo / "alias-ran").exists())
 
+    def test_heredoc_bodies_and_nested_quotes_are_allowed(self) -> None:
+        """Allow valid shell that shlex cannot split, including commit text in heredoc bodies."""
+        for command in (
+            "cat > notes.md <<'EOF'\nthe controller's dispatch\nEOF",
+            "cat > notes.md <<'EOF'\nthen git commit\nEOF",
+            'echo "$(echo "it\'s")"',
+        ):
+            with self.subTest(command=command):
+                self.assertIsNone(self.run_guard("PreToolUse", command, codex=True))
+
+    def test_commits_beside_heredocs_or_nested_quotes_are_denied(self) -> None:
+        """Deny commits that shlex cannot split or that follow a heredoc."""
+        for runtime in ("codex", "claude"):
+            for command in (
+                "git commit -m \"$(cat <<'EOF'\nfix: guard \"quotes\"\nEOF\n)\"",
+                'git commit -m "$(echo "it\'s")"',
+                "cat <<'EOF' > notes.md && git commit -m test\nit's\nEOF",
+                "cat <<-EOF\n\tdon't\n\tEOF\ngit commit -m test",
+                'cat <<<"x"\ngit commit -m test',
+            ):
+                with self.subTest(runtime=runtime, command=command):
+                    self.assert_denied(self.run_guard("PreToolUse", command, **{runtime: True}))
+
 
 if __name__ == "__main__":
     unittest.main()

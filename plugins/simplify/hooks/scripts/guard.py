@@ -10,6 +10,7 @@ runtimes remain unblocked because they have no supported path.
 
 import json
 import os
+import re
 import shlex
 import subprocess
 import sys
@@ -32,6 +33,7 @@ GIT_OPTIONS_WITHOUT_SUBCOMMAND = {
     "--man-path",
     "--version",
 }
+HEREDOC = re.compile(r"<<-?[ \t]*[\"']?([A-Za-z_]\w*)[\"']?([^\n]*)\r?\n(.*?)\r?\n[ \t]*\1[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
 def marker(git=("git",)):
@@ -83,10 +85,14 @@ def main():
     if event != "PreToolUse" or not (os.environ.get("CLAUDECODE") == "1" or data.get("turn_id")):
         return
 
-    command = tool_input.get("command", "")
+    # heredoc bodies are data, so drop them but keep the rest of the line that opens them
+    command = HEREDOC.sub(r" \2", tool_input.get("command", ""))
     lexer = shlex.shlex(command, posix=True, punctuation_chars=";&|()")
     lexer.whitespace_split = True
-    tokens = list(lexer)
+    try:
+        tokens = list(lexer)
+    except ValueError:  # quoting shlex cannot follow, such as quotes nested in $(...)
+        tokens = command.split()
     if len(tokens) == 3 and tuple(tokens[:2]) == COMPLETION_SIGNAL:
         if m := marker(("git", "-C", tokens[2])):
             m.touch()
