@@ -62,3 +62,6 @@ jobs:
 
       - name: Test visual proof guard
         run: python .github/scripts/test_require_visual_proof.py
+
+      - name: Test commit type guard
+        run: python .github/scripts/test_block_commit_type.py
