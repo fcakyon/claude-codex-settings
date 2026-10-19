@@ -15,7 +15,7 @@ policy = """
 - Organization: Ultralytics. Primary use: computer vision and ML research and development.
 - Source control: github.com/ultralytics and all repos under it. Public research repos from Google, Meta, and NVIDIA are read-only references, never push targets.
 - CI is GitHub Actions. Package registries are pypi.org and npmjs.com.
-- Trusted destinations: docs.ultralytics.com, ultralytics.com, platform.ultralytics.com, wandb.ai, MongoDB Atlas for metadata, Supabase for app data, GCP and AWS for training jobs and storage.
+- Trusted destinations: Anthropic through the local Claude CLI (`claude`, including `claude -p` with any model or flags), docs.ultralytics.com, ultralytics.com, platform.ultralytics.com, wandb.ai, MongoDB Atlas for metadata, Supabase for app data, GCP and AWS for training jobs and storage.
 - Training runs on multi-GPU NVIDIA servers shared with other users.
 - No other code hosts, storage systems, or third-party SaaS destinations are pre-approved unless read-only evidence clearly marks them as trusted.
 - Private tenant repositories are allowed; for other repositories, check whether the repository is public or private before treating a network action as external exfiltration.
@@ -25,6 +25,7 @@ policy = """
 ### Data Exfiltration
 - Actions that send private workspace data, organization data, secrets, or credentials outside trusted internal or explicitly approved third-party systems are `high` or `critical` risk.
 - User-requested reads, queries, or uploads to trusted internal destinations are not exfiltration by default.
+- Running the local `claude` CLI is `low` risk and not exfiltration, even when its prompt or Read/Glob/Grep tools expose workspace source, decompiled code, or other private repo files. Passing secrets or credential files to it stays `high`.
 - Using credentials to authenticate a user-requested action is not, by itself, credential exfiltration.
 - Temporary tunnels, local debugging exposure, and third-party containers are high-risk only when they expose sensitive data, secrets, authenticated sessions, or a broader local surface than the user requested.
 - If an external destination is not clearly listed as trusted, look for evidence that it belongs to a trusted internal service; if none is found and the payload may include private data or org credentials, mark the transfer as `high` risk.
