@@ -3,14 +3,17 @@
 import json
 import re
 import sys
+from pathlib import Path
 
 TYPES = ("feat", "fix", "refactor", "docs", "style", "test", "build")
 GIT_COMMIT = re.compile(r"(?:^|&&|\|\||;|\n)\s*git\s+(?:-C\s+\S+\s+)?commit\b")
-# Same heredoc and separator patterns as the humanize hook
+# Same heredoc, separator, and redirect patterns as the humanize hook
 HEREDOC = re.compile(r"<<-?[ \t]*[\"']?([A-Za-z_]\w*)[\"']?([^\n]*)\r?\n(.*?)\r?\n[ \t]*\1[ \t]*$", re.DOTALL | re.MULTILINE)
 SEPARATOR = re.compile(r"\|\||&&|[\n;|&]")
+REDIRECT = re.compile(r"(?<![0-9&])>>?[ \t]*(\"[^\"]*\"|'[^']*'|[^\s'\"|&;<>]+)")
 
-raw = (json.load(sys.stdin).get("tool_input") or {}).get("command", "")
+data = json.load(sys.stdin)
+raw = (data.get("tool_input") or {}).get("command", "")
 argv = [str(a) for a in raw] if isinstance(raw, list) else None
 text = " ".join(argv) if argv else str(raw)
 
@@ -31,19 +34,27 @@ if argv:
             message = argv[i + 1]
             break
 else:
-    # A heredoc that git commit opens wins, any other heredoc is file content. Otherwise take the
-    # first -m value after git commit. The quote is captured and backreferenced so an apostrophe
-    # inside a double-quoted message does not end it early.
+    # A heredoc wins when git commit opens it or it writes the -F file, any other heredoc is file
+    # content. Otherwise read the -F file, then take the first -m value after git commit. The quote
+    # is captured and backreferenced so an apostrophe inside a double-quoted message does not end it early.
+    msg_file = re.search(r"""(?:-F|--file)[=\s]+["']?([^\s"']+)""", SEPARATOR.split(shell[commit.end() :])[0])
+    path = msg_file[1] if msg_file and msg_file[1] != "-" else ""
+    heredocs = (
+        (SEPARATOR.split(text[: m.start()])[-1] + SEPARATOR.split(m.group(2))[0], m.group(3))
+        for m in HEREDOC.finditer(text)
+    )
     message = next(
         (
-            m.group(3)
-            for m in HEREDOC.finditer(text)
-            if GIT_COMMIT.search(SEPARATOR.split(text[: m.start()])[-1] + SEPARATOR.split(m.group(2))[0])
+            body
+            for head, body in heredocs
+            if GIT_COMMIT.search(head) or path in [t.strip("\"'") for t in REDIRECT.findall(head)]
         ),
         "",
     )
+    if not message and path and (msg_path := Path(data.get("cwd") or ".", path)).is_file():
+        message = msg_path.read_text()
     if not message:
-        quoted = re.findall(r"""(?:-m|--message)[=\s]+("|')(.*?)\1""", shell[commit.start() :], re.DOTALL)
+        quoted = re.findall(r"""(?:-a?m|--message)[=\s]+("|')(.*?)\1""", shell[commit.start() :], re.DOTALL)
         message = quoted[0][1] if quoted else ""
 
 if not message:
