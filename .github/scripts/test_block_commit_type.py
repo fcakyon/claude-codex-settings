@@ -17,9 +17,10 @@ class BlockCommitTypeTest(unittest.TestCase):
     """Test commit-type behavior."""
 
     def setUp(self) -> None:
-        """Create a session directory holding a message file with a disallowed type."""
+        """Create a session directory holding message files with a disallowed type."""
         self.cwd = self.enterContext(tempfile.TemporaryDirectory())
-        (Path(self.cwd) / "msg.txt").write_text("chore: bump\n")
+        for name in ("msg.txt", "my msg.txt"):
+            (Path(self.cwd) / name).write_text("chore: bump\n")
 
     def run_hook(self, command: str | list[str]) -> dict | None:
         """Run the hook with a shell command.
@@ -51,6 +52,23 @@ class BlockCommitTypeTest(unittest.TestCase):
             "git commit -F msg.txt",
             "git commit --file=msg.txt",
             "cat > new.txt <<'EOF'\nchore: bump\nEOF\ngit commit -F new.txt",
+            "bash <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
+            "sh <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
+            "zsh <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
+            "bash <<'EOF'\ngit commit -F - <<'MSG'\nchore: bump\nMSG\nEOF",
+            ["bash", "-lc", "git commit -am 'chore: bump'"],
+            'git commit -sm "chore: bump"',
+            'git commit -vam "chore: bump"',
+            'git commit -am"chore: bump"',
+            "git commit -aF msg.txt",
+            'git commit -F "my msg.txt"',
+            "cat <<'EOF' | git commit -F -\nchore: bump\nEOF",
+            "echo 'chore: bump' | git commit -F -",
+            ["git", "commit", "-am", "chore: bump"],
+            ["git", "commit", "-F", "msg.txt"],
+            'git commit -m "fix: tidy" && git commit --allow-empty -m "chore: bump"',
+            "git commit -m \"chore: bump $(cat <<'EOF'\nfix: tidy\nEOF\n)\"",
+            "git commit \\\n  -m 'chore: bump'",
         ):
             with self.subTest(command=command):
                 output = self.run_hook(command)
@@ -62,6 +80,12 @@ class BlockCommitTypeTest(unittest.TestCase):
             'git commit -m "fix: guard"',
             "git commit -m \"$(cat <<'EOF'\nfeat: add hook\n\nbody\nEOF\n)\"",
             "cat > msg.txt <<'EOF'\nfix: tidy\nEOF\ngit commit -F msg.txt",
+            "cat > \"my msg.txt\" <<'EOF'\nfix: tidy\nEOF\ngit commit -F \"my msg.txt\"",
+            "bash <<'EOF'\ngit commit -m 'fix: tidy'\nEOF",
+            "cat <<'EOF' | git commit -F -\nfix: tidy\nEOF",
+            ["git", "commit", "-am", "fix: tidy"],
+            "cat > ./msg.txt <<'EOF'\nfix: tidy\nEOF\ngit commit -F msg.txt",
+            "# don't forget to stage\ngit add . && git commit -m \"fix: close #12\"",
         ):
             with self.subTest(command=command):
                 self.assertIsNone(self.run_hook(command))
@@ -74,6 +98,7 @@ class BlockCommitTypeTest(unittest.TestCase):
             "cat > notes.md <<'EOF' && git commit -m \"docs: add notes\"\n# Notes\nEOF",
             'git stash push -m "wip" && git commit -m "fix: tidy"',
             "python3 - <<'EOF'\ncases = ['a && git commit -m x']\nEOF",
+            "cat > run.sh <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
         ):
             with self.subTest(command=command):
                 self.assertIsNone(self.run_hook(command))
