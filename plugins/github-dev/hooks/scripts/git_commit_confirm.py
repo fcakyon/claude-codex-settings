@@ -2,39 +2,8 @@
 """PreToolUse hook: show confirmation modal before creating git commit."""
 import json
 import os
-import re
 import subprocess
 import sys
-
-
-def parse_git_commit_message(command: str) -> dict[str, str]:
-    """Parse git commit command to extract commit message.
-
-    Args:
-        command (str): The git commit command string
-
-    Returns:
-        (dict): Dictionary with message and is_amend keys
-    """
-    params = {"message": "", "is_amend": False}
-
-    # Check for --amend flag
-    params["is_amend"] = "--amend" in command
-
-    # Try to extract heredoc format: git commit -m "$(cat <<'EOF' ... EOF)"
-    heredoc_match = re.search(r"<<'EOF'\s*\n(.*?)\nEOF", command, re.DOTALL)
-    if heredoc_match:
-        params["message"] = heredoc_match.group(1).strip()
-        return params
-
-    # Try to extract simple -m "message" format
-    simple_matches = re.findall(r'(?:-m|--message)\s+["\']([^"\']+)["\']', command)
-    if simple_matches:
-        # Join multiple -m flags with double newlines
-        params["message"] = "\n\n".join(simple_matches)
-        return params
-
-    return params
 
 
 def get_staged_files() -> tuple[list[str], str]:
@@ -141,14 +110,21 @@ command = tool_input.get("command", "")
 if os.environ.get("CLAUDECODE") != "1" or tool_name != "Bash" or not command.strip().startswith("git commit"):
     sys.exit(0)
 
-# Parse commit message
-params = parse_git_commit_message(command)
+# Imported past the gate, where every other Bash call already exited, and shared with the commit type hook
+from commit_message import git_commits
+
+commits = git_commits(command, input_data.get("cwd") or ".")
 
 # Get staged files and stats
 files, stats = get_staged_files()
 
 # Format confirmation message
-message = format_confirmation_message(params["message"], params["is_amend"], files, stats)
+message = format_confirmation_message(
+    "\n\n".join(msg.strip() for _, msg in commits if msg.strip()),
+    any("--amend" in args for args, _ in commits),
+    files,
+    stats,
+)
 
 # Return JSON with ask decision
 output = {
