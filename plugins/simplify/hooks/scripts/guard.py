@@ -4,8 +4,8 @@
 The marker lives in the per-worktree Git directory because /simplify reviews
 the worktree's index. Claude Code and Codex mint it through an explicit
 completion signal carrying the reviewed worktree. An agent can mint the same
-one-use permission when the user explicitly asks to skip /simplify. Other
-runtimes remain unblocked because they have no supported path.
+one-use permission for a named worktree when the user explicitly asks to skip
+/simplify. Other runtimes remain unblocked because they have no supported path.
 """
 
 import json
@@ -36,11 +36,11 @@ GIT_OPTIONS_WITHOUT_SUBCOMMAND = {
 HEREDOC = re.compile(r"<<-?[ \t]*[\"']?([A-Za-z_]\w*)[\"']?([^\n]*)\r?\n(.*?)\r?\n[ \t]*\1[ \t]*$", re.DOTALL | re.MULTILINE)
 
 
-def marker(git=("git",)):
+def marker(git):
     """Return the one-use marker for a Git worktree.
 
     Args:
-        git (tuple[str, ...], optional): Git executable and global options.
+        git (tuple[str, ...]): Git executable and global options.
 
     Returns:
         (Path | None): Marker path when the command resolves a Git directory.
@@ -93,12 +93,8 @@ def main():
         tokens = list(lexer)
     except ValueError:  # quoting shlex cannot follow, such as quotes nested in $(...)
         tokens = command.split()
-    if len(tokens) == 3 and tuple(tokens[:2]) == COMPLETION_SIGNAL:
+    if len(tokens) == 3 and tuple(tokens[:2]) in (COMPLETION_SIGNAL, BYPASS_SIGNAL):
         if m := marker(("git", "-C", tokens[2])):
-            m.touch()
-        return
-    if tuple(tokens) == BYPASS_SIGNAL:
-        if m := marker():
             m.touch()
         return
 

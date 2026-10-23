@@ -13,7 +13,6 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GUARD = REPO_ROOT / "plugins" / "simplify" / "hooks" / "scripts" / "guard.py"
-BYPASS_SIGNAL = "echo simplify-guard:bypass"
 
 
 class SimplifyGuardTest(unittest.TestCase):
@@ -80,16 +79,17 @@ class SimplifyGuardTest(unittest.TestCase):
         )
         return json.loads(result.stdout) if result.stdout else None
 
-    def completion_signal(self, repo: Path | None = None) -> str:
-        """Build a completion signal for a reviewed worktree.
+    def guard_signal(self, name: str, repo: Path | None = None) -> str:
+        """Build a guard signal for a worktree.
 
         Args:
-            repo (Path | None, optional): Reviewed worktree path.
+            name (str): Signal name after `simplify-guard:`, such as `complete` or `bypass`.
+            repo (Path | None, optional): Worktree the signal names.
 
         Returns:
-            (str): Shell-safe completion command.
+            (str): Shell-safe signal command.
         """
-        return shlex.join(["echo", "simplify-guard:complete", str(repo or self.repo)])
+        return shlex.join(["echo", f"simplify-guard:{name}", str(repo or self.repo)])
 
     def assert_denied(self, output: dict | None) -> None:
         """Assert that a hook response denies the command.
@@ -115,7 +115,7 @@ class SimplifyGuardTest(unittest.TestCase):
                     self.assert_denied(self.run_guard("PreToolUse", command, **{runtime: True}))
 
     def test_git_c_and_cd_use_the_target_worktree_marker(self) -> None:
-        """Keep completion bound to its reviewed worktree."""
+        """Keep completion and bypass bound to the worktree they name."""
         other_repo = self.repo / "other repo"
         subprocess.run(["git", "init", "-q", str(other_repo)], check=True)
         for command in (
@@ -124,29 +124,22 @@ class SimplifyGuardTest(unittest.TestCase):
             "cd ~/'repo/other repo' && git commit -m test",
         ):
             with self.subTest(command=command):
-                self.assertIsNone(self.run_guard("PreToolUse", self.completion_signal(), codex=True))
+                self.assertIsNone(self.run_guard("PreToolUse", self.guard_signal("complete"), codex=True))
                 self.assert_denied(self.run_guard("PreToolUse", command, codex=True))
                 self.assertTrue(self.marker.exists())
+                self.assertIsNone(self.run_guard("PreToolUse", self.guard_signal("bypass", other_repo), codex=True))
+                self.assertIsNone(self.run_guard("PreToolUse", command, codex=True))
 
-    def test_completion_allows_exactly_one_commit_attempt(self) -> None:
-        """Allow one commit attempt after completion."""
+    def test_completion_and_bypass_allow_exactly_one_commit_attempt(self) -> None:
+        """Allow one commit attempt after completion or an explicit bypass."""
         for runtime in ("codex", "claude"):
-            with self.subTest(runtime=runtime):
-                self.assertIsNone(self.run_guard("PreToolUse", self.completion_signal(), **{runtime: True}))
-                self.assertTrue(self.marker.exists())
-                self.assertIsNone(self.run_guard("PreToolUse", "git commit -m test", **{runtime: True}))
-                self.assertFalse(self.marker.exists())
-                self.assert_denied(self.run_guard("PreToolUse", "git commit -m again", **{runtime: True}))
-
-    def test_explicit_user_bypass_allows_exactly_one_commit_attempt(self) -> None:
-        """Allow one commit attempt after an explicit bypass."""
-        for runtime in ("codex", "claude"):
-            with self.subTest(runtime=runtime):
-                self.assertIsNone(self.run_guard("PreToolUse", BYPASS_SIGNAL, **{runtime: True}))
-                self.assertTrue(self.marker.exists())
-                self.assertIsNone(self.run_guard("PreToolUse", "git commit -m test", **{runtime: True}))
-                self.assertFalse(self.marker.exists())
-                self.assert_denied(self.run_guard("PreToolUse", "git commit -m again", **{runtime: True}))
+            for name in ("complete", "bypass"):
+                with self.subTest(runtime=runtime, name=name):
+                    self.assertIsNone(self.run_guard("PreToolUse", self.guard_signal(name), **{runtime: True}))
+                    self.assertTrue(self.marker.exists())
+                    self.assertIsNone(self.run_guard("PreToolUse", "git commit -m test", **{runtime: True}))
+                    self.assertFalse(self.marker.exists())
+                    self.assert_denied(self.run_guard("PreToolUse", "git commit -m again", **{runtime: True}))
 
     def test_completion_targets_a_repo_outside_the_session_cwd(self) -> None:
         """Bind completion when the session directory is not a repository."""
@@ -155,7 +148,7 @@ class SimplifyGuardTest(unittest.TestCase):
                 self.assertIsNone(
                     self.run_guard(
                         "PreToolUse",
-                        self.completion_signal(),
+                        self.guard_signal("complete"),
                         cwd=self.session_dir,
                         **{runtime: True},
                     )
@@ -182,16 +175,17 @@ class SimplifyGuardTest(unittest.TestCase):
         cases = [
             {"event": "PostToolUse", "skill": "simplify", "claude": True},
             {"event": "PreToolUse", "command": "echo simplify-guard:complete", "codex": True},
-            {"event": "PreToolUse", "command": self.completion_signal()},
-            {"event": "PreToolUse", "command": BYPASS_SIGNAL},
+            {"event": "PreToolUse", "command": "echo simplify-guard:bypass", "codex": True},
+            {"event": "PreToolUse", "command": self.guard_signal("complete")},
+            {"event": "PreToolUse", "command": self.guard_signal("bypass")},
             {
                 "event": "PreToolUse",
-                "command": "echo simplify-guard:complete-later",
+                "command": self.guard_signal("complete-later"),
                 "codex": True,
             },
             {
                 "event": "PreToolUse",
-                "command": "echo simplify-guard:bypass-later",
+                "command": self.guard_signal("bypass-later"),
                 "codex": True,
             },
         ]
