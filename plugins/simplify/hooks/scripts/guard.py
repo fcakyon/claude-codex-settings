@@ -46,7 +46,7 @@ def marker(git=("git",)):
         (Path | None): Marker path when the command resolves a Git directory.
     """
     git_dir = subprocess.run(
-        [*git, "rev-parse", "--path-format=absolute", "--git-dir"],
+        [*map(os.path.expanduser, git), "rev-parse", "--path-format=absolute", "--git-dir"],
         capture_output=True,
         cwd=data.get("cwd") or ".",
         text=True,
@@ -61,12 +61,12 @@ def commit_prefix(tokens):
         tokens (list[str]): Shell tokens to inspect.
 
     Returns:
-        (list[str] | None): Git executable and global options before `commit`.
+        (list[str] | None): Git executable, earlier `cd` targets as `-C`, and global options before `commit`.
     """
     for start, arg in enumerate(tokens):
         if Path(arg).name != "git":
             continue
-        git = [arg]
+        git = [arg, *(t for i in range(start) if tokens[i] == "cd" for t in ("-C", tokens[i + 1]))]
         for token in tokens[start + 1 :]:
             if token in SHELL_OPERATORS:
                 break

@@ -64,7 +64,7 @@ class SimplifyGuardTest(unittest.TestCase):
         if skill:
             payload["tool_input"]["skill"] = skill
 
-        env = os.environ.copy()
+        env = {**os.environ, "HOME": str(self.session_dir)}
         if claude:
             env["CLAUDECODE"] = "1"
         else:
@@ -114,19 +114,19 @@ class SimplifyGuardTest(unittest.TestCase):
                 with self.subTest(runtime=runtime, command=command):
                     self.assert_denied(self.run_guard("PreToolUse", command, **{runtime: True}))
 
-    def test_git_c_uses_the_target_worktree_marker(self) -> None:
+    def test_git_c_and_cd_use_the_target_worktree_marker(self) -> None:
         """Keep completion bound to its reviewed worktree."""
         other_repo = self.repo / "other repo"
         subprocess.run(["git", "init", "-q", str(other_repo)], check=True)
-        self.assertIsNone(self.run_guard("PreToolUse", self.completion_signal(), codex=True))
-        self.assert_denied(
-            self.run_guard(
-                "PreToolUse",
-                f"git -C '{other_repo}' commit -m test",
-                codex=True,
-            )
-        )
-        self.assertTrue(self.marker.exists())
+        for command in (
+            f"git -C '{other_repo}' commit -m test",
+            f"cd '{other_repo}' && git commit -m test",
+            "cd ~/'repo/other repo' && git commit -m test",
+        ):
+            with self.subTest(command=command):
+                self.assertIsNone(self.run_guard("PreToolUse", self.completion_signal(), codex=True))
+                self.assert_denied(self.run_guard("PreToolUse", command, codex=True))
+                self.assertTrue(self.marker.exists())
 
     def test_completion_allows_exactly_one_commit_attempt(self) -> None:
         """Allow one commit attempt after completion."""
