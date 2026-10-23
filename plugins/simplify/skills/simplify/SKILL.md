@@ -14,10 +14,10 @@ You are improving the quality of the changed code, not hunting for bugs. Review 
 If the user explicitly asks to commit while skipping simplify, skip the review phases below:
 
 1. State that simplify will be skipped for one commit and normal Git hooks will still run.
-2. Run this exact command from the worktree:
+2. Resolve the worktree you will commit in with `git -C '<worktree>' rev-parse --show-toplevel`, then run this exact command with that absolute path:
 
 ```bash
-echo simplify-guard:bypass
+echo simplify-guard:bypass '/absolute/path/to/worktree'
 ```
 
 3. Commit normally without `--no-verify`.
