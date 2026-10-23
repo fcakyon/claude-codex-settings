@@ -65,3 +65,6 @@ jobs:
 
       - name: Test commit type guard
         run: python .github/scripts/test_block_commit_type.py
+
+      - name: Test format hook
+        run: python .github/scripts/test_post_write.py

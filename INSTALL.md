@@ -143,15 +143,20 @@ rm gh.tar.gz
 
 ### Code Quality Tools
 
-```bash
-# Python formatting (required for Python hook)
-uv tool install ruff
+The ultralytics-dev format hook runs the Ultralytics Actions formatters. uv fetches ultralytics-actions and its ruff and npx fetches Prettier and Biome on first use, so the first formatted file needs network access. Shell scripts need shfmt.
 
-# Prettier for JS/TS/CSS/JSON/YAML/HTML/Markdown/Shell formatting (required for prettier hooks)
-npm install -g prettier@3.6.2 prettier-plugin-sh
+```bash
+# macOS
+brew install uv node shfmt
+
+# Linux: install Node.js with your package manager, then uv and a local shfmt binary
+curl -LsSf https://astral.sh/uv/install.sh | sh
+mkdir -p ~/.local/bin
+curl -Lo ~/.local/bin/shfmt https://github.com/mvdan/sh/releases/download/v3.13.1/shfmt_v3.13.1_linux_amd64
+chmod +x ~/.local/bin/shfmt
 ```
 
-> Verify both are on PATH: `ruff --version && npx prettier --version`. The Python, prettier, and bash hooks exit without a message when a tool is missing, so nothing gets formatted and nothing warns you.
+> Verify all three are on PATH: `uvx --version && npx --version && shfmt --version`. The hook skips a formatter whose tool is missing, so nothing gets formatted and nothing warns you.
 
 ## Post-Installation Setup
 

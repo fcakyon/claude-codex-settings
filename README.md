@@ -808,14 +808,10 @@ Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formattin
 
 **Hooks:**
 
-- [`format_python_docstrings.py`](./plugins/ultralytics-dev/hooks/scripts/format_python_docstrings.py) - Google-style docstring formatter
-- [`python_code_quality.py`](./plugins/ultralytics-dev/hooks/scripts/python_code_quality.py) - Python code quality with ruff
-- [`prettier_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/prettier_formatting.py) - JavaScript/TypeScript/CSS/JSON
-- [`markdown_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/markdown_formatting.py) - Markdown formatting
-- [`bash_formatting.py`](./plugins/ultralytics-dev/hooks/scripts/bash_formatting.py) - Bash script formatting
+- [`post_write.py`](./plugins/ultralytics-dev/hooks/scripts/post_write.py) - Formats each Python, Markdown, shell, and web file you change with the Ultralytics Actions format rules
 - [`block_force_push.py`](./plugins/ultralytics-dev/hooks/scripts/block_force_push.py) - Block force-push and rebase
 
-Install `ruff` and `prettier` first ([setup](INSTALL.md#code-quality-tools)).
+Install `uv`, Node.js, and `shfmt` first ([setup](INSTALL.md#code-quality-tools)).
 
 </details>
 
