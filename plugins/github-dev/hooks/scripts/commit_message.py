@@ -1,7 +1,5 @@
 """Find each git commit a shell command runs and the message it gives, shared by the commit hooks."""
 
-from __future__ import annotations
-
 import re
 import shlex
 from pathlib import Path
@@ -30,15 +28,15 @@ def tokens(text: str) -> list[str]:
         return re.findall(rf"[{OPERATORS}<>]+|[^\s{OPERATORS}<>]+", text)
 
 
-def git_commits(command: str | list[str], cwd: str) -> list[tuple[list[str], str]]:
-    """Return the arguments and message of each git commit a shell command or argv array runs.
+def git_commits(command: str, cwd: str) -> list[tuple[list[str], str]]:
+    """Return the arguments and message of each git commit a shell command runs.
 
     The message comes from -m values, a heredoc or pipe feeding -F -, or the -F file, preferring what cat, tee,
     echo, or printf wrote to it earlier in the command over the file on disk. A shell runs its -c script or its
     stdin as code, while every other heredoc body stays data.
 
     Args:
-        command (str | list[str]): Shell command string, or an argv array as Codex sends it.
+        command (str): Shell command string.
         cwd (str): Directory that relative -F paths resolve from.
 
     Returns:
@@ -112,8 +110,5 @@ def git_commits(command: str | list[str], cwd: str) -> list[tuple[list[str], str
             else:
                 cmd.append(tok)
 
-    if isinstance(command, list):  # an argv array is one simple command with no shell syntax
-        step([str(a) for a in command], "")
-    else:
-        run(command)
+    run(command)
     return found

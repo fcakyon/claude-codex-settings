@@ -89,7 +89,6 @@ def main() -> None:
         "project_hash": project_hash(cwd),
     }
     emit_log(event)
-    print(json.dumps({"chat_id": cid}))
 
 
 if __name__ == "__main__":

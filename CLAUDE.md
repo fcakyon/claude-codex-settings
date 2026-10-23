@@ -232,10 +232,17 @@ form, but Codex does not document that field:
 
 Codex normalizes shell and patch calls:
 
-- `Bash` and unified `exec_command` calls provide their command in `tool_input.command`.
+- `exec_command` reports `tool_name: "Bash"` with the command string in `tool_input.command`. It drops the `workdir`
+  argument and always sends the session folder as `cwd`, so hooks cannot see where a `workdir` command runs.
 - `apply_patch` provides the full patch envelope in `tool_input.command`, not a `file_path`.
 - `apply_patch` matches `apply_patch`, `Edit`, or `Write`, but still reports `tool_name: "apply_patch"`.
-- Post-write hooks that need paths must parse each `*** Add File:` or `*** Update File:` header from the patch envelope.
+- Hooks that need paths parse the `*** Add File:`, `*** Update File:`, and `*** Delete File:` headers of the patch
+  envelope. A `*** Move to:` line after an Update header renames that file, so a pre-write hook reads it from the Update
+  path and judges it by the Move to path, while a post-write hook finds it at the Move to path.
+
+Codex marks a hook failed and runs the tool anyway when its JSON output has a field outside the Codex schema,
+`permissionDecision: "ask"`, or `permissionDecision: "allow"` without `updatedInput`. It ignores plain-text PreCompact
+output.
 
 Claude Write, Edit, and MultiEdit calls continue to provide `tool_input.file_path`.
 

@@ -22,11 +22,11 @@ class BlockCommitTypeTest(unittest.TestCase):
         for name in ("msg.txt", "my msg.txt"):
             (Path(self.cwd) / name).write_text("chore: bump\n")
 
-    def run_hook(self, command: str | list[str]) -> dict | None:
+    def run_hook(self, command: str) -> dict | None:
         """Run the hook with a shell command.
 
         Args:
-            command (str | list[str]): Command supplied to the hook.
+            command (str): Command supplied to the hook.
 
         Returns:
             (dict | None): Hook response when the command is denied.
@@ -48,7 +48,6 @@ class BlockCommitTypeTest(unittest.TestCase):
             "git commit -m \"$(cat <<'EOF'\nchore: bump\n\nbody\nEOF\n)\"",
             "git commit -F - <<'MSG'\nchore: bump\nMSG",
             "cat > notes.md <<'EOF'\nfeat: looks like a subject\nEOF\ngit add notes.md && git commit -m \"chore: bump\"",
-            ["git", "commit", "-m", "chore: bump"],
             "git commit -F msg.txt",
             "git commit --file=msg.txt",
             "cat > new.txt <<'EOF'\nchore: bump\nEOF\ngit commit -F new.txt",
@@ -56,7 +55,7 @@ class BlockCommitTypeTest(unittest.TestCase):
             "sh <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
             "zsh <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
             "bash <<'EOF'\ngit commit -F - <<'MSG'\nchore: bump\nMSG\nEOF",
-            ["bash", "-lc", "git commit -am 'chore: bump'"],
+            "bash -lc \"git commit -am 'chore: bump'\"",
             'git commit -sm "chore: bump"',
             'git commit -vam "chore: bump"',
             'git commit -am"chore: bump"',
@@ -64,8 +63,6 @@ class BlockCommitTypeTest(unittest.TestCase):
             'git commit -F "my msg.txt"',
             "cat <<'EOF' | git commit -F -\nchore: bump\nEOF",
             "echo 'chore: bump' | git commit -F -",
-            ["git", "commit", "-am", "chore: bump"],
-            ["git", "commit", "-F", "msg.txt"],
             'git commit -m "fix: tidy" && git commit --allow-empty -m "chore: bump"',
             "git commit -m \"chore: bump $(cat <<'EOF'\nfix: tidy\nEOF\n)\"",
             "git commit \\\n  -m 'chore: bump'",
@@ -83,7 +80,6 @@ class BlockCommitTypeTest(unittest.TestCase):
             "cat > \"my msg.txt\" <<'EOF'\nfix: tidy\nEOF\ngit commit -F \"my msg.txt\"",
             "bash <<'EOF'\ngit commit -m 'fix: tidy'\nEOF",
             "cat <<'EOF' | git commit -F -\nfix: tidy\nEOF",
-            ["git", "commit", "-am", "fix: tidy"],
             "cat > ./msg.txt <<'EOF'\nfix: tidy\nEOF\ngit commit -F msg.txt",
             "# don't forget to stage\ngit add . && git commit -m \"fix: close #12\"",
         ):

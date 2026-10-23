@@ -2,17 +2,24 @@
 """Sync marketplace.json plugin entries to individual plugin.json files across Claude Code, Codex CLI, and Cursor."""
 
 import json
+import re
 import sys
 from pathlib import Path
 
 
 def get_edited_file_path():
-    """Extract file path from hook input."""
+    """Extract the file path from a Claude write, or the marketplace.json path from a Codex patch."""
     try:
-        input_data = json.load(sys.stdin)
-        return input_data.get("tool_input", {}).get("file_path", "")
+        tool_input = json.load(sys.stdin).get("tool_input", {})
     except (json.JSONDecodeError, KeyError):
         return ""
+    # Codex apply_patch names its files in patch headers, and a moved file in its Move to line
+    patched = re.search(
+        r"^\*\*\* (?:Add File|Update File|Move to): (.+?marketplace\.json)\s*$(?!\n\*\*\* Move to: )",
+        tool_input.get("command", ""),
+        re.MULTILINE,
+    )
+    return tool_input.get("file_path") or (patched[1] if patched else "")
 
 
 def sync_marketplace_to_plugins():
@@ -42,7 +49,7 @@ def sync_marketplace_to_plugins():
 
     for plugin in plugins:
         source = plugin.get("source")
-        if not source:
+        if not isinstance(source, str):  # remote sources have no local plugin folder
             continue
 
         # Resolve plugin directory relative to marketplace root
