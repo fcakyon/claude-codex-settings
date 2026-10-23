@@ -1,6 +1,6 @@
 {
   "name": "humanize",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Write naturally and block AI buzzwords in files, commits, and messages.",
   "author": {
     "name": "Fatih C. Akyon"

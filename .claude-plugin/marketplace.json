@@ -27,7 +27,7 @@
       "name": "humanize",
       "source": "./plugins/humanize",
       "description": "Write naturally and block AI buzzwords in files, commits, and messages.",
-      "version": "1.2.6",
+      "version": "1.2.7",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -102,7 +102,7 @@
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Track Claude Code usage, rejections, and session stats in one dashboard.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -362,7 +362,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "Git and GitHub workflow skills for commits, PRs, code review, and comment resolution.",
-      "version": "2.7.5",
+      "version": "2.7.6",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -377,7 +377,7 @@
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
-      "version": "2.4.1",
+      "version": "2.4.2",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -422,7 +422,7 @@
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Sync CLAUDE.md and the permissions allowlist, and refresh context on demand.",
-      "version": "2.1.4",
+      "version": "2.1.5",
       "author": {
         "name": "Fatih C. Akyon"
       },

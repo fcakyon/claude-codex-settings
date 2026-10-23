@@ -2,19 +2,16 @@
 """PreToolUse hook: block force-push and rebase, which rewrite shared history.
 
 Denies git push force forms (--force, -f, --force-with-lease, a leading + on a refspec) and git
-rebase, telling the caller to add a follow-up commit or a fresh branch instead. Reads a string
-command (Claude Code) and an argv array (Codex). Quoted text is stripped first so a force flag
-mentioned inside a commit message or PR body does not trip the guard. The deny decision works
-identically on both harnesses.
+rebase, telling the caller to add a follow-up commit or a fresh branch instead. Quoted text is
+stripped first so a force flag mentioned inside a commit message or PR body does not trip the guard.
 """
 import json
 import re
 import sys
 
 command = (json.load(sys.stdin).get("tool_input") or {}).get("command", "")
-text = " ".join(map(str, command)) if isinstance(command, list) else str(command)
 # drop quoted argument bodies so a force flag inside a message or body is not matched
-bare = re.sub(r"'[^']*'|\"[^\"]*\"", "", text)
+bare = re.sub(r"'[^']*'|\"[^\"]*\"", "", command)
 
 # scope the force flag to the git push clause, allowing options like -C between git and push, so a -f on
 # another command in a compound line does not trip it. A leading + on a refspec also force-pushes

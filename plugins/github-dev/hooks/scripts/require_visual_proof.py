@@ -3,9 +3,8 @@
 
 Denies `gh pr create` and `gh pr edit` when the command writes an inline body and either that body
 embeds a raw.githubusercontent image, which only works once the image is committed into the repo, or
-the branch changes a webpage or stylesheet and the body carries no image at all. Reads a string
-command (Claude Code) and an argv array (Codex). Lets the command through when git cannot list the
-branch files.
+the branch changes a webpage or stylesheet and the body carries no image at all. Lets the command
+through when git cannot list the branch files.
 """
 
 import json
@@ -23,8 +22,7 @@ RECIPE = (
 )
 
 data = json.load(sys.stdin)
-command = (data.get("tool_input") or {}).get("command", "")
-text = " ".join(map(str, command)) if isinstance(command, list) else str(command)
+text = (data.get("tool_input") or {}).get("command", "")
 
 # anchor per command segment so `cd site && gh pr create` matches but `gh issue comment -b "pr create"` does not
 pr_command = next(
@@ -46,7 +44,7 @@ if "--body-file" in text or ("$(" in text and "<<" not in text) or re.search(r"g
 import shlex
 import subprocess
 
-args = list(map(str, command)) if isinstance(command, list) else shlex.split(pr_command)
+args = shlex.split(pr_command)
 base = next((value for option, value in zip(args, args[1:]) if option in {"-B", "--base"}), None)
 base = next((arg.removeprefix("--base=") for arg in args if arg.startswith("--base=")), base)
 base_ref = f"origin/{base.removeprefix('origin/') if base else 'HEAD'}"

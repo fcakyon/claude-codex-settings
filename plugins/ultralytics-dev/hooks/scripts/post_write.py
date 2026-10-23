@@ -45,8 +45,9 @@ def changed_paths(data: dict) -> list[str]:
     tool_input = data.get("tool_input") or {}
     if file_path := tool_input.get("file_path"):
         return [file_path]
+    # a moved file now lives at its Move to path, not its Update File path
     return re.findall(
-        r"^\*\*\* (?:Add|Update) File: (.+?)\s*$",
+        r"^\*\*\* (?:Add File|Update File|Move to): (.+?)\s*$(?!\n\*\*\* Move to: )",
         tool_input.get("command", ""),
         re.MULTILINE,
     )

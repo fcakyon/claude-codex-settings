@@ -46,11 +46,11 @@ class RequireVisualProofTest(unittest.TestCase):
         """Remove the temporary repository."""
         self.temp_dir.cleanup()
 
-    def run_hook(self, command: str | list[str]) -> dict | None:
+    def run_hook(self, command: str) -> dict | None:
         """Run the hook with a shell command.
 
         Args:
-            command (str | list[str]): Command supplied to the hook.
+            command (str): Command supplied to the hook.
 
         Returns:
             (dict | None): Hook response when the command is denied.
@@ -69,7 +69,7 @@ class RequireVisualProofTest(unittest.TestCase):
         """Use the PR base instead of the repository default."""
         for command in (
             'gh pr create --base development --body "plain"',
-            ["gh", "pr", "create", "--base=development", "--body", "plain"],
+            'gh pr create --base=development --body "plain"',
         ):
             with self.subTest(command=command):
                 self.assertIsNone(self.run_hook(command))
