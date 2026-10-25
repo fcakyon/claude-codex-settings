@@ -21,6 +21,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.secret(name)` | Environment/private credential lookup |
 | `qa.reuseCookies(origins)` | Approved provider cookies from local browser |
 | `qa.http(url, options)` | Real fetch, 30-second deadline, no browser cookies |
+| `qa.network(startArgs, run)` | Scoped CLI capture with private export and cleanup |
 | `qa.command(file, args, options)` | Spawn argv without a shell, return code/stdout/stderr |
 | `qa.sqliteQuery(db, sql)` | Read-only SQLite JSON rows |
 | `qa.androidInstrumentation(serial, runner)` | Actual ADB tests with positive assertion count |
@@ -38,8 +39,17 @@ Browser analytics capture does not cover `qa.http` or subprocesses. Follow telem
 
 ## Optional network diagnostics
 
-Use [browser-network-cli](https://github.com/fcakyon/browser-network-cli) when a failed journey needs request/response or extension-worker evidence beyond the runner's assertions. Check `browser-network --help` first. If missing and needed for the task, install its precompiled release with `npm install -g https://github.com/fcakyon/browser-network-cli/releases/latest/download/fcakyon-browser-network-cli.tgz` (Node 22.12+), then read the CLI's current help and linked agent skill. Routine QA does not depend on it.
+Requires [browser-network-cli](https://github.com/fcakyon/browser-network-cli) 0.2.1+. Check `browser-network --version`. If missing, install with `npm install -g https://github.com/fcakyon/browser-network-cli/releases/latest/download/fcakyon-browser-network-cli.tgz`. If the release is older, build a checkout and set `BROWSER_NETWORK_CLI` to its `dist/cli.js`.
 
-Attach only to an authorized browser with an available CDP endpoint. The QA runner does not expose a debugging port by default. Use a unique `--state` path, explicit `--host` scope and the exact `--extension` ID when needed. Start capture before reproducing the action, inspect redacted evidence, and stop only your recorder in `finally`. Sensitive capture is opt-in and must stay private. Do not restart personal Chrome or request Keychain access to collect diagnostics.
+`qa.network(startArgs, run)` owns a private recorder, exports evidence and stops it even when the callback fails. Pass an authorized CDP endpoint or profile and explicit host/extension scope. The runner does not expose its own debugging port by default.
 
-Capture observes traffic; it does not isolate analytics or guarantee a worker's first requests were recorded. Node HTTP replay requires explicit authorization and does not prove browser authentication or DRM playback. Preserve the real UI and provider assertions. Put recurring diagnostic commands into the project's tracked scripts rather than repeating manual capture steps.
+```js
+await qa.network(['--cdp', endpoint, '--host', 'example.test'], async network => {
+  const after = (await network('status')).lastRequestId
+  await page.getByRole('button', {name: 'Connect'}).click()
+  const request = await network('wait', ['--contains', '/connect', '--after', after, '--status', '200'])
+  qa.assert.equal(request.status, 200)
+})
+```
+
+Use `targets` for exact IDs and `media --target ID` for frame/time/dimension samples. Startup capture needs `--pause-workers` before loading a service worker in a dedicated test browser. Capture does not isolate analytics or replace provider/playback assertions. Keep callback commands to observation and let the helper own export and stop.

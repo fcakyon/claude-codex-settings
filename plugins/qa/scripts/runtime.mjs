@@ -10,6 +10,7 @@ import {pathToFileURL} from 'node:url';
 import {chromium} from 'playwright-core';
 import {importCookies} from './session.mjs';
 import {signIn} from './auth.mjs';
+import {withNetwork} from './network.mjs';
 import {advancingVideo, observeSkip, videoState} from './media.mjs';
 
 export function privateDirectory(root, config) {
@@ -96,6 +97,7 @@ export async function runSuite(root, {filter, output} = {}) {
     root, config, stateDir, outputDir, Blocked, command, androidInstrumentation, sqliteQuery,
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
     signIn: page => signIn(qa, page),
+    network: (args, run) => withNetwork(qa, args, run),
     advancingVideo, observeSkip, videoState,
     telemetry: report.telemetry.events,
     secret: name => secret(name, stateDir),

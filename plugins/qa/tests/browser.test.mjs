@@ -92,3 +92,41 @@ test('cookie recovery reports unavailable HTTP discovery', async () => {
     await assert.rejects(importCookies(`http://127.0.0.1:${server.address().port}`, ['https://provider.test/']), /Browser discovery is unavailable/);
   } finally { await new Promise(resolve => server.close(resolve)); }
 });
+
+test('network capture exports and stops after success or journey failure', {skip: !process.env.QA_BROWSER_EXECUTABLE || !process.env.BROWSER_NETWORK_CLI}, async () => {
+  const {chromium} = await import('playwright-core');
+  const {readFile, stat} = await import('node:fs/promises');
+  const {withNetwork} = await import('../scripts/network.mjs');
+  const dir = await mkdtemp(path.join(tmpdir(), 'qa-network-contract-'));
+  const server = createServer((req, res) => res.end('fixture'));
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const profile = path.join(dir, 'browser');
+  const source = await chromium.launchPersistentContext(profile, {executablePath: process.env.QA_BROWSER_EXECUTABLE, headless: true, args: ['--remote-debugging-port=0']});
+  const exports = [];
+  try {
+    const page = await source.newPage();
+    await page.goto(`http://127.0.0.1:${server.address().port}/`);
+    const [port, endpoint] = (await readFile(path.join(profile, 'DevToolsActivePort'), 'utf8')).trim().split('\n');
+    for (const fail of [false, true]) {
+      const result = withNetwork({outputDir: dir, evidence: (name, value) => exports.push(value)}, ['--cdp', `ws://127.0.0.1:${port}${endpoint}`, '--host', '127.0.0.1'], async network => {
+        const targets = await network('targets');
+        assert.equal(targets.length, 1);
+        await page.evaluate(() => fetch('/probe', {method: 'POST'}));
+        const request = await network('wait', ['--contains', '/probe', '--method', 'POST', '--status', '200']);
+        assert.equal(request.target.id, targets[0].id);
+        if (fail) throw new Error('Expected journey failure');
+      });
+      if (fail) await assert.rejects(result, /Expected journey failure/);
+      else await result;
+      const report = JSON.parse(await readFile(exports.at(-1), 'utf8'));
+      assert.ok(report.entries.some(entry => entry.url.endsWith('/probe') && entry.status === 200));
+      assert.equal((await stat(exports.at(-1))).mode & 0o777, 0o600);
+      for (const file of ['state.json', 'state.json.lock']) await assert.rejects(stat(path.join(path.dirname(exports.at(-1)), file)), {code: 'ENOENT'});
+      assert.equal(page.isClosed(), false);
+    }
+  } finally {
+    await source.close();
+    await new Promise(resolve => server.close(resolve));
+    await rm(dir, {recursive: true, force: true});
+  }
+});

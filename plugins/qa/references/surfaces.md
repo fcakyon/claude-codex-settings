@@ -22,3 +22,5 @@ Android requires explicit serial, installed app and test runner. `qa.androidInst
 Keep missing integrations blocked until scripts exist. Do not create fake Android, payment, OAuth or provider cases to fill a coverage table.
 
 For a provider regression, compare the same browser and cookies with and without restored origin databases before assuming bot detection or changing browser identity. Verify actual media frames after the repair. A successful DRM capability call alone does not prove playback.
+
+Record the actual package, revisions and hashed account/profile/device context so identity changes are not mistaken for deployment regressions. Use network/media metadata when screen capture affects protected playback.
