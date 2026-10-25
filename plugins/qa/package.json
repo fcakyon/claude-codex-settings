@@ -1,0 +1,10 @@
+{
+  "name": "@akyonlabs/project-qa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {"project-qa": "scripts/qa.mjs"},
+  "scripts": {"test": "node --test tests/*.test.mjs"},
+  "engines": {"node": ">=22"},
+  "dependencies": {"playwright-core": "1.64.1"}
+}

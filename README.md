@@ -1053,6 +1053,23 @@ References are tied to one upstream release. The two skills work together and ca
 </details>
 
 <details>
+<summary><strong>qa</strong> - Test real app journeys with saved sessions</summary>
+
+- Discover website, extension, Android, backend and database components.
+- Generate project-owned QA skills and executable journeys under .agents.
+- Reuse authorized login sessions, test real playback and keep QA analytics out of user reports.
+- Report passed, failed and blocked coverage with private evidence.
+
+Install this plugin from the marketplace after publication. For a local checkout, run `npm ci --prefix plugins/qa` and `npm link` from `plugins/qa`. Then use `project-qa setup --root /path/to/project`.
+
+| Skill | Purpose |
+| --- | --- |
+| [setup](./plugins/qa/skills/setup/SKILL.md) | Discover components and build project-specific real journeys |
+| [run-qa](./plugins/qa/skills/run-qa/SKILL.md) | Run tracked journeys and inspect evidence |
+
+</details>
+
+<details>
 <summary><strong>test-audit</strong> - Keep only tests that catch real bugs, and prune ones that just restate the code</summary>
 
 | Claude Code | Codex CLI | Cursor | Gemini CLI |
