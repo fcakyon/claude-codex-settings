@@ -160,6 +160,7 @@
   "outputStyle": "Concise",
   "model": "opus",
   "enabledPlugins": {
+    "qa@claude-settings": true,
     "agent-browser@claude-settings": true,
     "intelligent-compact@claude-settings": true,
     "github-dev@claude-settings": true,
