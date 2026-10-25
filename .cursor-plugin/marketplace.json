@@ -90,7 +90,7 @@
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Design frontends, test interactions, and write clear interface copy.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "license": "Apache-2.0"
     },
     {
