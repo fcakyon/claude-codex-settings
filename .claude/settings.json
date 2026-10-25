@@ -237,6 +237,7 @@
     "refreshInterval": 60
   },
   "enabledPlugins": {
+    "qa@claude-settings": true,
     "intelligent-compact@claude-settings": true,
     "simplify@claude-settings": true,
     "humanize@claude-settings": true,

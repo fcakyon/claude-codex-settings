@@ -108,3 +108,6 @@ enabled = true
 
 [plugins."codex-advisor@claude-settings"]
 enabled = true
+
+[plugins."qa@claude-settings"]
+enabled = true
