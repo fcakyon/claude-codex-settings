@@ -246,6 +246,13 @@
       "description": "Keep only tests that catch real bugs, and prune ones that just restate the code.",
       "version": "1.0.0",
       "license": "MIT"
+    },
+    {
+      "name": "agent-qa",
+      "source": "./plugins/agent-qa",
+      "description": "Run application tests and explain failures with recorded evidence and memory.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     }
   ]
 }

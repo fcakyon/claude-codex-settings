@@ -522,6 +522,27 @@
       "keywords": ["testing", "test-quality", "code-review", "refactoring"],
       "category": "developer-tools",
       "tags": ["testing", "code-quality"]
+    },
+    {
+      "name": "agent-qa",
+      "source": "./plugins/agent-qa",
+      "description": "Run application tests and explain failures with recorded evidence and memory.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "testing",
+        "regression",
+        "web",
+        "mobile",
+        "evidence",
+        "memory"
+      ],
+      "category": "developer-tools",
+      "tags": [
+        "testing",
+        "test-results",
+        "knowledge"
+      ]
     }
   ]
 }

@@ -1080,6 +1080,37 @@ The test review playbook from [openclaw/openclaw](https://github.com/openclaw/op
 
 </details>
 
+<details>
+<summary><strong>agent-qa</strong> - Run application tests and explain failures with recorded evidence and memory.</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install agent-qa@claude-settings` | `codex plugin add agent-qa@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/agent-qa` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/agent-qa --skill '*'
+```
+
+Check web and mobile application journeys with agent-qa from vostride. Its advanced memidex memory and self-improvement support application knowledge, replay and test reliability.
+
+- Run a selected set of natural-language tests in a configured project.
+- Review the recorded verdict and inspect the artifacts behind a failure.
+- Trace the knowledge a run used, its current status and its source before proposing a correction.
+
+Requires Node.js 24+ and a configured agent-qa project. Original instructions use Apache-2.0; the external FSL-1.1-ALv2 runtime is not bundled.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| --- | --- | --- |
+| [`agent-qa`](./plugins/agent-qa/skills/agent-qa/SKILL.md) | Run selected tests, review recorded evidence and inspect memidex knowledge | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/agent-qa.zip) |
+
+The ZIP will be available with the next marketplace release.
+
+</details>
+
 ## Configuration
 
 <details>

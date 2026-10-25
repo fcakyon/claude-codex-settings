@@ -1,0 +1,8 @@
+{
+  "name": "agent-qa",
+  "version": "1.0.0",
+  "description": "Run application tests and explain failures with recorded evidence and memory.",
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}
