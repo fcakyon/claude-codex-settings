@@ -35,3 +35,11 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 Command output stays in memory unless saved. Use descriptive assertion messages instead of secret-bearing response dumps. Screenshots stay private. Use `try/finally` for project data and tabs. The runner saves sessions, closes its browser and reports failed cases.
 
 Browser analytics capture does not cover `qa.http` or subprocesses. Follow telemetry guidance for their effects. Run suites sharing state sequentially.
+
+## Optional network diagnostics
+
+Use [browser-network-cli](https://github.com/fcakyon/browser-network-cli) when a failed journey needs request/response or extension-worker evidence beyond the runner's assertions. Check `browser-network --help` first. If missing and needed for the task, install its precompiled release with `npm install -g https://github.com/fcakyon/browser-network-cli/releases/latest/download/fcakyon-browser-network-cli.tgz` (Node 22.12+), then read the CLI's current help and linked agent skill. Routine QA does not depend on it.
+
+Attach only to an authorized browser with an available CDP endpoint. The QA runner does not expose a debugging port by default. Use a unique `--state` path, explicit `--host` scope and the exact `--extension` ID when needed. Start capture before reproducing the action, inspect redacted evidence, and stop only your recorder in `finally`. Sensitive capture is opt-in and must stay private. Do not restart personal Chrome or request Keychain access to collect diagnostics.
+
+Capture observes traffic; it does not isolate analytics or guarantee a worker's first requests were recorded. Node HTTP replay requires explicit authorization and does not prove browser authentication or DRM playback. Preserve the real UI and provider assertions. Put recurring diagnostic commands into the project's tracked scripts rather than repeating manual capture steps.
