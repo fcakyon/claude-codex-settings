@@ -4,7 +4,7 @@ export async function importCookies(endpoint, origins) {
   let webSocketDebuggerUrl = endpoint;
   if (!['ws:', 'wss:'].includes(url.protocol)) {
     const response = await fetch(new URL('/json/version', url), {signal: AbortSignal.timeout(10000)});
-    if (!response.ok()) throw new Error('Browser discovery is unavailable. Set QA_SOURCE_CDP to the authorized DevTools WebSocket URL.');
+    if (!response.ok) throw new Error('Browser discovery is unavailable. Set QA_SOURCE_CDP to the authorized DevTools WebSocket URL.');
     ({webSocketDebuggerUrl} = await response.json());
   }
   const socket = new WebSocket(webSocketDebuggerUrl);

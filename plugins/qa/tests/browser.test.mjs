@@ -71,14 +71,24 @@ test('cookie recovery scopes origins and closes only its temporary source tab', 
   try {
     await source.addCookies([{name:'authorized',value:'fixture',domain:'provider.test',path:'/'},{name:'unrelated',value:'private-fixture',domain:'elsewhere.test',path:'/'}]);
     const original = source.pages();
-    const closed = source.waitForEvent('page').then(page => page.waitForEvent('close'));
     const before = original.length;
     const [port, endpoint] = (await readFile(path.join(dir, 'DevToolsActivePort'), 'utf8')).trim().split('\n');
-    const imported = await importCookies(`ws://127.0.0.1:${port}${endpoint}`, ['https://provider.test/']);
-    assert.deepEqual(imported.map(cookie => cookie.name), ['authorized']);
-    await closed;
+    for (const address of [`http://127.0.0.1:${port}`, `ws://127.0.0.1:${port}${endpoint}`]) {
+      const closed = source.waitForEvent('page').then(page => page.waitForEvent('close'));
+      const [imported] = await Promise.all([importCookies(address, ['https://provider.test/']), closed]);
+      assert.deepEqual(imported.map(cookie => cookie.name), ['authorized']);
+    }
     assert.equal(source.pages().length, before);
     assert.ok(original.every(page => !page.isClosed()));
     assert.equal((await source.cookies('https://elsewhere.test/')).length, 1);
   } finally { await source.close(); await rm(dir, {recursive: true, force: true}); }
+});
+
+test('cookie recovery reports unavailable HTTP discovery', async () => {
+  const {importCookies} = await import('../scripts/session.mjs');
+  const server = createServer((req, res) => res.writeHead(404).end());
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  try {
+    await assert.rejects(importCookies(`http://127.0.0.1:${server.address().port}`, ['https://provider.test/']), /Browser discovery is unavailable/);
+  } finally { await new Promise(resolve => server.close(resolve)); }
 });
