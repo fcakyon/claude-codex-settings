@@ -522,6 +522,23 @@
       "keywords": ["testing", "test-quality", "code-review", "refactoring"],
       "category": "developer-tools",
       "tags": ["testing", "code-quality"]
+    },
+    {
+      "name": "qa",
+      "source": "./plugins/qa",
+      "description": "Test real app journeys with saved sessions and clear failure evidence.",
+      "version": "1.0.0",
+      "keywords": [
+        "qa",
+        "testing",
+        "browser",
+        "integration"
+      ],
+      "category": "development",
+      "tags": [
+        "testing",
+        "quality"
+      ]
     }
   ]
 }

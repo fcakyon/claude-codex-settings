@@ -1,0 +1,11 @@
+{
+  "name": "qa",
+  "version": "1.0.0",
+  "description": "Test real app journeys with saved sessions and clear failure evidence.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

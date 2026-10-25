@@ -246,6 +246,12 @@
       "description": "Keep only tests that catch real bugs, and prune ones that just restate the code.",
       "version": "1.0.0",
       "license": "MIT"
+    },
+    {
+      "name": "qa",
+      "source": "./plugins/qa",
+      "description": "Test real app journeys with saved sessions and clear failure evidence.",
+      "version": "1.0.0"
     }
   ]
 }
