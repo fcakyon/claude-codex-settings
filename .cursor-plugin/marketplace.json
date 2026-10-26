@@ -83,14 +83,14 @@
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Drive browsers and Electron apps, run UI QA, and turn websites into API clients.",
-      "version": "1.2.2",
+      "version": "1.2.3",
       "license": "Apache-2.0"
     },
     {
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Design frontends, test interactions, and write clear interface copy.",
-      "version": "1.2.2",
+      "version": "1.2.3",
       "license": "Apache-2.0"
     },
     {
@@ -251,7 +251,7 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0"
     }
   ]

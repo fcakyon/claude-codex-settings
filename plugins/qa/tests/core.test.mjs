@@ -1,4 +1,5 @@
 import {test} from 'node:test';
+import {createServer} from 'node:http';
 import assert from 'node:assert/strict';
 import {mkdtemp, writeFile, readFile, rm} from 'node:fs/promises';
 import path from 'node:path';
@@ -45,4 +46,34 @@ test('database assertions read actual SQLite state and cannot write it', async (
     await assert.rejects(sqliteQuery(db, 'delete from votes'));
     assert.deepEqual(await sqliteQuery(db, 'select count(*) as total from votes'), [{total: 1}]);
   } finally { await rm(root, {recursive: true, force: true}); }
+});
+
+test('run selects the requested HTTP target without rewriting project settings', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-target-contract-'));
+  const hits = [0, 0];
+  const servers = ['configured', 'candidate'].map((name, index) => createServer((request, response) => {
+    hits[index]++;
+    response.end(name);
+  }));
+  try {
+    await Promise.all(servers.map(server => new Promise(resolve => server.listen(0, '127.0.0.1', resolve))));
+    const urls = servers.map(server => 'http://127.0.0.1:' + server.address().port);
+    await setup(root, {baseUrl: urls[0]});
+    const configPath = path.join(root, '.agents/qa/config.json');
+    const config = await readFile(configPath, 'utf8');
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), `export const cases=[{id:'target',surface:'website',async run(qa){qa.assert.equal(await (await qa.http(qa.config.baseUrl)).text(),process.env.QA_EXPECTED_TARGET,'Request reached the wrong target')}}];`);
+    const reports = [];
+    for (const [index, name] of ['configured', 'candidate'].entries()) {
+      const output = path.join(root, name);
+      const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', output, ...(index ? ['--base-url', urls[index]] : [])], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private'), QA_EXPECTED_TARGET: name}});
+      assert.equal(result.code, 0, result.stdout);
+      reports.push(JSON.parse(await readFile(path.join(output, 'report.json'), 'utf8')));
+    }
+    assert.deepEqual(hits, [1, 1], 'Each run must reach only its selected server');
+    assert.deepEqual(reports.map(report => report.baseUrl), urls);
+    assert.equal(await readFile(configPath, 'utf8'), config);
+  } finally {
+    await Promise.all(servers.map(server => new Promise(resolve => server.close(resolve))));
+    await rm(root, {recursive: true, force: true});
+  }
 });

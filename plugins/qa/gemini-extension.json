@@ -1,5 +1,5 @@
 {
   "name": "qa",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Test real app journeys with saved sessions and clear failure evidence."
 }

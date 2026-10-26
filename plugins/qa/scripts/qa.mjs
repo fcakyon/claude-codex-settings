@@ -13,7 +13,7 @@ if (values.help || !positionals.length) {
 } else if (positionals[0] === 'discover') console.log(JSON.stringify(await discover(values.root), null, 2));
 else if (positionals[0] === 'setup') console.log(JSON.stringify(await setup(values.root, {name: values.name, baseUrl: values['base-url'], extension: values.extension, related: values.related}), null, 2));
 else if (positionals[0] === 'run') {
-  const report = await runSuite(values.root, values);
+  const report = await runSuite(values.root, {filter: values.filter, output: values.output, baseUrl: values['base-url']});
   process.exitCode = report.counts.fail ? 1 : report.counts.blocked ? 2 : 0;
 } else if (positionals[0] === 'doctor') {
   for (const [name, args] of [['node', ['--version']], ['sqlite3', ['--version']], ['adb', ['version']]]) {

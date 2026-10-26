@@ -20,14 +20,9 @@ Interactive inspection is useful for new visual issues and failed journeys. It d
 
 Confirm the intended URL and meaningful rendered content. Check relevant console errors and framework overlays before diagnosing layout. Exercise the target interaction and observe its result through visible state, navigation or persisted application behavior.
 
-For visual changes, inspect the first viewport and relevant scrolled content at desktop and a mobile-sized viewport. Check the states affected by the change:
+For rendered validation, use the installed `ui-regression` skill when available. It owns state coverage, input contrast, asset density, screenshot inspection and the separate functional, rendered-quality and runtime verdicts. Keep investigation here and reuse the project runner for executable checks.
 
-- Clipping, overlap, wrapping, unreadable text and missing assets.
-- Layout shifts, z-index conflicts and scroll traps.
-- Loading, empty, error and completed interaction states.
-- Focus, keyboard interaction and controls that fail to update visible state.
-
-Compare reference-driven changes at matching viewports and states. Keep a short mismatch list linking each difference to rendered evidence and its fix or intentional deviation. Inspect screenshots before making visual claims.
+Without that skill, inspect desktop/mobile screenshots after media loads, exercise typed and cleared inputs, check contrast and asset sharpness at the target display density, and verify the intended surrounding layout across search results and empty states. Keep reference comparisons at matching state and viewport. Mark uninspected visuals as unverified.
 
 Make the smallest relevant edit, reload or rebuild as needed, and repeat the original failing interaction. Rerun affected project journeys. A passing build or root-page screenshot does not prove the interaction works.
 
