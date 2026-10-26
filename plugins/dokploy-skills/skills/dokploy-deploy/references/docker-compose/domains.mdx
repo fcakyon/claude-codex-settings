@@ -34,13 +34,14 @@ version: "3.8"
 
 services:
   beszel:
-    image: henrygd/beszel:0.10.2
+    image: henrygd/beszel:0.18
     restart: unless-stopped
+    #environment:
+    #  - APP_URL=http://beszel.lan
     ports:
       - 8090
     volumes:
       - beszel_data:/beszel_data
-      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   beszel_data: {}
@@ -57,7 +58,7 @@ version: "3.8"
 
 services:
   beszel:
-    image: henrygd/beszel:0.10.2
+    image: henrygd/beszel:0.18
     restart: unless-stopped
     ports:
       - 8090

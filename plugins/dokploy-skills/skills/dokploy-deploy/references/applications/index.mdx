@@ -25,6 +25,12 @@ Four graphs will be displayed for the use of memory, CPU, disk, and network. Not
 
 If you want to see any important logs from your application that is running, you can do so here and determine if your application is displaying any errors or not.
 
+## Files System
+
+Browse the file system of your application's running container directly from the dashboard. You can navigate directories, preview text files, download any file, and upload new files into the directory you currently have open.
+
+Files outside persistent volumes are usually ephemeral and can disappear after a restart or a new deployment. Uploading requires the `Write` permission on the `Container Filesystem` resource for custom roles; owners and admins have it by default.
+
 ## Deployments
 
 You can view the last 10 deployments of your application. When you deploy your application in real time, a new deployment record will be created and it will gradually show you how your application is being built.

@@ -33,6 +33,16 @@ glance:
 Click any row to open that service's full screen. Repo updates preserve your explicit edits and apply
 other changes automatically — see [how Compose changes merge](#when-the-repo-and-your-edits-disagree-drift).
 
+### Private services on a server with another proxy
+
+A stack with no domains or public routes can run without Openship's edge. Private services with no
+host publish, or an explicit mapping such as `127.0.0.1:25774:25774`, do not prompt to take over an
+existing reverse proxy. Missing-edge warnings only apply to deployed projects with configured routes.
+
+Automatically selected host ports still require a readable route inventory to prevent capturing a port
+another hostname uses. That safety check remains strict; an unavailable inventory does not authorize
+replacing your proxy. Use an explicit host mapping for a private service when you manage that boundary.
+
 ## How services get into a stack
 
 There are two ways, and you can mix them.
@@ -313,6 +323,52 @@ openship service drift keep --project my-app web
 </Tab>
 
 </Tabs>
+
+## Service replacement and spare capacity
+
+For one independently replaced service on a self-hosted Docker server using
+container-IP routing, Openship can start the replacement while the previous
+container keeps serving. It checks readiness before publishing the replacement's
+service aliases, updates the stack's routes, and records the successful release
+before retiring the previous container.
+
+If routing recovery exceeds its 30-second deadline, Openship requests cancellation
+and keeps both containers. Any route pass already in progress must finish before
+the attempt releases execution ownership, so it cannot overwrite a later retry's
+routes. A recovery timeout does not permit the next routing pass to start.
+
+Overlap is optional. It requires saved CPU and memory limits and fresh
+measurements showing that the deployment host has enough spare capacity for the
+replacement. Missing limits or unavailable measurements keep the normal
+replacement order; Openship does not invent resource limits to enable overlap.
+Every routed upstream port must also be present in the frozen configuration of
+the outgoing container's own deployment. Changed or unverifiable ports keep the
+normal replacement order so routing recovery cannot dial the old container on a
+new port.
+
+Fixed host ports, managed Cloud ingress, shared namespaces, devices, additional
+networks, static network addresses, Docker-owned health checks, and dependent
+multi-service replacements keep their existing deployment order. The deployment
+log explains when an optional overlap check falls back.
+
+Writable persistent storage is checked after image-declared and anonymous
+volumes have been resolved. Shared writers prevent overlap by default. An
+operator may opt a mount into overlap only when the application supports
+concurrent writers, using `OPENSHIP_CUTOVER_SHARED_VOLUMES` on the API server:
+
+```text
+my-project/web:/var/www/uploads
+```
+
+Entries are scoped to the exact project, service and container path. This does
+not bypass capacity, port or namespace checks. Do not opt a database's data
+directory into concurrent access.
+
+If startup or routing fails, Openship keeps the previous container and restores
+its routing before cleaning up the replacement. If it cannot verify recovery,
+it preserves both containers and records the attempt as failed (or cancelled),
+with the routing recovery error in its logs. Review and repair routing before
+removing either container; Openship does not automatically promote that attempt.
 
 ## Ports & volumes: cloud vs self-hosted
 

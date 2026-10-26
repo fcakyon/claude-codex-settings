@@ -18,7 +18,7 @@
 
 ## API keys
 
-Never include keys in source code. Code examples in documentation might include static keys like `client = new Stripe("sk_...")` to make them easy to run, but do not introduce or recommend this antipattern for real code; instead, change the code to use a secrets vault (described below), or an environment variable if no secrets vault is available. Strings matching the regular expression `/[sr]k_live_.*/` in source code are live Stripe API keys. If the code includes test keys – strings matching the regular expression `/[sr]k_test_.*/` – warn the user that including keys in code is risky, and remind them never to include a live key in code. Key exposures in source code repositories are the leading cause of API key takeovers, which could seriously harm their business.
+Never include keys in source code. Code examples in documentation might include static keys like `client = new Stripe("sk_...")` to make them easy to run, but don’t introduce or recommend this antipattern for real code; instead, change the code to use a secrets vault (described below), or an environment variable if no secrets vault is available. Strings matching the regular expression `/[sr]k_live_.*/` in source code are live Stripe API keys. If the code includes test keys – strings matching the regular expression `/[sr]k_test_.*/` – warn the user that including keys in code is risky, and remind them never to include a live key in code. Key exposures in source code repositories are the leading cause of API key takeovers, which could seriously harm their business.
 
 Always advise the user to store secret and restricted API keys in their platform’s secrets vault, never in source code or committed environment files. Platform-specific guidance for popular platforms:
 
@@ -41,7 +41,7 @@ If the code is under version control, help the user set up a pre-commit hook to 
 
 Never build API endpoints or error pages that dump environment variables. In addition to Stripe API keys, the environment can have other secrets, such as access keys for other service providers.
 
-**Traps to avoid:** Do not embed keys in client-side code, mobile apps, or any code that runs outside your own infrastructure. Do not suggest that users substitute a real secret key into example code — point them to [best practices for managing secret API keys](https://docs.stripe.com/keys-best-practices.md) instead.
+**Traps to avoid:** Don’t embed keys in client-side code, mobile apps, or any code that runs outside your own infrastructure. Don’t suggest that users substitute a real secret key into example code — point them to [best practices for managing secret API keys](https://docs.stripe.com/keys-best-practices.md) instead.
 
 ## Restricted API keys (RAKs)
 
@@ -52,13 +52,13 @@ Follow the principle of least privilege: give each RAK only the permissions it n
 Preferred migration approach:
 
 1. Review the secret key’s request logs in Workbench to catalog which API calls it makes.
-2. Create a RAK in test mode with matching permissions.
+2. Create a RAK in a sandbox with matching permissions.
 3. Use the [Stripe CLI](https://docs.stripe.com/cli.md)’s `stripe logs tail` command to watch logs.
 4. Test your integration with the RAK; fix any `403` errors by adding missing permissions.
 5. Create the equivalent live-mode RAK and replace the secret key.
 6. Rotate or expire the old secret key once confident.
 
-**Traps to avoid:** Do not default to recommending secret keys. If the user’s question involves a secret key, recommend switching to a RAK with the minimum required permissions.
+**Traps to avoid:** Don’t default to recommending secret keys. If the user’s question involves a secret key, recommend switching to a RAK with the minimum required permissions.
 
 ## IP restrictions
 
@@ -70,7 +70,7 @@ Use a different policy for each key (for example, one policy for production, ano
 
 If a key is exposed or compromised, follow [protecting against compromised API keys](https://support.stripe.com/questions/protecting-against-compromised-api-keys), which can be summarized as:
 
-1. **Roll the key immediately** — go to the [API keys page](https://dashboard.stripe.com/apikeys) and roll or delete the exposed key. Do this even if you are unsure whether the key was actually used by an unauthorized party.
+1. **Roll the key immediately** — go to the [API keys page](https://dashboard.stripe.com/apikeys) and roll or delete the exposed key. Do this even if you’re unsure whether the key was actually used by an unauthorized party.
 2. **Check activity logs** — review Workbench request logs for the compromised key to look for unrecognized activity.
 3. **Contact Stripe support** if you see activity you don’t recognize.
 
@@ -78,7 +78,7 @@ To prepare before an incident: practice rolling keys, audit source code for any 
 
 ## Webhook security
 
-Before processing any webhook event, always [verify the webhook signature](https://docs.stripe.com/webhooks.md#verify-events) using Stripe’s webhook signing secret. Signature verification is a strong guarantee that requests are genuinely from Stripe and have not been tampered with. Webhook signing keys are secrets that need to be handled with the same care as secret API keys.
+Before processing any webhook event, always [verify the webhook signature](https://docs.stripe.com/webhooks.md#verify-events) using Stripe’s webhook signing secret. Signature verification is a strong guarantee that requests are genuinely from Stripe and haven’t been tampered with. Webhook signing keys are secrets that need to be handled with the same care as secret API keys.
 
 For defense in depth, also [allowlist Stripe’s IP addresses](https://docs.stripe.com/ips.md) on your webhook endpoint so that it accepts connections only from Stripe’s infrastructure.
 
@@ -86,11 +86,11 @@ For defense in depth, also [allowlist Stripe’s IP addresses](https://docs.stri
 
 Add a `Content-Security-Policy` header to every web app that loads Stripe.js or uses Stripe’s hosted UIs. See [Stripe’s integration security guide](https://docs.stripe.com/security/guide.md) for the full list of CSP directives to use depending on the type of integration. At minimum, include `https://*.stripe.com` in the relevant directives (`script-src`, `frame-src`, `connect-src`), `https://*.link.com` if integrating assets from `link.com`, or both if integrating with Stripe’s embedded crypto onramp. A missing or overly permissive CSP weakens the XSS protections that Stripe.js relies on.
 
-**Traps to avoid:** Do not use `default-src *` or omit CSP headers.
+**Traps to avoid:** Don’t use `default-src *` or omit CSP headers.
 
 ## Mobile and client-side integrations
 
-Do not use production secret or restricted API keys in mobile apps or other client-side code. Client-side code can be extracted and decompiled to extract keys.
+Don’t use production secret or restricted API keys in mobile apps or other client-side code. Client-side code can be extracted and decompiled to extract keys.
 
 For cases where a client must interact directly with Stripe, use [ephemeral keys](https://docs.stripe.com/issuing/elements.md#ephemeral-key-authentication). Ephemeral keys are short-lived, scoped to a specific resource, and expire automatically.
 
@@ -110,7 +110,7 @@ Users can audit which Dashboard team members are using weak 2FA and can require 
 
 ## Connect security
 
-**Account type liability:** When using Connect, platform operators bear financial liability for fraud and disputes on Express and Custom connected accounts. Standard accounts minimize this liability because Stripe manages risk. Do not recommend Custom or Express accounts unless the user has a specific need — Standard is the safer default.
+**Account type liability:** When using Connect, platform operators bear financial liability for fraud and disputes on Express and Custom connected accounts. Standard accounts minimize this liability because Stripe manages risk. Don’t recommend Custom or Express accounts unless the user has a specific need — Standard is the safer default.
 
 **Connect onboarding:** Use [Stripe-hosted onboarding](https://docs.stripe.com/connect/onboarding.md) rather than building a custom onboarding flow. Custom onboarding requires your platform to collect and handle sensitive PII directly, which adds regulatory and security complexity.
 

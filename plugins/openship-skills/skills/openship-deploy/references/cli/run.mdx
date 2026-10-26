@@ -12,8 +12,9 @@ Use these commands on the machine that runs Openship. To manage an existing remo
 openship
 ```
 
-On a fresh machine, the interactive command guides setup. On an installed machine, it opens the
-control panel or resumes an interrupted setup.
+On a fresh machine, choose **Install Openship on this machine** for the interactive setup. The same
+menu also connects to Cloud or an existing self-hosted installation. On an installed machine,
+`openship` opens the local control panel or resumes an interrupted setup.
 
 For direct startup:
 
@@ -26,6 +27,10 @@ openship open
 `up` installs or starts a persistent service. `status` reports local service state and the active
 context's API health. `open` opens the dashboard. Use `openship up --foreground` for an attached process.
 See [all startup options](https://openship.io/docs/cli/reference/up), including Docker Compose configuration.
+
+The installation owner can use `openship --local project list` without creating or pasting a token.
+Local resource commands authenticate with the installation's protected credential; the public API
+still requires authentication. See [local and remote access](https://openship.io/docs/cli/access).
 
 ## Stop and update
 
@@ -51,7 +56,7 @@ account recovery uses [reset-admin-password](https://openship.io/docs/cli/refere
 | Command | Purpose |
 | --- | --- |
 | `npm install -g openship` | Install the CLI globally. |
-| `npm install openship` | Add the package to a Node project; SDK imports require an SDK-enabled release. |
+| `npm install openship` | Add Ship SDK and the CLI to a Node project. SDK imports are available in 0.8.0 and later. |
 | `openship install` | Download and install the desktop application. |
 | `openship install cache` | Inspect or manage cached installation downloads. |
 | `openship up` | Start the Openship API and dashboard as a local service. |

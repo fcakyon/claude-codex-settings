@@ -8,7 +8,7 @@
 
 Accounts v2 replaces the three fixed account types with three independent configuration dimensions. Each dimension is set separately, so platforms can mix and match to fit their exact business model.
 
-#### 1. Dashboard access (`dashboard`)
+#### 1. Dashboard access (dashboard)
 
 Controls what connected accounts see when they log in.
 
@@ -16,9 +16,9 @@ Controls what connected accounts see when they log in.
 | --- | --- | --- |
 | `express` | Lightweight dashboard showing earnings, payouts, and basic tax information. Stripe-branded with platform name. | Marketplace sellers, gig workers, or any connected account that needs visibility but not full Stripe control. |
 | `full` | Full, independent Stripe Dashboard. Connected accounts can manage their own settings, view all transactions, and install apps. | SaaS platforms where connected accounts are established businesses that want to operate independently. |
-| `none` | No Stripe dashboard. The platform owns the connected-account UI — use **[Embedded Components](https://docs.stripe.com/connect/supported-embedded-components.md)** (`@stripe/connect-js`) for pre-built widgets (account management, payouts, tax forms, and more) or build fully custom. | White-label platforms where connected accounts must never see Stripe branding. Use embedded components for pre-built functionality with white-label feel. **Fully custom (no embedded components)** adds significant complexity — the platform must build and maintain all connected account UX including onboarding remediation, refund and dispute flows, and ongoing requirement collection. |
+| `none` | No Stripe dashboard. The platform owns the connected-account UI — use **[Embedded Components](https://docs.stripe.com/connect/supported-embedded-components.md)** (`@stripe/connect-js`) for prebuilt widgets (account management, payouts, tax forms, and more) or build fully custom. | White-label platforms where connected accounts must never see Stripe branding. Use embedded components for prebuilt functionality with white-label feel. **Fully custom (no embedded components)** adds significant complexity — the platform must build and maintain all connected account UX including onboarding remediation, refund and dispute flows, and ongoing requirement collection. |
 
-#### 2. Fee collection (`defaults.responsibilities.fees_collector`)
+#### 2. Fee collection (defaults.responsibilities.fees_collector)
 
 Determines who is responsible for collecting Stripe processing fees from connected accounts.
 
@@ -32,7 +32,7 @@ Determines who is responsible for collecting Stripe processing fees from connect
 > - **Direct charges:** `fees_collector` determines who pays Stripe processing fees. With `fees_collector: "stripe"`, the connected account pays fees directly. The `fee_payer` parameter can further control this — see [direct charges fee payer behavior](https://docs.stripe.com/connect/direct-charges-fee-payer-behavior.md).
 > - **Destination charges and separate charges and transfers:** The platform always pays Stripe processing fees regardless of the `fees_collector` setting, because the charge lives on the platform account. The `fees_collector` setting in these cases governs the platform-level billing relationship with Stripe (single invoice vs per-account), not per-transaction fee deduction.
 
-#### 3. Loss liability (`defaults.responsibilities.losses_collector`)
+#### 3. Loss liability (defaults.responsibilities.losses_collector)
 
 Determines who bears financial responsibility for negative balances, disputes, and refunds on connected account activity.
 
@@ -198,7 +198,7 @@ configuration: {
 
 **Choose `dashboard: 'express'` when…**
 
-- You are building a marketplace or on-demand platform
+- You’re building a marketplace or on-demand platform
 - Connected accounts need to see their earnings and payout history
 - You want Stripe to host the seller dashboard so you can focus on your product
 - You want fast onboarding with Stripe-hosted flows
@@ -206,7 +206,7 @@ configuration: {
 **Choose `dashboard: 'full'` when…**
 
 - Connected accounts are established businesses that expect a full payments dashboard
-- You are a SaaS platform where merchants operate independently
+- You’re a SaaS platform where merchants operate independently
 - Connected accounts may want to install Stripe apps or manage their own settings
 - Sellers already have or expect to have their own Stripe relationship
 
@@ -220,7 +220,7 @@ configuration: {
 **Choose `losses_collector: 'stripe'` when…**
 
 - You want Stripe to bear financial responsibility for unresolved negative balances on connected accounts
-- You are starting out and want to minimize financial risk
+- You’re starting out and want to minimize financial risk
 - You don’t have a dedicated risk or fraud operations team
 - You plan to use direct charges
 
@@ -235,7 +235,7 @@ configuration: {
 **Choose `fees_collector: 'stripe'` when…**
 
 - You want the simplest operational model
-- You are fine with Stripe billing connected accounts directly
+- You’re fine with Stripe billing connected accounts directly
 - You don’t want to manage fee invoicing or reconciliation
 
 **Choose `fees_collector: 'application'` when…**
@@ -246,7 +246,7 @@ configuration: {
 
 ### Legacy Migration Note
 
-The terms **Standard**, **Express**, and **Custom** refer to the v1 Accounts API and its `type` parameter. They are no longer the recommended way to create connected accounts. Here is how they roughly map to v2 dimensions:
+The terms **Standard**, **Express**, and **Custom** refer to the v1 Accounts API and its `type` parameter. They’re no longer the recommended way to create connected accounts. Here is how they roughly map to v2 dimensions:
 
 | Legacy v1 Type | Approximate v2 Equivalent |
 | --- | --- |

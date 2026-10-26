@@ -5,7 +5,7 @@ Use Tail Workers when execution events need custom processing. Fetch the current
 | Task | Documentation |
 | --- | --- |
 | Decide whether custom processing is needed | [Tail Workers](https://developers.cloudflare.com/workers/observability/logs/tail-workers/index.md) |
-| Export logs and traces to an observability destination | [Exporting OpenTelemetry Data](https://developers.cloudflare.com/workers/observability/exporting-opentelemetry-data/index.md) |
+| Export logs and traces to an observability destination | [OpenTelemetry export](https://developers.cloudflare.com/observability/export/opentelemetry/index.md) |
 | Inspect a deployment interactively | [Real-time logs](https://developers.cloudflare.com/workers/observability/logs/real-time-logs/index.md) |
 | Implement the consumer | [Tail handler](https://developers.cloudflare.com/workers/runtime-apis/handlers/tail/index.md) |
 

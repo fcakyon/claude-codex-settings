@@ -419,6 +419,9 @@ bash .github/scripts/sync-openclaw-skills.sh
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
 
+`frontend-testing-debugging` is maintained locally. The frontend sync packages it without replacing it from upstream.
+OpenClaw test-audit keeps its detailed checklist in `references/audit.md`. Sync it alongside `SKILL.md` and `CAMPAIGN.md`, and adapt repository-specific workflow links in both the skill and checklist.
+
 #### When a sync script fails
 
 Failures usually mean the upstream repo restructured. Diagnostic steps:

@@ -41,6 +41,12 @@ We offer automated backups for your databases, ensuring that you can recover you
 
 If you want to see any important logs from your application that is running, you can do so here and determine if your application is displaying any errors or not.
 
+## Files System
+
+Browse the file system of your database's running container directly from the dashboard. You can navigate directories, preview text files, download any file, and upload new files into the directory you currently have open.
+
+Files outside persistent volumes are usually ephemeral and can disappear after a restart or a new deployment. Uploading requires the `Write` permission on the `Container Filesystem` resource for custom roles; owners and admins have it by default.
+
 ## Advanced
 
 This section provides advanced configuration options for experienced users. It includes tools for custom commands within the container, managing Docker Swarm settings, and adjusting cluster settings such as replicas and registry selection. These tools are typically not required for standard application deployment and are intended for complex management and troubleshooting tasks.
@@ -50,6 +56,23 @@ This section provides advanced configuration options for experienced users. It i
 - **Volumes**: To ensure data persistence across deployments, configure storage volumes for your application.
 - **Resources**: Adjust the CPU and memory allocation for your application.
 - **Danger Zone**: If for some reason you want to start again and delete all the data, tables, etc. you can do it here.
+
+### Enabling Redis Persistence (AOF)
+
+A Redis database runs with Redis' default persistence (RDB snapshots, no append-only file). To enable the AOF, override the start command from the **Run Command** field in the **Advanced** tab.
+
+- **Command**: `/bin/sh`
+- **Args** (one entry each): `-c`, then `redis-server --requirepass "$REDIS_PASSWORD" --appendonly yes --save 3600 1`
+
+The `REDIS_PASSWORD` environment variable is set by Dokploy, so the command can reference it instead of containing the password.
+
+Click **Deploy** after saving to apply the new command. To confirm:
+
+```bash
+redis-cli -a "$REDIS_PASSWORD" config get appendonly
+# 1) "appendonly"
+# 2) "yes"
+```
 
 ## Keyboard Shortcuts
 

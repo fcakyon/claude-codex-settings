@@ -69,7 +69,7 @@ Recommended [Connect embedded components](https://docs.stripe.com/connect/suppor
 [Note any charge-pattern caveats, if relevant]
 
 ### F. Webhook integration
-Use webhooks for reliable payment confirmation, especially for async payment methods. Always verify incoming webhook signatures before processing event data ([webhook signature verification](https://stripe.com/docs/webhooks/signatures)). Specific events and implementation details are covered in the build skill.
+Use webhooks for reliable payment confirmation, especially for async payment methods. Always verify incoming webhook signatures before processing event data ([webhook signature verification](https://stripe.com/docs/events/manage-webhook-endpoints#signature-errors)). Specific events and implementation details are covered in the build skill.
 
 ### G. Onboarding status gating
 Verify capability statuses with `stripe.v2.core.accounts.retrieve(id)` before enabling payouts and transfers:
@@ -186,7 +186,7 @@ The Express + Stripe-managed pricing and Express + platform-managed pricing conf
 
 #### Fee output requirements
 
-These requirements apply only when the recommendation does NOT use the Platform Pricing Tool. When the Platform Pricing Tool is recommended (see “Fee guidance rules” above), skip `applicationFeeIncludes` and any `application_fee_amount` math entirely — state that pricing is configured in the Platform Pricing Tool instead, and do not set an explicit `application_fee_amount`.
+These requirements apply only when the recommendation does NOT use the Platform Pricing Tool. When the Platform Pricing Tool is recommended (see “Fee guidance rules” above), skip `applicationFeeIncludes` and any `application_fee_amount` math entirely — state that pricing is configured in the Platform Pricing Tool instead, and don’t set an explicit `application_fee_amount`.
 
 When NOT using the Platform Pricing Tool, every recommendation MUST explicitly:
 

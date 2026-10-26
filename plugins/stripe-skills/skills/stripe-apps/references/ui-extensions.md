@@ -57,9 +57,9 @@ The order and *which component does which job* (the API of each is in its linked
 
 ## 3. Layout and style rules (the codified craft)
 
-These are the defaults that make an app feel native — they are *not* in any single component doc, so follow them here. Each is tagged **[Required]** (breaks/looks wrong otherwise), **[Recommended]** (Stripe’s craft default), or **[Optional]** (a style choice). Full styling reference: [style your app](https://docs.stripe.com/stripe-apps/style.md).
+These are the defaults that make an app feel native — they’re *not* in any single component doc, so follow them here. Each is tagged **[Required]** (breaks/looks wrong otherwise), **[Recommended]** (Stripe’s craft default), or **[Optional]** (a style choice). Full styling reference: [style your app](https://docs.stripe.com/stripe-apps/style.md).
 
-**[Required] `css` values are tokens, not web CSS.** The `css` prop is not CSS. Every value is a design token or fraction, never a raw unit:
+**[Required] `css` values are tokens, not web CSS.** The `css` prop isn’t CSS. Every value is a design token or fraction, never a raw unit:
 
 - **Spacing** (`padding`, `margin`, `gap`) → tokens only (`xxsmall`…`xxlarge`). Never `"24px"`, `"1rem"`, `%`.
 - **Layout** → `stack: "x" | "y"` with `gap`. There is no `display: "flex"`/`"grid"`.
@@ -104,7 +104,7 @@ Passing a raw CSS value (px, `flex`, hex) is a hard runtime error — the #1 way
 
 Avoid: a single column of oversized full-width cards; a large empty right side or lower page; one metric per row. Match the density of a native Dashboard overview.
 
-**[Recommended] List pages — the table is the hero.** A dedicated list/directory page (for example, a Members tab) is **the table itself**, full-width, as the primary content. The only things around it: **search / filters** (and segment tabs) *above* the table, **pagination** below, and an **empty state**. **Do not put KPI stat tiles, charts, or dashboard modules on a list page** — those belong on the overview. A native list page is dense with *rows*, not decorated with summary cards on top. Keep it: controls → full-width table (many rows) → pagination. (Overviews are multi-module and dense; list pages are single-purpose and focused — don’t blur the two.)
+**[Recommended] List pages — the table is the hero.** A dedicated list/directory page (for example, a Members tab) is **the table itself**, full-width, as the primary content. The only things around it: **search / filters** (and segment tabs) *above* the table, **pagination** below, and an **empty state**. **Don’t put KPI stat tiles, charts, or dashboard modules on a list page** — those belong on the overview. A native list page is dense with *rows*, not decorated with summary cards on top. Keep it: controls → full-width table (many rows) → pagination. (Overviews are multi-module and dense; list pages are single-purpose and focused — don’t blur the two.)
 
 **[Recommended] Stat tiles — a row of top-line KPI cards.** A **single row of equal `surface` cards** (not a 2×2 grid), each a muted `caption` label above a large `semibold` value — use the card treatment from Cards & trays. Lay them out as a horizontal row with equal widths:
 
@@ -118,7 +118,7 @@ Avoid: a single column of oversized full-width cards; a large empty right side o
 
 Aim for ~3–5 cards in one row (for example, Total spend · MRR · Refunds · Disputes). For *proportional* data (a total split into parts), prefer a progress/`MeterChart` treatment over a chart — see Charts.
 
-**[Recommended] Two-column detail (key/value).** Outer `stack: "x", gap: "xlarge"`; each column `width: "1/2", stack: "y", gap: "medium"`; each field `stack: "y", gap: "xxsmall"` with a `semibold` label above a regular value.
+**[Recommended] Two-column detail (key-value).** Outer `stack: "x", gap: "xlarge"`; each column `width: "1/2", stack: "y", gap: "medium"`; each field `stack: "y", gap: "xxsmall"` with a `semibold` label above a regular value.
 
 **[Recommended] Charts & data viz — pick the representation that fits the data.**
 
@@ -161,7 +161,7 @@ Reserve [BarChart](https://docs.stripe.com/stripe-apps/components/barchart.md) f
 | Top-level sections | `Tabs` / `Tab` (`ui/next`) | Distinct workflow areas; route-driven | [doc](https://docs.stripe.com/stripe-apps/components/tabs.md) |
 | Overview dashboard | `OverviewPage` + `PageModule` | Two-column summary; group content in modules | [doc](https://docs.stripe.com/stripe-apps/components/overviewpage.md) |
 | List of objects | `DataTable` | Sortable, status cells, row→detail, empty state, pagination | [doc](https://docs.stripe.com/stripe-apps/components/datatable.md) |
-| Single object detail | `DetailPage` (+ `PropertyList` for key/value) | Breadcrumb + two columns; top-level page, not inside `FullPageView` | [detail](https://docs.stripe.com/stripe-apps/components/detailpage.md) · [propertylist](https://docs.stripe.com/stripe-apps/components/propertylist.md) |
+| Single object detail | `DetailPage` (+ `PropertyList` for key-value) | Breadcrumb + two columns; top-level page, not inside `FullPageView` | [detail](https://docs.stripe.com/stripe-apps/components/detailpage.md) · [propertylist](https://docs.stripe.com/stripe-apps/components/propertylist.md) |
 | Create / edit | `FocusView` | Overlay drawer; `Button pending` on save | [doc](https://docs.stripe.com/stripe-apps/components/focusview.md) |
 | Data visualization | `LineChart` / `BarChart` / `MeterChart` / `Sparkline` (`ui/next`) | In a fixed-height `Box` in a `PageModule`; **read the doc for the `data` shape** | [line](https://docs.stripe.com/stripe-apps/components/linechart.md) · [bar](https://docs.stripe.com/stripe-apps/components/barchart.md) |
 | Layout / spacing | `Box`, `Inline` | The `stack`/`gap`/`padding` substrate (see §3) | [doc](https://docs.stripe.com/stripe-apps/components/box.md) |
