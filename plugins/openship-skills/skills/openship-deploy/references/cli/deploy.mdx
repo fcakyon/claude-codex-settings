@@ -22,7 +22,8 @@ openship deploy --project proj_123 --branch main --env production --watch
 openship deploy --project proj_123 --server srv_123 --watch
 ```
 
-For a preview, first create or select a **non-production project environment** in the dashboard,
+For a preview, first create or select a **non-production project environment** with
+`openship project environment create <project-id> Preview --type preview`,
 then deploy its project ID. That row owns its own routes, runtime and active release:
 
 ```bash
@@ -31,8 +32,9 @@ openship deploy --project proj_preview --env preview --watch
 
 `--env` selects stored variables within that project. It does not create a preview runtime or switch
 project IDs. Preview variables are refused on a production target before deployment starts.
-Omitting `--env` uses the project's default `production` variable set, including the values edited
-in the dashboard of a preview project.
+The explicit `--env` option overrides the default saved by `init --environment`. When using a directory
+link, its saved default is used next; otherwise the fallback is `production`. An explicit `--project`
+does not inherit a different project's linked branch or variable set.
 
 ## Deploy a folder
 
@@ -72,10 +74,20 @@ See the [deploy reference](https://openship.io/docs/cli/reference/deploy) for ev
 openship deployment list --project proj_123
 openship deployment get dep_123
 openship logs dep_123 --follow
+openship deployment wait dep_123 --timeout 600000
 ```
 
 Without `--watch`, deployment submission returns an ID that you can inspect later. A submitted build
 is not yet a successful release. Follow the final status and any requested decisions.
+
+Watching or waiting returns a failed exit status for failed releases and pending decisions. Inspect a
+decision with `deployment pending`, then use `deployment respond --action <offered-action>` and wait
+again. The CLI never chooses a decision for you. `--watch`, `logs --follow` and `deployment wait` have a
+ten-minute default deadline, adjustable with `--timeout` in milliseconds. A timeout stops observation;
+it does not cancel the deployment.
+
+`project server-logs <id> --follow` follows request logs using the SDK's authorized self-hosted or
+Cloud stream. Unavailable streaming exits nonzero; omit `--follow` to request a recent snapshot.
 
 ## Control a release
 

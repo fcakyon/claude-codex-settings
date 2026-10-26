@@ -9,13 +9,10 @@ source "$(dirname "$0")/_helpers.sh"
 # No ensure_license: openai/plugins repo has no LICENSE file.
 clone_or_update https://github.com/openai/plugins openai-plugins
 
-for skill in frontend-app-builder frontend-testing-debugging; do
-  local_name="$skill"
-  [ "$skill" = frontend-app-builder ] && local_name=openai-frontend-design
-  skill_dir="plugins/frontend-design-skills/skills/$local_name"
-  sync_dir "$HOME/dev/openai-plugins/plugins/build-web-apps/skills/$skill" "$skill_dir" .
+skill_dir="plugins/frontend-design-skills/skills/openai-frontend-design"
+sync_dir "$HOME/dev/openai-plugins/plugins/build-web-apps/skills/frontend-app-builder" "$skill_dir" .
 
-  python3 - "$REPO_ROOT/$skill_dir/SKILL.md" << 'PYEOF'
+python3 - "$REPO_ROOT/$skill_dir/SKILL.md" << 'PYEOF'
 import sys
 from pathlib import Path
 
@@ -32,8 +29,10 @@ t = t.replace(
 p.write_text(t)
 PYEOF
 
-  create_zip "$skill_dir"
-done
+create_zip "$skill_dir"
+
+# Keep the repository-owned testing workflow and package it without upstream replacement.
+create_zip "plugins/frontend-design-skills/skills/frontend-testing-debugging"
 
 # --- Anthropic frontend skill ---
 clone_or_update https://github.com/anthropics/claude-plugins-official anthropic-claude-plugins-official

@@ -35,15 +35,15 @@ You must follow these rules:
 
 - Ask for a field *only* after all of its prerequisite fields are satisfied.
 - Collect setup fields progressively as the flow advances.
-- Ask for one field at a time, or one group of fields only when they are dependency-free at that point in the flow.
+- Ask for one field at a time, or one group of fields only when they’re dependency-free at that point in the flow.
   - For example, ask for `platformCountry` and `accountCountry` separately: the platform country determines which account countries are valid, so asking both together can produce invalid combinations. But you may ask for `dashboardType`, `tosType`, and `legalEntityType` together in one group because their valid options are already known from the same response.
-- If there is ever a conflict between the user’s request and the validated setup, inform the user of the conflict and ask them to revise their setup choices using the [Interaction contract](https://docs.stripe.com/.md#interaction-contract). Keep the validated setup aligned with what the user requested without silently dropping the conflict.
-- Follow the [Interaction contract](https://docs.stripe.com/.md#interaction-contract) for every user question.
+- If there is ever a conflict between the user’s request and the validated setup, inform the user of the conflict and ask them to revise their setup choices using the [Interaction contract](#interaction-contract). Keep the validated setup aligned with what the user requested without silently dropping the conflict.
+- Follow the [Interaction contract](#interaction-contract) for every user question.
 - When the number of available options exceeds four, *always* print the full validated reference list before asking the multiple-choice question so the user can see the full option space.
   - When printing countries, always print the full country name followed by its code in parentheses, for example, `Germany (DE)`.
   - In the multiple-choice question, include a small set of suggested options so the user can move forward with immediate clarity. The reference list above remains the authoritative full set.
   - Leave the descriptions for the country suggested options blank.
-- For any field with four or fewer valid options, show every valid option directly in the multiple-choice question. Do not print a separate reference list first.
+- For any field with four or fewer valid options, show every valid option directly in the multiple-choice question. Don’t print a separate reference list first.
 - Every list of selectable options shown to the user must be pre-validated against all currently known constraints before you display it.
 - Never display an option as selectable if you already know it will be removed, rejected, or auto-adjusted later in the flow.
   - Present options that stay valid through the current flow.
@@ -115,7 +115,7 @@ By the time you make the final requirements request, you must have validated val
 
 You also must have asked for the following optional fields, if they’re applicable:
 
-- `businessStructure`: ask only when `legalEntityType` is not `individual`
+- `businessStructure`: ask only when `legalEntityType` isn’t `individual`
 - `orrProgram`: ask only when present in the public `programs` list for that validated setup
 
 ### Resolve capabilities
@@ -128,7 +128,7 @@ Use this algorithm whenever you build or validate the capability list:
    - if `apiVersion=v1` and `crypto_transfers` is selected, also include `transfers`
 3. If `apiVersion=v2`, drop any capability not present in `get-v2-supported-v1-capabilities`.
 4. Show the user the filtered capability list. When the user explicitly asks about a filtered-out capability, clearly explain that the asked-for capability is unavailable for the current setup.
-5. If the filtered list is empty, tell the user that no capabilities are supported for the current setup and ask them to revise earlier setup choices using the [Interaction contract](https://docs.stripe.com/.md#interaction-contract) before making the final requirements request.
+5. If the filtered list is empty, tell the user that no capabilities are supported for the current setup and ask them to revise earlier setup choices using the [Interaction contract](#interaction-contract) before making the final requirements request.
 6. When asking about `capabilities`, print the full filtered list first, then ask a multiple-choice question that includes the most likely choice or choices based on prior user context.
 7. If the user asks for a capability outside the filtered list, explain why it is unavailable for the current setup.
 
@@ -148,13 +148,13 @@ When the user asks what verification information they need, use this flow:
    - `tosType`
    - `legalEntityType`
 7. After `legalEntityType` is chosen, ask for `businessStructure` if the validated structure map exposes it.
-8. Resolve and ask for `capabilities` using [Resolve capabilities](https://docs.stripe.com/.md#resolve-capabilities).
+8. Resolve and ask for `capabilities` using [Resolve capabilities](#resolve-capabilities).
 9. Ask for `orrProgram` only if the validated setup exposes one or more public programs.
-10. If the user’s requested setup doesn’t match the valid options, tell them exactly which parts are invalid or auto-adjusted, then ask the correcting follow-up using the [Interaction contract](https://docs.stripe.com/.md#interaction-contract). Keep the mismatch visible, keep the setup grounded in the user’s request, and continue with a structured follow-up question.
+10. If the user’s requested setup doesn’t match the valid options, tell them exactly which parts are invalid or auto-adjusted, then ask the correcting follow-up using the [Interaction contract](#interaction-contract). Keep the mismatch visible, keep the setup grounded in the user’s request, and continue with a structured follow-up question.
 11. Only after the setup is valid, call `https://docs.stripe.com/_endpoint/get-requirements-for-setups` with one top-level setup key `account-setup-A[...]`, including `account-setup-A[apiVersion]`, `account-setup-A[platformCountry]`, `account-setup-A[accountCountry]`, `account-setup-A[dashboardType]`, `account-setup-A[tosType]`, `account-setup-A[legalEntityType]`, optional `account-setup-A[businessStructure]`, one or more `account-setup-A[capabilities][i]`, and optional `account-setup-A[orrProgram]`.
 12. At the end, you must call `https://docs.stripe.com/_endpoint/get-website-requirements-for-capabilities?capabilities[i]=...` and `https://docs.stripe.com/_endpoint/get-mcc-restrictions-for-capabilities?capabilities[i]=...` with the final validated capabilities to check for additional information.
 
-If you are asked to compare two setups or are asked what is needed to update from X to Y, you must follow the validation flow for setup A with a top-level `account-setup-A[...]` key and then follow the flow again for setup B with a second top-level key `account-setup-B[...]` before calling the diffable requirements request.
+If you’re asked to compare two setups or are asked what is needed to update from X to Y, you must follow the validation flow for setup A with a top-level `account-setup-A[...]` key and then follow the flow again for setup B with a second top-level key `account-setup-B[...]` before calling the diffable requirements request.
 
 Treat transport or build failures as retryable helper failures, and reserve unsupported-setup conclusions for successful prerequisite fetches and business validation results.
 
@@ -183,7 +183,7 @@ curl --get "$DOCS_HOST/_endpoint/get-requirement-selections-for-platform-country
   --data-urlencode "platformCountry=US"
 ```
 
-After that response returns, collect setup choices as described in the [Agent flow](https://docs.stripe.com/.md#agent-flow) section.
+After that response returns, collect setup choices as described in the [Agent flow](#agent-flow) section.
 
 #### Smart user: “I have a CA platform, and I want to onboard a FR company connected account to use card payments”
 
@@ -232,7 +232,7 @@ curl --get "$DOCS_HOST/_endpoint/get-requirements-for-setups" \
 
 Optionally, since `.programs` is present for this configuration, you can ask the user if they would like to choose a requirements update and add `--data-urlencode "account-setup-A[orrProgram]=eu-2025"` to the request.
 
-Use this response to present the requirements to the user as explained in the [Construct the result](https://docs.stripe.com/.md#construct-the-result) section.
+Use this response to present the requirements to the user as explained in the [Construct the result](#construct-the-result) section.
 
 Fetch the optional supplemental tables for the selected capabilities:
 
@@ -268,7 +268,7 @@ Apply these dependency rules before making the final request:
 
 - if you change `accountCountry`, re-check all downstream selections
 - if you change `legalEntityType`, re-check `businessStructure` and all downstream selections
-- if you change `accountCountry`, `tosType`, or `apiVersion`, re-run [Resolve capabilities](https://docs.stripe.com/.md#resolve-capabilities)
+- if you change `accountCountry`, `tosType`, or `apiVersion`, re-run [Resolve capabilities](#resolve-capabilities)
 
 Use `get-requirements-for-setups` as your main source of requirement data:
 
@@ -286,7 +286,7 @@ Within each successful setup result:
 Check the supplemental endpoints to see if there are any additional capability-specific restrictions to present to the user.
 
 - `requirements_by_capability` from the website endpoint is a separate website requirements table that explains requirements the connected account’s website must meet to support the selected capability. These should be presented to the user as a separate table.
-- `restrictions_by_capability` from the MCC endpoint is a separate MCC restrictions table that explains requirements the connected account’s MCC must meet to support the selected capability. If this endpoint returns any restrictions, ask the user what kind of business they are running to determine whether their business type is prohibited or restricted from using the specific capability.
+- `restrictions_by_capability` from the MCC endpoint is a separate MCC restrictions table that explains requirements the connected account’s MCC must meet to support the selected capability. If this endpoint returns any restrictions, ask the user what kind of business they’re running to determine whether their business type is prohibited or restricted from using the specific capability.
 - Empty maps are valid results for many standard capabilities and are not necessarily errors.
 
 ### Construct the result
@@ -304,7 +304,7 @@ Transform the API response into one or more human-readable tables in your own re
    - `owners.*` -> `owners`
    - `executives.*` -> `executives`
    - anything else -> `account`
-2. Render one table per non-empty section. Do not merge multiple sections into one table.
+2. Render one table per non-empty section. Don’t merge multiple sections into one table.
 3. For each table:
    - use the capitalized section name as the table heading, for example `Account`, `Company`, `Representative`, `Directors`, or `Owners`
    - Include the following columns:
@@ -340,7 +340,7 @@ Transform the API response into one or more human-readable tables in your own re
        - Group impacts with identical thresholds into a single sentence, for example `Capability, payments, and payouts will be paused immediately if not provided.`
        - If both `if not provided` and `if not verified` text exist, render the `if not provided` sentence(s) first and then the `if not verified` sentence(s); prefix the first `if not verified` sentence with `Also,`
        - If neither set of limits is present, render `—`
-4. If two sections share the same row-definition family, they still remain separate tables. For example, `representative` and `owners` both use the `person` row-definition family, but they render as separate `Representative` and `Owners` tables because they are different sections.
+4. If two sections share the same row-definition family, they still remain separate tables. For example, `representative` and `owners` both use the `person` row-definition family, but they render as separate `Representative` and `Owners` tables because they’re different sections.
 5. Assign each section to one of the row-definition families listed below in the `Row definitions` step. The row-definition family only controls how rows are matched and labeled inside that section’s table:
    - `account` -> `account`
    - `company` -> `entity`
@@ -383,13 +383,13 @@ person: Name: `/(first|last)_name/` Name (kana): `/(first|last)_name_kana/` Name
   }
   ```
 Do not use ellipses (`...`) or placeholder strings in the output — list every field name explicitly.
-- this shape is a derived summary for comparison and display. It is not a raw Accounts API response.
+- this shape is a derived summary for comparison and display. It isn’t a raw Accounts API response.
 - If `apiVersion=v2`, inform the user that this JSON is for information only, and doesn’t match the shape of a real API response.
 - derive each field’s due bucket from the requirement’s limit fields in the `get-requirements-for-setups` response:
   - treat a field as `currently_due` when any unverified limit amount or time is `<= 0`, or any verified limit amount or time is `<= 0`
   - otherwise treat it as `eventually_due`
 - populate `requirements.currently_due` and `requirements.eventually_due` from those derived buckets
-- do not add a separate `future_requirements` bucket. Regulatory or ORR-driven future changes are modeled through `orrProgram` setup selection and A/B setup comparison, not through a third due array
+- don’t add a separate `future_requirements` bucket. Regulatory or ORR-driven future changes are modeled through `orrProgram` setup selection and A/B setup comparison, not through a third due array
 - for `apiVersion=v1`, use the raw requirement field names in both arrays
 - for `apiVersion=v2`, use `v2_field_name` values in both arrays
 - If `apiVersion=v2`, omit fields that have no `v2_field_name`
@@ -408,5 +408,5 @@ When you return results to the user:
 - explain verification bullets using `extras[].value` as the source of truth
 - mention when a requirement was omitted because it matched none of the table row definitions in this document
 - mention when website or MCC endpoints returned no supplemental data, so the user doesn’t mistake that for a fetch failure
-- if you receive `validation_errors`, ask the user to correct the setup inputs using the [Interaction contract](https://docs.stripe.com/.md#interaction-contract) instead of guessing
+- if you receive `validation_errors`, ask the user to correct the setup inputs using the [Interaction contract](#interaction-contract) instead of guessing
 - if you receive `build_errors`, retry the request; if the error persists, tell the user the helper endpoint failed unexpectedly

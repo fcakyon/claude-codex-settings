@@ -340,3 +340,42 @@ openship service env set web -p my-stack -e preview API_URL=https://staging.exam
     description="Give each service in a docker-compose stack its own variables."
   />
 </Cards>
+
+## Build-time variables and command migration
+
+Saved project variables are supplied to install and build commands as well as runtime processes.
+Service variables override the project values for that service. This applies across managed stack
+builders, including Node/Bun, Python, PHP, Ruby and compiled stacks. A custom Dockerfile must declare
+and consume its own build arguments. Browser-facing variables such as `NEXT_PUBLIC_*` and `VITE_*`
+are compiled into client assets: rebuild after changing them, and never put secrets in them.
+
+Build settings warn about embedded variables at the start of a command or after shell separators
+such as `&&` and `;`. **Move to Environment** removes literal leading assignments and saves their
+values in one transaction. Chained assignments require manual editing to preserve their scope.
+Existing equal values are retained; conflicting values or concurrent command edits stop the migration.
+Shell expansions and command substitutions require manual editing. Values are encrypted and masked;
+warnings and audit records contain variable names only. The import wizard supports the same action
+before the project is saved.
+
+Before installation, managed builders inspect empty declarations in the selected app's `.env.example`
+and warn about unconfigured names. This is advisory because an empty example can be optional.
+The file is never executed. Compose required-variable expressions retain their existing blocking validation.
+
+## Managed output and build caches
+
+Next.js standalone builds use the generated manifest to locate the app server, preserve the complete
+traced workspace, and copy `.next/static` and `public` beside that server. Default startup selects the
+correct entry and working directory automatically. Nuxt uses its self-contained `.output` server through
+the same stack registry. Other stacks keep their registered runtime commands; custom commands remain
+authoritative. Invalid root directories fail before installation, and an invalid explicit Next standalone
+server path is reported with instructions to clear the override.
+
+Supported Docker builders use managed package and framework caches. Build settings detect legacy manual
+cache mounts and offer **Use managed caches** only after a deployment succeeds with the corresponding
+managed cache paths. Migration removes configuration mounts and retains existing volume data. Ordinary
+application data mounts are excluded. Cache paths come from each package manager and stack definition,
+so this also covers Python, PHP, Ruby, Go, Rust, Java and other registered builders.
+
+Build logs report observed Docker layer cache hits and misses, the managed cache paths, and build-time
+comparisons when previous timing is available. Layer reuse does not prove a package cache hit inside a
+running build step. Unsupported builders keep their original cache behavior and manual mounts.

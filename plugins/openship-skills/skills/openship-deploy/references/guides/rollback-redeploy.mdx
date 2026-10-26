@@ -87,6 +87,15 @@ If the build has been cleaned up, Openship rebuilds that version's commit instea
 — but it lands you in the same place, so rollback is never a dead end.
 </Callout>
 
+<Callout title="An older release contains redacted configuration" type="warn">
+Older Openship versions could replace credentials in saved Compose configuration with `***`.
+Openship refuses to replay an affected snapshot before starting a deployment; your active release
+stays in place. Today's service settings are not a reliable copy of that older release and are
+never substituted silently. Choose an intact release, or redeploy the original source with the
+required credentials to create a new restore point. New deployment snapshots preserve encrypted
+configuration exactly while build logs continue to redact credentials.
+</Callout>
+
 <Callout title="The rollback option is greyed out" type="warn">
 Only two things disable it: the version is already **Active** (you're on it), or it never finished healthy.
 A cleaned-up build no longer disables rollback — Openship rebuilds the commit instead.
@@ -104,6 +113,35 @@ says so. To make sure a version always stays instantly restorable, **pin** it �
 
 ## Redeploy (run it again)
 
+### Retry deployment without rebuilding
+
+When a Docker build finishes but starting its containers fails, the failed attempt offers
+**Retry deployment** while its completed images are still retained. This creates a new attempt
+through the normal deployment pipeline using the exact images, source revision, destination,
+and saved configuration. It does not rebuild or pull replacement images.
+Runtime secrets still follow the normal deployment environment layering: the saved project
+environment is replayed, while service-scoped values use the shared service environment loader.
+
+Openship retains the newest failed completed build until a newer completed attempt fails or a
+later release succeeds. A missing image produces a clear error; it never silently rebuilds.
+Use ordinary **Redeploy** when you want current source or configuration instead. Cancelled and
+incomplete builds, bare/static releases, and services requiring repository bind-mount files do
+not offer this image-only retry. A routing-only warning on a running release uses **Retry routing**
+in Domains, which leaves its containers running.
+
+The same operation is available through the API, SDK, and CLI:
+
+```bash
+openship deployment redeploy <deployment-id> --reuse-build
+```
+
+```ts
+await client.deployments.redeploy(deploymentId, { reuseBuild: true });
+```
+
+`POST /api/deployments/:id/redeploy` accepts `{ "reuseBuild": true }`.
+`useExistingCommit` is a separate rebuild option and cannot be combined with `reuseBuild`.
+
 Redeploying builds and ships your project again. Reach for it after you push a fix, or when you want the
 live site to pick up the newest commit.
 
@@ -116,6 +154,58 @@ The small caret (⌄) next to the button opens a couple of extra choices:
 - **Refresh env** — redeploy so the app picks up environment-variable changes you just made.
 - **Rebuild all** — rebuild every service instead of only the ones whose files changed. This choice appears
   only for multi-service projects (a single-app project always rebuilds the whole app anyway).
+- **Refresh images & redeploy** — pull refreshed image tags and rebuild with fresh base images,
+  keeping the deployed source revision.
+- **Check image updates** — compare recorded image digests with the registry and show image drift.
+
+## Runtime settings
+
+The deployment wizard's **Runtime** section shows the supported runtime version, build image, and
+production runtime image where applicable. Managed image defaults follow the selected version;
+custom images and digest pins remain explicit. Blank image overrides restore the managed defaults.
+Static Docker builds show their build image; Dockerfiles, prebuilt images, service recipes, and
+bare servers retain control of their own runtime.
+
+## Update a runtime after an image rebuild
+
+Image publishers can replace the content behind an existing tag, such as `php:8.4-fpm` or a WordPress
+image, without changing the tag's name. Running containers keep their existing image until replaced.
+
+Open the caret beside **Redeploy** and choose **Refresh images & redeploy**. The same menu is
+available for a project and an individual service. A service action targets that service; the project
+action includes all enabled services. Both use your saved configuration and environment variables.
+
+- Image services pull their configured tag again and deploy the acquired image.
+- Git source apps rebuild their deployed revision with fresh builder and production base images.
+  Reusable build layers remain available; deleting the build cache is unnecessary.
+- Digest pins stay fixed. Change the configured reference first if the fix requires a different digest
+  or version tag. A tag naming an old PHP patch release does not automatically advance to a newer patch.
+
+**Check image updates** compares deployed image digests and captured source-build base digests with
+the current registry manifests. It shows changed references and a direct refresh action. Source
+applications can update their bases even when there is no new application commit. Local and uploaded
+source do not have a retained Git revision;
+use their normal Redeploy flow after selecting an explicit updated runtime image tag or digest.
+Source services carried from a different deployment, or restored from a rollback/migration artifact,
+also need an explicit source deployment before Openship can confirm their revision for a runtime update.
+Image-only services can be updated separately while those source services remain running.
+
+Explicitly refreshed source builds record the literal base images selected by the build. Ordinary
+cached builds, older deployments, and unsupported custom Dockerfile expressions have an unknown
+baseline; a registry result alone does not prove what
+the previous build used. Refreshing a supported build records a baseline for future checks.
+
+The image publisher must have released its patched image first. Digest changes indicate different
+image content; they do not certify that a vulnerability was fixed. Openship does not execute
+interpreter-version probes as part of this feature.
+
+**Clear Build Cache** remains a separate storage/diagnostics action: it prunes unused build cache.
+It does not pull images, schedule an update, or redeploy the application. To acquire newer image
+content, choose **Refresh images & redeploy**. Useful build layers can remain cached.
+
+Runtime updates use the existing health checks, artifact retention and rollback policy. Restart and
+Refresh env continue to use the existing image. Rolling back restores the earlier image, including
+its earlier runtime version.
 
 <Callout title="Rebuild one specific old commit" type="info">
 To go back to a past deploy, use **Rollback to this version** on its row — Openship reuses its saved build

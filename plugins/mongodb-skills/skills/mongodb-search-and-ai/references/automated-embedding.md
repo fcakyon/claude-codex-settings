@@ -44,13 +44,16 @@ All models use Voyage AI, hosted and managed by MongoDB (multi-tenant, US region
 | `voyage-4-lite` | High-volume, cost-sensitive applications | $0.00002 | $0.02 |
 | `voyage-4` | **(Recommended)** General text search, balanced performance | $0.00006 | $0.06 |
 | `voyage-4-large` | Maximum accuracy, complex semantic relationships | $0.00012 | $0.12 |
-| `voyage-code-3` | Code search, technical documentation | $0.00018 | $0.18 |
+| `voyage-code-4` | **(Recommended for code)** Code search, technical documentation | $0.00012 | $0.12 |
+| `voyage-code-3` | Legacy code model — use `voyage-code-4` instead | $0.00018 | $0.18 |
 
 **Decision guide:**
 - Default / unknown use case → `voyage-4`
 - Large collection, cost is a concern → `voyage-4-lite`
 - High-stakes retrieval where accuracy matters most → `voyage-4-large`
-- Codebase or technical docs search → `voyage-code-3`
+- Codebase or technical docs search → `voyage-code-4`
+
+**`voyage-code-4` requires an Atlas deployment.** On self-managed deployments, use `voyage-code-3` for code and technical documentation.
 
 **Free tokens:** 200 million tokens per model, one-time, shared across the entire Atlas organization. Does not refresh. See [Billing and Free Tokens](#billing-and-free-tokens) below for how consumption and invoicing work.
 
@@ -327,6 +330,7 @@ No standard rate limits — uses a separate inference tier optimized for through
 | `voyage-4-large` | 2,000 | 3,000,000 |
 | `voyage-4` | 2,000 | 8,000,000 |
 | `voyage-4-lite` | 2,000 | 16,000,000 |
+| `voyage-code-4` | 2,000 | 3,000,000 |
 | `voyage-code-3` | 2,000 | 3,000,000 |
 
 **Best practice:** space out bulk insert/update operations rather than sending them all at once — batching avoids hitting these per-minute limits.
@@ -340,6 +344,7 @@ No standard rate limits — uses a separate inference tier optimized for through
 | `voyage-4-large` | 3 | 2,000 |
 | `voyage-4` | 3 | 2,000 |
 | `voyage-4-lite` | 3 | 2,000 |
+| `voyage-code-4` | 3 | 2,000 |
 | `voyage-code-3` | 3 | 2,000 |
 
 **Paid cluster (M0 with a payment method, Flex, or M10+ dedicated):**
@@ -349,6 +354,7 @@ No standard rate limits — uses a separate inference tier optimized for through
 | `voyage-4-large` | 2,000 | 3,000,000 |
 | `voyage-4` | 2,000 | 8,000,000 |
 | `voyage-4-lite` | 2,000 | 16,000,000 |
+| `voyage-code-4` | 2,000 | 3,000,000 |
 | `voyage-code-3` | 2,000 | 3,000,000 |
 
 Paid-tier limits increase automatically as usage grows over time — no action needed to benefit from that growth.

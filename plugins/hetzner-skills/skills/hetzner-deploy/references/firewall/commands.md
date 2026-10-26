@@ -90,7 +90,7 @@ hcloud firewall apply-to-resource (--type server --server <server> | --type labe
 ```
   -h, --help                    help for apply-to-resource
   -l, --label-selector string   Label Selector
-      --server string           Server name of ID (required when type is server)
+      --server string           Server name or ID (required when type is server)
       --type string             Resource Type (server, label_selector) (required)
 ```
 
@@ -340,7 +340,7 @@ hcloud firewall remove-from-resource (--type server --server <server> | --type l
 ```
   -h, --help                    help for remove-from-resource
   -l, --label-selector string   Label Selector
-      --server string           Server name of ID (required when type is server)
+      --server string           Server name or ID (required when type is server)
       --type string             Resource Type (server) (required)
 ```
 

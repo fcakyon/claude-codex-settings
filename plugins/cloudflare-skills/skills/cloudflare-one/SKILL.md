@@ -40,7 +40,7 @@ Use these to avoid jumping straight to configuration. Ask only the prompts relev
 
 - Sites and segments: which data centers, VPCs, offices, or network segments need connectivity.
 - HA: dev/test single connector, production multiple connectors, or advanced multi-tunnel/site redundancy.
-- Runtime: where cloudflared or WARP Connector/Mesh will run: VM, container, Kubernetes, bare metal, or other target.
+- Runtime: where cloudflared or Cloudflare Mesh nodes (formerly WARP Connector) will run: VM, container, Kubernetes, bare metal, or other target.
 - Egress: whether connectors can reach Cloudflare over the required outbound ports/protocols. Retrieve [Tunnel connectivity prechecks](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/troubleshoot-tunnels/connectivity-prechecks/index.md) before naming exact endpoints.
 - Origin reachability: whether the connector can resolve and reach every private origin.
 - Routing: required CIDRs/hostnames, overlapping IP spaces, [virtual networks](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/tunnel-virtual-networks/index.md), [Split Tunnels](https://developers.cloudflare.com/cloudflare-one/team-and-resources/devices/cloudflare-one-client/configure/route-traffic/split-tunnels/index.md), and private DNS/[resolver policy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/index.md) needs.
@@ -49,9 +49,11 @@ Use these to avoid jumping straight to configuration. Ask only the prompts relev
 ### Gateway, TLS, and DLP
 
 - Traffic controls: DNS categories, HTTP URL/path inspection, L4 ports/protocols, egress IP requirements, custom lists, and allow/block exceptions. Retrieve [Gateway traffic policy](https://developers.cloudflare.com/cloudflare-one/traffic-policies/index.md) docs for current selectors and order of enforcement.
-- Identity: whether Gateway policies need user or group selectors, and whether users will be authenticated through WARP/IdP context. Check [Gateway identity selectors](https://developers.cloudflare.com/cloudflare-one/traffic-policies/identity-selectors/index.md) and [SCIM provisioning](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/scim/index.md) when groups are involved.
+- Identity: whether Gateway policies need user or group selectors, and whether users will be authenticated through Cloudflare One Client/IdP context. Check [Gateway identity selectors](https://developers.cloudflare.com/cloudflare-one/traffic-policies/identity-selectors/index.md) and [SCIM provisioning](https://developers.cloudflare.com/cloudflare-one/team-and-resources/users/scim/index.md) when groups are involved.
 - TLS inspection: root CA deployment path, certificate-pinned applications, compliance exceptions, and FIPS requirements. Retrieve [TLS decryption](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/tls-decryption/index.md) docs before enabling.
 - DLP: sensitive data types, channels to inspect, TLS inspection readiness, DLP profiles, payload logging requirements, and false-positive tolerance. Retrieve [DLP](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/index.md) docs before creating enforcement.
+
+For writing or reviewing Workers invoked by the HTTP Forward action, use the [gateway-workers skill](../gateway-workers/SKILL.md).
 
 ### CASB, Device Posture, and Risk
 
@@ -68,7 +70,7 @@ Use these to avoid jumping straight to configuration. Ask only the prompts relev
 - Access controls application authorization; Gateway controls traffic inspection/filtering. Use both when the requirement spans identity-aware app access and network/web security.
 - For new Access deployments, create policies through the reusable policy API (`/access/policies`) and attach them to applications. Do not send inline `policies` in an application create/update request unless the current API documentation explicitly requires an app-scoped policy.
 - Treat an app-scoped policy reported as `reusable: false` as legacy. Migrate existing policies with the documented `make_reusable` endpoint or replace them with reusable policies; do not create new legacy policies. Distinguish legacy policies from the deprecated legacy private-network application type.
-- Public hostname Access apps can be clientless. Private destination apps require WARP/Device client or another network on-ramp plus routes and DNS resolution. Retrieve [self-hosted private app](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/self-hosted-private-app/index.md) docs before configuring private destinations.
+- Public hostname Access apps can be clientless. Private destination apps require the Cloudflare One Client or another network on-ramp plus routes and DNS resolution. Retrieve [self-hosted private app](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/self-hosted-private-app/index.md) docs before configuring private destinations.
 - Cloudflare Tunnel is an off-ramp from a private network to Cloudflare. Cloudflare WAN and Mesh are other off-ramps which can also be on-ramps.
 - Group-based policies depend on IdP group claims or SCIM. If group sync is missing, do not invent group selectors.
 - Private hostnames need explicit DNS routing/resolution; creating an Access app alone is not enough. Use [resolver policies](https://developers.cloudflare.com/cloudflare-one/traffic-policies/resolver-policies/index.md) and review [Connect a private hostname](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/connect-private-hostname/index.md)
@@ -122,7 +124,7 @@ Use these to avoid jumping straight to configuration. Ask only the prompts relev
 - DNS pre-resolution selectors and post-resolution selectors do not behave like a single strict precedence list. Retrieve current evaluation docs before changing rule order.
 - HTTP Do Not Inspect rules run before HTTP Allow/Block/Isolate behavior. A later block rule will not override an earlier inspection bypass.
 - Certificate-pinned apps need Do Not Inspect exceptions before broad TLS inspection. Deploy the Cloudflare root CA to managed devices before enabling inspection.
-- DLP profiles are detection definitions only. They do nothing until referenced by Gateway HTTP policies or CASB scan settings. Rules with body inspection may be evaluated multiple times in a single pass.
+- DLP profiles are detection definitions only. They enforce nothing until referenced by a DLP policy or a CASB integration. [Passive Detection](https://developers.cloudflare.com/cloudflare-one/data-loss-prevention/passive-detection/index.md) surfaces matches in sampled Gateway traffic before any policy exists; use it to choose what to log or block. Rules with body inspection may be evaluated multiple times in a single pass.
 - Start DLP with payload logging where appropriate, tune false positives, then block.
 - Gateway Network policies are strict L4 controls. Identity-aware L4 matching requires authenticated device context.
 
@@ -131,14 +133,14 @@ Use these to avoid jumping straight to configuration. Ask only the prompts relev
 - API CASB is out-of-band and periodic. It does not provide real-time inline enforcement although some integrations support "remediation"; use Gateway granular application controls for inline CASB capability for supported applications. Retrieve [Granular application controls](https://developers.cloudflare.com/cloudflare-one/traffic-policies/http-policies/granular-controls/index.md) when creating security policies for specific actions in specific SaaS applications.
 - CASB findings are tied to specific assets and instances. Drill into affected assets before recommending remediation.
 - Use current Dashboard remediation guidance for CASB fixes. Most remediations happen in the SaaS admin console, not Cloudflare.
-- Large SaaS integrations can take 24-48 hours for initial scans. Reauthorizing can restart scan state; check credential health before reconnecting.
+- CASB scans are periodic: the initial scan can take several hours, and later scans run roughly every 24-48 hours. Retrieve [CASB troubleshooting](https://developers.cloudflare.com/cloudflare-one/cloud-and-saas-findings/troubleshoot-casb/index.md) before promising timing. Reauthorizing can restart scan state; check credential health before reconnecting.
 - User risk scores are behavior-based and asynchronous. CASB findings do not automatically imply high user risk.
 
 ### Infrastructure Access
 
 - [Zero Trust Infrastructure Access](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/infrastructure-apps/index.md) (ZTIA) is the purpose-built offering for SSH access through the device client. It provides capabilities not available through self-hosted apps: keystroke logging, control over how users authenticate to the target machine, [short-lived certificates](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/index.md#generate-a-cloudflare-ssh-ca) that replace static SSH keys with ephemeral certs tied to Access identity, and lightweight privileged access management. Use Infrastructure Access apps for SSH when the device client is deployed.
 - [Browser Rendering](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/non-http/browser-rendering/index.md) provides clientless SSH, RDP, and VNC through the browser without requiring the device client. Clientless RDP includes session recording and file transfer controls. Use clientless access when a device client cannot be installed (contractors, partner access, unmanaged devices) - typically not as the default for managed users with the client installed.
-- [Audit SSH](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/index.md#enable-ssh-command-logging) is a Gateway Network policy action that logs SSH commands without blocking. It requires the session to be proxied through Cloudflare.
+- For SSH command logging, use [Access for Infrastructure](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/index.md#enable-ssh-command-logging). The Gateway Audit SSH action reached end of life on July 15, 2026, and remaining Audit SSH rules no longer work; do not recommend it.
 - Short-lived certificates require CA configuration on the target host and `sshd` configured to trust the Cloudflare CA public key. Retrieve [short-lived certificate setup](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/use-cases/ssh/ssh-infrastructure-access/index.md) docs before configuring.
 - For kubectl and database access behind private networks, use the device client with private destination routing. There is no Infrastructure Access or browser-rendered equivalent for arbitrary TCP protocols today.
 

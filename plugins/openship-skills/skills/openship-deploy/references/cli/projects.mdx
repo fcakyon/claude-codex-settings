@@ -31,17 +31,31 @@ openship config validate
 See [project commands](https://openship.io/docs/cli/reference/project), [link options](https://openship.io/docs/cli/reference/init), and
 [configuration commands](https://openship.io/docs/cli/reference/config).
 
+Links record their context, API and any explicit organization scope. Commands reject a mismatched
+connection before using the linked project. Pass `--project` to deliberately select a different target,
+or run `init --force` to replace the link.
+
 ## Environment and source settings
 
 ```bash
 openship project env get proj_123
 openship project git branch proj_123 main
 openship project sleep-mode proj_123 always_on
+openship project environment create proj_123 Preview --type preview --branch feature
+openship project environment list proj_123
+openship project resources get proj_123
+openship project resources set proj_123 resources.json
 ```
 
 Use the project reference for environment writes, auto-deploy, release images, logs, and project
 teardown. [Environment variables](https://openship.io/docs/guides/environment-variables) explains secret handling and
 when changes reach a running application.
+
+`project environment create` returns a **separate project ID** with its own runtime. Link or deploy that
+ID to use it. `project resources set` accepts a JSON patch such as
+`{"production":{"cpuCores":1,"memoryMb":1024}}`; the engine enforces the destination's capacity and policy.
+Use `project update <id> <file>` for other build/runtime configuration, `project storage` for object storage
+bindings, and `project connections` to wire app outputs into another project's variables.
 
 ## Services
 
@@ -49,10 +63,24 @@ when changes reach a running application.
 openship service list --project proj_123
 openship service get svc_123 --project proj_123
 openship service logs svc_123 --project proj_123 --follow
+openship service env set svc_123 MODE=production --project proj_123
+openship service env inspect svc_123 --project proj_123 --runtime
+openship service env apply svc_123 --project proj_123
 ```
 
-Services belong to a project. Supply `--project` or use a linked directory. The [service reference](https://openship.io/docs/cli/reference/service)
+Services belong to a project. Supply the required `--project` flag. The [service reference](https://openship.io/docs/cli/reference/service)
 covers creation, Compose synchronization, drift decisions, environment variables, runtime controls, and execution.
+
+Ordinary `env set` changes only the named overrides. `--secret` marks supplied values as secret;
+omitting it preserves existing secret classification. `--replace` explicitly replaces all overrides for
+the selected variable set. `env delete` removes selected overrides, exposing any inherited values again.
+Saving and deleting variables do not restart the service. `env apply` uses the engine's existing container
+replacement and rollback workflow; `restart` alone does not apply pending environment changes.
+
+`env inspect` shows effective values with secrets masked and checks the running container only with
+`--runtime`. `env reveal <service> <keys...>` explicitly reveals selected values and requires write access.
+Use `service update <service> <file> --project <id>` for a JSON configuration patch, including image,
+command, build settings, routing, ports and enabled state.
 
 ## Domains
 
@@ -65,6 +93,11 @@ openship domain verify-ssl dom_123
 
 Follow the returned DNS instructions before verification. See [domain options](https://openship.io/docs/cli/reference/domain)
 and the [custom-domain guide](https://openship.io/docs/guides/custom-domains) for DNS providers, TLS, and primary domains.
+
+`dns providers`, `dns credentials` and `dns verify-zone` manage automated DNS access. Use
+`domain dns plan` before `domain dns apply` to inspect provider record changes. For DNS certificate
+challenges, use `domain dns challenge start`, inspect with `get`, and pass the returned attempt ID to
+`check` or `cancel`. Manual challenges require the operator to add the TXT record, including at renewal.
 
 ## Catalog apps
 

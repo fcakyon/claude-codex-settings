@@ -13,14 +13,14 @@ Follow this exact sequence for every new app. Do NOT skip or reorder steps.
 6. pnpm test                                                      ← run tests
 7. stripe apps start                                             ← local preview for Dashboard UI extensions
 8. stripe apps upload                                            ← publish version (REQUIRED before Secret Store or fetchStripeSignature work)
-9. Install in test mode from Dashboard → Apps                    ← test the installed app
+9. Install in a sandbox using the private or public flow below  ← test the installed app
 10. Dashboard → Apps → Submit for review                         ← marketplace publishing (optional)
 11. stripe feedback                                              ← one report per build session (see references/feedback.md)
 ```
 
 **BLOCKED:** Do NOT use `stripe apps create` — it does not scaffold correctly. Always use `stripe generate app`.
 
-**MANDATORY:** Do NOT create files manually when `stripe generate app` provides them. The scaffold creates a V2 workspace: `stripe-app.yaml`, `package.json`, `pnpm-workspace.yaml`, and `ui/src/views/App.tsx` with the correct structure. Only create files that the scaffold doesn’t provide (e.g., `server.js` for your backend). Modify scaffolded files as needed — don’t rewrite them from scratch.
+**MANDATORY:** Do NOT create files manually when `stripe generate app` provides them. The scaffold creates a V2 workspace: `stripe-app.yaml`, `package.json`, `pnpm-workspace.yaml`, and `ui/src/views/App.tsx` with the correct structure. Only create files that the scaffold doesn’t provide (for example, `server.js` for your backend). Modify scaffolded files as needed — don’t rewrite them from scratch.
 
 ## End-to-end build order (detailed)
 
@@ -100,15 +100,22 @@ stripe apps start
 
 - Opens a browser to your Stripe Dashboard with your app running live
 - Watches for file changes and hot-reloads
-- Works against your live or test Stripe account
+- Works against your live Stripe account or a sandbox
 
 **Notes:**
 
-- `stripe apps start` requires browser access; Safari is not supported — use Chrome or Firefox
+- `stripe apps start` requires browser access; Safari isn’t supported — use Chrome or Firefox
 - This does **not** persist — your app is only visible while the command is running
-- The app is not installed on your account yet; it’s only previewed locally
+- The app isn’t installed on your account yet; it’s only previewed locally
 
 ### Step 6 — Upload a version (when ready to share or test permissions and secrets)
+
+Before uploading, run `stripe login` and log in to the account for your app’s distribution type:
+
+- For a private app, log in to the sandbox where you want to test it.
+- For a public app, log in to your live account.
+
+For a public app that you want to test in a general sandbox, [update its manifest to support sandbox installs](https://docs.stripe.com/stripe-apps/enable-sandbox-support.md#update-the-app-manifest) before uploading.
 
 ```bash
 stripe apps upload
@@ -120,11 +127,17 @@ stripe apps upload
 - Generates the signing secret needed for `fetchStripeSignature` and the Secret Store API
 - Makes the version available to install
 
-**After uploading:**
+**After uploading a private app:**
 
-1. Go to [Dashboard → Apps](https://dashboard.stripe.com/apps)
-2. Find your app
-3. Click **Install in test mode** to install it on your account
+1. Open [Created apps](https://dashboard.stripe.com/test/apps/created) in the sandbox where you uploaded the app
+2. Select your app and open the **Versions** tab
+3. Click **Install**, or click **Change version** if a version is already installed
+
+**After uploading a public app:**
+
+1. Complete the remaining steps to [enable general sandbox support](https://docs.stripe.com/stripe-apps/enable-sandbox-support.md)
+2. [Create an external test link](https://docs.stripe.com/stripe-apps/test-app.md) for the uploaded version
+3. Open a general sandbox, then visit the external test link to install the app
 
 **When you need to upload before `stripe apps start`:**
 
@@ -132,7 +145,9 @@ stripe apps upload
 - Using `fetchStripeSignature` to authenticate the UI to a backend
 - Testing permissions that require the app to be installed
 
-### Step 7 — Install in live mode (when ready to use with real data)
+### Step 7 — Install a private app in live mode (when ready to use with real data)
+
+Skip this step for public apps. Before installing a private app in live mode, log in to your live account and run `stripe apps upload` again.
 
 1. Go to the [Dashboard → Apps page](https://dashboard.stripe.com/apps)
 2. Select your app
@@ -140,7 +155,7 @@ stripe apps upload
 4. Select the version to install
 5. Click Install
 
-**Plain-language:** “Test mode uses fake data so you can try things safely. Live mode uses real customer data. Always test in test mode first.”
+**Plain-language:** “A sandbox uses test data so you can try things safely. Live mode uses real customer data. Always test in a sandbox first.”
 
 ### Step 8 — Ship a new version
 
@@ -169,7 +184,7 @@ To submit your app for marketplace review:
 
 ### Final step — Submit feedback (after a build session)
 
-If you ran toolchain commands this session, submit one `stripe feedback` report summarizing what worked and what got in the way, then print the returned id. See `references/feedback.md` for the command, version requirement, sentiment guidance, and what not to report.
+If you weren’t able to accomplish the user’s goal on the first try and the build process wasn’t clear, send feedback. See `references/feedback.md` for details on how to share feedback with Stripe.
 
 **Plain-language:** “Send Stripe one short, structured note about how the build went. It’s not support, and it never blocks your work.”
 
