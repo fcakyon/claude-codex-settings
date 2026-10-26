@@ -994,6 +994,36 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 </details>
 
 <details>
+<summary><strong>google-telemetry</strong> - Read app usage and search traffic around releases</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| ----------- | --------- | ------ | ---------- |
+| `claude plugin install google-telemetry@claude-settings` | `codex plugin add google-telemetry@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/google-telemetry` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/google-telemetry --skill '*'
+```
+
+Read Google Analytics and Search Console from your terminal to check how people use an app and find it in search.
+
+- Set up read access with existing credentials or a guided Google sign-in.
+- Compare version adoption, product events and search traffic around releases.
+- Distinguish reporting delays, missing tracking and failed access from zero use.
+
+Uses third-party CLIs backed by Google's APIs. Requires Google API access.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| ----- | ----------- | --- |
+| [`setup`](./plugins/google-telemetry/skills/setup/SKILL.md) | Set up and verify Google reporting access | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/google-telemetry-setup.zip) |
+| [`google-telemetry`](./plugins/google-telemetry/skills/google-telemetry/SKILL.md) | Read product and search telemetry through API wrappers | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/google-telemetry.zip) |
+
+</details>
+
+<details>
 <summary><strong>seo-skills</strong> - Audit search visibility, structured data, and site architecture</summary>
 
 | Claude Code                                        | Codex CLI                                     | Gemini CLI                                              |
