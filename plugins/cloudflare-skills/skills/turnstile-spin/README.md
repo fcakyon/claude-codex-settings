@@ -19,6 +19,7 @@ End-to-end setup skill for Cloudflare Turnstile. Loads when an agent is asked to
 | `references/astro.md`             | Code snippet for Astro projects                                        |
 | `references/sveltekit.md`         | Code snippet for SvelteKit projects                                    |
 | `references/hugo.md`              | Code snippet for Hugo projects                                         |
+| `references/skill-feedback.md`    | Steps for reporting problems with this skill to its maintainers        |
 | `tests/validation.md`             | Validation cases matching the assertions in the PRD                    |
 
 ## How agents load it

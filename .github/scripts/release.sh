@@ -1,103 +1,94 @@
 #!/bin/bash
-# Create a GitHub release with skill zips as artifacts.
-# Usage: bash .github/scripts/release.sh <version>
-# Example: bash .github/scripts/release.sh 2.4.0
+# Create a GitHub release with skill ZIPs from one committed revision.
+# Usage: bash .github/scripts/release.sh <version> [--dry-run]
 
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-SCRIPTS_DIR="$(dirname "$0")"
-
-if [ $# -lt 1 ]; then
-  echo "Usage: $0 <version>" >&2
-  echo "Example: $0 2.4.0" >&2
+if [ $# -lt 1 ] || [ $# -gt 2 ]
+then
+  echo "Usage: $0 <version> [--dry-run]" >&2
   exit 1
 fi
-
 VERSION="$1"
 TAG="v$VERSION"
-
-if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  echo "ERROR: version must be semver (e.g. 2.4.0), got: $VERSION" >&2
+if [ "${2:---dry-run}" != --dry-run ]
+then
+  echo "Unknown option: $2" >&2
+  exit 1
+fi
+if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+then
+  echo "ERROR: version must be semver (e.g. 2.10.0), got: $VERSION" >&2
   exit 1
 fi
 
 cd "$REPO_ROOT"
+COMMIT="$(git rev-parse HEAD)"
+STAGING="$(mktemp -d)"
+trap 'rm -rf "$STAGING"' EXIT
+git archive "$COMMIT" | tar -x -C "$STAGING"
 
-# Check the marketplace version. gh release create tags the pushed branch, so a local
-# edit here would never reach the release. The bump belongs in the commit that precedes it.
-python3 -c "
+python3 - "$STAGING/.claude-plugin/marketplace.json" "$VERSION" <<'PY'
 import json
+import sys
 from pathlib import Path
-current = json.loads(Path('.claude-plugin/marketplace.json').read_text())['metadata']['version']
-if current != '$VERSION':
-    raise SystemExit(
-        'ERROR: marketplace metadata.version is ' + current + ', expected $VERSION. '
-        'Bump it, run sync-versions.sh, then commit and merge before releasing.'
-    )
-print('Marketplace metadata.version is $VERSION')
-"
 
-# Sync all plugin versions across platforms
-bash "$SCRIPTS_DIR/sync-versions.sh"
+current = json.loads(Path(sys.argv[1]).read_text())["metadata"]["version"]
+if current != sys.argv[2]:
+    raise SystemExit(f"Marketplace version is {current}, expected {sys.argv[2]}. Commit the version bump first.")
+PY
 
-# Re-run all sync scripts to ensure all vendor zips are current.
-find plugins -name '*.zip' -delete
-for sync_script in "$SCRIPTS_DIR"/sync-*-skills.sh; do
-  [ -f "$sync_script" ] && bash "$sync_script"
-done
-
-# Package local skills that the vendor syncs did not cover.
-source "$SCRIPTS_DIR/_helpers.sh"
+# A fresh Git snapshot has no cached ZIPs or uncommitted skill files.
+source "$STAGING/.github/scripts/_helpers.sh"
 create_all_skill_zips
 
-# Collect zip files from skill directories
+python3 - "$STAGING" <<'PY'
+import sys
+from pathlib import Path
+from zipfile import ZipFile
+
+root = Path(sys.argv[1])
+skills = sorted(root.glob("plugins/*/skills/*/SKILL.md"))
+archives = sorted(root.glob("plugins/*/skills/*/*.zip"))
+assert skills and len(archives) == len(skills), "Expected one ZIP per skill"
+assert len({p.name for p in archives}) == len(archives), "Duplicate release asset names"
+for skill in skills:
+    archive, = skill.parent.glob("*.zip")
+    expected = {
+        f"{skill.parent.name}/{p.relative_to(skill.parent).as_posix()}": p.read_bytes()
+        for p in skill.parent.rglob("*") if p.is_file() and p.suffix != ".zip"
+    }
+    with ZipFile(archive) as zipped:
+        actual = {name: zipped.read(name) for name in zipped.namelist() if not name.endswith("/")}
+        assert actual == expected, f"ZIP contents differ from committed skill: {archive}"
+print(f"Verified {len(archives)} unique skill ZIPs against the committed source")
+PY
+
 ZIP_FILES=()
-while IFS= read -r -d '' f; do
-  ZIP_FILES+=("$f")
-done < <(find plugins -name '*.zip' -print0)
+while IFS= read -r -d '' file
+do
+  ZIP_FILES+=("$file")
+done < <(find "$STAGING/plugins" -name '*.zip' -print0)
 
-if [ ${#ZIP_FILES[@]} -eq 0 ]; then
-  echo "WARNING: no zip files found in plugins/*/skills/*/" >&2
+if [ "${2:-}" = --dry-run ]
+then
+  echo "Dry run: $TAG at $COMMIT, ${#ZIP_FILES[@]} ZIPs. Nothing published."
+  exit 0
 fi
 
-echo "Found ${#ZIP_FILES[@]} zip file(s) to upload"
-for z in "${ZIP_FILES[@]}"; do echo "  $z"; done
-
-# Get previous tag for changelog generation
-PREV_TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName' 2> /dev/null || echo "")
-
-# Generate auto-changelog
-CHANGELOG=""
-if [ -n "$PREV_TAG" ]; then
-  CHANGELOG=$(gh api repos/{owner}/{repo}/releases/generate-notes \
-    -f tag_name="$TAG" \
-    -f previous_tag_name="$PREV_TAG" \
-    -q '.body' 2> /dev/null || echo "")
+PREV_TAG="$(gh release list --limit 1 --json tagName -q '.[0].tagName')"
+cp "$STAGING/README.md" "$STAGING/release-notes.md"
+if [ -n "$PREV_TAG" ]
+then
+  printf '\n---\n\n' >> "$STAGING/release-notes.md"
+  gh api repos/{owner}/{repo}/releases/generate-notes \
+    -f tag_name="$TAG" -f previous_tag_name="$PREV_TAG" \
+    -f target_commitish="$COMMIT" -q .body >> "$STAGING/release-notes.md"
 fi
 
-# Combine release body: README + changelog
-README_CONTENT=$(cat README.md)
-BODY="$README_CONTENT"
-if [ -n "$CHANGELOG" ]; then
-  BODY="$README_CONTENT
+gh release create "$TAG" "${ZIP_FILES[@]}" --target "$COMMIT" \
+  --title "$TAG" --notes-file "$STAGING/release-notes.md" --latest
 
----
-
-$CHANGELOG"
-fi
-
-# Create release with zip artifacts
-if [ ${#ZIP_FILES[@]} -gt 0 ]; then
-  gh release create "$TAG" "${ZIP_FILES[@]}" \
-    --title "$TAG" \
-    --notes "$BODY"
-else
-  gh release create "$TAG" \
-    --title "$TAG" \
-    --notes "$BODY"
-fi
-
-echo ""
-echo "Release $TAG created."
-echo "URL: $(gh release view "$TAG" --json url -q '.url')"
+echo "Release $TAG created from $COMMIT"
+gh release view "$TAG" --json url -q .url

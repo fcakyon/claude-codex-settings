@@ -59,3 +59,7 @@ This skill covers Workers-specific best practices and code review. For related t
 - **Durable Objects**: load the `durable-objects` skill
 - **Workflows**: see [Rules of Workflows](https://developers.cloudflare.com/workflows/build/rules-of-workflows/index.md)
 - **CLI commands**: load the `cf-cli` skill, or the `wrangler` skill in a project with a Wrangler configuration file
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).

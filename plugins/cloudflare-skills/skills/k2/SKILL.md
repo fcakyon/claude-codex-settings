@@ -22,3 +22,7 @@ K2 is a durable log for decoupling event producers and consumers. Start with the
 Retrieve the matching pages above for each task and use their current examples. For capacity or cost questions, check current limits and any published pricing before quoting values. State when a requested pricing or availability detail is not yet published.
 
 For SQL transformation and delivery to R2 Iceberg tables, use the `basin` skill. For task processing, consult [Queues](https://developers.cloudflare.com/queues/index.md).
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).
