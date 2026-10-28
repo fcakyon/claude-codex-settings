@@ -109,3 +109,7 @@ Pilot plan:
 Validation:
 Rollback:
 ```
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).

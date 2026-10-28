@@ -236,7 +236,7 @@ fetch("https://api.example.com/webhook", { method: "POST", body: JSON.stringify(
 
 ### Be aware of platform limits
 
-Workers have a 10ms CPU time limit (Bundled) or 30s (Standard/Unbound). Heavy synchronous work — tight loops, large JSON parsing, compute-intensive crypto — can hit the CPU limit and terminate the request.
+Workers have CPU time limits based on the account plan. Heavy synchronous work — tight loops, large JSON parsing, compute-intensive crypto — can hit the CPU limit and terminate the request.
 
 **Check**: compute-heavy operations that run synchronously. Consider breaking work into smaller chunks, offloading to Queues/Workflows, or using WebAssembly for CPU-intensive tasks.
 

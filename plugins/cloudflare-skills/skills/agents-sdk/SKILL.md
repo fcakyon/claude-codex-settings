@@ -201,3 +201,7 @@ Read [client-sdk.md](references/client-sdk.md) for client selection and current 
 - **[references/voice.md](references/voice.md)** — `@cloudflare/voice` STT/TTS
 - **[references/codemode.md](references/codemode.md)** — Code Mode for tool orchestration
 - **[references/browse-the-web.md](references/browse-the-web.md)** — CDP browser tools
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).

@@ -179,3 +179,7 @@ await this.ctx.storage.deleteAlarm();
 ## Testing
 
 Read the [testing reference](./references/testing.md) before configuring a suite or writing Durable Object tests. It routes to current setup, APIs, and examples and identifies the behavior to cover.
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).
