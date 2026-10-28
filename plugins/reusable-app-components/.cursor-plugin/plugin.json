@@ -1,0 +1,8 @@
+{
+  "name": "reusable-app-components",
+  "version": "1.0.0",
+  "description": "Reuse tested app journeys with code, design and integration checks.",
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

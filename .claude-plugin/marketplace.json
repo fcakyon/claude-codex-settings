@@ -555,6 +555,23 @@
         "testing",
         "quality"
       ]
+    },
+    {
+      "name": "reusable-app-components",
+      "source": "./plugins/reusable-app-components",
+      "description": "Reuse tested app journeys with code, design and integration checks.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": [
+        "components",
+        "authentication",
+        "user-journeys"
+      ],
+      "category": "development",
+      "tags": [
+        "components",
+        "testing"
+      ]
     }
   ]
 }

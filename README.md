@@ -395,6 +395,8 @@ Frontend design, testing, and writing skills from [anthropics/claude-plugins-off
 | [`anthropic-frontend-design`](./plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md) | Bold aesthetic direction, distinctive typography, anti-generic AI aesthetics      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/anthropic-frontend-design.zip) |
 | [`writing-guidelines`](./plugins/frontend-design-skills/skills/writing-guidelines/SKILL.md)               | Review interface copy and text for clear, consistent writing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/writing-guidelines.zip)        |
 
+Pairs naturally with `reusable-app-components`.
+
 </details>
 
 <details>
@@ -1086,6 +1088,37 @@ References are tied to one upstream release. The two skills work together and ca
 </details>
 
 <details>
+<summary><strong>reusable-app-components</strong> - Reuse tested app journeys with code, design and integration checks</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install reusable-app-components@claude-settings` | `codex plugin add reusable-app-components@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/reusable-app-components` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/reusable-app-components --skill '*'
+```
+
+Reuse an app journey together with its code, integration rules and proof of behavior. The first recipe covers Google login:
+
+- Keep returning-account sign-in and a same-tab fallback when popups or the Google script are unavailable.
+- Resume the original action while preserving the app's sessions, roles and signup policy.
+- Use a configurable Muvisafe-inspired panel or keep the host design, with auth behavior independent of the shell.
+- Adapt the React component, test it locally, then verify the real provider in each app.
+- Track production references separately from extractions and pending migrations.
+
+| Skill | Purpose | ZIP |
+| --- | --- | --- |
+| [app-auth](./plugins/reusable-app-components/skills/app-auth/SKILL.md) | Shared auth contract, Google web adapter, optional panel and QA journeys | Available after the next release |
+
+The proposed PocketBase/Go auth, mail and OpenShip standard is included as migration guidance. It is not a shipped shared backend library.
+
+Pairs naturally with `frontend-design-skills` and `qa`.
+
+</details>
+
+<details>
 <summary><strong>qa</strong> - Test real app journeys with saved sessions</summary>
 
 - Discover website, extension, Android, backend and database components.
@@ -1099,6 +1132,8 @@ Install this plugin from the marketplace after publication. For a local checkout
 | --- | --- |
 | [setup](./plugins/qa/skills/setup/SKILL.md) | Discover components and build project-specific real journeys |
 | [run-qa](./plugins/qa/skills/run-qa/SKILL.md) | Run tracked journeys and inspect evidence |
+
+Pairs naturally with `reusable-app-components`.
 
 </details>
 

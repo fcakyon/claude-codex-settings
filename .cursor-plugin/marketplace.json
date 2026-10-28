@@ -265,6 +265,13 @@
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
       "version": "1.0.1",
       "license": "Apache-2.0"
+    },
+    {
+      "name": "reusable-app-components",
+      "source": "./plugins/reusable-app-components",
+      "description": "Reuse tested app journeys with code, design and integration checks.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
     }
   ]
 }

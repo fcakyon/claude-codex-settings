@@ -1,0 +1,30 @@
+name: Test reusable app components
+
+on:
+  pull_request:
+    paths:
+      - "plugins/reusable-app-components/**"
+      - ".github/workflows/reusable-app-components.yml"
+  push:
+    branches: [main]
+    paths:
+      - "plugins/reusable-app-components/**"
+      - ".github/workflows/reusable-app-components.yml"
+
+jobs:
+  component-contracts:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: plugins/reusable-app-components
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: plugins/reusable-app-components/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npx playwright install --with-deps --only-shell chromium
+      - run: npm test
