@@ -1,0 +1,41 @@
+.app-google-sign-in {
+  display: grid;
+  gap: 0.5rem;
+  inline-size: 100%;
+  max-inline-size: 400px;
+  min-inline-size: 200px;
+  font: inherit;
+}
+
+.app-google-sign-in__button {
+  min-block-size: 44px;
+}
+
+.app-google-sign-in__button[aria-hidden="true"] {
+  visibility: hidden;
+}
+
+.app-google-sign-in > a,
+.app-google-sign-in > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  text-wrap: balance;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.app-google-sign-in > :is(a, button):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.app-google-sign-in > p { margin: 0; }
