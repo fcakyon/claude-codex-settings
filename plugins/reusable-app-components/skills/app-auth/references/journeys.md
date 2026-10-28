@@ -4,6 +4,11 @@ Use the project's tracked QA harness and saved test sessions. Capture analytics 
 
 | Starting state | Action | Observable outcome |
 | --- | --- | --- |
+| New email account | Email, password, verify | Account session, original action and automatic free access without a purchase confirmation |
+| Existing email | Try signup, select login | Same email retained without duplicate account |
+| Unverified email | Login, send code | Correct recipient, resend and retry, persisted verified session |
+| Forgotten password | Email, code, new password | In-place reset, old password rejected and new password accepted |
+| Invalid, expired or reused code | Verify | Visible retry path, no unauthorized session or reset |
 | Valid app session | Protected deep link | Original action without login |
 | Remembered Google account | Official button | Existing account session, intended action, no duplicate user |
 | Multiple Google accounts | Use another account | Old hint cleared, chooser available |
@@ -30,7 +35,7 @@ npx playwright install chromium
 npm test
 ```
 
-`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` selects an installed Chrome executable. Tests use isolated headless browsers and local HTTP fixtures. The SDK substitute is only an event source. Tests prove component rendering, navigation, transport, failure and cancellation, not Google's account selection, token verification or a target app's access policy.
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` selects an installed Chrome executable. Tests use isolated headless browsers and local HTTP fixtures. The SDK substitute is only an event source. The email fixture exercises registration, code resend/rejection, email preservation, recovery and cancellation through local HTTP adapters. Backend code security and actual mail delivery require the adopting app’s tests. Tests prove component rendering, navigation, transport, failure and cancellation, not Google's account selection, token verification or a target app's access policy.
 
 ## App acceptance
 

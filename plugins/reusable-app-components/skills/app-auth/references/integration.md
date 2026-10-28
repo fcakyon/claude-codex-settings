@@ -40,6 +40,31 @@ These function names are host adapter points, not supplied implementations. In N
 
 If the app uses a one-use nonce/challenge, the auth shell obtains a fresh one after rejection or cancellation and updates `nonce` before retrying. Keep `identity` null while that challenge is unavailable so the same-tab fallback remains usable. Report challenge-fetch errors in the auth shell and never reuse a consumed challenge.
 
+## Email adapter
+
+Copy EmailAuth.tsx and email-auth.css together, and pass localized copy and an adapter for the app’s existing routes. The supplied component supports email/password login, signup, six-digit email verification, resend and password reset. It asks for email and one password. Add fields only when the app needs them before access. Keep a visibility control rather than asking for the password twice. Set minPasswordLength to the existing backend policy rather than changing that policy from the browser.
+
+The app owns identity, code expiry, attempts, single use, sessions, account eligibility and return navigation. A single header entry such as “Get started” can open signup while the form offers “Log in”. Keep public browsing public. Ask for streaming connections, extensions or other setup at the action that needs them. Preserve invitations, terms, consent and private-app registration rules.
+
+| Adapter | Result |
+| --- | --- |
+| login | Authenticated user |
+| register | Account saved and verification email sent |
+| sendCode | New signup or reset code issued |
+| verifyEmail | Verified user with a persisted session |
+| verifyResetCode | A server-authorized recovery capability |
+| resetPassword | Password saved and authenticated user |
+
+A recovery capability can be an opaque single-use reset ticket, or the already established session if that is the app’s existing recovery contract. Never create a client-side ticket or accept email alone as reset authorization. Do not put recovery capabilities in localStorage or expose them in a URL. This component does not implement a recovery backend.
+
+Map backend failures through onFailure to safe localized text. Use reason email-exists to offer login with the entered email preserved, and verification-needed to offer a new verification code. Do not tell someone with an existing account to choose a different address. The component retains email while switching forms and clears password and code at transitions. Signup terms are supplied by the host and require a checkbox only when that host passes terms. Do not preselect consent or mix marketing permission into account terms.
+
+The adapter must use the supplied AbortSignal. Closing the component cancels its pending request and prevents stale completion. A cancellation cannot undo a server-side write that already happened. Resume from the actual session or account state on the next visit. Keep onAuthenticated in the host auth owner so email and Google paths resume the same action once. EmailAuth is a form, so do not place it inside another form. Keep the Google button as a sibling in the auth shell, rather than nesting forms.
+
+Complete recovery in place: email, code, new password, then the selected app action. Show the actual recipient, support pasting and one-time-code autofill, and keep resend and email correction available. The backend owns expiry, so do not invent a countdown or hide its expiry error behind client timing.
+
+Free access should activate through the app’s account lifecycle without a confirmation or checkout. Keep existing Stripe customer registration and zero-priced subscription bookkeeping when that is how the app grants credits. A free-plan CTA opens the app, and paid checkout still shows its actual price and renewal terms. Do not change allowances or billing ownership while editing the auth interface.
+
 ## Backend contract
 
 Map these roles to existing routes rather than adding parallel endpoints.
@@ -69,7 +94,7 @@ A valid app session bypasses login. Preserve existing email/password methods, si
 
 Keep the official Google button, an underlined same-tab fallback and an explicit account-switch control. Preserve host typography, surfaces and primary color. Use a supported button theme rather than restyling the Google iframe. Keep controls at least 44px high, focus visible, pending state announced and errors actionable. The CSS is scoped and inherits app type and color. Authorization, upgrades and action resumption belong to the action owner after login.
 
-Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app brand, title and optional description/footer. Keep modal focus trapping and dismissal in the existing modal owner. The panel is a section, not a replacement dialog. It inherits typography. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
+Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app’s real logo or icon through its ReactNode brand slot, a title and optional description/footer. Give the logo useful alt text. The fixture mark is an example asset, not a product logo. Use a task heading such as “Create your account” or “Reset your password” rather than a vague “Get started” inside a form. Keep modal focus trapping and dismissal in the existing modal owner. The panel is a section, not a replacement dialog. It inherits typography. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
 
 ## Primary references
 

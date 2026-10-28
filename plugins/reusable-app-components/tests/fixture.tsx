@@ -2,6 +2,7 @@ import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { GoogleSignIn, type GoogleIdentity } from "../skills/app-auth/assets/GoogleSignIn";
 
+import { EmailFixture } from "./email-fixture";
 import { AuthPanel } from "../skills/app-auth/assets/AuthPanel";
 
 const query = new URLSearchParams(location.search);
@@ -26,7 +27,7 @@ function Fixture() {
   const [aborted, setAborted] = useState(false);
   const turkish = query.get("lang") === "tr";
   return <main>
-    {visible ? <AuthPanel brand="Akyon Labs"
+    {visible ? <AuthPanel brand={<img src="/example-logo.svg" alt="Example app" width={48} height={48} />}
       title={turkish ? "Tekrar hoş geldin" : "Welcome back"}
       description={turkish ? "Hesabına devam et." : "Continue to your account."}
     ><GoogleSignIn
@@ -75,4 +76,4 @@ function Fixture() {
   </main>;
 }
 
-createRoot(document.getElementById("root")!).render(<StrictMode><Fixture /></StrictMode>);
+createRoot(document.getElementById("root")!).render(<StrictMode>{query.has("email") ? <EmailFixture /> : <Fixture />}</StrictMode>);

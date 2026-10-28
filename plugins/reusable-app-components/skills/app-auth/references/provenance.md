@@ -13,6 +13,8 @@ Recorded on 2026-10-28. A reference deployment does not certify every extraction
 
 Cancellation, invalid state and unsafe destinations were backend contract tests, not all real Google consent-screen journeys. No conversion or latency benchmark was performed. The extraction removes router, modal, API-client and HeroUI dependencies and adds operation cancellation. Validate each app integration before marking it deployed.
 
+The email/password component is an extraction with local HTTP fixture evidence. Its MuviSafe integration is a separate local candidate until that app is released. The email-design skill supplies a shared layout and review workflow, not a new delivery provider.
+
 The server reference uses `tokeninfo`. That is provenance, not a recommendation for new production verifiers. Follow the production-library guidance in the integration contract.
 
 | App | Inspected starting point | Pending work |

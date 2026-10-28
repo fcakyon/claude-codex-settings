@@ -11,6 +11,7 @@ import { chromium } from 'playwright';
 const root = path.dirname(path.dirname(new URL(import.meta.url).pathname));
 let browser, server, origin, temporary, ssr;
 const submissions = [];
+const accounts = new Map();
 let pendingStarted, pendingClosed;
 
 before(async () => {
@@ -29,7 +30,28 @@ before(async () => {
   ssr = createRequire(import.meta.url)(path.join(temporary, 'ssr.cjs')).html;
   server = createServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
-    if (url.pathname === '/session') {
+    if (url.pathname.startsWith('/email/')) {
+      let raw = ''; for await (const chunk of request) raw += chunk;
+      const input = JSON.parse(raw);
+      if(url.searchParams.has('email-delay')){ pendingStarted(); response.on('close',()=>pendingClosed()); return; }
+      let result = {}, status = 200;
+      const account = accounts.get(input.email);
+      if(url.pathname==='/email/register'){
+        if(account){ status=409;result={reason:'email-exists'}; }
+        else accounts.set(input.email,{password:input.password,verified:false,code:'123456'});
+      }else if(url.pathname==='/email/send-code'){ account.code='654321'; }
+      else if(url.pathname==='/email/verify'||url.pathname==='/email/verify-reset'){
+        if(input.code!==account.code){status=400;}
+        else{account.code='';account.verified=true;result=url.pathname.endsWith('verify-reset')?{ticket:input.email}:{email:input.email};}
+      }else if(url.pathname==='/email/reset'){
+        const saved=accounts.get(input.recovery.ticket);saved.password=input.password;result={email:input.recovery.ticket};
+      }else if(url.pathname==='/email/login'){
+        if(!account||account.password!==input.password){status=401;}
+        else if(!account.verified){status=403;result={reason:'verification-needed'};}
+        else result={email:input.email};
+      }
+      response.writeHead(status,{'Content-Type':'application/json'});response.end(JSON.stringify(result));
+    } else if (url.pathname === '/session') {
       let body = ''; for await (const chunk of request) body += chunk;
       submissions.push(JSON.parse(body));
       if (url.searchParams.has('delay')) {
@@ -44,6 +66,9 @@ before(async () => {
       response.writeHead(302, {Location: '/provider?' + url.searchParams}); response.end();
     } else if (url.pathname === '/provider') {
       response.end('Local provider fixture');
+    } else if (url.pathname === '/example-logo.svg') {
+      response.setHeader('Content-Type', 'image/svg+xml');
+      response.end(await readFile(path.join(root, 'tests/example-logo.svg')));
     } else if (url.pathname === '/fixture.js' || url.pathname === '/fixture.css') {
       response.setHeader('Content-Type', url.pathname.endsWith('.js') ? 'text/javascript' : 'text/css');
       response.end(await readFile(path.join(temporary, url.pathname.slice(1))));
@@ -153,6 +178,67 @@ for (const [locale, width] of [['en', 1365], ['tr', 390]]) test(`${locale} at ${
       await mkdir(process.env.COMPONENT_SCREENSHOT_DIR, {recursive: true});
       await page.getByText('Test controls', {exact: true}).click();
       await page.screenshot({path: path.join(process.env.COMPONENT_SCREENSHOT_DIR, `${locale}-${width}.png`)});
+      await page.locator(".app-auth-panel").screenshot({path:path.join(process.env.COMPONENT_SCREENSHOT_DIR,`google-${locale}-${width}-panel.png`)});
+      if(locale === "en"){await page.setViewportSize({width:390,height:844});await page.locator(".app-auth-panel").screenshot({path:path.join(process.env.COMPONENT_SCREENSHOT_DIR,"google-en-390-panel.png")});}
     }
   } finally { await page.close(); }
+});
+
+for(const locale of ['en','tr'])test('email signup, existing-email login and recovery in '+locale,async()=>{
+  const page=await browser.newPage({viewport:{width:390,height:844}});
+  const email='viewer-'+locale+'@example.test'; const tr=locale==='tr';
+  try{
+    await page.goto(origin+'/?email=1&mode=signup&lang='+locale);
+    const form=page.locator('.app-email-auth');
+    assert.equal(await form.locator('input:not([type=checkbox])').count(),2);
+    if(process.env.COMPONENT_SCREENSHOT_DIR){await mkdir(process.env.COMPONENT_SCREENSHOT_DIR,{recursive:true});await page.locator('.app-auth-panel').screenshot({path:path.join(process.env.COMPONENT_SCREENSHOT_DIR,`email-${locale}-390-panel.png`)});}
+    await form.getByLabel(tr?'E-posta':'Email',{exact:true}).fill(email);
+    await form.getByLabel(tr?'Şifre':'Password',{exact:true}).fill('first-password');
+    await form.getByRole('button',{name:tr?'Göster':'Show',exact:true}).click();
+    assert.equal(await form.locator('input[name=password]').getAttribute('type'),'text');
+    await form.getByRole('checkbox').check();
+    await form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true}).click();
+    await form.getByRole('heading',{name:tr?'E-postanı kontrol et':'Check your email'}).waitFor();
+    await form.getByLabel(tr?'Kod':'Code',{exact:true}).fill('000000');
+    await form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true}).click();
+    await form.getByRole('alert').waitFor();
+    await form.getByRole('button',{name:tr?'Yeni kod gönder':'Send a new code',exact:true}).click();
+    await form.getByLabel(tr?'Kod':'Code',{exact:true}).fill('654321');
+    await form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true}).click();
+    await page.getByText('Signed in as '+email,{exact:true}).waitFor();
+    await page.reload();
+    await form.getByLabel(tr?'E-posta':'Email',{exact:true}).fill(email);
+    await form.getByLabel(tr?'Şifre':'Password',{exact:true}).fill('first-password');
+    await form.getByRole('checkbox').check();
+    await form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true}).click();
+    await form.getByRole('alert').waitFor();
+    await form.getByRole('button',{name:tr?'Giriş yap':'Log in',exact:true}).click();
+    assert.equal(await form.locator('input[type=email]').inputValue(),email);
+    await form.getByRole('button',{name:tr?'Şifremi unuttum?':'Forgot password?',exact:true}).click();
+    assert.equal(await form.locator('input[type=email]').inputValue(),email);
+    await form.getByRole('button',{name:tr?'Kod gönder':'Send code',exact:true}).click();
+    await form.getByLabel(tr?'Kod':'Code',{exact:true}).fill('654321');
+    await form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true}).click();
+    await form.getByLabel(tr?'Yeni şifre':'New password',{exact:true}).fill('new-password');
+    await form.getByRole('button',{name:tr?'Şifreyi kaydet':'Save password',exact:true}).click();
+    await page.getByText('Signed in as '+email,{exact:true}).waitFor();
+    assert.equal(accounts.get(email).password,'new-password');
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true);
+  }finally{await page.close()}
+});
+
+test('closing a pending email request cancels it without a stale completion',async()=>{
+  const page=await browser.newPage();const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  try{
+    await page.goto(origin+'/?email=1&email-delay=1');
+    await page.getByLabel('Email',{exact:true}).fill('cancel@example.test');
+    await page.getByLabel('Password',{exact:true}).fill('some-password');
+    const started=new Promise(resolve=>{pendingStarted=resolve});const closed=new Promise(resolve=>{pendingClosed=resolve});
+    await page.getByRole('button',{name:'Log in',exact:true}).click();await started;
+    await page.getByRole('button',{name:'Close email form',exact:true}).click();await closed;
+    await page.getByRole('button',{name:'Open email form',exact:true}).click();
+    assert.equal(await page.getByRole('button',{name:'Log in',exact:true}).isEnabled(),true);
+    assert.equal(await page.getByText('Signed out',{exact:true}).isVisible(),true);
+    assert.deepEqual(errors,[]);
+  }finally{await page.close()}
 });
