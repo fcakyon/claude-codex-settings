@@ -2,7 +2,7 @@
 
 ## Dependencies and adapters
 
-The component needs React and React DOM 19.2+ for `useEffectEvent`. It has no Next.js, HeroUI, PocketBase or routing dependency. Copy the TSX and CSS together. The optional AuthPanel and its CSS provide a Muvisafe-inspired dark panel without coupling auth to a design system. The plugin package.json is for validating the extraction, not for installation in every deployed app.
+The component needs React and React DOM 19.2+ for `useEffectEvent`. It has no Next.js, HeroUI, PocketBase or routing dependency. Copy the TSX and CSS together. The optional AuthPanel and its CSS provide spacing and type without a default card surface, outline or shadow. The plugin package.json is for validating the extraction, not for installation in every deployed app.
 
 Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `google.accounts.id` as `identity` when ready, or null while unavailable. Supply the public client ID from existing public configuration or server rendering, outside credential-attempt rate limits. Mount only the active login/signup surface because GIS initialization is global to the page.
 
@@ -94,7 +94,7 @@ A valid app session bypasses login. Preserve existing email/password methods, si
 
 Keep the official Google button, an underlined same-tab fallback and an explicit account-switch control. Preserve host typography, surfaces and primary color. Use a supported button theme rather than restyling the Google iframe. Keep controls at least 44px high, focus visible, pending state announced and errors actionable. The CSS is scoped and inherits app type and color. Authorization, upgrades and action resumption belong to the action owner after login.
 
-Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app’s real logo or icon through its ReactNode brand slot, a title and optional description/footer. Give the logo useful alt text. The fixture mark is an example asset, not a product logo. Use a task heading such as “Create your account” or “Reset your password” rather than a vague “Get started” inside a form. Keep modal focus trapping and dismissal in the existing modal owner. The panel is a section, not a replacement dialog. It inherits typography. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
+Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app’s real logo or icon through its ReactNode brand slot, a title and optional description/footer. Give the logo useful alt text. The fixture mark is an example asset, not a product logo. Use a task heading such as “Create your account” or “Reset your password” rather than a vague “Get started” inside a form. Keep modal focus trapping and dismissal in the existing modal owner. The panel is a section, not a replacement dialog. It inherits typography and leaves decorative chrome to the host. Use brand color for the actual logo, links, actions and focus feedback. Avoid accent stripes, generic card shadows and ornamental labels. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
 
 ## Primary references
 
