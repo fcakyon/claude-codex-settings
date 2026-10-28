@@ -1,6 +1,6 @@
 {
   "name": "qa",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Test real app journeys with saved sessions and clear failure evidence.",
   "author": {
     "name": "Fatih C. Akyon"

@@ -36,6 +36,7 @@ Use the browser tools available and permitted in the current environment. When u
 ## Language, layout, and feedback
 
 - Test every in-scope screen in each supported locale, including transient labels and errors. Check language detection/fallback, localized destinations, natural copy, and mixed-language strings.
+- For names, titles and identifiers affected by casing, verify rendered spelling under the page/content language, not only the browser locale. Exercise `i`, `I`, `İ` and `ı` when Turkish is supported. Compare the expected display value with browser `innerText` and inspect a screenshot: `textContent` alone misses CSS casing. Keep legitimate language-specific casing for translated UI labels.
 - Choose narrow, medium, and wide dimensions appropriate to the surface, including actual popup dimensions for extensions. Inspect wrapping, overflow, scroll access, and long labels.
 - Wait for relevant images to decode before screenshots, then open and inspect the captures, including focused crops. Compare layout, spacing, typography, colors and brand artwork at normal size and high display density when affected. A saved screenshot or successful image request alone is insufficient visual evidence.
 - For logos/icons, prefer genuine vector artwork when available and inspect SVGs for embedded bitmaps. For raster assets, compare intrinsic dimensions with rendered CSS size × device pixel ratio; inspect sharpness, proportions and crop. This does not require converting photos or posters to SVG.

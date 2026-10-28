@@ -1,5 +1,5 @@
 {
   "name": "agent-browser",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Drive browsers and Electron apps, run UI QA, and turn websites into API clients."
 }
