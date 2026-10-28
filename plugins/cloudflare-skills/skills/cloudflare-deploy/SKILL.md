@@ -150,3 +150,7 @@ Prefer [Workers Cache](https://developers.cloudflare.com/workers/cache/index.md)
 
 Cloudflare documentation: <https://developers.cloudflare.com/llms.txt>
 Cloudflare changelog: <https://developers.cloudflare.com/changelog/index.md>
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).

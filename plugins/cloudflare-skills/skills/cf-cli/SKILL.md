@@ -88,3 +88,7 @@ For Wrangler equivalents, use the [Wrangler to cf reference](https://developers.
 - A single secret: `npx wrangler secret put <SECRET_NAME> --name <WORKER_NAME>`. Or upload secrets with a new Worker version by passing `--secrets-file <PATH>` to `cf deploy` or `cf workers versions create`.
 
 For the current list, refer to "Commands not yet supported" in the [Wrangler to cf reference](https://developers.cloudflare.com/cf/wrangler/reference/index.md).
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).

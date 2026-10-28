@@ -447,11 +447,11 @@ Propagates `version` everywhere and `license` everywhere except `gemini-extensio
 bash .github/scripts/release.sh <version>
 ```
 
-Updates marketplace version, regenerates all skill zips, uploads them as release assets, generates release notes from README + auto-changelog.
+Packages every skill from the committed `HEAD` in a temporary Git snapshot, verifies each ZIP against its source, and publishes the assets with a tag targeting that commit. Release notes use the committed README and auto-changelog. Use `--dry-run` to package and verify without publishing.
 
-**Pre-flight**: run `bash .github/scripts/sync-versions.sh` and every `sync-*-skills.sh` manually first. `release.sh` re-runs them, but if any has broken on an upstream restructure the release will ship a stale or empty plugin. Surface those breakages BEFORE tagging.
+**Pre-flight**: run every `sync-*-skills.sh`, bump changed plugin versions, and run `bash .github/scripts/sync-versions.sh`. Resolve upstream path failures and validate the plugins before committing. The release command packages committed files without fetching upstream content or changing the checkout.
 
-**Versioning**: bump `metadata.version` in `.claude-plugin/marketplace.json` yourself, run `sync-versions.sh` to propagate it, and commit that before releasing. `release.sh <version>` only checks the committed value matches and stops if it does not, because `gh release create` tags the pushed branch and never sees a local edit. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
+**Versioning**: bump `metadata.version` in `.claude-plugin/marketplace.json`, run `sync-versions.sh` to propagate it, then commit, merge, and check out the release commit before running `release.sh <version>`. The command requires the committed version to match. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
 
 **README zip URLs**: existing zip badges use `releases/latest/download/<skill>.zip` and auto-resolve to the new tag. Do NOT manually bump these URLs after release. New skills introduced in the release need new badge rows added via `/claude-tools:update-readme`.
 

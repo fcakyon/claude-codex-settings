@@ -70,3 +70,7 @@ For deployment changes, use the project's build workflow and `wrangler deploy --
 For Previews, a returned URL does not validate behavior that depends on bindings Wrangler reports as missing. Validate the behavior the user requested, using Preview-specific logs and configuration when needed. Writes to production resources, destructive testing, and deletion of named Previews must match the user's explicit intent.
 
 Report what changed, the target environment, checks performed, and any unresolved validation gaps. Link the documentation used when the result depends on current command or configuration behavior.
+
+## Skill feedback
+
+If the user reports that this skill gave incorrect or outdated guidance, or is missing information, read [references/skill-feedback.md](references/skill-feedback.md).

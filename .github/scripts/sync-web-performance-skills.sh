@@ -5,7 +5,7 @@ source "$(dirname "$0")/_helpers.sh"
 clone_or_update https://github.com/cloudflare/skills cloudflare-skills
 SRC="$HOME/dev/cloudflare-skills/skills"
 
-sync_dir "$SRC/web-perf" "plugins/web-performance-skills/skills/web-performance-optimization" "SKILL.md"
+sync_dir "$SRC/web-perf" "plugins/web-performance-skills/skills/web-performance-optimization" "SKILL.md" "references/"
 sed -i '' 's/^name: web-perf$/name: web-performance-optimization/' \
   "$REPO_ROOT/plugins/web-performance-skills/skills/web-performance-optimization/SKILL.md"
 
