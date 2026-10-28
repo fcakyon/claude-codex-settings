@@ -14,11 +14,13 @@ You are improving the quality of the changed code, not hunting for bugs. Review 
 If the user explicitly asks to commit while skipping simplify, skip the review phases below:
 
 1. State that simplify will be skipped for one commit and normal Git hooks will still run.
-2. Resolve the worktree you will commit in with `git -C '<worktree>' rev-parse --show-toplevel`, then run this exact command with that absolute path:
+2. Resolve the worktree you will commit in with `git -C '<worktree>' rev-parse --show-toplevel`. In a separate shell invocation, run this exact command by itself with that absolute path:
 
 ```bash
 echo simplify-guard:bypass '/absolute/path/to/worktree'
 ```
+
+The hook recognizes only the standalone `echo` signal. Run `git commit` in a later invocation. The marker is tied to that worktree and is consumed by one commit attempt.
 
 3. Commit normally without `--no-verify`.
 
@@ -54,12 +56,12 @@ Wait for all four agents to complete, dedup findings that point at the same line
 
 ## Phase 3: Mark completion
 
-After all accepted fixes are applied, resolve the reviewed worktree with `git -C '<reviewed-worktree>' rev-parse --show-toplevel`, then put that absolute path in this command:
+After all accepted fixes are applied, resolve the reviewed worktree with `git -C '<reviewed-worktree>' rev-parse --show-toplevel`. In a separate shell invocation, run this exact command by itself with that absolute path:
 
 ```bash
 echo simplify-guard:complete '/absolute/path/to/reviewed/worktree'
 ```
 
-This lets the bundled guard record completion against the reviewed worktree even when the session started elsewhere. Do not run it before the review and cleanup phases finish.
+This lets the bundled guard record completion against the reviewed worktree even when the session started elsewhere. The hook recognizes only the standalone `echo` signal. Run the commit in a later invocation. The marker is one-use and belongs to the worktree's Git directory. If a commit attempt is denied, verify the review is still current and send the standalone completion command again before retrying.
 
 Finish with a brief summary of what was fixed and what was skipped (or confirm the code was already clean).
