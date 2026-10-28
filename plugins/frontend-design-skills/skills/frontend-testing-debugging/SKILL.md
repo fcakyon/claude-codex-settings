@@ -24,6 +24,8 @@ For rendered validation, use the installed `ui-regression` skill when available.
 
 Without that skill, inspect desktop/mobile screenshots after media loads, exercise typed and cleared inputs, check contrast and asset sharpness at the target display density, and verify the intended surrounding layout across search results and empty states. Keep reference comparisons at matching state and viewport. Mark uninspected visuals as unverified.
 
+When text changes unexpectedly between locales or screens, trace the source value through translation, formatting, Unicode normalization, JavaScript casing and CSS to the rendered result. Inspect inherited `lang`, text direction, font coverage and clipping where relevant. Distinguish translated interface copy from names, titles and identifiers whose spelling must survive presentation. Fix the owning transformation or layout rule instead of replacing individual characters, stripping accents, or forcing the whole page to one language. Use the actual content language for intentional transformations and locale formatting.
+
 Make the smallest relevant edit, reload or rebuild as needed, and repeat the original failing interaction. Rerun affected project journeys. A passing build or root-page screenshot does not prove the interaction works.
 
 Move repeatable discoveries into the existing tracked QA or e2e suite, with assertions on user-visible outcomes. Reuse its helpers instead of adding a second browser/session runner. When the QA plugin is available but the project has no suite, use `qa:setup` if creating repeatable coverage is within the task. Keep one-off diagnostic scripts and generated evidence outside Git.
