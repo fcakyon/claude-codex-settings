@@ -2,6 +2,7 @@ import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { GoogleSignIn, type GoogleIdentity } from "../skills/app-auth/assets/GoogleSignIn";
 
+import { EmailFixture } from "./email-fixture";
 import { AuthPanel } from "../skills/app-auth/assets/AuthPanel";
 
 const query = new URLSearchParams(location.search);
@@ -75,4 +76,4 @@ function Fixture() {
   </main>;
 }
 
-createRoot(document.getElementById("root")!).render(<StrictMode><Fixture /></StrictMode>);
+createRoot(document.getElementById("root")!).render(<StrictMode>{query.has("email") ? <EmailFixture /> : <Fixture />}</StrictMode>);

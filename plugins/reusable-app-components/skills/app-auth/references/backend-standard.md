@@ -14,7 +14,7 @@ PocketBase is pre-1.0 with no full backward-compatibility guarantee. Pin version
 | Migrations, health checks and backup verification | Collections, domain tables, indexes, buckets and retention |
 | Build/deployment conventions | Project IDs, domains, ports, volumes, workers and resource sizes |
 
-Use PocketBase's mail client and SMTP configuration for auth email instead of duplicating transports in Next and Go. Confirm sender verification and SPF/DKIM/DMARC. Keep marketing consent separate. Share implementation without silently sharing credentials or introducing one cross-app mail queue.
+Use PocketBase's mail client and SMTP configuration for auth email instead of duplicating transports in Next and Go. Confirm sender verification and SPF/DKIM/DMARC. Use [email-design](../../email-design/SKILL.md) for the shared HTML/text theme while preserving app-specific wording, links and sender settings. Keep marketing consent separate. Share implementation without silently sharing credentials or introducing one cross-app mail queue.
 
 Use the [common opaque-session contract](platforms.md#sessions) across clients. Browsers carry the session in HttpOnly, Secure cookies. Logout deletes the server session before clearing its cookie. This needs no Redis or browser refresh-token store.
 

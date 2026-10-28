@@ -1100,7 +1100,7 @@ References are tied to one upstream release. The two skills work together and ca
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/reusable-app-components --skill '*'
 ```
 
-Reuse an app journey together with its code, integration rules and proof of behavior. The first recipe covers Google login:
+Reuse an app journey together with its code, integration rules and proof of behavior. The auth recipe covers email and Google login:
 
 - Keep returning-account sign-in and a same-tab fallback when popups or the Google script are unavailable.
 - Resume the original action while preserving the app's sessions, roles and signup policy.
@@ -1110,7 +1110,10 @@ Reuse an app journey together with its code, integration rules and proof of beha
 
 | Skill | Purpose | ZIP |
 | --- | --- | --- |
-| [app-auth](./plugins/reusable-app-components/skills/app-auth/SKILL.md) | Shared auth contract, Google web adapter, optional panel and QA journeys | Available after the next release |
+| [app-auth](./plugins/reusable-app-components/skills/app-auth/SKILL.md) | Email signup, verification and recovery, Google login, shared panel and QA journeys | Available after the next release |
+| [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) | Brand themes, transactional copy, HTML and text layouts, and inbox checks | Available after the next release |
+
+Use [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) to theme verification, reset, billing and notification emails with the app’s existing mail service. The layout keeps brand colors and wording separate and includes text alternatives and preview checks.
 
 The proposed PocketBase/Go auth, mail and OpenShip standard is included as migration guidance. It is not a shipped shared backend library.
 
