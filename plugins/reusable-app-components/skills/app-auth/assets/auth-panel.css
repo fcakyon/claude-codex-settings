@@ -3,9 +3,11 @@
   inline-size: 100%;
   max-inline-size: 440px;
   padding: clamp(24px, 5vw, 36px);
-  border-radius: var(--auth-radius, 0);
-  background: var(--auth-surface, transparent);
+  border: 1px solid var(--auth-border, #303039);
+  border-radius: var(--auth-radius, 24px);
+  background: var(--auth-surface, #15151c);
   color: var(--auth-text, #f5f5f7);
+  box-shadow: 0 24px 80px #0003;
   font: inherit;
 }
 

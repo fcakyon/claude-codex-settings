@@ -6,14 +6,14 @@
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" bgcolor="{{page_color}}"><tr><td align="center" style="padding:32px 16px">
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px">
 <tr><td style="padding-bottom:24px;font-size:24px;font-weight:700;color:{{text_color}}">{{brand_name}}</td></tr>
-<tr><td style="padding:8px 0">
+<tr><td bgcolor="{{surface_color}}" style="padding:32px 24px;border-radius:12px">
 <h1 style="margin:0 0 16px;font-size:28px;line-height:1.2;color:{{text_color}}">{{heading}}</h1>
 <p style="margin:0;font-size:16px;line-height:1.6;color:{{text_color}}">{{body}}</p>
 <!-- Keep the code block for code-entry emails, or the action block for link-based emails. -->
-<p style="margin:24px 0;color:{{text_color}};font-size:32px;font-weight:700;letter-spacing:4px">{{code}}</p>
+<p style="padding:20px 8px;text-align:center;background-color:{{accent_color}};color:{{action_text_color}};font-size:32px;font-weight:700;letter-spacing:6px">{{code}}</p>
 <table role="presentation" cellspacing="0" cellpadding="0" style="margin-top:24px"><tr><td bgcolor="{{accent_color}}" style="border-radius:8px"><a href="{{action_url}}" style="display:inline-block;padding:16px 24px;font-size:16px;font-weight:700;color:{{action_text_color}};text-decoration:none">{{action_label}}</a></td></tr></table>
 <p style="margin:24px 0 0;font-size:14px;line-height:1.6;color:{{muted_color}}">{{note}}</p>
 </td></tr>
-<tr><td style="padding-top:24px;font-size:13px;line-height:1.6;color:{{muted_color}}"><a href="mailto:{{support_email}}" style="color:{{link_color}};text-decoration:underline">{{support_email}}</a></td></tr>
+<tr><td style="padding-top:24px;font-size:13px;line-height:1.6;color:{{muted_color}}">{{brand_name}} · <a href="mailto:{{support_email}}" style="color:{{link_color}};text-decoration:underline">{{support_email}}</a></td></tr>
 </table></td></tr></table>
 </body></html>

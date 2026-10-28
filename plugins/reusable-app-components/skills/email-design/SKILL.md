@@ -11,7 +11,7 @@ Make the email help someone finish the action they started in the app. Preserve 
 
 Trace each requested event from the app action to its template and sending client. Check locales, HTML and text parts, provider-managed templates, sender, reply address, expiry and destination handling. Keep tokens, addresses and captured messages private. Find the shared layout before adding another renderer. Do not replace a working delivery service to change its design.
 
-Read the app’s visible theme and copy. Choose brand name, approved logo, page background, body and muted text, primary action and its text color, font stack and support address. Put these in one theme or layout, with message wording separate. Keep per-message content limited to subject, preview, heading, body, code or primary action, and necessary context. Use the app’s locale and runtime formatting for amounts and dates.
+Read the app’s visible theme and copy. Choose brand name, approved logo, page and surface backgrounds, body and muted text, primary action and its text color, font stack, corner radius and support address. Put these in one theme or layout, with message wording separate. Keep per-message content limited to subject, preview, heading, body, code or primary action, and necessary context. Use the app’s locale and runtime formatting for amounts and dates.
 
 ## Design around the action
 
@@ -22,11 +22,13 @@ Read the app’s visible theme and copy. Choose brand name, approved logo, page 
 
 Use one main action. A code-entry email needs a readable code, rather than a competing button. Write direct headings such as “Verify your email” and “Reset your password”. Cut greetings, registration ceremony, congratulations and technical pipeline details when they do not help the next step.
 
+Remove accent rules, colored top edges and similar lines added only as decoration. Keep useful card surfaces, rounded corners, code highlights, brand color and spacing. Make the requested cleanup without flattening the surrounding design.
+
 ## Build for email readers
 
 Adapt [the layout asset](assets/email.html) to the app’s existing template engine. Its placeholder names describe content slots, not a required runtime. Replace its example theme with the app’s tokens. Keep action or code sections only when needed. Use the server’s escaping template engine for all dynamic text and validate action destinations where they are created. Never accept raw HTML from form fields or interpolate account data into markup.
 
-Use a fluid single column up to 560 px, presentation tables and inline CSS for essential layout. Include explicit foreground and background colors. Use spacing and type to group content. Omit decorative accent stripes, gradients, shadows, repeated brand footers and rounded card shells. Reserve accent color for the actual brand, links and actions. Verification codes are selectable text, not button-shaped color blocks. Keep a card surface or border only when the app’s existing design needs that separation. Use system font fallbacks, readable body text, large tap targets and underlined text links. Images need absolute HTTPS URLs and useful alt text. Keep the message usable with remote images blocked, styles stripped or a screen reader. Use semantic headings and a logical reading order. Do not depend on JavaScript, web fonts, flexbox, SVG or background images for essential content.
+Use a fluid single column up to 560 px, presentation tables and inline CSS for essential layout. Include explicit foreground and background colors. Treat rounded corners as decoration. Use system font fallbacks, readable body text, large tap targets and underlined text links. Images need absolute HTTPS URLs and useful alt text. Keep the message usable with remote images blocked, styles stripped or a screen reader. Use semantic headings and a logical reading order. Do not depend on JavaScript, web fonts, flexbox, SVG or background images for essential content.
 
 Send a matching plain-text part with the same action, code, expiry and required context. Keep secrets out of tracking URLs and do not add open tracking to account emails by default. Reuse verified sender and reply settings. Do not change DNS or delivery credentials as part of visual work.
 
