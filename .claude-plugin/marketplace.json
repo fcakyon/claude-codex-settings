@@ -560,7 +560,7 @@
       "name": "reusable-app-components",
       "source": "./plugins/reusable-app-components",
       "description": "Reuse tested app journeys with code, design and integration checks.",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "license": "Apache-2.0",
       "keywords": [
         "components",

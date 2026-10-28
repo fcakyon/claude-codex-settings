@@ -22,6 +22,8 @@ Read the app’s visible theme and copy. Choose brand name, approved logo, page 
 
 Use one main action. A code-entry email needs a readable code, rather than a competing button. Write direct headings such as “Verify your email” and “Reset your password”. Cut greetings, registration ceremony, congratulations and technical pipeline details when they do not help the next step.
 
+Remove accent rules, colored top edges and similar lines added only as decoration. Keep useful card surfaces, rounded corners, code highlights, brand color and spacing. Make the requested cleanup without flattening the surrounding design.
+
 ## Build for email readers
 
 Adapt [the layout asset](assets/email.html) to the app’s existing template engine. Its placeholder names describe content slots, not a required runtime. Replace its example theme with the app’s tokens. Keep action or code sections only when needed. Use the server’s escaping template engine for all dynamic text and validate action destinations where they are created. Never accept raw HTML from form fields or interpolate account data into markup.
