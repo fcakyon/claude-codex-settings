@@ -8,7 +8,7 @@ import "../skills/app-auth/assets/auth-panel.css";
 const english: EmailAuthCopy = {
   titles: {
     login: "Welcome back",
-    signup: "Get started",
+    signup: "Create your account",
     forgot: "Reset your password",
     verify: "Check your email",
     password: "Choose a new password",
@@ -33,7 +33,7 @@ const english: EmailAuthCopy = {
 const turkish: EmailAuthCopy = {
   titles: {
     login: "Tekrar hoş geldin",
-    signup: "Başla",
+    signup: "Hesabını oluştur",
     forgot: "Şifreni sıfırla",
     verify: "E-postanı kontrol et",
     password: "Yeni şifreni seç",
@@ -78,7 +78,7 @@ export function EmailFixture() {
     <main>
       {visible && !user ? (
         <section className="app-auth-panel">
-          <div className="app-auth-panel__brand">Akyon Labs</div>
+          <div className="app-auth-panel__brand"><img src="/example-logo.svg" alt="Example app" width={48} height={48} /></div>
           <EmailAuth<{ email: string }, { ticket: string }>
             initialMode={query.get("mode") === "signup" ? "signup" : "login"}
             copy={query.get("lang") === "tr" ? turkish : english}

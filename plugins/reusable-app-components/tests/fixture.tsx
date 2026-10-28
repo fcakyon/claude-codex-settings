@@ -27,7 +27,7 @@ function Fixture() {
   const [aborted, setAborted] = useState(false);
   const turkish = query.get("lang") === "tr";
   return <main>
-    {visible ? <AuthPanel brand="Akyon Labs"
+    {visible ? <AuthPanel brand={<img src="/example-logo.svg" alt="Example app" width={48} height={48} />}
       title={turkish ? "Tekrar hoş geldin" : "Welcome back"}
       description={turkish ? "Hesabına devam et." : "Continue to your account."}
     ><GoogleSignIn

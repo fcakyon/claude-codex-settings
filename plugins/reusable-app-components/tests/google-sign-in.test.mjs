@@ -66,6 +66,9 @@ before(async () => {
       response.writeHead(302, {Location: '/provider?' + url.searchParams}); response.end();
     } else if (url.pathname === '/provider') {
       response.end('Local provider fixture');
+    } else if (url.pathname === '/example-logo.svg') {
+      response.setHeader('Content-Type', 'image/svg+xml');
+      response.end(await readFile(path.join(root, 'tests/example-logo.svg')));
     } else if (url.pathname === '/fixture.js' || url.pathname === '/fixture.css') {
       response.setHeader('Content-Type', url.pathname.endsWith('.js') ? 'text/javascript' : 'text/css');
       response.end(await readFile(path.join(temporary, url.pathname.slice(1))));
@@ -176,6 +179,7 @@ for (const [locale, width] of [['en', 1365], ['tr', 390]]) test(`${locale} at ${
       await page.getByText('Test controls', {exact: true}).click();
       await page.screenshot({path: path.join(process.env.COMPONENT_SCREENSHOT_DIR, `${locale}-${width}.png`)});
       await page.locator(".app-auth-panel").screenshot({path:path.join(process.env.COMPONENT_SCREENSHOT_DIR,`google-${locale}-${width}-panel.png`)});
+      if(locale === "en"){await page.setViewportSize({width:390,height:844});await page.locator(".app-auth-panel").screenshot({path:path.join(process.env.COMPONENT_SCREENSHOT_DIR,"google-en-390-panel.png")});}
     }
   } finally { await page.close(); }
 });
