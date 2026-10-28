@@ -779,6 +779,7 @@ Git and GitHub automation. Run the `setup` skill after install.
 **Skills:**
 
 - [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes and write the message
+- [`create-issue`](./plugins/github-dev/skills/create-issue/SKILL.md) - Create or revise a concise problem report
 - [`create-pr`](./plugins/github-dev/skills/create-pr/SKILL.md) - Create a pull request from the full branch diff
 - [`review-pr`](./plugins/github-dev/skills/review-pr/SKILL.md) - Review a pull request for bugs and regressions
 - [`resolve-pr-comments`](./plugins/github-dev/skills/resolve-pr-comments/SKILL.md) - Address unresolved PR review comments
