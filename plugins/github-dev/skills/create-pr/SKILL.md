@@ -9,6 +9,9 @@ Create a PR a reviewer can understand without reading the conversation. Use extr
 text and session findings to explain the problem, final behavior, and evidence. Follow the
 user's requested format and the target repo's guidance.
 
+These rules apply to pull requests. For problem-focused issue titles and structured
+issue reports, use [create-issue](../create-issue/SKILL.md).
+
 ## Workflow
 
 1. **Inspect the scope and base**
@@ -43,7 +46,7 @@ user's requested format and the target repo's guidance.
 
 ## Title and body
 
-- Title: start with a capitalized verb and name the concrete behavior, such as
+- PR title: start with a capitalized verb and name the concrete behavior, such as
   `Fix copied session text losing line breaks`. No type prefix, internal brand names, or
   vague claims. Rewrite the title and body when the final scope changes.
 - Lead with the trigger and consequence: when does the bug happen, what goes wrong, and why
