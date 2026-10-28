@@ -3,6 +3,18 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
+      "name": "aeo",
+      "version": "1.0.1",
+      "description": "Turn buyer questions and AI citations into content that wins customers.",
+      "author": {
+        "name": "Fatih C. Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "source": "./plugins/aeo"
+    },
+    {
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",

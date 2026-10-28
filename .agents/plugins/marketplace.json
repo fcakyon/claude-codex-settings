@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "aeo",
+      "source": {
+        "source": "local",
+        "path": "./plugins/aeo"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "marketing"
+    },
+    {
       "name": "simplify",
       "source": {
         "source": "local",

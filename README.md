@@ -997,6 +997,36 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 </details>
 
 <details>
+<summary><strong>aeo</strong> - Turn buyer questions and AI citations into content that wins customers</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install aeo@claude-settings` | `codex plugin add aeo@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/aeo` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/aeo --skill '*'
+```
+
+Help people who have not heard of your product discover it through answer engine optimization (AEO).
+
+- Map acquisition questions by audience, buying stage, use case, market, and language, without naming your product.
+- Check content access and inspect the sources AI answers cite before choosing what to fix or publish.
+- Prioritize channels using customer evidence and keep prompt coverage within budget.
+- Measure unprompted discovery and customer outcomes, keeping branded accuracy checks separate.
+
+Use it for a strategy, audit, prompt portfolio, content brief, or performance review.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| --- | --- | --- |
+| [`aeo`](./plugins/aeo/skills/aeo/SKILL.md) | Evidence-led AI search strategy for any product | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/aeo.zip) |
+
+</details>
+
+<details>
 <summary><strong>seo-skills</strong> - Audit search visibility, structured data, and site architecture</summary>
 
 | Claude Code                                        | Codex CLI                                     | Gemini CLI                                              |
