@@ -29,9 +29,11 @@ sed -i '' \
   's/Run `validate_schema` on any block before you hand it over\./From this skill directory, run `node scripts\/validate_schema.mjs <jsonld-file>` on any block before you hand it over./' \
   "$SCHEMA_DIR/SKILL.md"
 
-mkdir -p "$SCHEMA_DIR/scripts"
-cp "$REPO_ROOT/.github/scripts/seo-skills/validate_schema.mjs" "$SCHEMA_DIR/scripts/"
-chmod +x "$SCHEMA_DIR/scripts/validate_schema.mjs"
+for script in schema/validate_schema.mjs seo-audit/check_llms_txt.mjs; do
+  dir="$REPO_ROOT/plugins/seo-skills/skills/${script%/*}/scripts"
+  mkdir -p "$dir"
+  install -m 755 "$REPO_ROOT/.github/scripts/seo-skills/${script#*/}" "$dir/"
+done
 
 # Insert local field notes ahead of each skill's References or Sources section.
 for notes in "$REPO_ROOT"/.github/scripts/seo-skills/field-notes/*.md; do
