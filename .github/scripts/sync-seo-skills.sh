@@ -33,6 +33,18 @@ mkdir -p "$SCHEMA_DIR/scripts"
 cp "$REPO_ROOT/.github/scripts/seo-skills/validate_schema.mjs" "$SCHEMA_DIR/scripts/"
 chmod +x "$SCHEMA_DIR/scripts/validate_schema.mjs"
 
+AUDIT_DIR="$REPO_ROOT/plugins/seo-skills/skills/seo-audit"
+sed -i '' \
+  -e 's#roughly 50 to 60 characters, brand at the end if included#descriptive and concise. Google sets no length limit and truncates the title link to fit the device width, so there is no fixed character cutoff. Brand with just the site name at the start or end after a hyphen, colon, or pipe, which Google may leave out when the result already shows it#' \
+  -e '/^- Google Search Central, Sitemaps overview:/i\
+- Google Search Central, Influencing title links: https://developers.google.com/search/docs/appearance/title-link
+' \
+  "$AUDIT_DIR/references/audit-checklist.md"
+
+mkdir -p "$AUDIT_DIR/scripts"
+cp "$REPO_ROOT/.github/scripts/seo-skills/check_head.mjs" "$AUDIT_DIR/scripts/"
+chmod +x "$AUDIT_DIR/scripts/check_head.mjs"
+
 # Insert local field notes ahead of each skill's References or Sources section.
 for notes in "$REPO_ROOT"/.github/scripts/seo-skills/field-notes/*.md; do
   python3 - "$notes" "$REPO_ROOT/plugins/seo-skills/skills/$(basename "$notes" .md)/SKILL.md" <<'PY'
