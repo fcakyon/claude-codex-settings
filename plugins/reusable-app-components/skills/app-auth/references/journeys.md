@@ -20,7 +20,7 @@ Use the project's tracked QA harness and saved test sessions. Capture analytics 
 | Unsafe target, altered/expired state | Callback | No external redirect, session or action |
 | Uninvited/disabled account | Either login path | Existing policy rejects access |
 | Signed in | Logout, protected route | Session invalidation matches the app's model |
-| Every locale, desktop/mobile | Login/signup switch and keyboard | Correct copy, focus, 44px controls, no overflow |
+| Every locale, desktop/mobile | Login/signup switch and keyboard | Correct copy, focus, 44px controls, equal-width fields, no overflow |
 
 Pair representative states and destinations. Put the full transport/security matrix at the owning backend boundary rather than duplicating it in every browser test. Treat API tokens and web sessions as separate contracts.
 
