@@ -1113,6 +1113,7 @@ Reuse an app journey together with its code, integration rules and proof of beha
 | --- | --- | --- |
 | [app-auth](./plugins/reusable-app-components/skills/app-auth/SKILL.md) | Email signup, verification and recovery, Google login, shared panel and QA journeys | Available after the next release |
 | [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) | Brand themes, transactional copy, HTML and text layouts, and inbox checks | Available after the next release |
+| [tawk-support](./plugins/reusable-app-components/skills/tawk-support/SKILL.md) | Signed chat identity, account switching, product knowledge and quiet themed chat | Available after the next release |
 
 Use [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) to theme verification, reset, billing and notification emails with the app’s existing mail service. The layout keeps brand colors and wording separate and includes text alternatives and preview checks.
 
