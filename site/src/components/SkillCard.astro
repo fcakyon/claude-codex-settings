@@ -1,0 +1,25 @@
+---
+import Icon from "./Icon.astro"
+import type { Skill } from "../lib/content"
+
+interface Props {
+  skill: Skill
+  describe?: boolean
+  showPlugin?: boolean
+}
+
+const { skill, describe = true, showPlugin = true } = Astro.props
+---
+
+<article class="plugin-card skill-card">
+  <strong><a href={skill.detailUrl}>{skill.name}</a></strong>
+  {describe && <span class="plugin-card-description">{skill.seo.description}</span>}
+  <span class="plugin-card-meta">
+    {showPlugin && skill.plugin !== skill.name && <span>{skill.plugin}</span>}
+    {skill.downloadUrl && (
+      <a class="card-download" href={skill.downloadUrl} data-download-asset={skill.asset} aria-label={`Download ZIP of ${skill.name}`}>
+        <Icon name="download" size={16} />Download ZIP
+      </a>
+    )}
+  </span>
+</article>

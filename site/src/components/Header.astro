@@ -1,6 +1,6 @@
 ---
 import Icon from "./Icon.astro"
-import { repositoryStars, repositoryUrl, type SiteVariant } from "../lib/content"
+import { repositoryStars, repositoryUrl, site, type SiteVariant } from "../lib/content"
 import { locales, translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -18,10 +18,9 @@ const languageLocale = locales[locale].alternate
 ---
 
 <header class="site-header">
-  <a class="brand" href={locales[locale].path}>{settings ? "Claude Settings" : "Agent Plugins"}</a>
+  <a class="brand" href={locales[locale].path}>{settings && <img src="/favicon-settings.svg" alt="" width="28" height="28" />}{site.name}</a>
   <nav aria-label={copy.primaryNav}>
-    {nav.map(([label, href]) => <a href={href}>{label}</a>)}
-    <a href={repositoryUrl}>GitHub</a>
+    {nav.map(([label, href]) => <a href={href} aria-current={Astro.url.pathname.startsWith(href) ? "true" : undefined}>{label}</a>)}
   </nav>
   <div class="header-actions">
     {showLanguage && <a class="language-link" href={locales[languageLocale].path} hreflang={languageLocale}>{copy.languageLabel}</a>}
@@ -39,7 +38,8 @@ const languageLocale = locales[locale].alternate
   .language-link:hover { color: var(--text); }
 
   @media (max-width: 760px) {
-    .header-actions { gap: 10px; }
-    .language-link { font-size: 13px; }
+    .header-actions { display: contents; }
+    .header-cta { grid-area: actions; }
+    .language-link { grid-area: nav; justify-self: end; align-self: center; padding-block: 10px; font-size: 13px; }
   }
 </style>

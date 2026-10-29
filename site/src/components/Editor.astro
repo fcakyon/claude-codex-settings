@@ -23,7 +23,6 @@ const initialFile = lines[0]
 <div class="editor" data-editor data-initial-file={initialFile.id}>
   <div class="editor-topbar" aria-hidden="true"><span></span><span></span><span></span></div>
   <aside class="file-tree" aria-label={copy.files}>
-    <p>{copy.project}</p>
     <div class="tree-row root-row"><Icon name="folder" size={18} /><span>claude-codex-settings</span></div>
     {editorGroups.map((group) => (
       <>
@@ -69,9 +68,8 @@ const initialFile = lines[0]
     ))}
   </div>
   <div class="terminal">
-    <div class="terminal-label">{copy.terminal}</div>
     <div class="terminal-body">
-      <span class="prompt">→</span>
+      <span class="prompt">$</span>
       <code>git clone {repositoryUrl}.git</code>
       <button class="icon-button" type="button" data-copy={`${repositoryUrl}.git`} aria-label={copy.copy}><Icon name="copy" size={18} /></button>
     </div>
@@ -114,8 +112,3 @@ const initialFile = lines[0]
   }
 
 </script>
-
-<style is:global>
-  .editor .file-tree { overflow-y: auto; }
-  .editor .tree-row span:last-child { overflow: hidden; text-overflow: ellipsis; }
-</style>

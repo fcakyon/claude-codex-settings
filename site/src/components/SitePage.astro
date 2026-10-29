@@ -12,9 +12,8 @@ interface Props {
 const { locale } = Astro.props
 const copy = translations[locale][site.variant]
 const providers = providerNames.join(locale === "en" ? ", " : "、")
-const description = site.variant === "settings" ? translations[locale].settings.meta.description(providers) : copy.meta.description
 ---
 
-<Layout locale={locale} variant={site.variant} title={copy.meta.title} description={description} canonical={`${site.url}${locales[locale].path}`}>
+<Layout locale={locale} variant={site.variant} title={copy.meta.title} canonical={`${site.url}${locales[locale].path}`}>
   {site.variant === "settings" ? <SettingsPage locale={locale} providers={providers} /> : <PluginsPage locale={locale} />}
 </Layout>

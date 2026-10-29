@@ -457,7 +457,7 @@
     },
     "frontend-design-skills/anthropic-frontend-design": {
       "title": "Download the Anthropic frontend design skill",
-      "description": "Download the Anthropic frontend design skill as a ZIP for ChatGPT or Claude.ai and apply its interface design guidance to web projects.",
+      "description": "Pick a distinct visual direction, typography and layout for a new or reshaped interface, and avoid choices that read as templated defaults.",
       "related": [
         "frontend-design-skills/writing-guidelines",
         "react-skills/web-design-guidelines"
@@ -473,7 +473,7 @@
     },
     "frontend-design-skills/openai-frontend-design": {
       "title": "Download the OpenAI frontend design skill",
-      "description": "Download the OpenAI frontend design skill as a ZIP for ChatGPT or Claude.ai, then follow its visual design and browser verification workflow.",
+      "description": "Build new pages, dashboards and hero sections from generated concept images, then implement them faithfully and verify the result in a browser.",
       "related": [
         "frontend-design-skills/frontend-testing-debugging",
         "react-skills/web-design-guidelines"
@@ -481,7 +481,7 @@
     },
     "frontend-design-skills/writing-guidelines": {
       "title": "Apply writing guidelines with an agent skill",
-      "description": "Download a writing guidelines skill for ChatGPT or Claude.ai to review documentation, interface copy, structure, tone, and formatting.",
+      "description": "Review documentation and interface copy for voice, banned words, headings, lists and punctuation, and report each issue by file and line.",
       "related": [
         "humanize/humanize",
         "adhd-output-style/adhd-output-style"
@@ -527,7 +527,7 @@
     },
     "github-dev/create-pr": {
       "title": "Create GitHub pull requests with an agent skill",
-      "description": "Download the create PR skill for ChatGPT or Claude.ai and guide an agent through branch checks, GitHub CLI commands, and pull request creation.",
+      "description": "Open a pull request a reviewer can follow without the chat. Check the branch and base, review every commit and publish a clear title and body.",
       "related": [
         "github-dev/review-pr",
         "github-dev/update-pr-summary"
@@ -535,7 +535,7 @@
     },
     "github-dev/resolve-pr-comments": {
       "title": "Resolve pull request comments with an agent skill",
-      "description": "Download the resolve PR comments skill for ChatGPT or Claude.ai to inspect review feedback, apply fixes, and verify each response.",
+      "description": "Work through unresolved review comments on a pull request, fix valid ones across the codebase and draft replies for the rest before posting.",
       "related": [
         "github-dev/review-pr",
         "github-dev/update-pr-summary"
@@ -543,7 +543,7 @@
     },
     "github-dev/review-pr": {
       "title": "Review GitHub pull requests with an agent skill",
-      "description": "Download the review PR skill for ChatGPT or Claude.ai to inspect a pull request, trace risks, and produce actionable code review findings.",
+      "description": "Review a pull request diff for bugs, regressions, missing tests and risky changes, then report fixes ranked by severity with file references.",
       "related": [
         "github-dev/resolve-pr-comments",
         "test-audit/test-audit"
