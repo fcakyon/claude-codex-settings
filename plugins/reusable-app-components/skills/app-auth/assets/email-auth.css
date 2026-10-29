@@ -55,12 +55,34 @@
   font-weight: 650;
 }
 .app-email-auth__password {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  position: relative;
 }
-.app-email-auth__password input {
-  flex: 1;
+.app-email-auth .app-email-auth__password input {
+  padding-inline-end: 48px;
+}
+.app-email-auth__password input::-ms-reveal {
+  display: none;
+}
+.app-email-auth__password button {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: 48px;
+  color: var(--auth-muted, #b3b3be);
+}
+.app-email-auth__password button:focus-visible {
+  outline-offset: -4px;
+}
+.app-email-auth__password svg {
+  display: block;
+  margin: auto;
+  inline-size: 20px;
+  block-size: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .app-email-auth .app-email-auth__terms {
   display: flex;

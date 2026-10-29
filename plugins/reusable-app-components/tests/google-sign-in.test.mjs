@@ -194,7 +194,11 @@ for(const locale of ['en','tr'])test('email signup, existing-email login and rec
     if(process.env.COMPONENT_SCREENSHOT_DIR){await mkdir(process.env.COMPONENT_SCREENSHOT_DIR,{recursive:true});await page.locator('.app-auth-panel').screenshot({path:path.join(process.env.COMPONENT_SCREENSHOT_DIR,`email-${locale}-390-panel.png`)});}
     await form.getByLabel(tr?'E-posta':'Email',{exact:true}).fill(email);
     await form.getByLabel(tr?'Şifre':'Password',{exact:true}).fill('first-password');
-    await form.getByRole('button',{name:tr?'Göster':'Show',exact:true}).click();
+    const toggle=form.getByRole('button',{name:tr?'Göster':'Show',exact:true});
+    const [emailBox,passwordBox,toggleBox]=await Promise.all([form.getByLabel(tr?'E-posta':'Email',{exact:true}).boundingBox(),form.getByLabel(tr?'Şifre':'Password',{exact:true}).boundingBox(),toggle.boundingBox()]);
+    assert.equal(passwordBox.width,emailBox.width);
+    assert.ok(toggleBox.x>passwordBox.x&&toggleBox.x+toggleBox.width<=passwordBox.x+passwordBox.width&&toggleBox.y>=passwordBox.y&&toggleBox.y+toggleBox.height<=passwordBox.y+passwordBox.height);
+    await toggle.click();
     assert.equal(await form.locator('input[name=password]').getAttribute('type'),'text');
     await form.getByRole('checkbox').check();
     await form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true}).click();

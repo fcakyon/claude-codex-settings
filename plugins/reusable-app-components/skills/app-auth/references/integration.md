@@ -42,7 +42,7 @@ If the app uses a one-use nonce/challenge, the auth shell obtains a fresh one af
 
 ## Email adapter
 
-Copy EmailAuth.tsx and email-auth.css together, and pass localized copy and an adapter for the app’s existing routes. The supplied component supports email/password login, signup, six-digit email verification, resend and password reset. It asks for email and one password. Add fields only when the app needs them before access. Keep a visibility control rather than asking for the password twice. Set minPasswordLength to the existing backend policy rather than changing that policy from the browser.
+Copy EmailAuth.tsx and email-auth.css together, and pass localized copy and an adapter for the app’s existing routes. The supplied component supports email/password login, signup, six-digit email verification, resend and password reset. It asks for email and one password. Add fields only when the app needs them before access. Instead of asking for the password twice, put an eye icon button inside the password field with a localized show or hide label. Keep every input at the same full width, and hide the browser's own reveal button so Edge does not show two. Set minPasswordLength to the existing backend policy rather than changing that policy from the browser.
 
 The app owns identity, code expiry, attempts, single use, sessions, account eligibility and return navigation. A single header entry such as “Get started” can open signup while the form offers “Log in”. Keep public browsing public. Ask for streaming connections, extensions or other setup at the action that needs them. Preserve invitations, terms, consent and private-app registration rules.
 
