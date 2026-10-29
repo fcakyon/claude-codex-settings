@@ -114,8 +114,9 @@ ${skills
   .map(
     (skill) => `### ${skill.name} (${skill.plugin})
 
-${skill.description}
+${skill.seo.description}
 
+- [Skill guide](${site.url}${skill.detailUrl})
 - [Download ZIP](${skill.downloadUrl})
 - [Source](${skill.sourceUrl})
 `,

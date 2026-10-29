@@ -352,6 +352,15 @@ When writing README or docs content for this repo:
 - When two plugins are designed to be used together, end each plugin's README long block with a "Pairs naturally with `other-plugin`" line on BOTH sides, so the pairing is asserted from both directions
 - Plan for future before/after GIFs or demos per plugin to show value visually
 
+### Website catalog pages
+
+`site/src/lib/content.ts` discovers plugins and local skills and generates their pages, hub links and sitemaps. No selected-skill list is needed.
+
+- `site/src/lib/catalog-seo.json` owns public titles, summaries and related skill links. Pages, cards, social tags, structured data and the LLM catalog share this copy. Detailed instructions remain in `SKILL.md`; versions, tools and install commands come from repository sources. Vendor syncs keep website copy intact.
+- Add, remove or rename catalog entries with their source plugin/skill. Write unique, complete task summaries and distinguish similar skills by provider or workflow. Choose related links by task, including across plugins. Do not turn invocation triggers into search snippets.
+- Run `npm ci --prefix site` and `npm run build --prefix site`. Build checks cover every page, metadata uniqueness, canonical URLs, headings, social tags, schema, contextual links, sitemaps and missing/stale entries.
+- Titles use 20–70 characters and summaries use 90–160 as editorial budgets, not Google limits. Review meaning against source; indexing, ranking and Google snippet selection are not guaranteed.
+
 ### Plugin descriptions
 
 The `description` field in `plugin.json` and marketplace entries faces non-technical marketplace browsers. Lead with concrete user-visible outcomes, not the mechanism. Drop jargon (OTel, hook event names, internal config field names). Write one sentence of at least 40 chars ending in a period, short enough that name plus description fits the 100-char README row. CI enforces this shape.

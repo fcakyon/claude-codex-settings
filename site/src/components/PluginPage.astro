@@ -25,10 +25,7 @@ const related = (sameCategory.length ? sameCategory : plugins.filter((item) => f
 
 <div class="plugin-hero">
   <div class="plugin-hero-copy">
-    <h1>
-      <span class="plugin-title-name" style={`view-transition-name: plugin-name-${plugin.name}`}>{plugin.name}</span>{" "}
-      <span class="plugin-title-tail">plugin for AI coding agents</span>
-    </h1>
+    <h1 style={`view-transition-name: plugin-name-${plugin.name}`}>{plugin.seo.title}</h1>
     <p>{plugin.description}</p>
     <dl class="plugin-facts">
       <div><dt>Works with</dt><dd><ToolIcons {plugin} size={18} /></dd></div>

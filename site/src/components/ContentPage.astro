@@ -13,6 +13,7 @@ import {
   repositoryUrl,
   site,
   skills,
+  skillByKey,
   skillsByPlugin,
   sourceDocuments,
   type ContentPage,
@@ -122,16 +123,15 @@ if (page.kind === "pluginHub") {
 } else if (page.kind === "plugin") {
   plugin = pluginByName.get(page.plugin)
   if (!plugin) throw new Error(`Unknown plugin: ${page.plugin}`)
-  title = `${plugin.name} plugin for AI coding agents`
-  description = `${plugin.description} See supported agents, install commands, and skill downloads.`
+  title = plugin.seo.title
+  description = plugin.description
   intro = plugin.description
   breadcrumbs = [homeCrumb, { label: "Plugins", href: "/plugins/" }, { label: plugin.name }]
 } else if (page.kind === "skill") {
-  skill = skills.find((item) => item.key === page.skill)
-  if (!skill?.seo) throw new Error(`Unknown SEO skill: ${page.skill}`)
+  skill = skillByKey.get(page.skill)
+  if (!skill) throw new Error(`Unknown skill: ${page.skill}`)
   title = skill.seo.title
   description = skill.seo.description
-  intro = skill.seo.intro
   breadcrumbs = [
     homeCrumb,
     { label: "Plugins", href: "/plugins/" },
@@ -186,6 +186,16 @@ if (plugin) {
     version: plugin.version,
   })
 }
+if (skill) {
+  graph.push({
+    "@type": "SoftwareSourceCode",
+    name: skill.name,
+    description,
+    url: canonical,
+    codeRepository: skill.sourceUrl,
+    isPartOf: { "@type": "SoftwareSourceCode", name: skill.plugin, url: `${site.url}/plugins/${skill.plugin}/` },
+  })
+}
 if (page.kind === "installGuide") {
   graph.push({
     "@type": "HowTo",
@@ -204,7 +214,7 @@ const hubItems =
   page.kind === "pluginHub"
     ? plugins.map((item) => ({ name: item.name, href: `/plugins/${item.name}/` }))
     : page.kind === "skillHub"
-      ? skills.map((item) => ({ name: item.name, href: item.seo ? `/plugins/${item.plugin}/skills/${item.name}/` : item.downloadUrl }))
+      ? skills.map((item) => ({ name: item.name, href: item.detailUrl }))
       : []
 if (hubItems.length) {
   graph.push({
@@ -220,6 +230,11 @@ if (hubItems.length) {
   })
 }
 const structuredData = { "@context": "https://schema.org", "@graph": graph }
+const relatedSkills = skill?.seo.related.map((key) => {
+  const related = skillByKey.get(key)
+  if (!related) throw new Error(`Unknown related skill: ${key}`)
+  return related
+}) || []
 const providerFiles = page.kind === "provider"
   ? configurationDocuments.filter((file) => file.provider === page.provider)
   : []
@@ -231,7 +246,7 @@ const providerFiles = page.kind === "provider"
     {plugin ? <PluginPage {plugin} /> : (
       <header class="content-hero">
         <h1>{title}</h1>
-        <p>{intro}</p>
+        {!skill && <p>{intro}</p>}
         {page.kind === "skillHub" && <a class="button primary" href="/guides/install-agent-skills/">Read the install guide <Icon name="arrow" size={18} /></a>}
       </header>
     )}
@@ -304,6 +319,17 @@ const providerFiles = page.kind === "provider"
           <h2>Use the skill for the right task</h2>
           <p>{skill.description}</p>
           <p>The skill belongs to the <a class="inline-link" href={`/plugins/${skill.plugin}/`}><code>{skill.plugin}</code> plugin</a>. Install the full plugin for coding-agent commands, hooks, or related skills.</p>
+        </section>
+        <section class="content-section">
+          <h2>Related skills</h2>
+          <div class="reference-grid">
+            {relatedSkills.map((item) => (
+              <a class="reference-card" href={item.detailUrl}>
+                <h3>{item.seo.title}</h3>
+                <p>{item.seo.description}</p>
+              </a>
+            ))}
+          </div>
         </section>
       </div>
     )}
