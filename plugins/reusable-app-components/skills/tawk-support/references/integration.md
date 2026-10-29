@@ -37,6 +37,6 @@ Do not automatically collect clinical conversations, medication selections, diag
 
 At the owning HTTP boundary, test guest, valid account, a second account, invalid/expired session and logout. Check the response field allowlist, no-store, signatures with isolated test keys and locale/property separation. At the browser boundary, verify SDK login/logout, focus refresh, context updates, cancellation, hidden workflow re-entry and no duplicate scripts. Exercise actual Tawk and inspect received fields separately from a mocked SDK.
 
-The extraction tests use local HTTP identities and an SDK event source. They prove component lifecycle and transport, not Tawk’s server enforcement or real account privacy. The initial app evidence is MuviSafe (8d0d40a), My AI Patient (b5c2900) and Fast & Rational (f9b8e4a). Record only the flows actually checked before claiming wider coverage.
+The extraction tests use local HTTP identities and an SDK event source. They prove component lifecycle and transport, not Tawk’s server enforcement or real account privacy. The deployed app revisions checked are MuviSafe (309dc0f), My AI Patient (7f162f1) and Fast & Rational (7db763d). MuviSafe’s live Tawk contact was separately checked for account, provider and full text version fields. Record only the flows actually checked before claiming wider coverage.
 
 Reference: [Tawk JavaScript API](https://developer.tawk.to/jsapi/).
