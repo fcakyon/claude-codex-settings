@@ -1,23 +1,23 @@
 ---
 import Breadcrumbs from "./Breadcrumbs.astro"
 import InstallGuide from "./InstallGuide.astro"
-import PluginHub from "./PluginHub.astro"
+import CatalogHub from "./CatalogHub.astro"
 import PluginPage from "./PluginPage.astro"
 import Icon from "./Icon.astro"
 import DownloadCount from "./DownloadCount.astro"
-import SkillDownload from "./SkillDownload.astro"
+import SourceFile from "./SourceFile.astro"
 import Layout from "../layouts/Layout.astro"
 import {
+  claudeGuideFile,
   configurationDocuments,
   downloadStats,
   pluginByName,
   plugins,
-  repositoryUrl,
+  popularSkills,
+  providerLabels,
   site,
   skills,
   skillByKey,
-  skillsByPlugin,
-  sourceDocuments,
   type ContentPage,
 } from "../lib/content"
 
@@ -28,79 +28,73 @@ interface Props {
 const { page } = Astro.props
 const canonical = `${site.url}/${page.path}/`
 const homeCrumb = { label: "Home", href: "/" }
-const skillGroups = Object.entries(skillsByPlugin).sort(([a], [b]) => a.localeCompare(b))
 const settingsCards = [
   {
     title: "Configure Claude Code",
-    description: "Use the repository settings file, hooks, permissions, and environment layout for Claude Code.",
+    description: "The settings.json with permissions, hooks, environment variables and enabled plugins.",
     href: "/settings/claude-code/",
   },
   {
     title: "Configure OpenAI Codex",
-    description: "Use the repository TOML configuration, plugins, model settings, and project guidance for Codex.",
+    description: "The config.toml with model, reasoning, plugin and project settings.",
     href: "/settings/codex/",
   },
   {
     title: "Use Kimi models",
-    description: "Compare the Claude Code and Codex files configured for Kimi models.",
+    description: "Claude Code and Codex files that point both tools at Kimi.",
     href: "/settings/providers/kimi/",
   },
   {
     title: "Use MiniMax models",
-    description: "Compare the Claude Code and Codex files configured for MiniMax models.",
+    description: "Claude Code and Codex files that point both tools at MiniMax.",
     href: "/settings/providers/minimax/",
   },
   {
     title: "Use Z.ai models",
-    description: "Compare the Claude Code and Codex files configured for Z.ai and GLM models.",
+    description: "Claude Code and Codex files for Z.ai GLM models.",
     href: "/settings/providers/zai/",
   },
   {
     title: "Write a CLAUDE.md file",
-    description: "Use the repository guidance file as a practical reference for agent instructions.",
+    description: "The rules file this repository uses, as a starting point for yours.",
     href: "/guides/claude-md/",
   },
 ]
 const configurationCopy = {
   "claude-code": {
-    title: "Configure Claude Code with repository settings",
-    description: "Review the Claude Code settings, provider variants, hooks, permissions, and project guidance maintained in the repository.",
-    intro: "This reference shows which Claude Code files to copy and what each file controls. Open the source before copying it so you can review every permission and environment value.",
-    files: configurationDocuments.filter((file) => file.tool === "Claude Code"),
-    source: ".claude/settings.json",
+    title: "Claude Code settings.json with hooks and permissions",
+    description: "Copy a working Claude Code settings.json with permissions, hooks, environment variables and plugins, plus Kimi, MiniMax and Z.ai variants.",
+    intro: "This is the settings.json from the repository. Check each permission and hook before you merge it into ~/.claude/settings.json.",
+    tool: "Claude Code",
   },
   codex: {
-    title: "Configure OpenAI Codex with repository settings",
-    description: "Review the Codex CLI TOML configuration, provider variants, plugins, model settings, and shared repository guidance.",
-    intro: "This reference maps each Codex configuration file to its purpose. Review the TOML source before placing it in your local Codex directory.",
-    files: configurationDocuments.filter((file) => file.tool === "Codex CLI"),
-    source: ".codex/config.toml",
+    title: "Codex config.toml with plugins and model settings",
+    description: "Copy a working OpenAI Codex config.toml with model, reasoning, plugin and project settings, plus Kimi, MiniMax and Z.ai variants.",
+    intro: "This is the config.toml from the repository. Merge the parts you need into ~/.codex/config.toml.",
+    tool: "Codex CLI",
   },
 } as const
 const providerCopy = {
   kimi: {
-    label: "Kimi",
     title: "Configure Kimi for Claude Code and Codex",
-    description: "Compare the repository-backed Kimi settings for Claude Code and OpenAI Codex, including each file’s source and target tool.",
-    intro: "Use the Kimi provider files when you want the same model provider available in Claude Code and Codex. Review both formats because each tool expects different keys.",
+    description: "Copy the Kimi settings for Claude Code and OpenAI Codex. Claude Code reads the JSON file and Codex reads the TOML file with its proxy setup.",
+    intro: "Use these files to run Kimi models in Claude Code and Codex. Each tool expects different keys, so copy the file for your tool.",
   },
   minimax: {
-    label: "MiniMax",
     title: "Configure MiniMax for Claude Code and Codex",
-    description: "Compare the repository-backed MiniMax settings for Claude Code and OpenAI Codex, including each file’s source and target tool.",
-    intro: "Use the MiniMax provider files to keep the provider choice consistent across Claude Code and Codex. Copy only the file for the tool you use.",
+    description: "Copy the MiniMax settings for Claude Code and OpenAI Codex, with the model names and endpoints each tool needs in its own file format.",
+    intro: "Use these files to run MiniMax models in Claude Code and Codex. Copy only the file for the tool you use.",
   },
   zai: {
-    label: "Z.ai",
     title: "Configure Z.ai for Claude Code and Codex",
-    description: "Compare the repository-backed Z.ai and GLM settings for Claude Code and OpenAI Codex, including each source file.",
-    intro: "Use the Z.ai provider files when you want GLM models in Claude Code or Codex. Check the source because the JSON and TOML formats are not interchangeable.",
+    description: "Copy the Z.ai GLM settings for Claude Code and OpenAI Codex. The JSON and TOML files use different keys, so take the one for your tool.",
+    intro: "Use these files to run Z.ai GLM models in Claude Code or Codex. The JSON and TOML formats are not interchangeable.",
   },
 } as const
 
-let title = "Claude Settings"
-let description = "Repository-backed settings, plugins, and agent skills."
-let intro = description
+let title: string
+let description: string
+let intro = ""
 let breadcrumbs = [homeCrumb]
 let plugin: (typeof plugins)[number] | undefined
 let skill: (typeof skills)[number] | undefined
@@ -109,25 +103,24 @@ let provider: (typeof providerCopy)[keyof typeof providerCopy] | undefined
 
 if (page.kind === "pluginHub") {
   title = "Find plugins for Claude Code, Codex, Cursor, and Gemini"
-  description = `Explore ${plugins.length} repository-backed plugins with install commands, supported tools, included skills, and direct source links.`
-  intro = "Search by task or filter by category. Each plugin page lists its skills, supported agents, and install commands."
+  description = `${plugins.length} plugins for Claude Code, Codex, Cursor and Gemini CLI. See what each one adds, which tools it supports and how to install it.`
+  intro = `${plugins.length} plugins with ${skills.length} skills, plus hooks and agents. Filter by category or search for a task.`
   breadcrumbs = [homeCrumb, { label: "Plugins" }]
 } else if (page.kind === "skillHub") {
   title = "Download agent skills for ChatGPT and Claude"
-  description = `Download ${skills.length} agent skills as ZIP files for ChatGPT and Claude.ai, with compatibility, bundled-file, and setup labels.`
-  intro = "Download a skill ZIP, review its source, then upload it to ChatGPT or Claude.ai. Every download is generated from the skill source in this repository."
+  description = `Download any of ${skills.length} agent skills as a ZIP and upload it to ChatGPT or Claude.ai. Each skill page lists its files and when it runs.`
+  intro = "Search by task, download the ZIP, then upload it to ChatGPT or Claude.ai."
   breadcrumbs = [homeCrumb, { label: "Skills" }]
 } else if (page.kind === "settingsHub") {
   title = "Choose settings for Claude Code and Codex"
-  description = "Find repository-backed Claude Code and OpenAI Codex settings, provider configurations, and CLAUDE.md guidance."
-  intro = "Start with your coding agent, then choose a provider variant only if you need one. Every page links to the maintained repository file."
+  description = "Copy Claude Code and OpenAI Codex settings files, including Kimi, MiniMax and Z.ai provider variants and a CLAUDE.md you can adapt."
+  intro = "Start with the file for your agent. Add a provider variant only if you use Kimi, MiniMax or Z.ai models."
   breadcrumbs = [homeCrumb, { label: "Settings" }]
 } else if (page.kind === "plugin") {
   plugin = pluginByName.get(page.plugin)
   if (!plugin) throw new Error(`Unknown plugin: ${page.plugin}`)
   title = plugin.seo.title
   description = plugin.description
-  intro = plugin.description
   breadcrumbs = [homeCrumb, { label: "Plugins", href: "/plugins/" }, { label: plugin.name }]
 } else if (page.kind === "skill") {
   skill = skillByKey.get(page.skill)
@@ -138,30 +131,26 @@ if (page.kind === "pluginHub") {
     homeCrumb,
     { label: "Plugins", href: "/plugins/" },
     { label: skill.plugin, href: `/plugins/${skill.plugin}/` },
-    { label: skill.name },
+    { label: `${skill.name} skill` },
   ]
 } else if (page.kind === "configuration") {
   configuration = configurationCopy[page.configuration as keyof typeof configurationCopy]
   title = configuration.title
   description = configuration.description
   intro = configuration.intro
-  breadcrumbs = [homeCrumb, { label: "Settings", href: "/settings/" }, { label: page.configuration }]
+  breadcrumbs = [homeCrumb, { label: "Settings", href: "/settings/" }, { label: configuration.tool }]
 } else if (page.kind === "provider") {
   provider = providerCopy[page.provider as keyof typeof providerCopy]
   title = provider.title
   description = provider.description
   intro = provider.intro
-  breadcrumbs = [
-    homeCrumb,
-    { label: "Settings", href: "/settings/" },
-    { label: provider.label },
-  ]
+  breadcrumbs = [homeCrumb, { label: "Settings", href: "/settings/" }, { label: providerLabels[page.provider] }]
 } else if (page.kind === "claudeGuide") {
   title = "Write a CLAUDE.md file for coding agents"
   description = "Use a maintained CLAUDE.md file as a reference for project rules, tool guidance, code style, and safe agent behavior."
-  intro = "A CLAUDE.md file gives coding agents repository-specific instructions. Use this guide to choose rules that are concrete, testable, and relevant to the codebase."
+  intro = "A CLAUDE.md file gives coding agents the rules of your repository. Keep each rule concrete, testable and specific to the codebase."
   breadcrumbs = [homeCrumb, { label: "CLAUDE.md" }]
-} else if (page.kind === "installGuide") {
+} else {
   title = "Install agent skills and plugins in Claude, Codex, and Cursor"
   description = "Add the Claude Settings marketplace to Claude Code, OpenAI Codex, or Cursor, install plugins, and upload skill ZIPs to ChatGPT or Claude.ai."
   intro = "Pick your app. Coding agents install plugins from this marketplace. ChatGPT and Claude.ai take a skill ZIP."
@@ -183,6 +172,7 @@ if (plugin) {
     "@type": "SoftwareSourceCode",
     name: plugin.name,
     description: plugin.description,
+    url: canonical,
     codeRepository: plugin.href,
     license: plugin.license,
     version: plugin.version,
@@ -198,25 +188,11 @@ if (skill) {
     isPartOf: { "@type": "SoftwareSourceCode", name: skill.plugin, url: `${site.url}/plugins/${skill.plugin}/` },
   })
 }
-if (page.kind === "installGuide") {
-  graph.push({
-    "@type": "HowTo",
-    name: title,
-    description,
-    step: [
-      { "@type": "HowToStep", name: "Choose your app", text: "Pick Claude Code, Codex, Cursor, or Gemini CLI to install a plugin, or ChatGPT or Claude.ai to upload a skill ZIP." },
-      { "@type": "HowToStep", name: "Add the marketplace", text: "Add the Claude Settings marketplace to Claude Code, OpenAI Codex, or Cursor." },
-      { "@type": "HowToStep", name: "Install a plugin", text: "Install the plugin from the marketplace in your terminal or desktop app." },
-      { "@type": "HowToStep", name: "Start a new session", text: "Start a new session, then ask the agent to use the installed skill or workflow." },
-      { "@type": "HowToStep", name: "Upload a skill ZIP", text: "Download a skill ZIP without extracting it, then upload it to ChatGPT or Claude.ai." },
-    ],
-  })
-}
 const hubItems =
   page.kind === "pluginHub"
     ? plugins.map((item) => ({ name: item.name, href: `/plugins/${item.name}/` }))
     : page.kind === "skillHub"
-      ? skills.map((item) => ({ name: item.name, href: item.detailUrl }))
+      ? popularSkills.map((item) => ({ name: item.name, href: item.detailUrl }))
       : []
 if (hubItems.length) {
   graph.push({
@@ -237,9 +213,9 @@ const relatedSkills = skill?.seo.related.map((key) => {
   if (!related) throw new Error(`Unknown related skill: ${key}`)
   return related
 }) || []
-const providerFiles = page.kind === "provider"
-  ? configurationDocuments.filter((file) => file.provider === page.provider)
-  : []
+const [configurationFile, ...variantFiles] = configuration ? configurationDocuments.filter((file) => file.tool === configuration.tool) : []
+const providerFiles = page.kind === "provider" ? configurationDocuments.filter((file) => file.provider === page.provider) : []
+const claudeFile = page.kind === "claudeGuide" ? claudeGuideFile : undefined
 ---
 
 <Layout locale="en" variant="settings" {title} {description} {canonical} alternates={{ en: canonical }} {structuredData}>
@@ -251,17 +227,13 @@ const providerFiles = page.kind === "provider"
           <DownloadCount count={skill.downloads} />
           <h1>{title}</h1>
           <p>{skill.seo.description}</p>
-          <div class="skill-labels">
-            <span>{skill.bundled.length ? `Includes ${skill.bundled.join(", ")}` : "Instructions only"}</span>
-            {skill.externalSetup && <span>May require external tools</span>}
-          </div>
-          <div class="plugin-hero-links">
-            <a class="official-link" href={skill.sourceUrl}>Read the skill instructions <Icon name="arrow" size={16} /></a>
-            <a class="official-link" href={`/plugins/${skill.plugin}/`}>Included in {skill.plugin}</a>
+          <div class="hero-links">
+            <a class="official-link" href={`/plugins/${skill.plugin}/`}>Part of the {skill.plugin} plugin</a>
+            <a class="official-link" href={skill.sourceUrl}>Source on GitHub</a>
           </div>
         </div>
         <aside class="catalog-install">
-          <h2>Install this skill</h2>
+          <h2>Install {skill.name}</h2>
           <InstallGuide {skill} />
         </aside>
       </header>
@@ -270,50 +242,29 @@ const providerFiles = page.kind === "provider"
         <h1>{title}</h1>
         <p>{intro}</p>
         {(page.kind === "skillHub" || page.kind === "pluginHub") && <DownloadCount count={downloadStats.total} />}
-        {page.kind === "skillHub" && <a class="button primary" href="/guides/install-agent-skills/">Read the install guide <Icon name="arrow" size={18} /></a>}
+        {page.kind === "skillHub" && <a class="button secondary" href="/guides/install-agent-skills/#chatgpt">How to upload a skill</a>}
       </header>
     )}
 
-    {page.kind === "pluginHub" && <PluginHub />}
+    {page.kind === "pluginHub" && <CatalogHub kind="plugin" />}
+    {page.kind === "skillHub" && <CatalogHub kind="skill" />}
 
-    {page.kind === "skillHub" && (
-      <div class="content-sections">
-        {skillGroups.map(([pluginName, pluginSkills]) => (
-          <section class="catalog-section" id={pluginName}>
-            {pluginSkills && pluginSkills.length > 1 && (
-              <div class="section-heading">
-                <h2><a href={`/plugins/${pluginName}/`}>{pluginByName.get(pluginName)?.seo.title}</a></h2>
-                <span>{pluginSkills.length} skills</span>
-              </div>
-            )}
-            <div class="skill-stack">{pluginSkills?.map((item) => <SkillDownload skill={item} heading={pluginSkills?.length === 1 ? "h2" : "h3"} compact />)}</div>
-          </section>
-        ))}
+    {page.kind === "settingsHub" && (
+      <div class="reference-grid">
+        {settingsCards.map((card) => <a class="reference-card" href={card.href}><h2>{card.title}</h2><p>{card.description}</p></a>)}
       </div>
     )}
 
-    {page.kind === "settingsHub" && (
-      <section class="content-section">
-        <h2>Choose the file that matches your tool</h2>
-        <p>Claude Code uses JSON settings. Codex uses TOML. Provider pages show both formats together.</p>
-        <div class="reference-grid">
-          {settingsCards.map((card) => <a class="reference-card" href={card.href}><h3>{card.title}</h3><p>{card.description}</p><span>Open reference <Icon name="arrow" size={16} /></span></a>)}
-        </div>
-      </section>
-    )}
-
-    {configuration && (
+    {configurationFile && (
       <div class="content-sections">
         <section class="content-section">
-          <h2>Review the default configuration</h2>
-          <p>Clone the repository, open the source file, then merge only the values you need into your local configuration.</p>
-          <pre class="code-sample"><code>{configuration.source}</code></pre>
+          <SourceFile file={configurationFile} />
         </section>
         <section class="content-section">
-          <h2>Review each maintained file</h2>
-          <p>The default file covers the standard setup. Provider variants change the model endpoint and related values.</p>
+          <h2>Provider variants</h2>
+          <p>Each variant swaps the model provider and the values that go with it.</p>
           <div class="file-list">
-            {configuration.files.map((file) => <a href={file.url}><code>{file.path}</code><span>{file.provider ? `${file.provider} provider variant` : "Default configuration"}</span><Icon name="arrow" size={17} /></a>)}
+            {variantFiles.map((file) => <a href={`/settings/providers/${file.provider}/`}><code>{file.path}</code><span>{providerLabels[file.provider!]}</span><Icon name="chevron" size={17} /></a>)}
           </div>
         </section>
       </div>
@@ -321,24 +272,39 @@ const providerFiles = page.kind === "provider"
 
     {provider && (
       <div class="content-sections">
-        <section class="content-section">
-          <h2>Choose the format for your coding agent</h2>
-          <p>Claude Code reads JSON. Codex reads TOML. Do not copy keys between the two formats.</p>
-          <div class="file-list">
-            {providerFiles.map((file) => <a href={file.url}><code>{file.path}</code><span>{file.tool}</span><Icon name="arrow" size={17} /></a>)}
-          </div>
-        </section>
+        {providerFiles.map((file) => (
+          <section class="content-section">
+            <SourceFile {file} />
+          </section>
+        ))}
         <section class="content-section related-links">
-          <h2>Review the base configuration first</h2>
-          <p>Start with the base settings page for your tool, then apply the provider file.</p>
-          <a href="/settings/claude-code/">Claude Code settings</a>
-          <a href="/settings/codex/">Codex settings</a>
+          <h2>Start from the base settings</h2>
+          <p>The base files carry the permissions, hooks and plugins that the provider files build on.</p>
+          <a href="/settings/claude-code/">Claude Code settings.json</a>
+          <a href="/settings/codex/">Codex config.toml</a>
         </section>
       </div>
     )}
 
     {skill && (
       <div class="content-sections">
+        <section class="content-section">
+          <h2>When it runs</h2>
+          <p>Your agent reads this description from <code>SKILL.md</code> to decide when to load the skill:</p>
+          <blockquote class="skill-trigger">{skill.trigger}</blockquote>
+        </section>
+        {skill.sections.length > 0 && (
+          <section class="content-section">
+            <h2>What SKILL.md covers</h2>
+            <ul class="skill-sections">{skill.sections.map((section) => <li>{section}</li>)}</ul>
+          </section>
+        )}
+        <section class="content-section">
+          <h2>Files in the ZIP</h2>
+          <ul class="skill-files">
+            {skill.files.map((file) => <li><a href={file.url}><Icon name="file" size={16} /><code>{skill.name}/{file.path}</code></a></li>)}
+          </ul>
+        </section>
         <section class="content-section">
           <h2>Related skills</h2>
           <div class="reference-grid">
@@ -353,18 +319,17 @@ const providerFiles = page.kind === "provider"
       </div>
     )}
 
-    {page.kind === "claudeGuide" && (
+    {claudeFile && (
       <div class="content-sections">
         <section class="content-section">
           <h2>Put durable project rules in CLAUDE.md</h2>
-          <p>Write rules that an agent can follow and verify. Include repository commands, file boundaries, code conventions, and safety limits.</p>
+          <p>Write rules that an agent can follow and check. Include repository commands, file boundaries, code conventions and safety limits.</p>
           <ul class="prose-list"><li>Name the exact command for tests and formatting</li><li>State which files are generated or must not change</li><li>Describe repository-specific naming and architecture</li><li>Remove guidance that duplicates tool defaults</li></ul>
         </section>
         <section class="content-section">
-          <h2>Start from the maintained source</h2>
-          <p>The repository file contains practical rules used across Claude Code and other coding agents. Copy only the parts that fit your project.</p>
-          <a class="button secondary" href={`${repositoryUrl}/blob/main/.claude/CLAUDE.md`}>Open CLAUDE.md on GitHub <Icon name="arrow" size={18} /></a>
-          <p class="source-size">Current source length: {sourceDocuments.claude.split("\n").length.toLocaleString("en")} lines</p>
+          <h2>The CLAUDE.md this repository uses</h2>
+          <p>Copy only the rules that fit your project.</p>
+          <SourceFile file={claudeFile} />
         </section>
       </div>
     )}

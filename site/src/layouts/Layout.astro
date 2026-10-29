@@ -1,7 +1,8 @@
 ---
+import { Font } from "astro:assets"
 import Header from "../components/Header.astro"
 import Icon, { type IconName } from "../components/Icon.astro"
-import { author, repositoryUrl, site, type SiteVariant } from "../lib/content"
+import { author, providerNames, repositoryUrl, site, type SiteVariant } from "../lib/content"
 import { locales, translations, type Locale } from "../lib/i18n"
 import "../styles/global.css"
 
@@ -9,14 +10,16 @@ interface Props {
   locale: Locale
   variant: SiteVariant
   title: string
-  description: string
+  description?: string
   canonical: string
   alternates?: Partial<Record<Locale, string>>
   structuredData?: Record<string, unknown>
 }
 
-const { locale, variant, title, description, canonical, alternates, structuredData: pageStructuredData } = Astro.props
+const { locale, variant } = Astro.props
 const copy = translations[locale]
+const siteDescription = variant === "settings" ? copy.settings.meta.description(providerNames.join(locale === "en" ? ", " : "、")) : copy.plugins.meta.description
+const { title, description = siteDescription, canonical, alternates, structuredData: pageStructuredData } = Astro.props
 const image = new URL(`/og-${variant}.webp`, Astro.site).href
 const localeData = locales[locale]
 const googleAnalyticsId = import.meta.env.PUBLIC_GOOGLE_ANALYTICS_ID
@@ -25,9 +28,9 @@ const defaultStructuredData = {
   "@graph": [
     {
       "@type": "WebSite",
-      name: variant === "settings" ? "Claude Settings" : "Agent Plugins",
+      name: site.name,
       url: site.url,
-      description,
+      description: siteDescription,
       inLanguage: locale,
       creator: { "@id": author.id },
     },
@@ -36,7 +39,7 @@ const defaultStructuredData = {
       name: "Claude Codex Settings",
       codeRepository: repositoryUrl,
       license: "https://www.apache.org/licenses/LICENSE-2.0",
-      description,
+      description: siteDescription,
       inLanguage: locale,
       programmingLanguage: ["Markdown", "JSON", "Python", "Shell"],
       author: { "@id": author.id },
@@ -85,12 +88,13 @@ const structuredData = pageGraph.length
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={title} />
-    <meta property="og:site_name" content={variant === "settings" ? "Claude Settings" : "Agent Plugins"} />
+    <meta property="og:site_name" content={site.name} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <meta name="twitter:creator" content={author.xHandle} />
+    {variant === "settings" && <Font cssVariable="--font-sans" preload />}
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     {googleAnalyticsId && (
       <>
@@ -106,7 +110,7 @@ const structuredData = pageGraph.length
       <Header locale={locale} variant={variant} showLanguage={alternateEntries.length > 1} />
       <main id="main"><slot /></main>
       <footer>
-        <span>{copy.footer.credit} <a href={repositoryUrl} target="_blank" rel="noreferrer">claude-codex-settings</a></span>
+        <span>{copy.footer.madeBy[0]}<a class="inline-link" href={author.id} rel="author">{author.name}</a>{copy.footer.madeBy[1]}</span>
         <div>
           <a href="/llms.txt">llms.txt</a>
           <a href="/sitemap.xml">{copy.footer.sitemap}</a>
@@ -124,15 +128,12 @@ const structuredData = pageGraph.length
       document.addEventListener("click", async (event) => {
         const button = (event.target as Element).closest<HTMLElement>("[data-copy], [data-copy-command]")
         if (!button) return
-        const label = button.querySelector<HTMLElement>("[data-install-copy-label]")
-        const text = button.dataset.copy || button.closest(".command-line")?.querySelector("code")?.textContent || ""
+        const text = button.dataset.copy || button.closest(".command-line, .source-file")?.querySelector("code")?.textContent || ""
         await navigator.clipboard.writeText(text)
         button.classList.add("is-copied")
-        if (label) label.textContent = "Copied"
         announcement.textContent = announcement.dataset.copied!
         window.setTimeout(() => {
           button.classList.remove("is-copied")
-          if (label) label.textContent = "Copy command"
           announcement.textContent = ""
         }, 1200)
       })

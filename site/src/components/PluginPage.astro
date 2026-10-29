@@ -1,9 +1,8 @@
 ---
 import DownloadCount from "./DownloadCount.astro"
 import InstallGuide from "./InstallGuide.astro"
-import Icon from "./Icon.astro"
 import PluginCard from "./PluginCard.astro"
-import SkillDownload from "./SkillDownload.astro"
+import SkillCard from "./SkillCard.astro"
 import ToolIcons from "./ToolIcons.astro"
 import { downloadStats, featured, plugins, skillsByPlugin } from "../lib/content"
 
@@ -18,9 +17,7 @@ const extras = [
   ["Agents", plugin.components?.agents],
   ["Commands", plugin.components?.commands],
   ["Output styles", plugin.components?.outputStyles],
-  ["Hooks", plugin.components?.hooks && "Run automatically while you work"],
-  ["MCP server", plugin.components?.mcp && "Bundled server config"],
-].filter(([, items]) => items?.length) as [string, string | string[]][]
+].filter(([, items]) => items?.length) as [string, string[]][]
 const sameCategory = plugins.filter((item) => item.category === plugin.category && item.name !== plugin.name)
 const related = (sameCategory.length ? sameCategory : plugins.filter((item) => featured.includes(item.name) && item.name !== plugin.name)).slice(0, 3)
 ---
@@ -32,34 +29,30 @@ const related = (sameCategory.length ? sameCategory : plugins.filter((item) => f
     <p>{plugin.description}</p>
     <dl class="plugin-facts">
       <div><dt>Works with</dt><dd><ToolIcons {plugin} size={18} /></dd></div>
-      <div><dt>Includes</dt><dd>{plugin.summary || "Instructions only"}</dd></div>
+      {plugin.summary && <div><dt>Includes</dt><dd>{plugin.summary}</dd></div>}
       <div><dt>Version</dt><dd>{plugin.version}</dd></div>
-      <div><dt>License</dt><dd>{plugin.license || "See source"}</dd></div>
+      {plugin.license && <div><dt>License</dt><dd>{plugin.license}</dd></div>}
     </dl>
-    <div class="plugin-hero-links">
-      <a class="official-link" href={plugin.href}>Open the source on GitHub <Icon name="arrow" size={16} /></a>
-      <a class="official-link" href="/guides/install-agent-skills/#claude-code">Add the marketplace first <Icon name="arrow" size={16} /></a>
-    </div>
+    <a class="official-link" href={plugin.href}>Source on GitHub</a>
   </div>
   <aside class="catalog-install">
-    <h2>Install this plugin</h2>
+    <h2>Install {plugin.name}</h2>
     <InstallGuide {plugin} />
   </aside>
 </div>
 
 {(pluginSkills.length > 0 || extras.length > 0) && (
   <section class="content-section" id="skills">
-    <h2>What's inside</h2>
     {pluginSkills.length > 0 && (
       <>
-        <p>Choose a skill to see its instructions and installation options.</p>
-        <div class="skill-grid">{pluginSkills.map((item) => <SkillDownload skill={item} heading="h3" compact />)}</div>
+        <h2>{pluginSkills.length === 1 ? "Skill" : `${pluginSkills.length} skills`}</h2>
+        <div class="plugin-grid">{pluginSkills.map((item) => <SkillCard skill={item} describe={pluginSkills.length > 1} showPlugin={false} />)}</div>
       </>
     )}
     {extras.length > 0 && (
       <dl class="plugin-extras">
         {extras.map(([label, items]) => (
-          <div><dt>{label}</dt><dd>{typeof items === "string" ? items : items.map((item) => <code>{item}</code>)}</dd></div>
+          <div><dt>{label}</dt><dd>{items.map((item) => <code>{item}</code>)}</dd></div>
         ))}
       </dl>
     )}
@@ -67,6 +60,6 @@ const related = (sameCategory.length ? sameCategory : plugins.filter((item) => f
 )}
 
 <section class="content-section related-plugins">
-  <h2>{sameCategory.length ? `More ${plugin.category?.replaceAll("-", " ")} plugins` : "Popular plugins"}</h2>
+  <h2>{sameCategory.length ? `More ${plugin.category?.replaceAll("-", " ")} plugins` : "Featured plugins"}</h2>
   <div class="plugin-grid">{related.map((item) => <PluginCard plugin={item} />)}</div>
 </section>

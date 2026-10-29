@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import {
   author,
+  claudeGuideFile,
   configurationDocuments,
   plugins,
   providerNames,
@@ -100,7 +101,7 @@ ${authorContext}
 
 ## AI guidance: .claude/CLAUDE.md
 
-${sourceDocuments.claude}
+${claudeGuideFile.content}
 
 ${configurationCatalog}
 
