@@ -2,7 +2,7 @@
 import Editor from "./Editor.astro"
 import Icon from "./Icon.astro"
 import PluginCard from "./PluginCard.astro"
-import { codingTools, pluginByName, plugins, repositoryStars, repositoryUrl } from "../lib/content"
+import { codingTools, pluginByName, plugins } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -12,7 +12,6 @@ interface Props {
 
 const { locale, providers } = Astro.props
 const copy = translations[locale].settings
-const stars = await repositoryStars()
 ---
 
 <section class="settings-hero">
@@ -20,11 +19,8 @@ const stars = await repositoryStars()
     <h1>{copy.hero.title}</h1>
     <p>{copy.hero.description(providers)}</p>
     <div class="hero-actions">
-      <a class="button primary" href={repositoryUrl} target="_blank" rel="noreferrer">
-        <Icon name="github" size={23} />{copy.hero.repository}
-        {stars && <span class="star-count"><Icon name="star" size={15} />{stars.toLocaleString(locale)}<span class="sr-only"> {translations[locale].stars}</span></span>}
-      </a>
-      <a class="button secondary" href="/guides/install-agent-skills/">{copy.hero.install} <Icon name="arrow" size={19} /></a>
+      <a class="button primary" href="/plugins/">{copy.hero.browse(plugins.length)}</a>
+      <a class="button secondary" href="/guides/install-agent-skills/">{copy.hero.install}</a>
     </div>
   </div>
   <Editor locale={locale} />
@@ -41,11 +37,11 @@ const stars = await repositoryStars()
       return (
         <div class="tool-band-item">
           <strong><Icon name={icon} size={24} />{label}</strong>
-          <span>{copy.configuration.tools[index]}</span>
           <div class="command-line">
             <code>{command}</code>
             <button class="icon-button" type="button" data-copy={command} aria-label={`${copy.configuration.copyCommand} ${label}`}><Icon name="copy" size={18} /></button>
           </div>
+          <span set:html={copy.configuration.tools[index]} />
         </div>
       )
     })}
@@ -53,10 +49,7 @@ const stars = await repositoryStars()
 </section>
 
 <section class="section settings-plugins" id="plugins">
-  <div class="section-intro">
-    <h2>{copy.plugins.title}</h2>
-    <p>{copy.plugins.description}</p>
-  </div>
+  <h2>{copy.plugins.title}</h2>
   <div class="plugin-grid">{plugins.slice(0, 6).map((plugin) => <PluginCard {plugin} />)}</div>
-  <a class="text-link" href="/plugins/">{copy.plugins.browse} ({plugins.length}) <Icon name="arrow" size={18} /></a>
+  <a class="text-link" href="/plugins/">{copy.plugins.browse(plugins.length)}</a>
 </section>

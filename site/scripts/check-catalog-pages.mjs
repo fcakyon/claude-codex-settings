@@ -56,7 +56,7 @@ const checkPage = (path, name, group) => {
   const claudePanel = panels.find((node) => attr(node, "id") === "claude-code");
   assert.ok(text(claudePanel).includes(`claude plugin install ${path.split("/")[2]}@claude-settings`), `${path}: installer targets the parent plugin`);
   const badge = page.find((node) => attr(node, "class") === "download-count");
-  assert.match(text(badge), /[\d,]+\s*ZIP downloads/, `${path}: GitHub ZIP download count`);
+  assert.match(text(badge), /[\d,]+\s*downloads/, `${path}: GitHub download count`);
   return links(page);
 };
 

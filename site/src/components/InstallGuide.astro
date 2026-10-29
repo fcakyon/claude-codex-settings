@@ -10,7 +10,6 @@ interface Props {
 const { plugin, skill } = Astro.props
 const compact = Boolean(plugin || skill)
 const target = plugin || pluginByName.get(skill?.plugin || "simplify")!
-const Heading = compact ? "h3" : "h2"
 
 const marketplaceCommands = Object.fromEntries(codingTools.map((tool) => [tool.id, tool.marketplace]))
 const guideTabs = [
@@ -20,43 +19,42 @@ const guideTabs = [
     label: "Claude Code",
     icon: "claude",
     title: "Add this marketplace to Claude Code",
-    intro: "Add this marketplace once, then install each plugin by name. The terminal and desktop app share it.",
+    intro: "Add the marketplace once, then install plugins by name. The terminal and desktop app share it.",
     code: `${marketplaceCommands.claude}\n${target.claudeCommand}`,
-    terminal: "Run <code>/reload-plugins</code> in an open session. New sessions load installed plugins automatically.",
-    app: "Select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>. Choose the plugin from the marketplace.",
-    docs: ["Claude Code plugin guide", "https://code.claude.com/docs/en/discover-plugins"],
+    note: "In an open session, run <code>/reload-plugins</code>.",
+    app: "Select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>.",
+    docs: ["Claude Code plugin docs", "https://code.claude.com/docs/en/discover-plugins"],
   },
   {
     id: "codex",
     label: "Codex",
     icon: "openai",
     title: "Add this marketplace to OpenAI Codex",
-    intro: "Works in the Codex CLI and desktop app. The Codex IDE extension doesn’t support plugins.",
+    intro: "Plugins work in the Codex CLI and desktop app, not in the IDE extension.",
     code: `${marketplaceCommands.codex}\n${target.codexCommand}`,
-    terminal: "Enter <code>/plugins</code> to browse marketplaces interactively. Start a new session after installing.",
-    app: "Open <strong>Plugins</strong>, find the plugin, and select <strong>Install</strong>. Start a new task before you use it.",
-    docs: ["OpenAI plugin guide", "https://learn.chatgpt.com/docs/plugins"],
+    note: "Start a new session after installing.",
+    app: "Open <strong>Plugins</strong>, find the plugin and select <strong>Install</strong>.",
+    docs: ["OpenAI plugin docs", "https://learn.chatgpt.com/docs/plugins"],
   },
   {
     id: "cursor",
     label: "Cursor",
     icon: "cursor",
     title: "Add this marketplace to Cursor",
-    intro: "Plugins installed for your user work in the Cursor app and Cursor Agent CLI. The marketplace command only adds the catalog.",
-    code: `${marketplaceCommands.cursor}\ncursor-agent`,
-    terminal: "In Cursor Agent, enter <code>/plugin</code> to choose and install a plugin.",
-    app: "Open <strong>Customize</strong>, find the plugin, and select <strong>Install</strong>. Choose user or project scope when prompted.",
-    docs: ["Cursor plugin guide", "https://cursor.com/docs/plugins"],
+    intro: "Plugins you install for your user work in the Cursor app and the Cursor Agent CLI.",
+    code: `${marketplaceCommands.cursor}\n${target.cursorCommand}`,
+    app: "Open <strong>Customize</strong>, find the plugin and select <strong>Install</strong>.",
+    docs: ["Cursor plugin docs", "https://cursor.com/docs/plugins"],
   },
   {
     id: "gemini-cli",
     label: "Gemini CLI",
     icon: "gemini",
     title: "Install a local extension in Gemini CLI",
-    intro: "Gemini CLI installs extensions from local folders. Clone the repository and run the command from its root.",
+    intro: "Gemini CLI installs extensions from a local folder, so clone the repository first.",
     code: `git clone ${repositoryUrl}.git\ncd claude-codex-settings\n${target.geminiCommand}`,
-    terminal: "Start a new Gemini CLI session after installing.",
-    docs: ["Gemini CLI extension reference", "https://geminicli.com/docs/extensions/reference/"],
+    note: "Start a new Gemini CLI session after installing.",
+    docs: ["Gemini CLI extension docs", "https://geminicli.com/docs/extensions/reference/"],
   },
   {
     id: "chatgpt",
@@ -64,30 +62,30 @@ const guideTabs = [
     label: "ChatGPT",
     icon: "openai",
     title: "Upload a skill to ChatGPT",
-    intro: "Personal Skills work on eligible ChatGPT plans. Workspace admins can turn off skill uploads.",
+    intro: "Personal skills work on eligible ChatGPT plans. Workspace admins can turn off uploads.",
     steps: [
       "Open <strong>chatgpt.com/skills</strong>",
       "Select <strong>+</strong>, then <strong>Upload a skill</strong>",
-      "Choose the downloaded ZIP and wait for the security check",
-      "Run a prompt that matches the skill description",
+      "Choose the ZIP and wait for the security check",
+      "Ask for something the skill covers",
     ],
     image: ["/tutorials/install-skill-chatgpt.webp", "ChatGPT Skills page with the upload menu and ZIP upload screen"],
-    docs: ["OpenAI Skills guide", "https://help.openai.com/en/articles/20001066-skills-in-chatgpt"],
+    docs: ["ChatGPT skills docs", "https://help.openai.com/en/articles/20001066-skills-in-chatgpt"],
   },
   {
     id: "claude-ai",
     label: "Claude.ai",
     icon: "claude",
     title: "Upload a skill to Claude.ai",
-    intro: "Custom skills work on supported Claude plans with code execution turned on.",
+    intro: "Custom skills need a supported Claude plan with code execution turned on.",
     steps: [
       "Open <strong>Customize</strong>, then <strong>Skills</strong>",
       "Select <strong>Add</strong>, then <strong>Upload skill</strong>",
-      "Choose the downloaded ZIP and select <strong>Save</strong>",
-      "Run a prompt that matches the skill description",
+      "Choose the ZIP and select <strong>Save</strong>",
+      "Ask for something the skill covers",
     ],
     image: ["/tutorials/install-skill-claude.webp", "Claude Skills settings with the Add menu and ZIP upload screen"],
-    docs: ["Claude Skills guide", "https://support.claude.com/en/articles/12512180-use-skills-in-claude"],
+    docs: ["Claude skills docs", "https://support.claude.com/en/articles/12512180-use-skills-in-claude"],
   },
 ] as const
 const supportedTabs = guideTabs.filter((tab) => {
@@ -102,7 +100,7 @@ const supportedTabs = guideTabs.filter((tab) => {
     {supportedTabs.map((tab, index) => (
       <button
         id={`tab-${tab.id}`}
-        class:list={["install-tool-tab", { "is-active": index === 0, "is-group-start": index > 0 && ("steps" in tab) !== ("steps" in supportedTabs[index - 1]) }]}
+        class:list={["install-tool-tab", { "is-active": index === 0 }]}
         type="button"
         role="tab"
         aria-controls={tab.id}
@@ -110,7 +108,7 @@ const supportedTabs = guideTabs.filter((tab) => {
         tabindex={index === 0 ? 0 : -1}
         data-aliases={"aliases" in tab ? tab.aliases.join(" ") : undefined}
       >
-        <Icon name={tab.icon} size={20} />
+        <Icon name={tab.icon} size={17} />
         <span>{tab.label}</span>
       </button>
     ))}
@@ -118,31 +116,29 @@ const supportedTabs = guideTabs.filter((tab) => {
   {supportedTabs.map((tab, index) => (
     <div id={tab.id} class="guide-panel" role="tabpanel" aria-labelledby={`tab-${tab.id}`} hidden={index > 0}>
       <div class="guide-main">
-        <Heading>{tab.title}</Heading>
-        <p>{tab.intro}</p>
+        {!compact && <h2>{tab.title}</h2>}
+        {!compact && <p>{tab.intro}</p>}
         {"code" in tab && (
-          <>
-            <pre class="code-sample"><code>{tab.code}</code><button class="icon-button code-copy" type="button" data-copy={tab.code} aria-label={`Copy ${tab.label} commands`}><Icon name="copy" size={17} /></button></pre>
-            <p set:html={tab.terminal} />
-          </>
+          <div class="command">
+            <pre><code>{tab.code.split("\n").map((line) => <span>{line}</span>)}</code></pre>
+            <button class="icon-button code-copy" type="button" data-copy={tab.code} aria-label={`Copy ${tab.label} commands`}><Icon name="copy" size={16} /></button>
+          </div>
         )}
+        {"note" in tab && <p set:html={tab.note} />}
         {"steps" in tab && (
           <>
             {skill && (skill.downloadUrl
-              ? <a class="button primary" href={skill.downloadUrl} data-download-asset={skill.asset}>Download {skill.name} ZIP <Icon name="arrow" size={16} /></a>
-              : <p>A stable ZIP has not been released yet. Install the plugin with a coding agent tab above.</p>
+              ? <a class="button primary" href={skill.downloadUrl} data-download-asset={skill.asset}>Download {skill.name}.zip</a>
+              : <p>No ZIP release yet. Install the plugin from a coding agent tab.</p>
             )}
-            {plugin && <p><a class="inline-link" href="#skills">Choose a skill below</a>, then download its ZIP.</p>}
+            {plugin && <p><a class="inline-link" href="#skills">Download a skill ZIP</a> from the list below.</p>}
             <ol class="steps-list">{tab.steps.map((step) => <li set:html={step} />)}</ol>
           </>
         )}
         {compact && "app" in tab && <p class="install-app"><strong>Desktop app:</strong> <span set:html={tab.app} /></p>}
-        <div class="guide-links">
-          <a class="official-link" href={tab.docs[1]}>Read the {tab.docs[0]} <Icon name="arrow" size={16} /></a>
-          {"steps" in tab && <a class="official-link" href="/skills/">Browse skill downloads <Icon name="arrow" size={16} /></a>}
-        </div>
+        {!compact && <a class="official-link" href={tab.docs[1]}>{tab.docs[0]}</a>}
       </div>
-      {!compact && "app" in tab && tab.app && (
+      {!compact && "app" in tab && (
         <div class="guide-aside">
           <h3>In the desktop app</h3>
           <p set:html={tab.app} />
@@ -165,7 +161,7 @@ Use the humanize skill to revise this README.`}</code></pre>
   </div>
   <div>
     <h2>Keep the folder inside the ZIP</h2>
-    <p>Claude.ai needs the named skill folder inside the archive. Every download here keeps it. Read <code>SKILL.md</code> and any scripts before you upload.</p>
+    <p>Claude.ai expects the skill folder inside the archive, and every download here keeps it. Read <code>SKILL.md</code> and any scripts before you upload.</p>
     <pre class="code-sample"><code>{`skill-name.zip
 └── skill-name/
     ├── SKILL.md

@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { basename, extname, resolve } from "node:path";
+import { basename, extname, relative, resolve } from "node:path";
+import { load } from "js-yaml";
 import catalogSeo from "./catalog-seo.json";
 import { releaseDownloads } from "./downloads";
 
@@ -41,10 +42,12 @@ export const author = {
 export const site = {
   settings: {
     variant: "settings" as const,
+    name: "Claude Settings",
     url: process.env.PUBLIC_SITE_URL || "https://claudesettings.com",
   },
   plugins: {
     variant: "plugins" as const,
+    name: "Agent Plugins",
     url: process.env.PUBLIC_SITE_URL || "https://agentplugins.net",
   },
 }[variant];
@@ -99,8 +102,9 @@ export const editorGroups = editorDirectories.map((directory) => ({
 
 export const editorFiles = editorGroups.flatMap((group) => group.files);
 export const configurationDocuments = editorFiles.filter((file) => file.label !== "CLAUDE.md");
+export const claudeGuideFile = editorFiles.find((file) => file.label === "CLAUDE.md")!;
 
-const providerLabels: Record<string, string> = { kimi: "Kimi", minimax: "MiniMax", zai: "Z.ai / GLM" };
+export const providerLabels: Record<string, string> = { kimi: "Kimi", minimax: "MiniMax", zai: "Z.ai / GLM" };
 
 export const providerNames = [
   ...new Set(
@@ -272,6 +276,27 @@ export const plugins = marketplace.plugins
 export type Plugin = (typeof plugins)[number];
 export const pluginByName = new Map(plugins.map((plugin) => [plugin.name, plugin]));
 
+const skillFiles = (directory: string, base = directory): string[] =>
+  readdirSync(directory, { withFileTypes: true })
+    .filter((entry) => !entry.name.startsWith(".") && extname(entry.name) !== ".zip")
+    .flatMap((entry) =>
+      entry.isDirectory()
+        ? skillFiles(resolve(directory, entry.name), base)
+        : [relative(base, resolve(directory, entry.name))],
+    )
+    .sort((a, b) => Number(a !== "SKILL.md") - Number(b !== "SKILL.md") || a.localeCompare(b));
+
+// Second-level headings outside code fences, as plain text.
+const sectionHeadings = (markdown: string) => {
+  let fenced = false;
+  return markdown.split("\n").flatMap((line) => {
+    if (/^\s*(```|~~~)/.test(line)) fenced = !fenced;
+    return !fenced && line.startsWith("## ")
+      ? [line.slice(3).replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[`*]/g, "").replace(/\s+[—–]\s+/g, ": ").trim()]
+      : [];
+  });
+};
+
 const duplicateSkillNames = new Set(
   plugins
     .flatMap((plugin) => plugin.components?.skills || [])
@@ -281,38 +306,38 @@ export const skills = plugins
   .flatMap((plugin) =>
     (plugin.components?.skills || []).map((name) => {
       const key = `${plugin.name}/${name}`;
-      const directory = resolve(root, "plugins", plugin.name, "skills", name);
-      const content = read(`plugins/${plugin.name}/skills/${name}/SKILL.md`);
+      const path = `plugins/${plugin.name}/skills/${name}`;
+      const [, frontmatter, body] = read(`${path}/SKILL.md`).match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/) || [];
+      const { description } = (load(frontmatter || "") || {}) as { description?: string };
+      if (!description) throw new Error(`Missing SKILL.md description: ${key}`);
       const assetPlugin = plugin.name.endsWith("-office-skills")
         ? plugin.name.replace(/-office-skills$/, "")
         : plugin.name;
       const asset = `${duplicateSkillNames.has(name) ? `${assetPlugin}-${name}` : name}.zip`;
-      const bundled = ["scripts", "references", "assets", "templates"].filter((folder) =>
-        existsSync(resolve(directory, folder)),
-      );
       const seo = catalogSeo.skills[key as keyof typeof catalogSeo.skills];
       if (!seo) throw new Error(`Missing public skill metadata: ${key}`);
       return {
         key,
         name,
         plugin: plugin.name,
+        category: plugin.category,
         asset,
         downloads: downloadStats.assets[asset]?.count || 0,
         downloadUrl: downloadStats.assets[asset]?.url,
-        sourceUrl: `${repositoryUrl}/tree/main/plugins/${plugin.name}/skills/${name}`,
-        bundled,
-        externalSetup:
-          /\b(?:API key|authentication|CLI|MCP server|Node\.js|Python|GitHub CLI|Azure CLI|gcloud|Tavily|Overleaf)\b/i.test(
-            content,
-          ),
+        sourceUrl: `${repositoryUrl}/tree/main/${path}`,
+        trigger: description.trim(),
+        sections: sectionHeadings(body),
+        files: skillFiles(resolve(root, path)).map((file) => ({ path: file, url: `${repositoryUrl}/blob/main/${path}/${file}` })),
         seo,
         detailUrl: `/plugins/${plugin.name}/skills/${name}/`,
+        search: [name, plugin.name, plugin.category, seo.title, seo.description].filter(Boolean).join(" ").toLowerCase(),
       };
     }),
   )
   .sort((a, b) => a.name.localeCompare(b.name) || a.plugin.localeCompare(b.plugin));
 
 export type Skill = (typeof skills)[number];
+export const popularSkills = skills.toSorted((a, b) => b.downloads - a.downloads);
 export const skillByKey = new Map(skills.map((skill) => [skill.key, skill]));
 export const skillsByPlugin = Object.groupBy(skills, (skill) => skill.plugin);
 
@@ -362,6 +387,5 @@ export const codingTools = [
 ] as const;
 
 export const sourceDocuments = {
-  claude: read(".claude/CLAUDE.md"),
   install: read("INSTALL.md"),
 };

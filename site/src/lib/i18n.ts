@@ -9,20 +9,20 @@ export const translations = {
   en: {
     languageLabel: "简体中文",
     stars: "stars",
-    downloads: "ZIP downloads",
-    downloadSource: (releases: string, date: string) => `GitHub ZIP downloads across ${releases} published releases. Updated ${date}.`,
+    downloads: "downloads",
+    downloadSource: (releases: string, date: string) => `ZIP downloads across ${releases} GitHub releases. Updated ${date}.`,
     skipToContent: "Skip to main content",
     copied: "Copied to clipboard",
     primaryNav: "Primary navigation",
     footer: {
-      credit: "Developed using web development plugins from",
+      madeBy: ["Made by ", ""],
       sitemap: "Sitemap",
     },
     settings: {
       meta: {
         title: "Claude Settings for Claude Code, Codex and Cursor",
         description: (providers: string) =>
-          `Repository-backed settings for Claude Code and Codex CLI, including ${providers}, plus shared plugins, skills and hooks.`,
+          `Copy working Claude Code and Codex CLI settings with ${providers} variants, and install plugins, skills and hooks from one marketplace.`,
       },
       nav: [
         ["Settings", "/settings/"],
@@ -31,27 +31,26 @@ export const translations = {
         ["Install", "/guides/install-agent-skills/"],
       ],
       hero: {
-        title: "Battle-tested settings for Claude Code, Codex and Cursor",
+        title: "Claude Code and Codex settings",
         description: (providers: string) =>
-          `Explore ready-to-use ${providers} files alongside shared skills, hooks, agents and MCP servers.`,
-        repository: "View the repository",
-        install: "Read the install guide",
+          `Copy the settings files, including variants for ${providers}. Then install plugins that add skills, hooks and agents.`,
+        browse: (count: number) => `Browse ${count} plugins`,
+        install: "Install guide",
       },
       configuration: {
-        title: "One setup, four coding tools",
-        description: "Add the marketplace once in the tool you use, then install only the plugins you need.",
+        title: "Add the marketplace",
+        description: "Run one command in your tool, then install plugins by name.",
         copyCommand: "Copy the command for",
         tools: [
-          "Settings, hooks, commands and agents",
-          "Plugins, skills and shared guidance",
-          "Portable plugins and project rules",
-          "Gemini CLI installs plugin folders from a clone of the repository.",
+          "Then run <code>claude plugin install plugin_name@claude-settings</code>.",
+          "Then run <code>codex plugin add plugin_name@claude-settings</code> and start a new session.",
+          "Then run <code>cursor-agent</code> and enter <code>/plugin</code> to pick a plugin.",
+          "Run it inside a clone of this repository.",
         ],
       },
       plugins: {
-        title: "Plugins with a clear job",
-        description: "Descriptions and links come from the repository manifests on every build.",
-        browse: "Browse all plugins",
+        title: "Featured plugins",
+        browse: (count: number) => `All ${count} plugins`,
       },
     },
     plugins: {
@@ -66,12 +65,11 @@ export const translations = {
         ["Compatibility", "#compatibility"],
       ],
       hero: {
-        title: "Agent plugins that do real work",
-        description: "Browse installable skills, hooks and agents for Claude Code, Codex, Cursor and Gemini.",
+        title: "Plugins for Claude Code, Codex, Cursor and Gemini",
+        description: "Search by task, pick a plugin and copy its install command.",
       },
       compatibility: {
-        title: "Use the same skills across tools",
-        description: "Support labels are derived from the manifest files present in each plugin directory.",
+        title: "Supported tools",
         tools: [
           "Plugins, skills, agents, hooks and commands",
           "Plugins, skills and shared agent guidance",
@@ -91,16 +89,14 @@ export const translations = {
         installPlugin: "Install plugin",
         copyMarketplace: "Copy marketplace command",
         copyInstall: "Copy install command",
-        note: "Pick a tab to switch tools, or a plugin name to change the command.",
+        note: "Select a plugin name to change the command.",
         unavailable: "is not available for",
         shown: "plugins shown",
       },
     },
     editor: {
       files: "Repository files",
-      project: "Project",
       tabs: "Configuration files",
-      terminal: "Terminal",
       copy: "Copy clone URL",
     },
     github: "View on GitHub",
@@ -108,41 +104,45 @@ export const translations = {
   "zh-CN": {
     languageLabel: "English",
     stars: "个星标",
-    downloads: "ZIP 下载",
-    downloadSource: (releases: string, date: string) => `GitHub 上 ${releases} 个已发布版本的 ZIP 下载总次数。更新于 ${date}。`,
+    downloads: "次下载",
+    downloadSource: (releases: string, date: string) => `${releases} 个 GitHub 版本的 ZIP 下载总次数。更新于 ${date}。`,
     skipToContent: "跳到主要内容",
     copied: "已复制到剪贴板",
     primaryNav: "主导航",
     footer: {
-      credit: "使用以下仓库中的网页开发插件构建：",
+      madeBy: ["由 ", " 制作"],
       sitemap: "网站地图",
     },
     settings: {
       meta: {
         title: "Claude Code 配置与 Codex CLI 插件 | Claude Settings",
         description: (providers: string) =>
-          `由仓库自动生成的 Claude Code 与 Codex CLI 配置，包含 ${providers}，以及共享插件、技能和钩子。`,
+          `复制可直接使用的 Claude Code 与 Codex CLI 配置（含 ${providers} 版本），并从同一个插件市场安装插件、技能和钩子。`,
       },
       nav: [
         ["安装", "#install"],
         ["插件", "#plugins"],
       ],
       hero: {
-        title: "适用于 Claude Code、Codex 和 Cursor 的实用配置",
-        description: (providers: string) => `直接查看 ${providers} 配置，并共享技能、钩子、智能体和 MCP 服务。`,
-        repository: "查看 GitHub 仓库",
-        install: "阅读安装指南",
+        title: "Claude Code 与 Codex 配置",
+        description: (providers: string) => `复制配置文件，包括 ${providers} 版本。然后安装插件，添加技能、钩子和智能体。`,
+        browse: (count: number) => `浏览 ${count} 个插件`,
+        install: "安装指南",
       },
       configuration: {
-        title: "一套配置，支持四种编程工具",
-        description: "在你使用的工具中添加一次插件市场，然后只安装需要的插件。",
+        title: "添加插件市场",
+        description: "在你的工具中运行一条命令，然后按名称安装插件。",
         copyCommand: "复制以下工具的命令：",
-        tools: ["设置、钩子、命令和智能体", "插件、技能和共享指引", "可移植插件和项目规则", "Gemini CLI 从克隆的仓库中安装插件目录。"],
+        tools: [
+          "然后运行 <code>claude plugin install plugin_name@claude-settings</code>。",
+          "然后运行 <code>codex plugin add plugin_name@claude-settings</code>，并开启新会话。",
+          "然后运行 <code>cursor-agent</code>，输入 <code>/plugin</code> 选择插件。",
+          "请在本仓库的克隆目录中运行。",
+        ],
       },
       plugins: {
-        title: "每个插件都有明确用途",
-        description: "插件说明和链接会在每次构建时从仓库清单读取。",
-        browse: "浏览全部插件",
+        title: "精选插件",
+        browse: (count: number) => `全部 ${count} 个插件`,
       },
     },
     plugins: {
@@ -156,12 +156,11 @@ export const translations = {
         ["兼容性", "#compatibility"],
       ],
       hero: {
-        title: "真正解决问题的 AI 编程工具插件",
-        description: "浏览可安装到 Claude Code、Codex、Cursor 和 Gemini 的技能、钩子与智能体。",
+        title: "适用于 Claude Code、Codex、Cursor 和 Gemini 的插件",
+        description: "按任务搜索，选择插件，复制安装命令。",
       },
       compatibility: {
-        title: "在不同工具中使用同一套技能",
-        description: "支持范围会根据每个插件目录中的清单文件自动生成。",
+        title: "支持的工具",
         tools: [
           "插件、技能、智能体、钩子和命令",
           "插件、技能和共享智能体指引",
@@ -181,16 +180,14 @@ export const translations = {
         installPlugin: "安装插件",
         copyMarketplace: "复制插件市场命令",
         copyInstall: "复制安装命令",
-        note: "切换工具标签，或选择插件名称来更新安装命令。",
+        note: "选择插件名称即可更新安装命令。",
         unavailable: "暂不支持",
         shown: "个插件",
       },
     },
     editor: {
       files: "仓库文件",
-      project: "项目",
       tabs: "配置文件",
-      terminal: "终端",
       copy: "复制克隆地址",
     },
     github: "在 GitHub 查看",

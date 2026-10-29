@@ -1,44 +1,51 @@
 ---
 import Icon from "./Icon.astro"
 import PluginCard from "./PluginCard.astro"
-import { plugins } from "../lib/content"
+import SkillCard from "./SkillCard.astro"
+import { plugins, popularSkills } from "../lib/content"
 
-const pluginCategories = Object.entries(Object.groupBy(plugins, (plugin) => plugin.category || "other")).sort(([a], [b]) =>
-  a.localeCompare(b),
-)
+interface Props {
+  kind: "plugin" | "skill"
+}
+
+const { kind } = Astro.props
+const items = kind === "plugin" ? plugins : popularSkills
+const categories = Object.entries(Object.groupBy(items, (item) => item.category || "other")).sort(([a], [b]) => a.localeCompare(b))
 ---
 
-<div class="hub" data-plugin-hub>
+<div class="hub" data-hub={kind}>
   <div class="hub-filters">
     <label class="hub-search">
       <Icon name="search" size={20} />
-      <span class="sr-only">Search plugins</span>
-      <input type="search" name="q" placeholder={`Search ${plugins.length} plugins by name, skill, or task…`} autocomplete="off" data-hub-search />
+      <span class="sr-only">Search {kind}s</span>
+      <input type="search" name="q" placeholder={`Search ${items.length} ${kind}s by name or task…`} autocomplete="off" data-hub-search />
     </label>
     <div class="hub-chips" role="group" aria-label="Filter by category">
-      <button type="button" aria-pressed="true" data-hub-category="">All <span>{plugins.length}</span></button>
-      {pluginCategories.map(([category, categoryPlugins]) => (
-        <button type="button" aria-pressed="false" data-hub-category={category}>{category.replaceAll("-", " ")} <span>{categoryPlugins?.length}</span></button>
+      <button type="button" aria-pressed="true" data-hub-category="">All <span>{items.length}</span></button>
+      {categories.map(([category, categoryItems]) => (
+        <button type="button" aria-pressed="false" data-hub-category={category}>{category.replaceAll("-", " ")} <span>{categoryItems?.length}</span></button>
       ))}
     </div>
   </div>
   <ul class="plugin-grid" role="list">
-    {plugins.map((item) => (
-      <li
-        style={`view-transition-name: plugin-${item.name}`}
-        data-category={item.category || "other"}
-        data-search={item.search}
-      >
-        <PluginCard plugin={item} />
-      </li>
-    ))}
+    {kind === "plugin"
+      ? plugins.map((item) => (
+          <li style={`view-transition-name: plugin-${item.name}`} data-category={item.category || "other"} data-search={item.search}>
+            <PluginCard plugin={item} />
+          </li>
+        ))
+      : popularSkills.map((item) => (
+          <li data-category={item.category || "other"} data-search={item.search}>
+            <SkillCard skill={item} />
+          </li>
+        ))}
   </ul>
-  <p class="hub-empty" data-hub-empty hidden>No plugins match. Try a shorter word or pick All.</p>
+  <p class="hub-empty" data-hub-empty hidden>No {kind}s match. Try a shorter word or pick All.</p>
   <p class="sr-only" aria-live="polite" data-hub-count></p>
 </div>
 
 <script>
-  document.querySelectorAll<HTMLElement>("[data-plugin-hub]").forEach((hub) => {
+  document.querySelectorAll<HTMLElement>("[data-hub]").forEach((hub) => {
     const search = hub.querySelector<HTMLInputElement>("[data-hub-search]")!
     const chips = [...hub.querySelectorAll<HTMLButtonElement>("[data-hub-category]")]
     const items = [...hub.querySelectorAll<HTMLElement>("[data-search]")]
@@ -54,7 +61,7 @@ const pluginCategories = Object.entries(Object.groupBy(plugins, (plugin) => plug
         visible += Number(!item.hidden)
       })
       empty.hidden = visible > 0
-      count.textContent = visible ? `${visible} plugin${visible === 1 ? "" : "s"} shown` : empty.textContent
+      count.textContent = visible ? `${visible} ${hub.dataset.hub}${visible === 1 ? "" : "s"} shown` : empty.textContent
     }
     search.addEventListener("input", filter)
     chips.forEach((chip) =>
