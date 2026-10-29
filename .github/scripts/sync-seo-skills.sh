@@ -33,6 +33,21 @@ mkdir -p "$SCHEMA_DIR/scripts"
 cp "$REPO_ROOT/.github/scripts/seo-skills/validate_schema.mjs" "$SCHEMA_DIR/scripts/"
 chmod +x "$SCHEMA_DIR/scripts/validate_schema.mjs"
 
+# Insert local field notes ahead of each skill's References or Sources section.
+for notes in "$REPO_ROOT"/.github/scripts/seo-skills/field-notes/*.md; do
+  python3 - "$notes" "$REPO_ROOT/plugins/seo-skills/skills/$(basename "$notes" .md)/SKILL.md" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+notes, skill = Path(sys.argv[1]).read_text().strip(), Path(sys.argv[2])
+text = skill.read_text()
+match = re.search(r"^## (References|Sources)$", text, re.M)
+at = match.start() if match else len(text)
+skill.write_text(f"{text[:at].rstrip()}\n\n{notes}\n\n{text[at:]}".rstrip() + "\n")
+PY
+done
+
 for skill in "${SKILLS[@]}"; do
   create_zip "plugins/seo-skills/skills/$skill"
 done
