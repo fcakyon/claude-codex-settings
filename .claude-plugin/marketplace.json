@@ -539,6 +539,30 @@
       "tags": ["testing", "code-quality"]
     },
     {
+      "name": "google-telemetry",
+      "version": "1.0.0",
+      "description": "Read app usage and search traffic before and after releases with API-backed CLIs.",
+      "author": {
+        "name": "Fatih C. Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "source": "./plugins/google-telemetry",
+      "keywords": [
+        "analytics",
+        "telemetry",
+        "search",
+        "traffic",
+        "releases"
+      ],
+      "category": "productivity",
+      "tags": [
+        "analytics",
+        "seo"
+      ]
+    },
+    {
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
