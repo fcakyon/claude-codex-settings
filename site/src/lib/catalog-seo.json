@@ -156,6 +156,10 @@
       "title": "Review test quality and remove duplicate coverage",
       "description": "Keep tests that protect real behavior and independent contracts. Audit weak or duplicate coverage and remove tests that only restate implementation details."
     },
+    "google-telemetry": {
+      "title": "Track release adoption with Google Analytics and Search Console",
+      "description": "Read Google Analytics and Search Console from the terminal. Compare version adoption, product events and search traffic before and after a release."
+    },
     "qa": {
       "title": "Run real app journeys with reusable QA tooling",
       "description": "Set up and run tracked QA journeys for websites, browser extensions, Android apps and backends. Verify user workflows with saved sessions and failure evidence."
@@ -563,6 +567,22 @@
       "related": [
         "github-dev/create-pr",
         "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "google-telemetry/google-telemetry": {
+      "title": "Read Google Analytics and Search Console reports",
+      "description": "Answer product questions with Google Analytics events and Search Console clicks. Separate reporting delays, missing tracking and failed access from zero use.",
+      "related": [
+        "google-telemetry/setup",
+        "seo-skills/seo-audit"
+      ]
+    },
+    "google-telemetry/setup": {
+      "title": "Set up read access to Google Analytics and Search Console",
+      "description": "Install the Analytics and Search Console command-line tools. Grant read access with existing credentials or a guided Google sign-in, then confirm each property.",
+      "related": [
+        "google-telemetry/google-telemetry",
+        "gcloud-tools/setup"
       ]
     },
     "hetzner-skills/hetzner-deploy": {
