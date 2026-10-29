@@ -29,11 +29,18 @@ sed -i '' \
   's/Run `validate_schema` on any block before you hand it over\./From this skill directory, run `node scripts\/validate_schema.mjs <jsonld-file>` on any block before you hand it over./' \
   "$SCHEMA_DIR/SKILL.md"
 
-for script in schema/validate_schema.mjs seo-audit/check_llms_txt.mjs; do
+for script in schema/validate_schema.mjs seo-audit/check_llms_txt.mjs seo-audit/check_head.mjs; do
   dir="$REPO_ROOT/plugins/seo-skills/skills/${script%/*}/scripts"
   mkdir -p "$dir"
   install -m 755 "$REPO_ROOT/.github/scripts/seo-skills/${script#*/}" "$dir/"
 done
+
+sed -i '' \
+  -e 's#roughly 50 to 60 characters, brand at the end if included#descriptive and concise. Google sets no length limit and truncates the title link to fit the device width, so there is no fixed character cutoff. Brand with just the site name at the start or end after a hyphen, colon, or pipe, which Google may leave out when the result already shows it#' \
+  -e '/^- Google Search Central, Sitemaps overview:/i\
+- Google Search Central, Influencing title links: https://developers.google.com/search/docs/appearance/title-link
+' \
+  "$REPO_ROOT/plugins/seo-skills/skills/seo-audit/references/audit-checklist.md"
 
 # Insert local field notes ahead of each skill's References or Sources section.
 for notes in "$REPO_ROOT"/.github/scripts/seo-skills/field-notes/*.md; do
