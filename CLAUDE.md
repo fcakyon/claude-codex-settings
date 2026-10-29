@@ -359,6 +359,7 @@ When writing README or docs content for this repo:
 - `site/src/lib/catalog-seo.json` owns public titles, summaries and related skill links. Pages, cards, social tags, structured data and the LLM catalog share this copy. Detailed instructions remain in `SKILL.md`; versions, tools and install commands come from repository sources. Vendor syncs keep website copy intact.
 - Add, remove or rename catalog entries with their source plugin/skill. Write unique, complete task summaries and distinguish similar skills by provider or workflow. Choose related links by task, including across plugins. Do not turn invocation triggers into search snippets.
 - Run `npm ci --prefix site` and `npm run build --prefix site`. Build checks cover every page, metadata uniqueness, canonical URLs, headings, social tags, schema, contextual links, sitemaps and missing/stale entries.
+- `InstallGuide.astro` owns installation choices for the guide and catalog pages. Show only supported tools and link ZIP downloads to published assets. `downloads.ts` sums GitHub release assets across paginated published releases once per build. Plugin totals combine skill ZIPs and earlier plugin ZIPs without counting the same asset twice. These are download actions, not installs or unique users. The existing website refresh deploys fresh counts daily.
 - Titles use 20–70 characters and summaries use 90–160 as editorial budgets, not Google limits. Review meaning against source; indexing, ranking and Google snippet selection are not guaranteed.
 
 ### Plugin descriptions

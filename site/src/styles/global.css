@@ -63,7 +63,6 @@ button { color: inherit; }
 .button:focus-visible,
 .editor button:focus-visible,
 .plugin-browser button:focus-visible,
-.install-terminal-section button:focus-visible,
 .tool-band button:focus-visible,
 .guide-tabs button:focus-visible,
 .content-page a:focus-visible,
@@ -268,7 +267,6 @@ button.tree-row { cursor: pointer; }
 .content-sections > section,
 .content-section {
   padding: clamp(40px, 5vw, 64px) 0;
-  border-bottom: 1px solid var(--border);
 }
 .content-section > h2,
 .catalog-section > h2 {
@@ -308,21 +306,19 @@ button.tree-row { cursor: pointer; }
 .reference-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  margin-top: 42px;
-  border-top: 1px solid var(--border);
-  border-left: 1px solid var(--border);
+  gap: 24px;
+  margin-top: 32px;
 }
 .reference-card {
-  min-height: 230px;
-  padding: 34px;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  padding: 24px;
+  border-radius: 12px;
+  background: var(--surface);
 }
 .reference-card:hover {
   background: var(--surface-hover);
 }
 .reference-card p {
-  min-height: 76px;
+  margin-bottom: 0;
 }
 .reference-card span,
 .official-link {
@@ -403,197 +399,11 @@ button.tree-row { cursor: pointer; }
   background: #11161c;
   color: #fff;
 }
-.install-terminal {
-  margin-top: 14px;
-  overflow: hidden;
-  border: 1px solid #29323c;
-  border-radius: 16px;
-  background: #0d1117;
-  color: #f7f9fb;
-  box-shadow: 0 18px 44px rgb(15 23 32 / 14%);
-}
-.install-terminal-bar {
-  min-height: 56px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 20px;
-  padding: 0 22px;
-  border-bottom: 1px solid #252d36;
-  background: #11161c;
-}
-.terminal-lights {
-  display: flex;
-  gap: 8px;
-}
-.terminal-lights i {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #ff625a;
-}
-.terminal-lights i:nth-child(2) {
-  background: #f4bf4f;
-}
-.terminal-lights i:nth-child(3) {
-  background: #58c968;
-}
-.install-terminal-title {
-  color: #8f99a5;
-  font-size: 13px;
-  font-weight: 650;
-}
-.install-terminal-title strong {
-  color: #cbd2da;
-}
-.terminal-copy {
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  justify-self: end;
-  gap: 9px;
-  padding: 0 14px;
-  border: 1px solid #3b4652;
-  border-radius: 10px;
-  background: #181f27;
-  color: #e5e9ed;
-  font-size: 13px;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    color 160ms ease;
-}
-.terminal-copy:hover {
-  border-color: #5b6877;
-  background: #202832;
-}
-.terminal-copy.is-copied {
-  border-color: #49d66f;
-  color: #66e184;
-}
-.install-terminal-body {
-  min-height: 210px;
-  padding: 30px 26px 26px;
-}
-.install-command-line {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  min-width: 0;
-}
-.install-prompt {
-  flex: 0 0 auto;
-  color: #727d89;
-  font: 18px/1.6 var(--mono);
-}
-.install-command-line code {
-  min-width: 0;
-  color: #f6f8fa;
-  font: 15px/1.6 var(--mono);
-  letter-spacing: -0.02em;
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
-}
-.typing-cursor {
-  width: 9px;
-  height: 22px;
-  flex: 0 0 auto;
-  background: #5ad978;
-  animation: terminal-cursor 720ms step-end infinite;
-}
-[data-phase="complete"] .typing-cursor {
-  opacity: 0;
-}
-.install-output {
-  margin-top: 20px;
-  font: 14px/1.6 var(--mono);
-}
-.install-output p {
-  margin: 0 0 14px;
-  color: #8f99a5;
-  opacity: 0;
-  transform: translateY(5px);
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
-}
-[data-phase="output"] .install-output p:first-child,
-[data-phase="complete"] .install-output p {
-  opacity: 1;
-  transform: translateY(0);
-}
-.install-output .install-success {
-  color: #61df80;
-}
-.install-terminal-progress {
-  min-height: 52px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
-  align-items: center;
-  gap: 14px;
-  padding: 0 20px 0 38px;
-  border-top: 1px solid #252d36;
-  color: #7f8995;
-  font: 12px/1 var(--mono);
-}
-.install-progress-track {
-  height: 2px;
-  overflow: hidden;
-  background: #2d3742;
-}
-.install-progress-track i {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: #5ad978;
-  transform: scaleX(0);
-  transform-origin: left;
-}
-.install-progress-track i.is-counting {
-  transform: scaleX(1);
-  transition: transform 2600ms linear;
-}
-.install-terminal-progress button {
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  padding: 0;
-  border: 1px solid #38424d;
-  border-radius: 8px;
-  background: transparent;
-  color: #aeb6bf;
-  cursor: pointer;
-}
-.install-terminal-progress button:hover {
-  background: #1b222a;
-  color: #fff;
-}
-.play-glyph,
-[data-paused] .pause-glyph {
-  display: none;
-}
-[data-paused] .play-glyph {
-  display: inline-flex;
-}
-@keyframes terminal-cursor {
-  50% {
-    opacity: 0;
-  }
-}
-.skill-stack {
-  border-top: 1px solid var(--border);
-}
 .skill-download {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 190px;
   gap: 26px 40px;
   padding: 34px 0;
-  border-bottom: 1px solid var(--border);
 }
 .skill-download.compact {
   padding-block: 28px;
@@ -688,19 +498,33 @@ button.tree-row { cursor: pointer; }
 .hub-chips button[aria-pressed="true"] { border-color: var(--text); background: var(--text); color: var(--background); }
 .hub-chips span { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .7; }
 .hub .plugin-grid { margin-top: 14px; }
-.plugin-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(32px, 4vw, 64px); align-items: start; padding: clamp(36px, 4vw, 56px) 0 clamp(40px, 5vw, 64px); border-bottom: 1px solid var(--border); }
-.plugin-hero h1 { display: flex; flex-direction: column; gap: 10px; }
-.plugin-title-name { width: fit-content; font-family: var(--mono); font-size: clamp(40px, 4.6vw, 64px); letter-spacing: -0.04em; line-height: 1; }
-.plugin-title-tail { color: var(--muted); font-size: clamp(18px, 1.6vw, 22px); font-weight: 600; letter-spacing: -0.01em; }
-.plugin-hero-copy > p { margin: 0; color: var(--text); font-size: clamp(19px, 1.8vw, 22px); line-height: 1.45; }
+.catalog-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: start; padding: 42px 0 56px; }
+.catalog-hero h1 { text-wrap: balance; }
+.catalog-hero-copy > p { max-width: 680px; font-size: clamp(18px, 1.8vw, 21px); line-height: 1.55; }
+.catalog-hero .skill-labels { margin-top: 24px; }
+.catalog-install { min-width: 0; padding: 24px; border-radius: 16px; background: var(--surface-hover); }
+.catalog-install > h2 { margin: 0; font-size: 23px; }
+.download-count { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 20px; padding: 7px 11px; border-radius: 999px; background: var(--surface-hover); color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.download-count strong { color: var(--text); }
+.download-count:hover { color: var(--link); }
+.content-hero > .download-count { margin-top: 24px; margin-bottom: 0; }
+.compact-install { padding-top: 18px; }
+.compact-install .install-tool-tabs { --tab-columns: repeat(3, minmax(0, 1fr)); }
+.compact-install .install-tool-tab { min-height: 48px; font-size: 12px; gap: 6px; }
+.compact-install .guide-panel { grid-template-columns: minmax(0, 1fr); padding: 20px 0 0; border: 0; }
+.compact-install .guide-panel h3 { font-size: 18px; margin-bottom: 10px; }
+.compact-install .guide-main > p, .compact-install .steps-list { font-size: 14px; line-height: 1.6; }
+.compact-install .guide-links { margin-top: 14px; font-size: 13px; }
+.compact-install .code-sample { margin-block: 16px; padding: 16px 48px 16px 16px; }
+.compact-install .code-sample code { font-size: 12px; }
+.compact-install .install-app { margin-top: 14px; }
+
 .plugin-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 28px 0 0; overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: var(--border); }
 .plugin-facts div { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; background: var(--surface); }
 .plugin-facts dt { color: var(--muted); font-size: 13px; }
 .plugin-facts dd { margin: 0; font-weight: 650; }
 .plugin-hero-links { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 24px; }
-.plugin-hero .install-tool-tabs { --tab-columns: repeat(4, minmax(0, 1fr)); }
-.plugin-hero .install-tool-tab { font-size: 13px; }
-.skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 0 48px; margin-top: 12px; border-top: 1px solid var(--border); }
+.skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 0 48px; margin-top: 12px; }
 .skill-grid .skill-download { grid-template-columns: 1fr; gap: 16px; }
 .skill-grid .skill-copy p { margin-bottom: 14px; color: var(--muted); font-size: 15px; }
 .skill-grid .skill-actions { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px 20px; }
@@ -717,14 +541,11 @@ h2 + .plugin-extras { border-top: 1px solid var(--border); }
 .guide-tabs .install-tool-tabs { --tab-columns: repeat(6, minmax(0, 1fr)); }
 .guide-tabs .install-tool-tab { position: relative; }
 .guide-tabs .is-group-start { margin-left: 5px; }
-.is-cycling .install-tool-tab.is-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--accent); transform-origin: left; animation: guide-progress 7s linear; }
-.is-cycling:hover .install-tool-tab.is-active::after { animation-play-state: paused; }
-@keyframes guide-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes panel-in { from { opacity: 0; transform: translateY(6px); } }
 ::view-transition-group(*) { animation-duration: 220ms; }
 .guide-panel { grid-area: 2 / 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 28px 56px; align-items: start; padding: 36px 0 48px; border-bottom: 1px solid var(--border); }
 .guide-panel:not([hidden]) { animation: panel-in 240ms ease both; }
-.guide-panel[hidden] { display: grid; visibility: hidden; }
+.guide-panel[hidden] { display: none; }
 .guide-panel h2 { margin-bottom: 10px; }
 .guide-main > p { max-width: 620px; font-size: 17px; }
 .guide-main > p:last-of-type { margin-bottom: 0; }
@@ -836,7 +657,7 @@ footer a:hover { color: var(--text); }
   .editor { height: 620px; }
   .plugin-layout { grid-template-columns: 1fr; }
   .install-panel { position: static; }
-  .plugin-hero { grid-template-columns: 1fr; }
+  .catalog-hero { grid-template-columns: 1fr; }
   .plugin-head,
   .plugin-row {
     grid-template-columns: 42px 160px minmax(240px, 1fr) 120px;
@@ -903,11 +724,7 @@ footer a:hover { color: var(--text); }
     grid-template-columns: 1fr;
   }
   .reference-card {
-    min-height: 0;
     padding: 26px 22px;
-  }
-  .reference-card p {
-    min-height: 0;
   }
   .file-list a {
     grid-template-columns: 1fr 22px;
@@ -930,31 +747,6 @@ footer a:hover { color: var(--text); }
   }
   .install-tool-tab:last-child:nth-child(odd) {
     grid-column: span 2;
-  }
-  .install-terminal-bar {
-    grid-template-columns: 1fr auto;
-    padding-inline: 16px;
-  }
-  .install-terminal-title {
-    display: none;
-  }
-  .install-terminal-body {
-    padding-inline: 20px;
-  }
-  .install-command-line {
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .typing-cursor {
-    width: 8px;
-    height: 19px;
-    margin-top: 2px;
-  }
-  .install-output {
-    font-size: 13px;
-  }
-  .install-terminal-progress {
-    padding-left: 20px;
   }
   .skill-download {
     grid-template-columns: 1fr;

@@ -4,10 +4,12 @@ import InstallGuide from "./InstallGuide.astro"
 import PluginHub from "./PluginHub.astro"
 import PluginPage from "./PluginPage.astro"
 import Icon from "./Icon.astro"
+import DownloadCount from "./DownloadCount.astro"
 import SkillDownload from "./SkillDownload.astro"
 import Layout from "../layouts/Layout.astro"
 import {
   configurationDocuments,
+  downloadStats,
   pluginByName,
   plugins,
   repositoryUrl,
@@ -243,10 +245,31 @@ const providerFiles = page.kind === "provider"
 <Layout locale="en" variant="settings" {title} {description} {canonical} alternates={{ en: canonical }} {structuredData}>
   <article class="content-page" data-content-type={page.kind === "installGuide" ? "How-to" : page.kind.includes("Hub") ? "Landing" : "Reference"}>
     <Breadcrumbs items={breadcrumbs} />
-    {plugin ? <PluginPage {plugin} /> : (
+    {plugin ? <PluginPage {plugin} /> : skill ? (
+      <header class="catalog-hero">
+        <div class="catalog-hero-copy">
+          <DownloadCount count={skill.downloads} />
+          <h1>{title}</h1>
+          <p>{skill.seo.description}</p>
+          <div class="skill-labels">
+            <span>{skill.bundled.length ? `Includes ${skill.bundled.join(", ")}` : "Instructions only"}</span>
+            {skill.externalSetup && <span>May require external tools</span>}
+          </div>
+          <div class="plugin-hero-links">
+            <a class="official-link" href={skill.sourceUrl}>Read the skill instructions <Icon name="arrow" size={16} /></a>
+            <a class="official-link" href={`/plugins/${skill.plugin}/`}>Included in {skill.plugin}</a>
+          </div>
+        </div>
+        <aside class="catalog-install">
+          <h2>Install this skill</h2>
+          <InstallGuide {skill} />
+        </aside>
+      </header>
+    ) : (
       <header class="content-hero">
         <h1>{title}</h1>
-        {!skill && <p>{intro}</p>}
+        <p>{intro}</p>
+        {(page.kind === "skillHub" || page.kind === "pluginHub") && <DownloadCount count={downloadStats.total} />}
         {page.kind === "skillHub" && <a class="button primary" href="/guides/install-agent-skills/">Read the install guide <Icon name="arrow" size={18} /></a>}
       </header>
     )}
@@ -257,11 +280,13 @@ const providerFiles = page.kind === "provider"
       <div class="content-sections">
         {skillGroups.map(([pluginName, pluginSkills]) => (
           <section class="catalog-section" id={pluginName}>
-            <div class="section-heading">
-              <h2><a href={`/plugins/${pluginName}/`}>{pluginName}</a></h2>
-              <span>{pluginSkills?.length || 0} skills</span>
-            </div>
-            <div class="skill-stack">{pluginSkills?.map((item) => <SkillDownload skill={item} heading="h3" compact />)}</div>
+            {pluginSkills && pluginSkills.length > 1 && (
+              <div class="section-heading">
+                <h2><a href={`/plugins/${pluginName}/`}>{pluginByName.get(pluginName)?.seo.title}</a></h2>
+                <span>{pluginSkills.length} skills</span>
+              </div>
+            )}
+            <div class="skill-stack">{pluginSkills?.map((item) => <SkillDownload skill={item} heading={pluginSkills?.length === 1 ? "h2" : "h3"} compact />)}</div>
           </section>
         ))}
       </div>
@@ -314,12 +339,6 @@ const providerFiles = page.kind === "provider"
 
     {skill && (
       <div class="content-sections">
-        <section class="content-section"><SkillDownload {skill} /></section>
-        <section class="content-section">
-          <h2>Use the skill for the right task</h2>
-          <p>{skill.description}</p>
-          <p>The skill belongs to the <a class="inline-link" href={`/plugins/${skill.plugin}/`}><code>{skill.plugin}</code> plugin</a>. Install the full plugin for coding-agent commands, hooks, or related skills.</p>
-        </section>
         <section class="content-section">
           <h2>Related skills</h2>
           <div class="reference-grid">

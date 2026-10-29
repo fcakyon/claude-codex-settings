@@ -117,7 +117,7 @@ ${skills
 ${skill.seo.description}
 
 - [Skill guide](${site.url}${skill.detailUrl})
-- [Download ZIP](${skill.downloadUrl})
+${skill.downloadUrl ? `- [Download ZIP](${skill.downloadUrl})` : `- [Install the plugin](${site.url}/plugins/${skill.plugin}/): A stable skill ZIP has not been published yet.`}
 - [Source](${skill.sourceUrl})
 `,
   )

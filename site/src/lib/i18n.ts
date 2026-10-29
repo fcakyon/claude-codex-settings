@@ -9,6 +9,8 @@ export const translations = {
   en: {
     languageLabel: "简体中文",
     stars: "stars",
+    downloads: "ZIP downloads",
+    downloadSource: (releases: string, date: string) => `GitHub ZIP downloads across ${releases} published releases. Updated ${date}.`,
     skipToContent: "Skip to main content",
     copied: "Copied to clipboard",
     primaryNav: "Primary navigation",
@@ -106,6 +108,8 @@ export const translations = {
   "zh-CN": {
     languageLabel: "English",
     stars: "个星标",
+    downloads: "ZIP 下载",
+    downloadSource: (releases: string, date: string) => `GitHub 上 ${releases} 个已发布版本的 ZIP 下载总次数。更新于 ${date}。`,
     skipToContent: "跳到主要内容",
     copied: "已复制到剪贴板",
     primaryNav: "主导航",

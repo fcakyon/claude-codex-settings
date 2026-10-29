@@ -1,6 +1,16 @@
 ---
 import Icon from "./Icon.astro"
-import { codingTools, repositoryUrl } from "../lib/content"
+import { codingTools, pluginByName, repositoryUrl, type Plugin, type Skill } from "../lib/content"
+
+interface Props {
+  plugin?: Plugin
+  skill?: Skill
+}
+
+const { plugin, skill } = Astro.props
+const compact = Boolean(plugin || skill)
+const target = plugin || pluginByName.get(skill?.plugin || "simplify")!
+const Heading = compact ? "h3" : "h2"
 
 const marketplaceCommands = Object.fromEntries(codingTools.map((tool) => [tool.id, tool.marketplace]))
 const guideTabs = [
@@ -11,9 +21,9 @@ const guideTabs = [
     icon: "claude",
     title: "Add this marketplace to Claude Code",
     intro: "Add this marketplace once, then install each plugin by name. The terminal and desktop app share it.",
-    code: `${marketplaceCommands.claude}\nclaude plugin install simplify@claude-settings`,
+    code: `${marketplaceCommands.claude}\n${target.claudeCommand}`,
     terminal: "Run <code>/reload-plugins</code> in an open session. New sessions load installed plugins automatically.",
-    app: "Select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>. Choose a plugin from the marketplace.",
+    app: "Select <strong>+</strong> beside the prompt, then <strong>Plugins</strong> and <strong>Add plugin</strong>. Choose the plugin from the marketplace.",
     docs: ["Claude Code plugin guide", "https://code.claude.com/docs/en/discover-plugins"],
   },
   {
@@ -22,7 +32,7 @@ const guideTabs = [
     icon: "openai",
     title: "Add this marketplace to OpenAI Codex",
     intro: "Works in the Codex CLI and desktop app. The Codex IDE extension doesn’t support plugins.",
-    code: `${marketplaceCommands.codex}\ncodex plugin add simplify@claude-settings`,
+    code: `${marketplaceCommands.codex}\n${target.codexCommand}`,
     terminal: "Enter <code>/plugins</code> to browse marketplaces interactively. Start a new session after installing.",
     app: "Open <strong>Plugins</strong>, find the plugin, and select <strong>Install</strong>. Start a new task before you use it.",
     docs: ["OpenAI plugin guide", "https://learn.chatgpt.com/docs/plugins"],
@@ -44,8 +54,8 @@ const guideTabs = [
     icon: "gemini",
     title: "Install a local extension in Gemini CLI",
     intro: "Gemini CLI installs extensions from local folders. Clone the repository and run the command from its root.",
-    code: `git clone ${repositoryUrl}.git\ncd claude-codex-settings\ngemini extensions install --path ./plugins/simplify`,
-    terminal: "Replace <code>simplify</code> with the plugin you want, then start a new Gemini CLI session.",
+    code: `git clone ${repositoryUrl}.git\ncd claude-codex-settings\n${target.geminiCommand}`,
+    terminal: "Start a new Gemini CLI session after installing.",
     docs: ["Gemini CLI extension reference", "https://geminicli.com/docs/extensions/reference/"],
   },
   {
@@ -80,14 +90,19 @@ const guideTabs = [
     docs: ["Claude Skills guide", "https://support.claude.com/en/articles/12512180-use-skills-in-claude"],
   },
 ] as const
+const supportedTabs = guideTabs.filter((tab) => {
+  if (!compact) return true
+  if ("steps" in tab) return Boolean(skill || target.components?.skills.length)
+  return { "claude-code": target.claudeCommand, codex: target.codexCommand, cursor: target.cursorCommand, "gemini-cli": target.geminiCommand }[tab.id]
+})
 ---
 
-<section class="guide-tabs" data-guide-tabs>
+<section class:list={["guide-tabs", { "compact-install": compact }]} data-guide-tabs aria-label="Installation options">
   <div class="install-tool-tabs" role="tablist" aria-label="Choose where you install">
-    {guideTabs.map((tab, index) => (
+    {supportedTabs.map((tab, index) => (
       <button
         id={`tab-${tab.id}`}
-        class:list={["install-tool-tab", { "is-active": index === 0, "is-group-start": index > 0 && ("steps" in tab) !== ("steps" in guideTabs[index - 1]) }]}
+        class:list={["install-tool-tab", { "is-active": index === 0, "is-group-start": index > 0 && ("steps" in tab) !== ("steps" in supportedTabs[index - 1]) }]}
         type="button"
         role="tab"
         aria-controls={tab.id}
@@ -100,10 +115,10 @@ const guideTabs = [
       </button>
     ))}
   </div>
-  {guideTabs.map((tab, index) => (
+  {supportedTabs.map((tab, index) => (
     <div id={tab.id} class="guide-panel" role="tabpanel" aria-labelledby={`tab-${tab.id}`} hidden={index > 0}>
       <div class="guide-main">
-        <h2>{tab.title}</h2>
+        <Heading>{tab.title}</Heading>
         <p>{tab.intro}</p>
         {"code" in tab && (
           <>
@@ -111,19 +126,29 @@ const guideTabs = [
             <p set:html={tab.terminal} />
           </>
         )}
-        {"steps" in tab && <ol class="steps-list">{tab.steps.map((step) => <li set:html={step} />)}</ol>}
+        {"steps" in tab && (
+          <>
+            {skill && (skill.downloadUrl
+              ? <a class="button primary" href={skill.downloadUrl} data-download-asset={skill.asset}>Download {skill.name} ZIP <Icon name="arrow" size={16} /></a>
+              : <p>A stable ZIP has not been released yet. Install the plugin with a coding agent tab above.</p>
+            )}
+            {plugin && <p><a class="inline-link" href="#skills">Choose a skill below</a>, then download its ZIP.</p>}
+            <ol class="steps-list">{tab.steps.map((step) => <li set:html={step} />)}</ol>
+          </>
+        )}
+        {compact && "app" in tab && <p class="install-app"><strong>Desktop app:</strong> <span set:html={tab.app} /></p>}
         <div class="guide-links">
           <a class="official-link" href={tab.docs[1]}>Read the {tab.docs[0]} <Icon name="arrow" size={16} /></a>
           {"steps" in tab && <a class="official-link" href="/skills/">Browse skill downloads <Icon name="arrow" size={16} /></a>}
         </div>
       </div>
-      {"app" in tab && tab.app && (
+      {!compact && "app" in tab && tab.app && (
         <div class="guide-aside">
           <h3>In the desktop app</h3>
           <p set:html={tab.app} />
         </div>
       )}
-      {"image" in tab && (
+      {!compact && "image" in tab && (
         <figure class="tutorial-figure">
           <img src={tab.image[0]} alt={tab.image[1]} width="1200" height="760" loading="lazy" />
         </figure>
@@ -131,7 +156,7 @@ const guideTabs = [
     </div>
   ))}
 </section>
-<section class="content-section guide-notes">
+{!compact && <section class="content-section guide-notes">
   <div>
     <h2>Use a plugin in a new session</h2>
     <p>Start a new session so the agent loads the plugin, then name the skill or describe the task.</p>
@@ -147,13 +172,12 @@ Use the humanize skill to revise this README.`}</code></pre>
     ├── scripts/
     └── references/`}</code></pre>
   </div>
-</section>
+</section>}
 
 <script>
   document.querySelectorAll<HTMLElement>("[data-guide-tabs]").forEach((guide) => {
     const tabs = [...guide.querySelectorAll<HTMLButtonElement>("[role=tab]")]
     const panels = tabs.map((tab) => document.getElementById(tab.getAttribute("aria-controls")!)!)
-    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
     const select = (index: number) =>
       tabs.forEach((tab, tabIndex) => {
         const active = tabIndex === index
@@ -162,12 +186,10 @@ Use the humanize skill to revise this README.`}</code></pre>
         tab.tabIndex = active ? 0 : -1
         panels[tabIndex].hidden = !active
       })
-    const stop = () => guide.classList.remove("is-cycling")
     const fromHash = () => {
       const id = location.hash.slice(1)
       const index = tabs.findIndex((tab) => tab.getAttribute("aria-controls") === id || tab.dataset.aliases?.split(" ").includes(id))
       if (index < 0) return false
-      stop()
       select(index)
       guide.scrollIntoView()
       return true
@@ -175,7 +197,6 @@ Use the humanize skill to revise this README.`}</code></pre>
 
     tabs.forEach((tab, index) => {
       tab.addEventListener("click", () => {
-        stop()
         select(index)
         history.replaceState(null, "", `#${tab.getAttribute("aria-controls")}`)
       })
@@ -188,14 +209,7 @@ Use the humanize skill to revise this README.`}</code></pre>
         tabs[target].click()
       })
     })
-    guide.addEventListener("pointerdown", stop)
-    guide.addEventListener("keydown", stop)
-    window.addEventListener("scroll", stop, { once: true, passive: true })
-    guide.addEventListener("animationend", (event) => {
-      if (!guide.classList.contains("is-cycling") || !tabs.includes(event.target as HTMLButtonElement)) return
-      select((tabs.indexOf(event.target as HTMLButtonElement) + 1) % tabs.length)
-    })
     window.addEventListener("hashchange", fromHash)
-    if (!fromHash() && !reducedMotion.matches) guide.classList.add("is-cycling")
+    fromHash()
   })
 </script>

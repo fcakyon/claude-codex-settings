@@ -47,6 +47,16 @@ const checkPage = (path, name, group) => {
   assert.ok(schema.some((item) => item["@type"] === "SoftwareSourceCode" && item.name === name && item.description === description), `${path}: page schema`);
   assert.ok(hubs[group].has(path), `${path}: linked from hub`);
   assert.ok(sitemaps[group].includes(`<loc>${canonical}</loc>`), `${path}: listed in sitemap`);
+  const tabs = page.filter((node) => attr(node, "role") === "tab");
+  const panels = page.filter((node) => attr(node, "role") === "tabpanel");
+  assert.ok(tabs.length > 0 && tabs.length === panels.length, `${path}: installation choices have matching panels`);
+  assert.equal(tabs.filter((node) => attr(node, "aria-selected") === "true").length, 1, `${path}: one selected installation choice`);
+  assert.equal(panels.filter((node) => attr(node, "hidden") === undefined).length, 1, `${path}: one visible installation panel`);
+  for (const tab of tabs) assert.ok(panels.some((panel) => attr(panel, "id") === attr(tab, "aria-controls")), `${path}: installation panel exists`);
+  const claudePanel = panels.find((node) => attr(node, "id") === "claude-code");
+  assert.ok(text(claudePanel).includes(`claude plugin install ${path.split("/")[2]}@claude-settings`), `${path}: installer targets the parent plugin`);
+  const badge = page.find((node) => attr(node, "class") === "download-count");
+  assert.match(text(badge), /[\d,]+\s*ZIP downloads/, `${path}: GitHub ZIP download count`);
   return links(page);
 };
 

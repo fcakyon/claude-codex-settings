@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/check-catalog-pages.mjs",
+    "test": "node --experimental-strip-types --test scripts/*.test.mjs",
+    "build": "npm test && ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/check-catalog-pages.mjs",
     "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview"
   },
