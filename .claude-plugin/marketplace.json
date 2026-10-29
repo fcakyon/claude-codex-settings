@@ -512,7 +512,7 @@
       "name": "seo-skills",
       "source": "./plugins/seo-skills",
       "description": "Audit SEO, plan scalable pages, validate schema, and improve site architecture.",
-      "version": "1.1.0",
+      "version": "1.0.1",
       "license": "MIT",
       "keywords": ["seo", "audit", "structured-data", "schema", "site-architecture", "organic-search"],
       "category": "search",
