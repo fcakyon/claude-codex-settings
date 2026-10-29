@@ -270,7 +270,7 @@
       "name": "reusable-app-components",
       "source": "./plugins/reusable-app-components",
       "description": "Reuse tested app journeys with code, design and integration checks.",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "license": "Apache-2.0"
     }
   ]
