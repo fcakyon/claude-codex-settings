@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { basename, extname, resolve } from "node:path";
+import catalogSeo from "./catalog-seo.json";
 
 export type SiteVariant = "settings" | "plugins";
 
@@ -163,6 +164,8 @@ const skillDescriptions = (content: string) => {
 
 export const plugins = marketplace.plugins
   .map((plugin, index) => {
+    const seo = catalogSeo.plugins[plugin.name as keyof typeof catalogSeo.plugins];
+    if (!seo) throw new Error(`Missing public plugin metadata: ${plugin.name}`);
     const localSource = typeof plugin.source === "string" ? plugin.source : undefined;
     const directory = localSource ? resolve(root, localSource) : undefined;
     const hasCodex = codexPlugins.has(plugin.name);
@@ -195,6 +198,8 @@ export const plugins = marketplace.plugins
 
     return {
       ...plugin,
+      seo,
+      description: seo.description,
       index,
       tools,
       components,
@@ -210,7 +215,7 @@ export const plugins = marketplace.plugins
         .join(", "),
       search: [
         plugin.name,
-        plugin.description,
+        seo.description,
         plugin.category,
         ...(plugin.keywords || []),
         ...(plugin.tags || []),
@@ -286,51 +291,6 @@ const duplicateSkillNames = new Set(
     .flatMap((plugin) => plugin.components?.skills || [])
     .filter((name, _, names) => names.indexOf(name) !== names.lastIndexOf(name)),
 );
-const skillSeo: Record<string, { title: string; description: string; intro: string }> = {
-  "frontend-design-skills/openai-frontend-design": {
-    title: "Download the OpenAI frontend design skill",
-    description:
-      "Download the OpenAI frontend design skill as a ZIP for ChatGPT or Claude.ai, then follow its visual design and browser verification workflow.",
-    intro:
-      "Use this skill when you want an agent to design a complete interface, implement it in your existing stack, and compare the result in a browser.",
-  },
-  "frontend-design-skills/anthropic-frontend-design": {
-    title: "Download the Anthropic frontend design skill",
-    description:
-      "Download the Anthropic frontend design skill as a ZIP for ChatGPT or Claude.ai and apply its interface design guidance to web projects.",
-    intro:
-      "Use this skill to give an agent a focused design process for layout, typography, visual direction, and implementation.",
-  },
-  "frontend-design-skills/writing-guidelines": {
-    title: "Apply writing guidelines with an agent skill",
-    description:
-      "Download a writing guidelines skill for ChatGPT or Claude.ai to review documentation, interface copy, structure, tone, and formatting.",
-    intro:
-      "Use this skill to check documentation and product copy against a concrete editorial standard, then report issues by file and line.",
-  },
-  "github-dev/create-pr": {
-    title: "Create GitHub pull requests with an agent skill",
-    description:
-      "Download the create PR skill for ChatGPT or Claude.ai and guide an agent through branch checks, GitHub CLI commands, and pull request creation.",
-    intro:
-      "Use this skill when you want an agent to inspect a branch, prepare a concise pull request, and open it with the GitHub CLI.",
-  },
-  "github-dev/review-pr": {
-    title: "Review GitHub pull requests with an agent skill",
-    description:
-      "Download the review PR skill for ChatGPT or Claude.ai to inspect a pull request, trace risks, and produce actionable code review findings.",
-    intro:
-      "Use this skill when you need a structured review that checks the full pull request diff and reports only actionable findings.",
-  },
-  "github-dev/resolve-pr-comments": {
-    title: "Resolve pull request comments with an agent skill",
-    description:
-      "Download the resolve PR comments skill for ChatGPT or Claude.ai to inspect review feedback, apply fixes, and verify each response.",
-    intro:
-      "Use this skill when review comments need code changes, concise replies, and a final check that every thread has been addressed.",
-  },
-};
-
 export const skills = plugins
   .flatMap((plugin) =>
     (plugin.components?.skills || []).map((name) => {
@@ -344,11 +304,12 @@ export const skills = plugins
       const bundled = ["scripts", "references", "assets", "templates"].filter((folder) =>
         existsSync(resolve(directory, folder)),
       );
+      const seo = catalogSeo.skills[key as keyof typeof catalogSeo.skills];
+      if (!seo) throw new Error(`Missing public skill metadata: ${key}`);
       return {
         key,
         name,
         plugin: plugin.name,
-        pluginDescription: plugin.description,
         description: skillDescriptions(content),
         asset,
         downloadUrl: `${repositoryUrl}/releases/latest/download/${asset}`,
@@ -358,14 +319,15 @@ export const skills = plugins
           /\b(?:API key|authentication|CLI|MCP server|Node\.js|Python|GitHub CLI|Azure CLI|gcloud|Tavily|Overleaf)\b/i.test(
             content,
           ),
-        seo: skillSeo[key],
+        seo,
+        detailUrl: `/plugins/${plugin.name}/skills/${name}/`,
       };
     }),
   )
   .sort((a, b) => a.name.localeCompare(b.name) || a.plugin.localeCompare(b.plugin));
 
 export type Skill = (typeof skills)[number];
-export const seoSkills = skills.filter((skill) => skill.seo);
+export const skillByKey = new Map(skills.map((skill) => [skill.key, skill]));
 export const skillsByPlugin = Object.groupBy(skills, (skill) => skill.plugin);
 
 export const contentPages = [
@@ -385,7 +347,7 @@ export const contentPages = [
     plugin: plugin.name,
     sitemap: "plugins",
   })),
-  ...seoSkills.map((skill) => ({
+  ...skills.map((skill) => ({
     path: `plugins/${skill.plugin}/skills/${skill.name}`,
     kind: "skill" as const,
     skill: skill.key,

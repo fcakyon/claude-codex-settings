@@ -10,13 +10,12 @@ interface Props {
 
 const { skill, heading = "h2", compact = false } = Astro.props
 const Heading = heading
-const detailUrl = skill.seo ? `/plugins/${skill.plugin}/skills/${skill.name}/` : undefined
 ---
 
 <article class:list={["skill-download", { compact }]}>
   <div class="skill-copy">
-    <Heading>{detailUrl ? <a href={detailUrl}>{skill.name}</a> : skill.name}</Heading>
-    <p>{skill.description}</p>
+    <Heading><a href={skill.detailUrl}>{skill.name}</a></Heading>
+    <p>{skill.seo.description}</p>
     <div class="skill-labels">
       <span>ChatGPT</span>
       <span>Claude.ai</span>
