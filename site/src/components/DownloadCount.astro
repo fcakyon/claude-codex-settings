@@ -1,0 +1,20 @@
+---
+import Icon from "./Icon.astro"
+import { downloadStats, repositoryUrl } from "../lib/content"
+import { translations, type Locale } from "../lib/i18n"
+
+interface Props {
+  count: number
+  locale?: Locale
+}
+const { count, locale = "en" } = Astro.props
+const copy = translations[locale]
+const numbers = new Intl.NumberFormat(locale)
+const updated = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: "UTC" }).format(new Date(downloadStats.updatedAt))
+---
+
+<a class="download-count" href={`${repositoryUrl}/releases`} title={copy.downloadSource(numbers.format(downloadStats.releaseCount), updated)}>
+  <Icon name="github" size={17} />
+  <strong>{numbers.format(count)}</strong>
+  <span>{copy.downloads}</span>
+</a>

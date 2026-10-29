@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { basename, extname, resolve } from "node:path";
 import catalogSeo from "./catalog-seo.json";
+import { releaseDownloads } from "./downloads";
 
 export type SiteVariant = "settings" | "plugins";
 
@@ -125,6 +126,8 @@ export const repositoryStars = () => {
   return starsRequest;
 };
 
+export const [downloadStats] = await Promise.all([releaseDownloads(marketplaceSlug), repositoryStars()]);
+
 const marketplace = JSON.parse(read(".claude-plugin/marketplace.json")) as Marketplace;
 const codexPlugins = new Set(
   (JSON.parse(read(".agents/plugins/marketplace.json")) as Marketplace).plugins.map((plugin) => plugin.name),
@@ -146,20 +149,6 @@ const componentNames = (directory: string, folder: string, skill = false) => {
     )
     .map((entry) => (skill ? entry.name : basename(entry.name, ".md")))
     .sort();
-};
-
-const skillDescriptions = (content: string) => {
-  const frontmatter = content.match(/^---\n([\s\S]*?)\n---/)?.[1] || "";
-  const match = frontmatter.match(/^description:\s*(.*)$/m);
-  if (!match) return "Read the skill instructions and supported workflow.";
-  if (!/^[>|][+-]?$/.test(match[1])) return match[1].replace(/^['"]|['"]$/g, "").replace(/"([^"]+)"/g, "“$1”");
-  const lines = frontmatter.slice((match.index || 0) + match[0].length).split("\n");
-  const end = lines.findIndex((line) => line && !/^\s+/.test(line));
-  return lines
-    .slice(0, end < 0 ? lines.length : end)
-    .map((line) => line.trim())
-    .join(" ")
-    .replace(/"([^"]+)"/g, "“$1”");
 };
 
 export const plugins = marketplace.plugins
@@ -238,7 +227,6 @@ export const plugins = marketplace.plugins
           icon: "claude",
           tool: "Claude Code",
           command: claudeCommand,
-          output: [`Resolving ${plugin.name}@claude-settings…`, `✓ Installed ${plugin.name}`],
         },
         ...(codexCommand
           ? [
@@ -247,7 +235,6 @@ export const plugins = marketplace.plugins
                 icon: "openai",
                 tool: "OpenAI Codex",
                 command: codexCommand,
-                output: [`Resolving ${plugin.name}@claude-settings…`, `✓ Added ${plugin.name}`],
               },
             ]
           : []),
@@ -258,7 +245,6 @@ export const plugins = marketplace.plugins
                 icon: "cursor",
                 tool: "Cursor",
                 command: cursorCommand,
-                output: [`Opening ${plugin.name} in Cursor Agent…`, `Type /plugin and choose ${plugin.name}`],
               },
             ]
           : []),
@@ -269,7 +255,6 @@ export const plugins = marketplace.plugins
                 icon: "gemini",
                 tool: "Gemini CLI",
                 command: geminiCommand,
-                output: [`Reading ./plugins/${plugin.name}/gemini-extension.json…`, `✓ Installed ${plugin.name}`],
               },
             ]
           : []),
@@ -284,6 +269,7 @@ export const plugins = marketplace.plugins
     );
   });
 
+export type Plugin = (typeof plugins)[number];
 export const pluginByName = new Map(plugins.map((plugin) => [plugin.name, plugin]));
 
 const duplicateSkillNames = new Set(
@@ -310,9 +296,9 @@ export const skills = plugins
         key,
         name,
         plugin: plugin.name,
-        description: skillDescriptions(content),
         asset,
-        downloadUrl: `${repositoryUrl}/releases/latest/download/${asset}`,
+        downloads: downloadStats.assets[asset]?.count || 0,
+        downloadUrl: downloadStats.assets[asset]?.url,
         sourceUrl: `${repositoryUrl}/tree/main/plugins/${plugin.name}/skills/${name}`,
         bundled,
         externalSetup:

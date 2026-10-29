@@ -2,7 +2,7 @@
   "plugins": {
     "aeo": {
       "title": "Answer engine optimization for product discovery",
-      "description": "Turn buyer questions and AI citations into an AEO content strategy. Use evidence from answer engines to improve discovery by people new to your product."
+      "description": "Use answer engine optimization (AEO) to improve product discovery in AI search. Turn buyer questions and citation evidence into a focused content strategy."
     },
     "simplify": {
       "title": "Simplify code changes before committing",
@@ -176,7 +176,7 @@
     },
     "aeo/aeo": {
       "title": "Answer engine optimization and AI discovery skill",
-      "description": "Build an evidence led AEO strategy around buyer questions, AI citations and discovery. Track whether people find your product before they know its name.",
+      "description": "Use answer engine optimization (AEO) to help buyers discover your product in AI answers. Plan content from buyer questions and track citations.",
       "related": [
         "seo-skills/seo-audit",
         "seo-skills/programmatic-seo"

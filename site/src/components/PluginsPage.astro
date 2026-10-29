@@ -1,7 +1,8 @@
 ---
+import DownloadCount from "./DownloadCount.astro"
 import Icon from "./Icon.astro"
 import PluginDirectory from "./PluginDirectory.astro"
-import { codingTools } from "../lib/content"
+import { codingTools, downloadStats } from "../lib/content"
 import { translations, type Locale } from "../lib/i18n"
 
 interface Props {
@@ -16,6 +17,7 @@ const copy = translations[locale].plugins
   <div class="plugins-intro">
     <h1>{copy.hero.title}</h1>
     <p>{copy.hero.description}</p>
+    <DownloadCount count={downloadStats.total} {locale} />
   </div>
   <PluginDirectory locale={locale} />
 </section>

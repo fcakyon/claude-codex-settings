@@ -14,7 +14,7 @@ const Heading = heading
 
 <article class:list={["skill-download", { compact }]}>
   <div class="skill-copy">
-    <Heading><a href={skill.detailUrl}>{skill.name}</a></Heading>
+    <Heading><a href={skill.detailUrl}>{skill.seo.title}</a></Heading>
     <p>{skill.seo.description}</p>
     <div class="skill-labels">
       <span>ChatGPT</span>
@@ -24,8 +24,8 @@ const Heading = heading
     </div>
   </div>
   <div class="skill-actions">
-    <a class:list={["button download-button", compact ? "secondary" : "primary"]} href={skill.downloadUrl} data-download-asset={skill.asset}>
-      Download ZIP <Icon name="arrow" size={17} />
+    <a class:list={["button download-button", compact ? "secondary" : "primary"]} href={skill.downloadUrl || skill.detailUrl} data-download-asset={skill.downloadUrl ? skill.asset : undefined}>
+      {skill.downloadUrl ? "Download ZIP" : "View skill"} <Icon name="arrow" size={17} />
     </a>
     <a class="source-link" href={skill.sourceUrl}>View skill source</a>
     <a class="source-link" href="/guides/install-agent-skills/">Install guide</a>
