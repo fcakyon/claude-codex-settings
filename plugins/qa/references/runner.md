@@ -6,11 +6,11 @@ Requirements: Node 22+, `npm ci` in this plugin, a supported Chrome build for br
 project-qa discover --root .
 project-qa setup --root . --base-url https://example.com --related ../backend
 project-qa doctor
-project-qa run --root .
+project-qa run --root . --base-url http://localhost:3000
 project-qa run --root . --filter auth --output /private/path/qa-run
 ```
 
-Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `requires` with earlier case IDs, `async run(qa)` and an explicit `qa.assert` outcome assertion. Throw `new qa.Blocked(reason)` for known missing prerequisites. Unexpected errors fail. Reports record configured gaps and selected/omitted cases.
+Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `requires` with earlier case IDs, `async run(qa)` and an explicit `qa.assert` outcome assertion. Throw `new qa.Blocked(reason)` for known missing prerequisites. Unexpected errors fail. Reports record the effective `baseUrl`, tested revision, configured gaps and selected/omitted cases. `run --base-url` overrides only the website target for that run; API and authentication endpoints are separate settings. Confirm those endpoints before using credentials or creating side effects.
 
 | API | Purpose |
 | --- | --- |

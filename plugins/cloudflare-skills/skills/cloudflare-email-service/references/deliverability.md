@@ -140,8 +140,6 @@ curl -X DELETE "https://api.cloudflare.com/client/v4/accounts/{account_id}/email
   --header "Authorization: Bearer <API_TOKEN>"
 ```
 
-Zone-level suppressions are also available at `/zones/{zone_id}/email/sending/suppression` with the same interface.
-
 ### GraphQL Analytics API
 
 Email Service exposes two zone-level datasets via the [GraphQL Analytics API](https://developers.cloudflare.com/analytics/graphql-api/index.md). You can explore the schema interactively at [graphql.cloudflare.com/explorer](https://graphql.cloudflare.com/explorer). Metrics are retained for 31 days.

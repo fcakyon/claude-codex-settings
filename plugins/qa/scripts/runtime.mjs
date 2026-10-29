@@ -73,10 +73,11 @@ export async function openBrowser(config, stateDir, telemetry) {
   return context;
 }
 
-export async function runSuite(root, {filter, output} = {}) {
+export async function runSuite(root, {filter, output, baseUrl} = {}) {
   root = await realpath(root);
   const config = JSON.parse(await readFile(path.join(root, '.agents/qa/config.json'), 'utf8'));
   config.root = root;
+  config.baseUrl = baseUrl ?? config.baseUrl;
   const stateDir = privateDirectory(root, config);
   await mkdir(stateDir, {recursive: true, mode: 0o700});
   const outputDir = output || path.join(stateDir, 'runs', new Date().toISOString().replaceAll(':', '-'));
@@ -89,7 +90,7 @@ export async function runSuite(root, {filter, output} = {}) {
   }
   const selected = cases.filter(item => wanted.has(item.id));
   if (!selected.length) throw new Error('No QA cases selected. Setup must include executable cases.');
-  const report = {project: config.name, coverageGaps: config.coverageGaps || [], selected: selected.map(item => item.id), omitted: cases.filter(item => !selected.includes(item)).map(item => item.id), startedAt: new Date().toISOString(), root, revision: (await command('git', ['rev-parse', 'HEAD'], {cwd: root})).stdout.trim(), telemetry: {mode: 'capture', deliveryVerified: false, events: []}, results: []};
+  const report = {project: config.name, baseUrl: config.baseUrl, coverageGaps: config.coverageGaps || [], selected: selected.map(item => item.id), omitted: cases.filter(item => !selected.includes(item)).map(item => item.id), startedAt: new Date().toISOString(), root, revision: (await command('git', ['rev-parse', 'HEAD'], {cwd: root})).stdout.trim(), telemetry: {mode: 'capture', deliveryVerified: false, events: []}, results: []};
   report.dirty = Boolean((await command('git', ['status', '--porcelain'], {cwd: root})).stdout.trim());
   if (config.extension) report.extensionVersion = JSON.parse(await readFile(path.resolve(root, config.extension, 'manifest.json'), 'utf8')).version;
   let browserContext;

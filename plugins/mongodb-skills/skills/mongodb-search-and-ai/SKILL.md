@@ -1,7 +1,7 @@
 ---
 name: mongodb-search-and-ai
 description: |
-  Guides MongoDB users through implementing and optimizing Atlas Search (full-text), Vector Search (semantic), and Hybrid Search solutions. Use this skill when users need to build search functionality for text-based queries (autocomplete, fuzzy matching, faceted search), semantic similarity (embeddings, RAG applications), or combined approaches. Also use when users need text containment, substring matching ('contains', 'includes', 'appears in'), case-insensitive or multi-field text search, or filtering across many fields with variable combinations. Provides workflows for selecting the right search type, creating indexes, constructing queries, and optimizing performance using the MongoDB MCP server.
+  Covers everything about search in MongoDB: Atlas Search (full-text), Vector Search (semantic), and Hybrid Search. Use this skill for ANY question about MongoDB search, including open-ended and explanatory ones asked before the user has any data or use case — 'how does search work in MongoDB?', 'I'm new to MongoDB search, where do I start?', 'what's the difference between Atlas Search and Vector Search?', 'which search type should I use?', 'what is vector search?', 'how does automated embedding work?', 'can you explain hybrid search?'. Do not answer these from general knowledge; use this skill. Also use to build search features: full-text queries, autocomplete, fuzzy matching, faceted search, semantic similarity, embeddings, RAG, text containment or substring matching ('contains', 'includes'), case-insensitive or multi-field text search, and filtering across many fields. Provides workflows for choosing a search type, creating indexes, writing queries, and optimizing performance via the MongoDB MCP server.
 license: Apache-2.0
 metadata:
   version: "1.0.0"
@@ -9,18 +9,46 @@ metadata:
 
 # MongoDB Search and AI Recommendations Skill
 
-You are helping MongoDB users implement, optimize, and troubleshoot Atlas Search (lexical), Vector Search (semantic), and Hybrid Search (combined) solutions. Your goal is to understand their use case, recommend the appropriate search approach, and help them build effective indexes and queries.
+You are helping MongoDB users implement, optimize, and troubleshoot Atlas Search (lexical), Vector Search (semantic), and Hybrid Search (combined) solutions.
 
 ## Core Principles
 
 1. **Understand before building** - Validate the use case to ensure you recommend the right solution
 2. **Always inspect first** - Check existing indexes and schema before making recommendations
 3. **Explain before executing** - Describe what indexes will be created and require explicit approval
-4. **Optimize for the use case** - Different use cases require different index configurations and query patterns
-5. **Handle read-only scenarios** - If you do not have access to `create`, `update`, or `delete` operation tools, you are in read-only mode. Provide the complete index configuration JSON so the user can create it themselves, including via the Atlas UI.
-6. **Explain in accessible language** - Describe technical concepts and map business requirements to technical implementations in terms the user can follow.
+4. **Handle read-only scenarios** - Without `create`, `update`, or `delete` operation tools you are in read-only mode; hand the user index JSON to create themselves
+5. **Explain in accessible language** - Describe technical concepts and map business requirements to technical implementations in terms the user can follow
 
 ## Workflow
+
+### 0. Check for a Quickstart Request
+
+`references/quick-start.md` is a guided walkthrough that builds semantic, keyword, and hybrid search against the `sample_mflix` sample dataset. It is a teaching tour, not a way to build search for the user's own data.
+
+**Do not read `references/quick-start.md` until the user has chosen the tour.** A general request like "I'm new to search, help me get started" can just as easily mean "help me add search to my app." Use AskUserQuestion:
+
+> "Two ways I can take this — which fits better?"
+
+- **Guided tour on sample data** — we load Atlas's sample movie dataset and build semantic, keyword, and hybrid search on it step by step. Best for learning how each type works.
+- **Build search for my own data** — tell me what you're searching and I'll design the indexes and queries for your collections.
+
+Prompts that should trigger this offer, rather than being answered directly as a question:
+
+- "I'm new to MongoDB, how does search work?", "help me get started with search"
+- "what's the difference between Atlas Search and Vector Search?", "which search type should I use?"
+- "I want to try vector search", "show me semantic search", "how does automated embedding work?"
+- "I want to try keyword search", "show me full-text search", "I want to try hybrid search"
+
+Skip the offer only when the intent is already unambiguous:
+
+- **Explicit tour request** ("give me a guided tour", "walk me through search using sample data") — load `references/quick-start.md` and start at its Step 0.
+- **The user has their own collection, data, or concrete use case** — use the Discovery Phase below, even when they name a single search type.
+
+If the user named a specific search type, carry that into the walkthrough: it skips its own path question and routes straight to that path, after its prerequisite steps.
+
+The walkthrough requires an Atlas cloud cluster — the sample dataset loads from the Atlas UI, and Automated Embedding works on every Atlas tier with no key management. Atlas Local and self-managed MongoDB are out of scope; the walkthrough routes them back here when a step gives evidence of one.
+
+Otherwise, continue with the Discovery Phase.
 
 ### 1. Discovery Phase
 
@@ -47,7 +75,7 @@ Common questions to ask:
 
 ### 2. Determine Search Type and Consult the Reference File
 
-Match the use case to a search type below, then consult the linked reference file **before** recommending indexes or queries. Each reference file also documents the prerequisites you must verify first (cluster tier, MongoDB version, deployment requirements).
+Match the use case to a search type below, then consult the linked reference file **before** recommending indexes or queries. Each reference file also documents the prerequisites you must verify first (cluster tier, MongoDB version, deployment type, auto-scaling).
 
 **Atlas Search (Lexical/Full-Text):**
 Use when users need:
@@ -69,7 +97,7 @@ Use when users need:
 - Text data already stored in Atlas that they want to search by meaning
 - RAG or AI agent memory with minimal setup
 
-→ Consult `references/automated-embedding.md` and verify its cluster prerequisites (tier, deployment, auto-scaling) before creating the index or query.
+→ Consult `references/automated-embedding.md`.
 
 **Vector Search (Semantic, bring your own embeddings):**
 Use when users need:
@@ -88,7 +116,7 @@ Use when users need:
 - Results that factor in multiple relevance criteria
 - Uses `$rankFusion` (rank-based) or `$scoreFusion` (score-based) to merge pipelines
 
-→ Consult `references/hybrid-search.md` and verify its version requirements before building (also consult the lexical/vector files for the individual pipeline stages).
+→ Consult `references/hybrid-search.md`, plus the lexical/vector files for the individual pipeline stages.
 
 ### 3. Execution and Validation
 
@@ -117,17 +145,7 @@ Use when users need:
 
 ## Handling Edge Cases
 
-**User mentions fields you can't find:**
-- Use `collection-schema` to inspect available fields
-- Suggest alternatives or ask for clarification
-
-**Required field doesn't exist:**
-- Explain what needs to be added and how (e.g., embedding field for vector search)
-
-**Query fails or index missing:**
-- Use `collection-indexes` to verify index exists
-- If missing, explain index needs to be created first
-
-**Multiple collections are relevant:**
-- List options and ask which one they mean
-- If context makes it obvious, confirm your assumption
+- **Fields you can't find** — inspect available fields with `collection-schema`, then confirm the intended field with the user
+- **A required field doesn't exist** — explain what to add and how (e.g., an embedding field for vector search)
+- **Query fails or index missing** — verify with `collection-indexes`; if absent, the index must be created first
+- **Multiple collections are relevant** — ask which one they mean, unless context makes it obvious

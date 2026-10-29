@@ -1,115 +1,115 @@
 {
   "repository": "https://github.com/oblien/openship",
-  "ref": "v0.8.0",
-  "commit": "234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0",
+  "ref": "v0.9.5",
+  "commit": "c4e440e6eba4975d348c95d8432148f2951a58a9",
   "files": {
     ".claude/skills/openship-config/SKILL.md": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/.claude/skills/openship-config/SKILL.md",
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/.claude/skills/openship-config/SKILL.md",
       "sha256": "a3f86d4b417ea06eb67c3e648b835c013ea6ac4b6f7fc25732363cbaf8a66df6"
     },
     "LICENSE": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/LICENSE",
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/LICENSE",
       "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
     },
     "apps/cli/src/commands/config.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/cli/src/commands/config.ts",
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/cli/src/commands/config.ts",
       "sha256": "c2d10f0af7968969054e395dbb4603afb0844698e8a02866df8dd8716314e90a"
     },
     "apps/cli/src/commands/server.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/cli/src/commands/server.ts",
-      "sha256": "4e325527d7c5b026301e9ff8bc455df9f75c3267558d05b26fea51d55b50ab60"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/cli/src/commands/server.ts",
+      "sha256": "2be23808c312b48c5205b0887b3a8c2576c6a4b6ce14160b96a8058b9ee75f36"
     },
     "apps/cli/src/commands/service.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/cli/src/commands/service.ts",
-      "sha256": "3c2557f7465af8a9959a98cf375ef38cc60cd20e04a34d25253a4902d44ea634"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/cli/src/commands/service.ts",
+      "sha256": "72b7ad47a3941768463e03226548c399022b397c2ae9544c8e9f4c190585a89c"
     },
     "apps/web/content/docs/cli/access.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/access.mdx",
-      "sha256": "9d333e06eb0abf6a55e30c7831dfe4aa5967c7fd6cee88da7c0920f839b40a97"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/access.mdx",
+      "sha256": "779b6f26dadb34285350ca54a6825b682c62a15dbc5873683547e94ae73d0229"
     },
     "apps/web/content/docs/cli/automation.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/automation.mdx",
-      "sha256": "d1d62ce201281aa273dea03126a1c80e906a017a1d982a207352f0049eb044e9"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/automation.mdx",
+      "sha256": "cb2c12b82058c4e6be9ec96179c7f746b7908f6de9346d8c7e1949a9255ce8a9"
     },
     "apps/web/content/docs/cli/deploy.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/deploy.mdx",
-      "sha256": "eaf05233f85bff0d0f80d1da0e37d78138ff3d6bb09e196a8cab7b69dc960853"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/deploy.mdx",
+      "sha256": "24b198005b4867076d8b68d50955a520f4c0c2876463d0a541d8f191dfc218ff"
     },
     "apps/web/content/docs/cli/edge.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/edge.mdx",
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/edge.mdx",
       "sha256": "0f52dd84eea71475b332dd0488353bb1537fa31558c231ab179e80a1ef4ac15c"
     },
     "apps/web/content/docs/cli/index.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/index.mdx",
-      "sha256": "b0e6418fab8c4d975ec33265c7da65cd40e937eebc83012d4a56e5db8d90cb2f"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/index.mdx",
+      "sha256": "4b914e0fcba306fa3a4242abdeae4cfa2d25e3f47b472d07b6800352cb03f6ff"
     },
     "apps/web/content/docs/cli/projects.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/projects.mdx",
-      "sha256": "30320a8c261f8c8fc1c03b9e0208cd6eb7b42007a7caab84b92e1d9856665e7b"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/projects.mdx",
+      "sha256": "8865451bc0b65eb9dbbd24ddccee7cd7830f50325be561954ef8afb09ffd0cca"
     },
     "apps/web/content/docs/cli/run.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/run.mdx",
-      "sha256": "378ccc92864d0662bc4f30e20a5829d7e120f65418cd8af53fb1df5a33b67143"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/run.mdx",
+      "sha256": "0e4d1b281a21121285f0a015613172b9c7da4315c7e1675614fc797adb2acd1b"
     },
     "apps/web/content/docs/cli/self-host.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/cli/self-host.mdx",
-      "sha256": "0e2e2e0f2f7e9ac287c7653325b82ce4aefb8962de7e60745e9e56b04296b695"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/cli/self-host.mdx",
+      "sha256": "a65deac5f8f27a706a78f802138e3f27015dad6f17693d69e20f781968637a5c"
     },
     "apps/web/content/docs/guides/backups-restore.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/backups-restore.mdx",
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/backups-restore.mdx",
       "sha256": "2175ed7cdd2a9387a3934145d2b4b3a46795d3febe28d65c8c43c17d0bcba533"
     },
     "apps/web/content/docs/guides/custom-domains.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/custom-domains.mdx",
-      "sha256": "20212663fefd6538b12d6c2da43610d349af14ad7f6f800df5060f933e6d08c3"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/custom-domains.mdx",
+      "sha256": "475ea71cf3a33956518a0ed0218dba721f21940732b9af57f347437194842f02"
     },
     "apps/web/content/docs/guides/logs-monitoring.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/logs-monitoring.mdx",
-      "sha256": "08b319115dc8610a3647afc9ff2d7ff65271e8ff2fa876621adbb6fd5c9622ef"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/logs-monitoring.mdx",
+      "sha256": "eca39e1b16ee6b1f60aa15a2fabf6eaea5f7f15e47b2acf450c93af57b55bbd0"
     },
     "apps/web/content/docs/guides/migrate-control-plane.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/migrate-control-plane.mdx",
-      "sha256": "882e1c4723cda64822a2a778d31e276a6513bb8b8870cc85edef181333342dce"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/migrate-control-plane.mdx",
+      "sha256": "17ade748de7eb2fbf1e994f9d7cdf6401f292adba729ab8c8db4ba27e9a2433f"
     },
     "apps/web/content/docs/guides/persistent-storage.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/persistent-storage.mdx",
-      "sha256": "4eed7f2a8e84c01c5e6849db0a2241f084a4ca2c1af71cc1ed2a3f2501a62fb8"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/persistent-storage.mdx",
+      "sha256": "65a7e1271cb38da746517ba479d59c2eb493a4ec37742a2188466f64325d373b"
     },
     "apps/web/content/docs/guides/rollback-redeploy.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/rollback-redeploy.mdx",
-      "sha256": "280da3b759ee71f602b96e9e86a235282c080815b2ba5128b28d0649a82018de"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/rollback-redeploy.mdx",
+      "sha256": "f2e94b38b13d48609aa340f988991b7e8a624f8194bb0ed659fef7cfcc27f278"
     },
     "apps/web/content/docs/guides/self-hosted-github-app.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/self-hosted-github-app.mdx",
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/self-hosted-github-app.mdx",
       "sha256": "6e313f19583f49127204839686d4d24760b160baa7ddcfd95a2aa10a5517e8b8"
     },
     "apps/web/content/docs/guides/updating.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/guides/updating.mdx",
-      "sha256": "5e66a79c87e48f73ed3e5279151c0a153c52bb4bad34157a309eb933e268b0ea"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/guides/updating.mdx",
+      "sha256": "fb298e6e590344d84a87f4cabfe16bfce59168884e7aa3801f00ac542d3075a5"
     },
     "apps/web/content/docs/troubleshooting/deployments.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/troubleshooting/deployments.mdx",
-      "sha256": "58a28780c71646981340603006fe236576d744860868e758f30f30f5f2ecc1b8"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/troubleshooting/deployments.mdx",
+      "sha256": "5db71294aa128e647bc1c743544a3a8cae1cd935e143887caabfcb323fdf6483"
     },
     "apps/web/content/docs/troubleshooting/domains-ssl.mdx": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/apps/web/content/docs/troubleshooting/domains-ssl.mdx",
-      "sha256": "fbbfe65b10e9967bca2704d9d22e85889b0f57278ae1c0754c698880792ae087"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/apps/web/content/docs/troubleshooting/domains-ssl.mdx",
+      "sha256": "17e1449d97a8cafc63797ed34394f850f29d0ec58deed448192ab826a58680be"
     },
     "packages/core/src/openship-config/parse.test.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/packages/core/src/openship-config/parse.test.ts",
-      "sha256": "e832749e74a85c189c10db3cd15a5a631684f6402e32a6ac75cf173f2dde321f"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/packages/core/src/openship-config/parse.test.ts",
+      "sha256": "39100b4b81aaa239b90266b1c183551bce4dd4ac92662dbfc8239ff53a2cbc73"
     },
     "packages/core/src/openship-config/parse.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/packages/core/src/openship-config/parse.ts",
-      "sha256": "38f6d730cf7c95ba490fdf43e2b58ec3e326911a52ed3a4b4375ce906d1957ba"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/packages/core/src/openship-config/parse.ts",
+      "sha256": "17994e57237aad7d2c8f756c0c312cc434ea6f5cd6b283b2627bcff9fccd00a5"
     },
     "packages/core/src/openship-config/schema.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/packages/core/src/openship-config/schema.ts",
-      "sha256": "b08ceb3fcfae53dc11f189d41520a8ec758769c965f660e1c8d2cf8efb6ddb0a"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/packages/core/src/openship-config/schema.ts",
+      "sha256": "20abc63d2c45c222bd0f60bce39324338e95aa92090bfb3a5f6420345d7996f7"
     },
     "packages/platform/src/engine/modules/deployments/prepare.service.ts": {
-      "url": "https://github.com/oblien/openship/blob/234d8a9d0bd571aff3fe3ce73a8408f226dcb4a0/packages/platform/src/engine/modules/deployments/prepare.service.ts",
-      "sha256": "7e66618cfa48c26a817a6a2ce807e2519527bade8efbaebdd5a7c8aca908237d"
+      "url": "https://github.com/oblien/openship/blob/c4e440e6eba4975d348c95d8432148f2951a58a9/packages/platform/src/engine/modules/deployments/prepare.service.ts",
+      "sha256": "22a650e2356ed60fc1a4746b080099e638b6081aa53e3de84be40a8adb398f4e"
     }
   }
 }

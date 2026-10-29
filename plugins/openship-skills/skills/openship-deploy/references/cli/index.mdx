@@ -3,7 +3,9 @@ title: Openship CLI
 description: Deploy applications and manage Openship from your terminal.
 ---
 
-Use the CLI to deploy code, inspect releases, manage services, and operate a self-hosted installation.
+Use the CLI to deploy code, inspect releases, and manage Openship Cloud or a remote self-hosted installation
+from any machine with Node.js and access to that API. A local Openship server or Docker installation is
+not required for remote commands.
 
 ## Install
 
@@ -13,17 +15,17 @@ openship --help
 ```
 
 Node.js 22 or later is required. A local `npm install openship` also provides the command through `npx`.
-The reference follows this repository; use `--help` to check your installed version. Native SDK mode and
-SDK imports require the [preview package](https://openship.io/docs/api/sdk/installation) until its release is published.
+The reference follows this repository; use `--help` to check your installed version. SDK imports and
+native mode are available in `openship` 0.8.0 and later. Newly added commands require a release containing them.
 
 ## Connect and deploy
 
-Start a [local installation](https://openship.io/docs/cli/run), or connect to an existing one:
+Run `openship` for a guided choice of Cloud, a remote self-hosted installation, or
+[installing on this machine](https://openship.io/docs/cli/run). To connect directly:
 
 ```bash
 openship login \
   --api-url https://ship.example.com \
-  --dashboard-url https://ship.example.com \
   --context production
 
 openship project list
@@ -33,6 +35,8 @@ openship deploy --watch
 
 `login` opens the token settings page and asks for a personal access token. `init` links the current
 directory to a project. `deploy --watch` submits a deployment and follows its progress.
+Use `openship login --cloud` for Openship Cloud. On the server that runs Openship, the installation
+owner can use `openship --local project list` with automatic local authentication.
 
 ## Choose a workflow
 
@@ -40,8 +44,10 @@ Use `openship job` (alias `jobs`) to manage [scheduled jobs](https://openship.io
 
 <Cards>
   <Card title="Connect and authenticate" href="https://openship.io/docs/cli/access" description="Manage contexts, tokens, and direct HTTP requests." />
+  <Card title="Manage Openship Cloud" href="https://openship.io/docs/cli/cloud" description="Deploy from any machine, choose managed servers, and manage subscriptions." />
   <Card title="Deploy and inspect releases" href="https://openship.io/docs/cli/deploy" description="Deploy folders or Git projects, read logs, and roll back." />
   <Card title="Manage applications" href="https://openship.io/docs/cli/projects" description="Work with projects, services, domains, and catalog apps." />
+  <Card title="Monitor and automate" href="https://openship.io/docs/cli/operations" description="Inspect health and issues, configure notifications, and manage webhooks and audit events." />
   <Card title="Operate infrastructure" href="https://openship.io/docs/cli/self-host" description="Manage servers, backups, mail, and installation settings." />
   <Card title="Use native SDK mode" href="https://openship.io/docs/cli/native" description="Run supported commands against an explicitly configured native installation." />
   <Card title="Complete command reference" href="https://openship.io/docs/cli/reference" description="Every command, subcommand, argument, and option, grouped by task." />

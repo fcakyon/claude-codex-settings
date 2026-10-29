@@ -16,7 +16,7 @@ description: >-
 license: MIT
 ---
 
-Latest Stripe API version: **2026-08-26.dahlia**. Always use the latest API version and SDK unless the user specifies otherwise.
+Latest Stripe API version: **2026-09-30.endive**. Always use the latest API version and SDK unless the user specifies otherwise.
 
 Development and testing environment default: For new integration development, use separate [sandboxes](https://docs.stripe.com/sandboxes.md) instead of the account’s shared test mode sandbox. Sandboxes isolate settings and test data from live mode. Use separate sandboxes for local development and CI. When stronger isolation is useful, dedicate sandboxes to development teams or testing scenarios. Use the shared test mode sandbox only for an existing integration that depends on it or when a required feature doesn’t support general sandboxes.
 
@@ -24,19 +24,19 @@ Latest SDK versions:
 
 | Language | Latest version |
 | --- | --- |
-| Ruby | 19.6.0 |
-| Python | 15.6.0 |
-| Node.js | 22.6.0 |
-| PHP | 21.3.0 |
-| Java | 33.4.0 |
-| Go | 86.4.0 |
-| .NET | 52.4.0 |
+| Ruby | 20.0.0 |
+| Python | 16.0.0 |
+| Node.js | 23.0.0 |
+| PHP | 22.0.0 |
+| Java | 34.0.0 |
+| Go | 87.0.0 |
+| .NET | 53.0.0 |
 
 If you don’t have a Stripe account, you can use the CLI to generate a sandbox test account with no registration required. Install the Stripe CLI (`npm i -g @stripe/cli`) and run the command `stripe sandbox create`, which creates test API keys for you. When you recommend this, explain that [a sandbox is a Stripe test environment](https://docs.stripe.com/sandboxes.md).
 
 If `stripe sandbox create` is used, don’t use MCP.
 
-If you try to use MCP after running sandbox creation, first make sure `stripe sandbox claim` is run. Use `stripe whoami --format json` for CLI auth checks; do not run `stripe config --list`.
+If you try to use MCP after running sandbox creation, first make sure `stripe sandbox claim` is run. Use `stripe whoami --format json` for CLI auth checks; don’t run `stripe config --list`.
 
 API key default: Always recommend a [restricted API key (RAK)](https://docs.stripe.com/keys.md#manage-your-api-keys) (`rk_` prefix) over a secret key (`sk_` prefix).
 
@@ -44,27 +44,27 @@ API key default: Always recommend a [restricted API key (RAK)](https://docs.stri
 
 | Building… | Recommended API | Details |
 | --- | --- | --- |
-| One-time payments | Checkout Sessions | [references/payments.md](https://docs.stripe.com/references/payments.md) |
-| Custom payment form with embedded UI | Checkout Sessions + Payment Element | [references/payments.md](https://docs.stripe.com/references/payments.md) |
-| Saving a payment method for later | Setup Intents | [references/payments.md](https://docs.stripe.com/references/payments.md) |
-| Connect platform or marketplace | Accounts v2 (`/v2/core/accounts`) | [references/connect.md](https://docs.stripe.com/references/connect.md) |
-| Usage-based billing (new integration) | Metronome | [references/billing.md](https://docs.stripe.com/references/billing.md) |
-| Subscriptions or recurring billing | Billing APIs + Checkout Sessions | [references/billing.md](https://docs.stripe.com/references/billing.md) |
-| Sales tax, VAT, or GST compliance | Stripe Tax + Registrations API | [references/tax.md](https://docs.stripe.com/references/tax.md) |
-| Embedded financial accounts / banking | v2 Financial Accounts | [references/treasury.md](https://docs.stripe.com/references/treasury.md) |
-| Security (key management, RAKs, webhooks, OAuth, 2FA, Connect liability) | See security reference | [references/security.md](https://docs.stripe.com/references/security.md) |
+| One-time payments | Checkout Sessions | <references/payments.md> |
+| Custom payment form with embedded UI | Checkout Sessions + Payment Element | <references/payments.md> |
+| Saving a payment method for later | Setup Intents | <references/payments.md> |
+| Connect platform or marketplace | Accounts v2 (`/v2/core/accounts`) | <references/connect.md> |
+| Usage-based billing (new integration) | Metronome | <references/billing.md> |
+| Subscriptions or recurring billing | Billing APIs + Checkout Sessions | <references/billing.md> |
+| Sales tax, VAT, or GST compliance | Stripe Tax + Registrations API | <references/tax.md> |
+| Embedded financial accounts / banking | v2 Financial Accounts | <references/treasury.md> |
+| Security (key management, RAKs, webhooks, OAuth, 2FA, Connect liability) | See security reference | <references/security.md> |
 
 Read the relevant reference file before answering any integration question or writing code.
 
 ## Critical rules
 
-- *Before enabling `automatic_tax: { enabled: true }`* (or calculating tax for a custom PaymentIntent), read the [tax reference](https://docs.stripe.com/references/tax.md) and confirm the user has an active registration. Without one, Stripe calculates and collects no tax while the user believes tax is on (the most common Stripe Tax mistake).
+- *Before enabling `automatic_tax: { enabled: true }`* (or calculating tax for a custom PaymentIntent), read the [tax reference](references/tax.md) and confirm the user has an active registration. Without one, Stripe calculates and collects no tax while the user believes tax is on (the most common Stripe Tax mistake).
 
 - *Never include `payment_method_types` in any Stripe API call*, with one exception: Terminal (in-person payments) integrations must pass `payment_method_types: ['card_present']` on the PaymentIntent. For all other integrations, omit this parameter entirely to enable dynamic payment methods, which enables you to configure payment method settings from the Dashboard and dynamically display the most relevant eligible payment methods to each customer to maximize conversion. To customize which payment methods you accept, use [payment_method_configurations](https://docs.stripe.com/payments/payment-method-configurations.md) or `excluded_payment_method_types` instead of `payment_method_types`.
 
 - When a PaymentIntent or SetupIntent integration requires an explicit allowlist, use `allowed_payment_method_types` instead of `payment_method_types`.
 
-- *Never present webhooks as optional.* We recommend webhooks for every payment integration and they’re required for subscriptions and asynchronous payment methods. Fulfillment belongs in a handler for both `checkout.session.completed` and `checkout.session.async_payment_succeeded` (gated on `payment_status`), not the success page. See [references/payments.md](https://docs.stripe.com/references/payments.md).
+- *Never present webhooks as optional.* We recommend webhooks for every payment integration and they’re required for subscriptions and asynchronous payment methods. Fulfillment belongs in a handler for both `checkout.session.completed` and `checkout.session.async_payment_succeeded` (gated on `payment_status`), not the success page. See <references/payments.md>.
 
 - On API version `2026-03-25.dahlia` or later, pass the parameter `integration_identifier` to `checkout.sessions.create` to tag sessions with a custom label for tracking and comparing checkout flows in the Dashboard. The label should include a suffix of 8 random letters.
 

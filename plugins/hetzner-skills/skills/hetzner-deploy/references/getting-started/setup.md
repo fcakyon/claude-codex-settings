@@ -8,7 +8,7 @@ language: "en"
 description: ""
 docs_type: ["getting_started"]
 product_category: ["Integrations"]
-translation: ["Integrations", "CLI", "Getting Started", "Installing the hcloud CLI"]
+translation: ["Integrations", "CLI", "Tutorials", "Installing the hcloud CLI"]
 scrape_type: "whole"
 priority: 100
 ---
@@ -18,308 +18,233 @@ priority: 100
 
 This tutorial will guide you through the process of setting up the hcloud CLI on your local machine.
 
-**Prerequisites:**
+## Prerequisites
 
 Before you begin, ensure you have the following:
 
 - A [Hetzner Console account](https://console.hetzner.com).
 
-<br>
+## 1. Install the hcloud CLI
 
-----
+### 1.1 Manual installation
 
-<br>
+You can download pre-built binaries from our [GitHub releases](https://github.com/hetznercloud/cli/releases).
+Install them by extracting the archive and moving the binary to a directory in your `PATH`.
 
-1. Install the hcloud CLI
+On a 64-bit Linux system, it could look something like this:
 
-   Click on one of the options below to view the respective steps.
+```bash
+curl -sSLO https://github.com/hetznercloud/cli/releases/latest/download/hcloud-linux-amd64.tar.gz
+sudo tar -C /usr/local/bin --no-same-owner -xzf hcloud-linux-amd64.tar.gz hcloud
+rm hcloud-linux-amd64.tar.gz
+```
 
-   <details>
-   <summary>Manual installation</summary>
-   <ul>
+### 1.2 Installation using Go
 
-   You can download pre-built binaries from our [GitHub releases](https://github.com/hetznercloud/cli/releases).
-   Install them by extracting the archive and moving the binary to a directory in your `PATH`.
+If you have Go installed, you can also install hcloud CLI from source using the following command:
 
-   On a 64-bit Linux system, it could look something like this:
+```bash
+go install github.com/hetznercloud/cli/cmd/hcloud@latest
+```
 
-   ```bash
-   curl -sSLO https://github.com/hetznercloud/cli/releases/latest/download/hcloud-linux-amd64.tar.gz
-   sudo tar -C /usr/local/bin --no-same-owner -xzf hcloud-linux-amd64.tar.gz hcloud
-   rm hcloud-linux-amd64.tar.gz
-   ```
-   > ℹ️ **Note**
-   > This installation method does not provide automatic updates. Please make sure to keep your installation up to date manually.
+> [!NOTE]
+> Binaries built with Go will not have the correct version embedded.
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Installation using Go</summary>
-   <ul>
+> [!NOTE]
+> Both of the above installation methods do not provide automatic updates. Please make sure to keep your installation up to date manually.
 
-   If you have Go installed, you can also install hcloud CLI from source using the following command:
+### 1.3 Installation using .deb package (Debian/Ubuntu)
 
-   ```bash
-   go install github.com/hetznercloud/cli/cmd/hcloud@latest
-   ```
-   > ℹ️ **Note**
-   > Binaries built with Go will not have the correct version embedded.
-   > This installation method does not provide automatic updates. Please make sure to keep your installation up to date manually.
+> [!WARNING]
+> Debian packages are experimental and might change or break in the future.
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Installation using .deb package (Debian/Ubuntu)</summary>
-   <ul>
+On Debian and Ubuntu-based distributions, you can install the hcloud CLI using the `.deb` package:
 
-   On Debian and Ubuntu-based distributions, you can install the hcloud CLI using the `.deb` package:
+1. Download the latest `.deb` package from the [GitHub releases page](https://github.com/hetznercloud/cli/releases/latest).
 
-   > ⚠️ **Warning**
-   > Debian packages are experimental and might change or break in the future.
+2. Install the package using `dpkg`:
 
-   1. Download the latest `.deb` package from the [GitHub releases page](https://github.com/hetznercloud/cli/releases/latest).
+```bash
+# Download the package (replace with the actual version and architecture)
+curl -sSLO https://github.com/hetznercloud/cli/releases/latest/download/hcloud-cli_<version>_linux_amd64.deb
 
-   2. Install the package using `dpkg`:
+# Install the package
+sudo dpkg -i hcloud-cli_<version>_linux_amd64.deb
+```
 
-   ```bash
-   # Download the package (replace with the actual version and architecture)
-   curl -sSLO https://github.com/hetznercloud/cli/releases/latest/download/hcloud-cli_<version>_linux_amd64.deb
+The `.deb` package includes shell completions for bash, zsh, and fish, as well as man pages.
 
-   # Install the package
-   sudo dpkg -i hcloud-cli_<version>_linux_amd64.deb
-   ```
+### 1.4 Installation using .rpm package (Fedora/RHEL/CentOS)
 
-   The `.deb` package includes shell completions for bash, zsh, and fish, as well as man pages.
+> [!WARNING]
+> RPM packages are experimental and might change or break in the future.
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Installation using .rpm package (Fedora/RHEL/CentOS)</summary>
-   <ul>
+On Fedora, RHEL, CentOS, and other RPM-based distributions, you can install the hcloud CLI using the `.rpm` package:
 
-   On Fedora, RHEL, CentOS, and other RPM-based distributions, you can install the hcloud CLI using the `.rpm` package:
+1. Download the latest `.rpm` package from the [GitHub releases page](https://github.com/hetznercloud/cli/releases/latest).
 
-   > ⚠️ **Warning**
-   > RPM packages are experimental and might change or break in the future.
+2. Install the package using `rpm` or `dnf`:
 
-   1. Download the latest `.rpm` package from the [GitHub releases page](https://github.com/hetznercloud/cli/releases/latest).
+```bash
+# Download the package (replace with the actual version and architecture)
+curl -sSLO https://github.com/hetznercloud/cli/releases/latest/download/hcloud-cli-<version>-1.x86_64.rpm
 
-   2. Install the package using `rpm` or `dnf`:
+# Install using dnf (Fedora/RHEL 8+/CentOS 8+)
+sudo dnf install hcloud-cli-<version>-1.x86_64.rpm
 
-   ```bash
-   # Download the package (replace with the actual version and architecture)
-   curl -sSLO https://github.com/hetznercloud/cli/releases/latest/download/hcloud-cli-<version>-1.x86_64.rpm
+# Or install using rpm
+sudo rpm -i hcloud-cli-<version>-1.x86_64.rpm
+```
 
-   # Install using dnf (Fedora/RHEL 8+/CentOS 8+)
-   sudo dnf install hcloud-cli-<version>-1.x86_64.rpm
+The `.rpm` package includes shell completions for bash, zsh, and fish, as well as man pages.
 
-   # Or install using rpm
-   sudo rpm -i hcloud-cli-<version>-1.x86_64.rpm
-   ```
+### 1.5 Installation using Homebrew
 
-   The `.rpm` package includes shell completions for bash, zsh, and fish, as well as man pages.
+On Linux and macOS you can also install the hcloud CLI using Homebrew:
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Installation using Homebrew</summary>
-   <ul>
+```bash
+brew install hcloud
+```
 
-   On Linux and macOS you can also install the hcloud CLI using Homebrew:
+### 1.6 Installation on Windows using WinGet or Scoop
 
-   ```bash
-   brew install hcloud
-   ```
+> [!WARNING]
+> The WinGet and Scoop package entries are not maintained by Hetzner.
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Installation on Windows using WinGet or Scoop</summary>
-   <ul>
+On Windows, you can install `hcloud` using WinGet (Windows Package Manager) or Scoop:
 
-   On Windows, you can install `hcloud` using WinGet (Windows Package Manager) or Scoop:
+```bash
+winget install HetznerCloud.CLI
+```
 
-   > ⚠️ **Warning**
-   > The WinGet and Scoop package entries are not maintained by Hetzner.
+```bash
+scoop install hcloud
+```
 
-   ```bash
-   winget install HetznerCloud.CLI
-   ```
+### 1.7 Using hcloud with Docker
 
-   ```bash
-   scoop install hcloud
-   ```
+Instead of installing hcloud on the host, you can also use our docker image at `hetznercloud/cli`.
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Using hcloud with Docker</summary>
-   <ul>
+```bash
+docker run --rm -e HCLOUD_TOKEN="<your token>" hetznercloud/cli:latest <command>
+```
 
-   Instead of installing hcloud on the host, you can also use our docker image at `hetznercloud/cli`.
+If you want to use (and persist) your configuration, you can mount it to `/config.toml`:
+```bash
+docker run --rm -v ~/.config/hcloud/cli.toml:/config.toml hetznercloud/cli:latest <command>
+```
 
-   ```bash
-   docker run --rm -e HCLOUD_TOKEN="<your token>" hetznercloud/cli:latest <command>
-   ```
+The image is based on Alpine Linux, so a shell is available in the image. You can use it to run commands interactively:
 
-   If you want to use (and persist) your configuration, you can mount it to `/config.toml`:
-   ```bash
-   docker run --rm -v ~/.config/hcloud/cli.toml:/config.toml hetznercloud/cli:latest <command>
-   ```
+```bash
+docker run -it --rm --entrypoint /bin/sh hetznercloud/cli:latest
+```
 
-   The image is based on Alpine Linux, so a shell is available in the image. You can use it to run commands interactively:
+---
 
-   ```bash
-   docker run -it --rm --entrypoint /bin/sh hetznercloud/cli:latest
-   ```
+> [!WARNING]
+> Some third-party package repositories may provide outdated versions of the hcloud CLI.
+> Please consider one of the other installation methods.
 
-   > ⚠️ **Warning**
-   > Some third-party package repositories may provide outdated versions of the hcloud CLI.
-   > Please consider one of the other installation methods.
+## 2. (Optional) Setup auto-completion
 
-   </ul>
-   </details>
+hcloud CLI offers auto-completion for bash, zsh, fish and PowerShell. It is recommended to enable it for a better user experience.
 
-<br>
+### 2.1 Bash
 
-2. Setup auto-completion (Optional)
+To load completions into the current shell execute:
 
-   hcloud CLI offers auto-completion for bash, zsh, fish and PowerShell. It is recommended to enable it for a better user experience.
+    source <(hcloud completion bash)
 
-   Click on one of the options below to view the respective steps.
+In order to make the completions permanent, append the line above to
+your .bashrc.
 
-   <details>
-   <summary>Bash</summary>
-   <ul>
+### 2.2 Zsh
 
-   To load completions into the current shell execute:
-   ```bash
-   source <(hcloud completion bash)
-   ```
+If shell completions are not already enabled for your environment need
+to enable them. Add the following line to your ~/.zshrc file:
 
-   In order to make the completions permanent, append the line above to
-   your `.bashrc`.
+    autoload -Uz compinit; compinit
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Zsh</summary>
-   <ul>
+To load completions for each session execute the following commands:
 
-   If shell completions are not already enabled for your environment need
-   to enable them. Add the following line to your ~/.zshrc file:
+    mkdir -p ~/.config/hcloud/completion/zsh
+    hcloud completion zsh > ~/.config/hcloud/completion/zsh/_hcloud
 
-   ```bash
-   autoload -Uz compinit; compinit
-   ```
+Finally add the following line to your ~/.zshrc file, *before* you
+call the compinit function:
 
-   To load completions for each session execute the following commands:
+    fpath+=(~/.config/hcloud/completion/zsh)
 
-   ```bash
-   mkdir -p ~/.config/hcloud/completion/zsh
-   hcloud completion zsh > ~/.config/hcloud/completion/zsh/_hcloud
-   ```
+In the end your ~/.zshrc file should contain the following two lines
+in the order given here.
 
-   Finally add the following line to your ~/.zshrc file, *before* you
-   call the compinit function:
+    fpath+=(~/.config/hcloud/completion/zsh)
+    #  ... anything else that needs to be done before compinit
+    autoload -Uz compinit; compinit
+    # ...
 
-   ```bash
-   fpath+=(~/.config/hcloud/completion/zsh)
-   ```
+You will need to start a new shell for this setup to take effect.
 
-   In the end your ~/.zshrc file should contain the following two lines
-   in the order given here.
+### 2.3 Fish
 
-   ```bash
-   fpath+=(~/.config/hcloud/completion/zsh)
-   #  ... anything else that needs to be done before compinit
-   autoload -Uz compinit; compinit
-   # ...
-   ```
+To load completions into the current shell execute:
 
-   You will need to start a new shell for this setup to take effect.
+    hcloud completion fish | source
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>Fish</summary>
-   <ul>
+In order to make the completions permanent execute once:
 
-   To load completions into the current shell execute:
+    hcloud completion fish > ~/.config/fish/completions/hcloud.fish
 
-   ```bash
-   hcloud completion fish | source
-   ```
+### 2.4 PowerShell
 
-   In order to make the completions permanent execute once:
+To load completions into the current shell execute:
 
-   ```bash
-   hcloud completion fish > ~/.config/fish/completions/hcloud.fish
-   ```
+    PS> hcloud completion powershell | Out-String | Invoke-Expression
 
-   <br></ul>
-   </details>
-   <details>
-   <summary>PowerShell</summary>
-   <ul>
+To load completions for every new session, run
+and source this file from your PowerShell profile.
 
-   To load completions into the current shell execute:
+    PS> hcloud completion powershell > hcloud.ps1
 
-   ```bash
-   PS> hcloud completion powershell | Out-String | Invoke-Expression
-   ```
+## 3. Create a context
 
-   To load completions for every new session, run
-   and source this file from your PowerShell profile.
+The hcloud CLI uses contexts to manage multiple Hetzner Cloud tokens and set configuration preferences.
 
-   ```bash
-   PS> hcloud completion powershell > hcloud.ps1
-   ```
-   <br></ul>
-   </details>
+First, you need to create an API token.
+Follow the instructions in the [Hetzner Cloud documentation](https://docs.hetzner.com/cloud/api/getting-started/generating-api-token/) to create your project API token.
 
-<br>
+Once you have your token, you can create a context using the following command:
 
-3. Create a context
+```bash
+hcloud context create <context-name>
+```
 
-   The hcloud CLI uses contexts to manage multiple Hetzner Cloud tokens and set configuration preferences.
+Ideally, keep the context name similar to the project name so you can easily identify it later.
 
-   First, you need to create an API token.
-   Follow the instructions in the [Hetzner Cloud documentation](https://docs.hetzner.com/cloud/api/getting-started/generating-api-token/) to create your project API token.
+When prompted, enter the API token you created earlier. Your context should now be created and activated.
 
-   Once you have your token, you can create a context using the following command:
+## 4. Verify everything works
 
-   ```bash
-   hcloud context create <context-name>
-   ```
+To verify that the hcloud CLI is working correctly, you can run the following command:
 
-   Ideally, keep the context name similar to the project name so you can easily identify it later.
+```bash
+hcloud location list
+```
 
-   When prompted, enter the API token you created earlier. Your context should now be created and activated.
+You should see something like this:
 
-<br>
+```plaintext
+ID   NAME   DESCRIPTION             NETWORK ZONE   COUNTRY   CITY
+1    fsn1   Falkenstein DC Park 1   eu-central     DE        Falkenstein
+2    nbg1   Nuremberg DC Park 1     eu-central     DE        Nuremberg
+3    hel1   Helsinki DC Park 1      eu-central     FI        Helsinki
+4    ash    Ashburn, VA             us-east        US        Ashburn, VA
+5    hil    Hillsboro, OR           us-west        US        Hillsboro, OR
+6    sin    Singapore               ap-southeast   SG        Singapore
+```
 
-4. Verify everything works
-
-   To verify that the hcloud CLI is working correctly, you can run the following command:
-
-   ```bash
-   hcloud location list
-   ```
-
-   You should see something like this:
-
-   ```plaintext
-   ID   NAME   DESCRIPTION             NETWORK ZONE   COUNTRY   CITY
-   1    fsn1   Falkenstein DC Park 1   eu-central     DE        Falkenstein
-   2    nbg1   Nuremberg DC Park 1     eu-central     DE        Nuremberg
-   3    hel1   Helsinki DC Park 1      eu-central     FI        Helsinki
-   4    ash    Ashburn, VA             us-east        US        Ashburn, VA
-   5    hil    Hillsboro, OR           us-west        US        Hillsboro, OR
-   6    sin    Singapore               ap-southeast   SG        Singapore
-   ```
-
-   If you see this output, congratulations! You have successfully set up the hcloud CLI on your local machine.
+If you see this output, congratulations! You have successfully set up the hcloud CLI on your local machine.
 
 If there are any problems, make sure you followed all steps of this tutorial correctly. If there still are problems,
 you can reach out to our [Support](https://console.hetzner.com/support) to get help.

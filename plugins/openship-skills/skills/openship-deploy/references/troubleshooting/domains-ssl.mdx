@@ -90,7 +90,7 @@ its deadline and **Certificate logs**.
 
 | State or message | What to do |
 |---|---|
-| No DNS provider connected | Connect Cloudflare in **Settings → DNS**, or choose **Manual TXT** and generate a TXT record. |
+| No DNS provider connected | Choose **Connect a DNS provider** in the DNS panel (also available in **Settings → Credentials**), or choose **Manual TXT** and generate a TXT record. |
 | TXT record not visible | Compare both name and value. If the provider appends your zone name, enter only the relative part. Keep other TXT values, allow propagation, then **Check TXT & enable HTTPS**. |
 | Connection interrupted | Reopen the panel or use **Refresh status**. An accepted operation continues on the server; the saved attempt can resume after a restart. |
 | TXT challenge expired or CA order invalid | Cancel the old attempt if needed and start again. Publish the new value; remove only the previous attempt's value. |
@@ -111,6 +111,31 @@ fresh TXT value, or switch to **Automatic provider** for unattended renewal. See
 2. Set its value to the exact string from the **DNS Records** panel. Use the **Copy** button; a single extra
    space or a missing character will fail the match.
 3. Save, wait for propagation, and click **Verify** again.
+
+Cloudflare represents TXT content with surrounding double quotes, for example
+`"ownership-token"`. Automatic DNS setup writes this form and repairs older
+unquoted values when you apply the DNS plan again. The quotes delimit the DNS
+string; they are not extra characters in the ownership token. Openship accepts
+quoted resolver answers and joins chunks within a single TXT record.
+
+## Cloud DNS is correct, but the certificate check fails
+
+Openship Cloud gets its certificate status from the Cloud provider. Connecting
+Cloudflare automates DNS records; it does not move Cloud certificate issuance to
+the Openship API server. A Cloudflare certificate notification alone does not
+confirm the origin's certificate or the application's route.
+
+If the response contains `CLOUD_DOMAIN_NOT_CONNECTED`, the provider has no route
+for this domain and project. Check the service mapping in **Domains & Routes**,
+retry routing, then verify HTTPS. `CLOUD_DOMAIN_CHANGED` means the binding changed
+during the operation; refresh the domain details before retrying. Openship does
+not adopt another project's route to repair this condition.
+
+Older Cloud adapters could throw `undefined is not an object` while reading
+`info?.ssl.status`, even after the provider issued a certificate. Update the
+Openship API to a version that accepts both flat and nested provider SSL status
+responses, then use **Recheck SSL**. Rechecking reads the existing certificate
+and does not request another one.
 
 <Callout title="Already verified?" type="info">
 If you re-run Verify on a domain that's already done, Openship simply replies **"Already verified"** and

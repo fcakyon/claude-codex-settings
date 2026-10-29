@@ -1,0 +1,122 @@
+.app-email-auth {
+  display: grid;
+  gap: 20px;
+  font: inherit;
+  color: var(--auth-text, #f5f5f7);
+}
+.app-email-auth h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+}
+.app-email-auth fieldset {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+.app-email-auth label,
+.app-email-auth__field {
+  display: grid;
+  gap: 8px;
+  font-size: 0.875rem;
+}
+.app-email-auth input:not([type="checkbox"]) {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 48px;
+  padding: 12px;
+  border: 1px solid var(--auth-border, #45454f);
+  border-radius: 8px;
+  background: var(--auth-input, #23232b);
+  color: inherit;
+  font: inherit;
+}
+.app-email-auth button {
+  min-block-size: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--auth-accent, #00e2b4);
+  font: inherit;
+  cursor: pointer;
+}
+.app-email-auth :is(input, button):focus-visible {
+  outline: 2px solid var(--auth-accent, #00e2b4);
+  outline-offset: 3px;
+}
+.app-email-auth .app-email-auth__primary {
+  background: var(--auth-accent, #00e2b4);
+  color: var(--auth-action-text, #071714);
+  font-weight: 650;
+}
+.app-email-auth__password {
+  position: relative;
+}
+.app-email-auth .app-email-auth__password input {
+  padding-inline-end: 48px;
+}
+.app-email-auth__password input::-ms-reveal {
+  display: none;
+}
+.app-email-auth__password button {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  inline-size: 48px;
+  color: var(--auth-muted, #b3b3be);
+}
+.app-email-auth__password button:focus-visible {
+  outline-offset: -4px;
+}
+.app-email-auth__password svg {
+  display: block;
+  margin: auto;
+  inline-size: 20px;
+  block-size: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.app-email-auth .app-email-auth__terms {
+  display: flex;
+  align-items: start;
+  line-height: 1.5;
+  color: var(--auth-muted, #b3b3be);
+}
+.app-email-auth__terms input {
+  margin-block-start: 4px;
+  accent-color: var(--auth-accent, #00e2b4);
+}
+.app-email-auth__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.app-email-auth__links button {
+  padding-inline: 0;
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.app-email-auth p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  color: var(--auth-muted, #b3b3be);
+}
+.app-email-auth [role="alert"] {
+  color: var(--auth-error, #fda4af);
+}
+.app-email-auth fieldset:disabled {
+  opacity: 0.65;
+}
+
+.app-email-auth a { color: var(--auth-accent, #00e2b4); text-decoration: underline; text-underline-offset: 3px; }

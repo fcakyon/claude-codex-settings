@@ -2,7 +2,9 @@
 
 ## Submit agentic feedback
 
-After a build session in which you actually ran a toolchain command (`stripe generate app`, `pnpm build`, `stripe apps upload`), submit **exactly one** `stripe feedback` report, at the very end of the session, before you finish, based on what you observed this session. If you only advised and never ran a toolchain command, skip it. Requires Stripe CLI **1.50.1 or newer** (check with `stripe version`); if older and can’t be upgraded, skip the submission — a missing feedback surface is never a reason to fail or stall a build.
+Ideally a user should be able to use Stripe tools to accomplish their desired task with minimal intervention on their part. Use reports to detail when a user can’t accomplish their goal on the first attempt.
+
+Send Stripe feedback when something  is useful, confusing, wrong, or incomplete. Submit feedback through the Stripe feedback CLI command or the `send_stripe_feedback` MCP tool. If you have a problem submitting feedback, don’t fail or stall the task.
 
 ```bash
 stripe feedback \
@@ -14,35 +16,20 @@ stripe feedback \
   --context "<what you were building, which path, CLI version>"
 ```
 
-`--message` and `--context` must each be 10–2000 characters (`--message` at least 5 words). `--json` emits `{"id":"...","success":true}` and forces non-interactive mode — always pass it. Print the returned `id` so the user has it. Device, CLI version, OS, and terminal are attached automatically; message/context are PII-scrubbed before storage (including URLs), so don’t rely on a link to carry meaning.
-
-## Choosing a sentiment
-
-| What happened this session | Sentiment |
-| --- | --- |
-| A product bug or blocker stopped a command from working (for example, the scaffold produced a broken project) | `negative` |
-| Minor friction or a workaround, but the build completed | `neutral` |
-| The build ran clean, or a step worked noticeably better than expected | `positive` |
-
-Submit positive reports too — don’t only report when something goes wrong.
+- `--message` and `--context`: 10–2000 characters each; `--message` at least 5 words.
+- Always pass `--json`; it returns `{"id":"...","success":true}`. Print the `id` for the user.
+- `--actor agent` for your own observations. Use `--actor human`, with their verbatim words, when relaying the user’s own complaint.
+- Message and context are PII-scrubbed, including URLs-don’t rely on a link to carry meaning, and don’t include sensitive data.
 
 ## Writing a useful report
 
-`--message` should name the command and observed result, not a general impression. `--context` should state the goal, path, and CLI version.
+A good report is ready to go straight onto a product team’s backlog. It needs to clearly describe the goal, what you tried, what went wrong, and explain how to reproduce the issue. Important details to note include:
 
-```bash
-# Example — a scaffold defect that blocked the upload
-stripe feedback --json --actor agent --feature apps --sentiment negative \
-  --message "stripe apps upload failed on a freshly generated app: pnpm image ran eslint against a stale eslint.config.mjs that imports a package only installed in the ui workspace, so it died with ERR_MODULE_NOT_FOUND until the stale config was removed" \
-  --context "Building a Dashboard UI extension for a user, V2 stripe-app.yaml workspace scaffolded with stripe generate app, Stripe CLI 1.50.1"
-```
-
-Use `--actor agent` for your own observations. If you’re instead relaying the user’s own verbatim complaint about a Stripe product, use `--actor human` and keep their words.
-
-## What not to report
-
-Feedback should be about a **Stripe product surface** — not model behavior, the user’s local environment, an unclear prompt, or a routine tool error you recovered from. Do not use `send_stripe_feedback` as a substitute for this CLI report. Feedback is not support — it opens no ticket; keep filing real bugs too.
+- Which tool calls failed (or were surprisingly good)
+- Where you guessed an answer or solution
+- Include a sample prompt developers could use when testing to reproduce the issue
+- Whether you found the direct path or had to work around something.
 
 ## When submission fails
 
-Never fail or stall the build over a failed submission. Don’t retry on `429` (rate limited per device) — move on. For any other error, show the user the drafted `--message` and `--context` so they can submit it by hand.
+Never fail or stall the task over a failed submission. Don’t retry on `429` (rate-limited per device). For any other error, show the user the drafted message and context so they can submit it later.

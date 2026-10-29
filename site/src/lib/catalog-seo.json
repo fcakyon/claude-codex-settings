@@ -1,0 +1,1102 @@
+{
+  "plugins": {
+    "aeo": {
+      "title": "Answer engine optimization for product discovery",
+      "description": "Use answer engine optimization (AEO) to improve product discovery in AI search. Turn buyer questions and citation evidence into a focused content strategy."
+    },
+    "simplify": {
+      "title": "Simplify code changes before committing",
+      "description": "Review code changes for reuse, unnecessary complexity, wasted work and misplaced logic. Apply focused cleanup findings before committing the diff."
+    },
+    "humanize": {
+      "title": "Write naturally and remove generic AI phrasing",
+      "description": "Write clearer documents, interface copy and messages with natural language guidance. Catch generic AI phrasing in edited files and commit messages."
+    },
+    "fable-advisor": {
+      "title": "Get a Fable second opinion on code and plans",
+      "description": "Ask Claude Fable for an independent view of a plan, implementation or difficult failure. Check its findings before making decisions in the primary session."
+    },
+    "codex-advisor": {
+      "title": "Get a Codex second opinion on code and plans",
+      "description": "Ask Codex for an independent review through its CLI. Compare another model's findings with source and tests before applying a change."
+    },
+    "adhd-output-style": {
+      "title": "ADHD friendly formatting for coding agent replies",
+      "description": "Reduce reading effort with short steps, visible progress and clear next actions. Format coding agent replies for readers with limited working memory."
+    },
+    "intelligent-compact": {
+      "title": "Preserve coding context through session summaries",
+      "description": "Keep important paths, root causes and open questions available when a coding session is summarized. Use context guidance to retain the work that still matters."
+    },
+    "claude-telemetry-hooks": {
+      "title": "Track Claude Code usage and session telemetry",
+      "description": "Track Claude Code usage, rejected actions and session statistics in one dashboard. Use telemetry hooks to inspect how your coding sessions run."
+    },
+    "anthropic-office-skills": {
+      "title": "Anthropic skills for Word, PDF, Excel and PowerPoint",
+      "description": "Create and edit Word documents, PDFs, Excel workbooks and PowerPoint decks with official Anthropic skills. Choose a document workflow and download its source."
+    },
+    "openai-office-skills": {
+      "title": "OpenAI skills for documents, PDFs, slides and sheets",
+      "description": "Work with Word documents, PDFs, PowerPoint slides and spreadsheets using official OpenAI skills. Render and review deliverables when visual accuracy matters."
+    },
+    "python-skills": {
+      "title": "Python coding style and refactoring guidelines",
+      "description": "Write and review Python code using guidance from PEP 8, Google style and Effective Python. Keep naming, docstrings and refactoring choices consistent."
+    },
+    "react-skills": {
+      "title": "React, Next.js and React Native development skills",
+      "description": "Build and review React, Next.js and React Native apps. Apply guidance for component composition, rendering performance, view transitions and web accessibility."
+    },
+    "agent-browser": {
+      "title": "Browser automation, UI QA and API client skills",
+      "description": "Drive websites and Electron apps with agent-browser. Run browser QA, capture evidence and derive standalone API clients from recorded website workflows."
+    },
+    "frontend-design-skills": {
+      "title": "Frontend design, UI testing and writing skills",
+      "description": "Design web interfaces, debug rendered changes and review product copy. Use frontend skills for visual direction, responsive layouts and browser verification."
+    },
+    "mongodb-skills": {
+      "title": "MongoDB schema, queries, indexing and search skills",
+      "description": "Design MongoDB schemas, write queries and investigate slow workloads. Use official guidance for connections, indexing, Atlas Search and streaming pipelines."
+    },
+    "supabase-skills": {
+      "title": "Supabase database, auth and application skills",
+      "description": "Build Supabase apps with Postgres, authentication, storage and Edge Functions. Use database, JavaScript SDK and CLI skills for development and troubleshooting."
+    },
+    "stripe-skills": {
+      "title": "Stripe payments, billing, Connect and Apps skills",
+      "description": "Build Stripe payment and billing integrations with official skills. Plan Connect platforms, Dashboard apps, usage billing and API upgrades."
+    },
+    "polar-skills": {
+      "title": "Polar billing and local development skills",
+      "description": "Work on Polar subscriptions, checkout and benefit delivery with official skills. Set up a Docker development environment and follow the billing lifecycle."
+    },
+    "livekit-skills": {
+      "title": "Build, test and operate LiveKit voice AI agents",
+      "description": "Build LiveKit voice and chat agents, write tests and run conversation simulations. Debug behavior and use deployment guidance for production operations."
+    },
+    "cloudflare-skills": {
+      "title": "Cloudflare Workers, storage and deployment skills",
+      "description": "Choose Cloudflare products and build with Workers, Durable Objects and storage. Use official skills for deployment, networking, email and performance work."
+    },
+    "web-performance-skills": {
+      "title": "Audit Core Web Vitals and website performance",
+      "description": "Investigate website loading and interaction performance with Core Web Vitals and Chrome DevTools. Measure bottlenecks and verify the effect of changes."
+    },
+    "openobserve-skills": {
+      "title": "OpenObserve log search and dashboard API skills",
+      "description": "Search logs, metrics and traces through the OpenObserve API. Build dashboards, edit panels and investigate streams with documented curl workflows."
+    },
+    "hetzner-skills": {
+      "title": "Hetzner Cloud servers and infrastructure skills",
+      "description": "Manage Hetzner Cloud with the hcloud CLI. Create servers and work with networks, firewalls, load balancers, DNS zones and storage volumes."
+    },
+    "dokploy-skills": {
+      "title": "Deploy apps and Docker Compose with Dokploy",
+      "description": "Deploy apps, Docker Compose stacks and databases to Dokploy Cloud or a self hosted instance. Manage domains and investigate deployment problems."
+    },
+    "anthropic-essentials": {
+      "title": "Anthropic feature development and agent tooling",
+      "description": "Use Anthropic tools for feature development, CLAUDE.md review and Agent Skills creation. Inspect the bundled agents and commands before installing."
+    },
+    "anthropic-plugin-dev": {
+      "title": "Build coding agent plugins, hooks and MCP tools",
+      "description": "Build agent plugins with guidance for skills, commands, hooks and MCP servers. Inspect the included development toolkit and supported agent tools."
+    },
+    "phd-skills": {
+      "title": "Research paper, citation and experiment review tools",
+      "description": "Review research papers, verify citations and analyze experiments with research focused tooling. Inspect the included workflows and source before use."
+    },
+    "github-dev": {
+      "title": "GitHub issues, commits and pull request skills",
+      "description": "Write clear GitHub issues, commits and pull requests. Review code changes, address feedback and maintain branch descriptions with focused agent workflows."
+    },
+    "ultralytics-dev": {
+      "title": "YOLO training and Ultralytics Platform skills",
+      "description": "Diagnose YOLO training runs and manage models or datasets on Ultralytics Platform. Use coding hooks and source guidance for the relevant workflow."
+    },
+    "ultralytics-branding": {
+      "title": "Ultralytics brand guidance for content and design",
+      "description": "Apply official Ultralytics colors, typography, logo rules and tone to documents, slides and websites. Keep branded content consistent across deliverables."
+    },
+    "azure-tools": {
+      "title": "Query Azure resources through MCP tools",
+      "description": "Connect coding agents to Azure resources with the Azure MCP server. Query storage, Key Vault, Cosmos DB and AKS after configuring Azure CLI authentication."
+    },
+    "claude-tools": {
+      "title": "Maintain CLAUDE.md and coding agent settings",
+      "description": "Keep CLAUDE.md, permission settings and repository documentation in sync. Use the included commands to maintain guidance and refresh session context."
+    },
+    "gcloud-tools": {
+      "title": "Google Cloud logs, metrics and observability tools",
+      "description": "Investigate Google Cloud production issues through Cloud Observability MCP. Query logs, metrics and traces after configuring project access and credentials."
+    },
+    "paper-search-tools": {
+      "title": "Search academic papers and look up research DOIs",
+      "description": "Search research papers, look up DOIs and download PDFs with Paper Search CLI. Use supported academic sources and configure credentials when required."
+    },
+    "tavily-tools": {
+      "title": "Web search and page extraction with Tavily",
+      "description": "Search the web and extract content from known URLs with Tavily. Route research tasks to the relevant tool and diagnose integration setup problems."
+    },
+    "overleaf-skills": {
+      "title": "Review Overleaf comments in a LaTeX repository",
+      "description": "Bring Overleaf review comments into a Git tracked LaTeX project. Apply source edits, address feedback and configure the authenticated review workflow."
+    },
+    "seo-skills": {
+      "title": "SEO audits, structured data and site planning skills",
+      "description": "Audit search metadata and crawl signals, plan useful pages and review JSON-LD. Connect page content, site architecture and internal links with SEO guidance."
+    },
+    "openship-skills": {
+      "title": "OpenShip deployment and app configuration skills",
+      "description": "Deploy apps with the OpenShip CLI and configure repositories through openship.json. Investigate builds and manage domains, storage, backups and upgrades."
+    },
+    "test-audit": {
+      "title": "Review test quality and remove duplicate coverage",
+      "description": "Keep tests that protect real behavior and independent contracts. Audit weak or duplicate coverage and remove tests that only restate implementation details."
+    },
+    "qa": {
+      "title": "Run real app journeys with reusable QA tooling",
+      "description": "Set up and run tracked QA journeys for websites, browser extensions, Android apps and backends. Verify user workflows with saved sessions and failure evidence."
+    },
+    "reusable-app-components": {
+      "title": "Reusable app authentication, emails and support chat",
+      "description": "Reuse app login, signup, transactional emails and Tawk support chat. Share tested components and account contracts while keeping each product's theme."
+    }
+  },
+  "skills": {
+    "adhd-output-style/adhd-output-style": {
+      "title": "ADHD friendly response formatting skill",
+      "description": "Format agent replies with short steps, visible progress and low friction starts. Use this skill to reduce reading effort and support limited working memory.",
+      "related": [
+        "humanize/humanize",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "aeo/aeo": {
+      "title": "Answer engine optimization and AI discovery skill",
+      "description": "Use answer engine optimization (AEO) to help buyers discover your product in AI answers. Plan content from buyer questions and track citations.",
+      "related": [
+        "seo-skills/seo-audit",
+        "seo-skills/programmatic-seo"
+      ]
+    },
+    "agent-browser/agent-browser": {
+      "title": "Agent browser automation skill for websites",
+      "description": "Navigate websites, fill forms, inspect pages and capture screenshots with agent-browser. Follow a snapshot based workflow with named browser sessions.",
+      "related": [
+        "agent-browser/derive-client",
+        "agent-browser/dogfood",
+        "agent-browser/electron"
+      ]
+    },
+    "agent-browser/derive-client": {
+      "title": "Derive an API client from browser traffic",
+      "description": "Record a website workflow as browser traffic, then build a standalone API client. Use the derived CLI for repeated tasks without driving the browser again.",
+      "related": [
+        "agent-browser/agent-browser",
+        "agent-browser/webmcp-gen"
+      ]
+    },
+    "agent-browser/dogfood": {
+      "title": "Website dogfooding and bug discovery skill",
+      "description": "Explore a web app for bugs and usability problems. Capture reproduction steps, screenshots and videos so each finding can be checked and fixed.",
+      "related": [
+        "agent-browser/agent-browser",
+        "agent-browser/derive-client",
+        "agent-browser/electron"
+      ]
+    },
+    "agent-browser/electron": {
+      "title": "Electron desktop app automation skill",
+      "description": "Control Electron apps through Chrome DevTools Protocol with agent-browser. Inspect screens, interact with controls and verify desktop app workflows.",
+      "related": [
+        "agent-browser/agent-browser",
+        "agent-browser/ui-regression"
+      ]
+    },
+    "agent-browser/ui-regression": {
+      "title": "Browser UI and extension regression testing skill",
+      "description": "Verify website and extension workflows with real browser evidence. Check actions, recovery, localization and accessibility after a release or UI change.",
+      "related": [
+        "agent-browser/dogfood",
+        "qa/run-qa",
+        "frontend-design-skills/frontend-testing-debugging"
+      ]
+    },
+    "agent-browser/webmcp-gen": {
+      "title": "Build and validate WebMCP page tools",
+      "description": "Expose website workflows as experimental WebMCP tools. Generate page tooling and validate that tool actions behave like the existing user interface.",
+      "related": [
+        "agent-browser/derive-client",
+        "agent-browser/ui-regression"
+      ]
+    },
+    "anthropic-office-skills/docx": {
+      "title": "Anthropic Word document creation and editing skill",
+      "description": "Create and edit Word documents and templates with Anthropic office guidance. Handle formatting, tables, tracked changes and document structure.",
+      "related": [
+        "openai-office-skills/doc",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "anthropic-office-skills/pdf": {
+      "title": "Anthropic PDF processing and form filling skill",
+      "description": "Read, merge, split and create PDFs with Anthropic office guidance. Extract tables, fill forms and apply OCR when document pages contain scanned text.",
+      "related": [
+        "openai-office-skills/pdf",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "anthropic-office-skills/pptx": {
+      "title": "Anthropic PowerPoint presentation editing skill",
+      "description": "Create and edit PowerPoint decks with Anthropic office guidance. Work with slide layouts, templates, speaker notes and content from existing presentations.",
+      "related": [
+        "openai-office-skills/slides",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "anthropic-office-skills/xlsx": {
+      "title": "Anthropic Excel spreadsheet editing skill",
+      "description": "Create and repair Excel workbooks and tabular files with Anthropic office guidance. Clean data, add formulas and format spreadsheet deliverables.",
+      "related": [
+        "openai-office-skills/spreadsheet",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "azure-tools/azure-usage": {
+      "title": "Azure resource management with MCP tools",
+      "description": "Query Azure resources through MCP tools, including storage, Key Vault, Cosmos DB and AKS. Read the workflow before choosing a service operation.",
+      "related": [
+        "azure-tools/setup"
+      ]
+    },
+    "azure-tools/setup": {
+      "title": "Azure MCP authentication and setup skill",
+      "description": "Set up Azure MCP integration and diagnose authentication failures. Check Azure CLI availability, sign in state and the configuration needed by the tools.",
+      "related": [
+        "azure-tools/azure-usage"
+      ]
+    },
+    "cloudflare-skills/agents-sdk": {
+      "title": "Cloudflare Agents SDK development skill",
+      "description": "Build and debug applications with Cloudflare Agents SDK and the agents package. Follow the SDK workflow for stateful AI agents on Cloudflare.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/basin": {
+      "title": "Cloudflare Basin analytics and pipelines skill",
+      "description": "Build analytics workflows with Cloudflare Basin Pipelines, Catalog and SQL. Stream data into R2 Iceberg tables and troubleshoot ingestion and queries.",
+      "related": [
+        "cloudflare-skills/k2",
+        "cloudflare-skills/cf-cli"
+      ]
+    },
+    "cloudflare-skills/cf-cli": {
+      "title": "Cloudflare cf CLI commands and deployment skill",
+      "description": "Find and run Cloudflare cf CLI commands for Workers and account resources. Check schemas, manage DNS or storage and choose between cf and Wrangler.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/cloudflare-deploy": {
+      "title": "Choose Cloudflare products and deployment paths",
+      "description": "Match an app or infrastructure task to Cloudflare products. Compare compute, storage, networking and security options before following deployment guidance.",
+      "related": [
+        "cloudflare-skills/cf-cli",
+        "cloudflare-skills/wrangler"
+      ]
+    },
+    "cloudflare-skills/cloudflare-email-service": {
+      "title": "Cloudflare Email Sending and Routing setup skill",
+      "description": "Implement Cloudflare Email Sending and Email Routing integrations. Review delivery configuration and troubleshoot the email workflow in your application.",
+      "related": [
+        "reusable-app-components/email-design",
+        "cloudflare-skills/cf-cli"
+      ]
+    },
+    "cloudflare-skills/cloudflare-one": {
+      "title": "Cloudflare One Zero Trust configuration skill",
+      "description": "Design and review Cloudflare One Zero Trust and SASE deployments. Use task specific guidance for access, network security and configuration changes.",
+      "related": [
+        "cloudflare-skills/cloudflare-one-migrations",
+        "cloudflare-skills/gateway-workers"
+      ]
+    },
+    "cloudflare-skills/cloudflare-one-migrations": {
+      "title": "Plan a Cloudflare One migration",
+      "description": "Plan a move from a VPN, secure web gateway or SASE vendor to Cloudflare One. Map policies, identify feature gaps and prepare a staged rollout.",
+      "related": [
+        "cloudflare-skills/cloudflare-one",
+        "cloudflare-skills/gateway-workers"
+      ]
+    },
+    "cloudflare-skills/durable-objects": {
+      "title": "Cloudflare Durable Objects development skill",
+      "description": "Build and troubleshoot Cloudflare Durable Objects for persistent state and coordination. Follow the code and storage guidance for your Workers application.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/gateway-workers": {
+      "title": "Cloudflare Gateway Workers middleware skill",
+      "description": "Build Workers called by the Forward action in Cloudflare Gateway HTTP policies. Review GatewayMiddleware types, request context and continuation behavior.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/k2": {
+      "title": "Cloudflare K2 durable streams and logs skill",
+      "description": "Build and troubleshoot Cloudflare K2 Streams durable logs. Configure streams, subscriptions and retention, then produce or consume records.",
+      "related": [
+        "cloudflare-skills/basin",
+        "cloudflare-skills/cf-cli"
+      ]
+    },
+    "cloudflare-skills/nextjs-on-cloudflare": {
+      "title": "Deploy Next.js on Cloudflare with vinext",
+      "description": "Build or migrate Next.js apps on Cloudflare Workers with vinext. Choose a deployment path and load the upstream guidance for setup and migration.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/sandbox-migrate-to-next": {
+      "title": "Migrate Cloudflare Sandbox to the next SDK",
+      "description": "Move a Cloudflare Sandbox app from the stable package to the next SDK preview. Follow the migration guidance for package and application changes.",
+      "related": [
+        "cloudflare-skills/sandbox-stable",
+        "cloudflare-skills/sandbox-next"
+      ]
+    },
+    "cloudflare-skills/sandbox-next": {
+      "title": "Cloudflare Sandbox next SDK development skill",
+      "description": "Build and maintain apps using the Cloudflare Sandbox next SDK preview. Follow its current API guidance and route stable apps through the migration workflow.",
+      "related": [
+        "cloudflare-skills/sandbox-migrate-to-next",
+        "cloudflare-skills/sandbox-stable"
+      ]
+    },
+    "cloudflare-skills/sandbox-stable": {
+      "title": "Cloudflare Sandbox stable SDK development skill",
+      "description": "Build and maintain apps on the stable Cloudflare Sandbox package. Use the stable SDK workflow and separate guidance when moving to the next preview.",
+      "related": [
+        "cloudflare-skills/sandbox-migrate-to-next",
+        "cloudflare-skills/sandbox-next"
+      ]
+    },
+    "cloudflare-skills/turnstile-spin": {
+      "title": "Cloudflare Turnstile bot verification setup skill",
+      "description": "Add or repair Cloudflare Turnstile verification in a frontend and backend. Connect the widget to server side Siteverify and check the complete flow.",
+      "related": [
+        "reusable-app-components/app-auth",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/web-perf": {
+      "title": "Cloudflare website performance audit skill",
+      "description": "Diagnose website loading and interaction performance with Cloudflare guidance. Review Core Web Vitals, Lighthouse findings and the causes of slow pages.",
+      "related": [
+        "web-performance-skills/web-performance-optimization",
+        "cloudflare-skills/workers-profiling"
+      ]
+    },
+    "cloudflare-skills/workers-best-practices": {
+      "title": "Cloudflare Workers code review and development skill",
+      "description": "Write and review Cloudflare Workers using production application guidance. Check the relevant patterns before changing request handling and platform code.",
+      "related": [
+        "cloudflare-skills/workers-profiling",
+        "cloudflare-skills/durable-objects"
+      ]
+    },
+    "cloudflare-skills/workers-profiling": {
+      "title": "Profile Cloudflare Workers CPU and memory usage",
+      "description": "Measure CPU usage and memory allocation in deployed Cloudflare Workers and Durable Objects. Use profiling evidence to guide code and performance changes.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "cloudflare-skills/wrangler": {
+      "title": "Cloudflare Wrangler configuration and deploy skill",
+      "description": "Run and troubleshoot Wrangler in existing Cloudflare projects. Work with configuration files, local development, previews, deployments and resources.",
+      "related": [
+        "cloudflare-skills/cloudflare-deploy",
+        "cloudflare-skills/workers-best-practices"
+      ]
+    },
+    "codex-advisor/codex-advisor": {
+      "title": "Codex second opinion and cross model review skill",
+      "description": "Ask Codex for an independent review of a plan or implementation. Use another model's findings to investigate uncertainty before applying a change.",
+      "related": [
+        "fable-advisor/fable-advisor",
+        "simplify/simplify"
+      ]
+    },
+    "dokploy-skills/dokploy-deploy": {
+      "title": "Dokploy app deployment and server management skill",
+      "description": "Deploy apps and Docker Compose stacks with Dokploy. Manage domains, databases and self hosted instances using the relevant CLI and deployment guidance.",
+      "related": [
+        "openship-skills/openship-deploy",
+        "hetzner-skills/hetzner-deploy"
+      ]
+    },
+    "fable-advisor/fable-advisor": {
+      "title": "Fable second opinion and plan review skill",
+      "description": "Get a Fable second opinion on a plan or difficult implementation. Review its findings against source and tests before changing the primary approach.",
+      "related": [
+        "codex-advisor/codex-advisor",
+        "simplify/simplify"
+      ]
+    },
+    "frontend-design-skills/anthropic-frontend-design": {
+      "title": "Download the Anthropic frontend design skill",
+      "description": "Download the Anthropic frontend design skill as a ZIP for ChatGPT or Claude.ai and apply its interface design guidance to web projects.",
+      "related": [
+        "frontend-design-skills/writing-guidelines",
+        "react-skills/web-design-guidelines"
+      ]
+    },
+    "frontend-design-skills/frontend-testing-debugging": {
+      "title": "Frontend UI debugging and responsive testing skill",
+      "description": "Debug rendered frontend changes with browser evidence and reference screenshots. Check responsive layouts and reuse project QA journeys where available.",
+      "related": [
+        "agent-browser/ui-regression",
+        "qa/run-qa"
+      ]
+    },
+    "frontend-design-skills/openai-frontend-design": {
+      "title": "Download the OpenAI frontend design skill",
+      "description": "Download the OpenAI frontend design skill as a ZIP for ChatGPT or Claude.ai, then follow its visual design and browser verification workflow.",
+      "related": [
+        "frontend-design-skills/frontend-testing-debugging",
+        "react-skills/web-design-guidelines"
+      ]
+    },
+    "frontend-design-skills/writing-guidelines": {
+      "title": "Apply writing guidelines with an agent skill",
+      "description": "Download a writing guidelines skill for ChatGPT or Claude.ai to review documentation, interface copy, structure, tone, and formatting.",
+      "related": [
+        "humanize/humanize",
+        "adhd-output-style/adhd-output-style"
+      ]
+    },
+    "gcloud-tools/gcloud-usage": {
+      "title": "Google Cloud logs and observability skill",
+      "description": "Investigate Google Cloud production issues with logs, metrics and traces. Use the GCloud tooling workflow to query evidence and diagnose failures.",
+      "related": [
+        "gcloud-tools/setup"
+      ]
+    },
+    "gcloud-tools/setup": {
+      "title": "Google Cloud authentication and MCP setup skill",
+      "description": "Configure Google Cloud tooling and Application Default Credentials. Diagnose missing project settings, gcloud sign in errors and MCP connection failures.",
+      "related": [
+        "gcloud-tools/gcloud-usage"
+      ]
+    },
+    "github-dev/clean-gone-branches": {
+      "title": "Clean local Git branches removed from remote",
+      "description": "Find local branches whose remote branches were deleted and remove obsolete checkouts. Follow the branch cleanup workflow while preserving unfinished work.",
+      "related": [
+        "github-dev/commit-staged",
+        "github-dev/create-pr"
+      ]
+    },
+    "github-dev/commit-staged": {
+      "title": "Review and commit staged Git changes with an agent",
+      "description": "Inspect staged changes and write a concise Git commit message. Keep the commit focused on the selected diff and follow the repository's commit rules.",
+      "related": [
+        "simplify/simplify",
+        "github-dev/create-pr"
+      ]
+    },
+    "github-dev/create-issue": {
+      "title": "Create clear GitHub issues with an agent skill",
+      "description": "Turn a bug report or feature request into a useful GitHub issue. Describe the problem, reproduction and desired behavior with concise source backed detail.",
+      "related": [
+        "github-dev/create-pr",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "github-dev/create-pr": {
+      "title": "Create GitHub pull requests with an agent skill",
+      "description": "Download the create PR skill for ChatGPT or Claude.ai and guide an agent through branch checks, GitHub CLI commands, and pull request creation.",
+      "related": [
+        "github-dev/review-pr",
+        "github-dev/update-pr-summary"
+      ]
+    },
+    "github-dev/resolve-pr-comments": {
+      "title": "Resolve pull request comments with an agent skill",
+      "description": "Download the resolve PR comments skill for ChatGPT or Claude.ai to inspect review feedback, apply fixes, and verify each response.",
+      "related": [
+        "github-dev/review-pr",
+        "github-dev/update-pr-summary"
+      ]
+    },
+    "github-dev/review-pr": {
+      "title": "Review GitHub pull requests with an agent skill",
+      "description": "Download the review PR skill for ChatGPT or Claude.ai to inspect a pull request, trace risks, and produce actionable code review findings.",
+      "related": [
+        "github-dev/resolve-pr-comments",
+        "test-audit/test-audit"
+      ]
+    },
+    "github-dev/setup": {
+      "title": "GitHub CLI authentication and setup skill",
+      "description": "Set up the GitHub CLI and diagnose authentication or connection errors. Check the installed tooling and signed in account before retrying GitHub actions.",
+      "related": [
+        "github-dev/create-issue",
+        "github-dev/create-pr"
+      ]
+    },
+    "github-dev/update-pr-summary": {
+      "title": "Rewrite GitHub pull request titles and descriptions",
+      "description": "Update a pull request summary to match its final diff. Write a clear title and concise description that explain the change to a reviewer without chat history.",
+      "related": [
+        "github-dev/create-pr",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "hetzner-skills/hetzner-deploy": {
+      "title": "Hetzner Cloud deployment and hcloud CLI skill",
+      "description": "Create and manage Hetzner Cloud infrastructure with hcloud. Work with servers, networks, firewalls, load balancers, DNS zones and storage volumes.",
+      "related": [
+        "openship-skills/openship-config",
+        "dokploy-skills/dokploy-deploy"
+      ]
+    },
+    "humanize/humanize": {
+      "title": "Humanize writing and remove generic AI phrasing",
+      "description": "Revise documentation, interface copy and messages into clear natural language. Remove generic AI phrasing while preserving the writer's meaning and tone.",
+      "related": [
+        "frontend-design-skills/writing-guidelines",
+        "adhd-output-style/adhd-output-style"
+      ]
+    },
+    "livekit-skills/building-livekit-agents": {
+      "title": "Build LiveKit voice and chat AI agents",
+      "description": "Design LiveKit voice and chat agents with clear tasks, handoffs and tool behavior. Keep context focused and plan for conversational latency.",
+      "related": [
+        "livekit-skills/debugging-livekit-agents",
+        "livekit-skills/operating-livekit-agents",
+        "livekit-skills/reading-livekit-docs"
+      ]
+    },
+    "livekit-skills/debugging-livekit-agents": {
+      "title": "Debug LiveKit agents through live conversations",
+      "description": "Try a LiveKit agent in a live multi turn conversation with lk agent debugger. Inspect what it says and does after changing its prompts or tools.",
+      "related": [
+        "livekit-skills/building-livekit-agents",
+        "livekit-skills/operating-livekit-agents",
+        "livekit-skills/reading-livekit-docs"
+      ]
+    },
+    "livekit-skills/operating-livekit-agents": {
+      "title": "Deploy and operate LiveKit agents in production",
+      "description": "Ship and roll back LiveKit agents, manage worker processes and investigate production failures. Review secrets, shutdown behavior, upgrades and observability.",
+      "related": [
+        "livekit-skills/building-livekit-agents",
+        "livekit-skills/debugging-livekit-agents",
+        "livekit-skills/reading-livekit-docs"
+      ]
+    },
+    "livekit-skills/reading-livekit-docs": {
+      "title": "Look up LiveKit APIs, models and CLI documentation",
+      "description": "Read current LiveKit documentation before using an API, CLI flag or provider feature. Find SDK signatures, examples and changelog details from source.",
+      "related": [
+        "livekit-skills/building-livekit-agents",
+        "livekit-skills/debugging-livekit-agents",
+        "livekit-skills/operating-livekit-agents"
+      ]
+    },
+    "livekit-skills/running-livekit-simulations": {
+      "title": "Run LiveKit agent text and audio simulations",
+      "description": "Run LiveKit conversation simulations locally or against a deployed agent. Compare text and audio results and investigate failures before shipping changes.",
+      "related": [
+        "livekit-skills/building-livekit-agents",
+        "livekit-skills/debugging-livekit-agents",
+        "livekit-skills/operating-livekit-agents"
+      ]
+    },
+    "livekit-skills/testing-livekit-agents": {
+      "title": "Write LiveKit agent tests with pytest or Vitest",
+      "description": "Test LiveKit agent messages, tool calls and handoffs in pytest or Vitest. Use the SDK session harness and intent checks to cover behavior changes.",
+      "related": [
+        "livekit-skills/building-livekit-agents",
+        "livekit-skills/debugging-livekit-agents",
+        "livekit-skills/operating-livekit-agents"
+      ]
+    },
+    "livekit-skills/writing-livekit-scenarios": {
+      "title": "Write LiveKit agent simulation scenarios",
+      "description": "Create LiveKit simulation scenarios for realistic conversations and failure cases. Define user behavior and outcomes for repeatable agent evaluation.",
+      "related": [
+        "livekit-skills/building-livekit-agents",
+        "livekit-skills/debugging-livekit-agents",
+        "livekit-skills/operating-livekit-agents"
+      ]
+    },
+    "mongodb-skills/mongodb-atlas-stream-processing": {
+      "title": "MongoDB Atlas Stream Processing workflow skill",
+      "description": "Build and operate MongoDB Atlas Stream Processing pipelines. Configure workspaces and connections, manage processors and diagnose streaming data failures.",
+      "related": [
+        "mongodb-skills/mongodb-connection",
+        "mongodb-skills/mongodb-mcp-setup",
+        "mongodb-skills/mongodb-natural-language-querying"
+      ]
+    },
+    "mongodb-skills/mongodb-connection": {
+      "title": "MongoDB connection pools and timeout tuning skill",
+      "description": "Review MongoDB client connections, pool sizing and timeouts for your workload. Diagnose connection failures before choosing driver configuration changes.",
+      "related": [
+        "mongodb-skills/mongodb-atlas-stream-processing",
+        "mongodb-skills/mongodb-mcp-setup",
+        "mongodb-skills/mongodb-natural-language-querying"
+      ]
+    },
+    "mongodb-skills/mongodb-mcp-setup": {
+      "title": "MongoDB MCP Server setup and connection skill",
+      "description": "Configure MongoDB MCP Server and check its connection to your database. Follow the setup workflow before using agent tools for MongoDB operations.",
+      "related": [
+        "mongodb-skills/mongodb-atlas-stream-processing",
+        "mongodb-skills/mongodb-connection",
+        "mongodb-skills/mongodb-natural-language-querying"
+      ]
+    },
+    "mongodb-skills/mongodb-natural-language-querying": {
+      "title": "Write MongoDB queries from natural language",
+      "description": "Translate data questions into MongoDB filters and aggregation pipelines. Use this skill for query syntax and document operations rather than Atlas Search.",
+      "related": [
+        "mongodb-skills/mongodb-atlas-stream-processing",
+        "mongodb-skills/mongodb-connection",
+        "mongodb-skills/mongodb-mcp-setup"
+      ]
+    },
+    "mongodb-skills/mongodb-query-optimizer": {
+      "title": "MongoDB slow query and index review skill",
+      "description": "Investigate slow MongoDB queries and choose indexes using query evidence. Focus on performance and indexing when a workload needs faster execution.",
+      "related": [
+        "mongodb-skills/mongodb-atlas-stream-processing",
+        "mongodb-skills/mongodb-connection",
+        "mongodb-skills/mongodb-mcp-setup"
+      ]
+    },
+    "mongodb-skills/mongodb-schema-design": {
+      "title": "MongoDB schema design and data modeling skill",
+      "description": "Choose MongoDB document models, embedding and references for your access patterns. Review validation, data growth and schema migration tradeoffs.",
+      "related": [
+        "mongodb-skills/mongodb-atlas-stream-processing",
+        "mongodb-skills/mongodb-connection",
+        "mongodb-skills/mongodb-mcp-setup"
+      ]
+    },
+    "mongodb-skills/mongodb-search-and-ai": {
+      "title": "MongoDB Atlas, vector and hybrid search skill",
+      "description": "Plan MongoDB full text, vector and hybrid search with task specific guidance. Compare search types and learn how embeddings fit your data and queries.",
+      "related": [
+        "mongodb-skills/mongodb-atlas-stream-processing",
+        "mongodb-skills/mongodb-connection",
+        "mongodb-skills/mongodb-mcp-setup"
+      ]
+    },
+    "openai-office-skills/doc": {
+      "title": "OpenAI Word document rendering and editing skill",
+      "description": "Read and edit Word documents with python-docx and rendered page checks. Use the OpenAI office workflow when layout and formatting accuracy matter.",
+      "related": [
+        "anthropic-office-skills/docx",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "openai-office-skills/pdf": {
+      "title": "OpenAI PDF generation and visual review skill",
+      "description": "Create, inspect and extract PDF documents with the OpenAI office workflow. Render pages for visual checks and use PDF libraries for text and tables.",
+      "related": [
+        "anthropic-office-skills/pdf",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "openai-office-skills/slides": {
+      "title": "OpenAI PowerPoint slides with PptxGenJS",
+      "description": "Create and edit PowerPoint presentations with PptxGenJS and layout helpers. Render slides, check placement and repair visual issues before delivery.",
+      "related": [
+        "anthropic-office-skills/pptx",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "openai-office-skills/spreadsheet": {
+      "title": "OpenAI spreadsheet formulas and visual review skill",
+      "description": "Create and analyze Excel and tabular files with formula aware checks. Follow the OpenAI office workflow for recalculation, formatting and visual review.",
+      "related": [
+        "anthropic-office-skills/xlsx",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "openobserve-skills/openobserve-api": {
+      "title": "OpenObserve logs, SQL and dashboard API skill",
+      "description": "Query OpenObserve logs and manage dashboards through its REST API. Work with streams, SQL searches, panels and ingestion using the documented workflow.",
+      "related": [
+        "gcloud-tools/gcloud-usage",
+        "cloudflare-skills/workers-profiling"
+      ]
+    },
+    "openship-skills/openship-config": {
+      "title": "Create and validate OpenShip deployment config",
+      "description": "Write openship.json for a deployable repository and fix configuration errors. Match app build settings, services and domains to the OpenShip contract.",
+      "related": [
+        "openship-skills/openship-deploy"
+      ]
+    },
+    "openship-skills/openship-deploy": {
+      "title": "Deploy apps and manage OpenShip infrastructure",
+      "description": "Use the OpenShip CLI to deploy apps and investigate deployment failures. Manage domains, storage, backups and instance upgrades through the control plane.",
+      "related": [
+        "openship-skills/openship-config"
+      ]
+    },
+    "overleaf-skills/review-overleaf": {
+      "title": "Review Overleaf comments and update LaTeX sources",
+      "description": "Fetch Overleaf review comments and apply changes in a Git tracked LaTeX project. Match feedback to source edits and verify that each issue is addressed.",
+      "related": [
+        "overleaf-skills/setup"
+      ]
+    },
+    "overleaf-skills/setup": {
+      "title": "Overleaf authentication cookie setup skill",
+      "description": "Set up or refresh the Overleaf session used by the review tools. Diagnose expired cookies, unauthorized responses and connection problems.",
+      "related": [
+        "overleaf-skills/review-overleaf"
+      ]
+    },
+    "paper-search-tools/paper-search-usage": {
+      "title": "Search research papers with the paper search CLI",
+      "description": "Find research papers through arXiv, PubMed, IEEE and other supported sources. Look up DOIs and retrieve papers with the paper search workflow.",
+      "related": [
+        "paper-search-tools/setup"
+      ]
+    },
+    "paper-search-tools/setup": {
+      "title": "Paper search CLI setup and credentials skill",
+      "description": "Install and configure paper search tooling or diagnose a missing command. Check the required credentials before searching academic paper sources.",
+      "related": [
+        "paper-search-tools/paper-search-usage"
+      ]
+    },
+    "polar-skills/polar-billing": {
+      "title": "Polar billing and subscription integration skill",
+      "description": "Work on Polar checkout, subscriptions and benefit delivery. Follow the billing lifecycle and Stripe integration guidance for your application.",
+      "related": [
+        "polar-skills/polar-local-environment"
+      ]
+    },
+    "polar-skills/polar-local-environment": {
+      "title": "Set up a Polar local development environment",
+      "description": "Run Polar locally with Docker and its development services. Follow the environment setup workflow when preparing or managing a local billing stack.",
+      "related": [
+        "polar-skills/polar-billing"
+      ]
+    },
+    "python-skills/python-guidelines": {
+      "title": "Python code style and refactoring guidelines skill",
+      "description": "Write and review Python code with consistent naming, imports and docstrings. Prefer existing utilities and simple data flow when refactoring a codebase.",
+      "related": [
+        "test-audit/test-audit",
+        "simplify/simplify"
+      ]
+    },
+    "qa/run-qa": {
+      "title": "Run tracked website, extension and Android QA",
+      "description": "Verify real website, browser extension and Android workflows with QA journeys. Collect evidence for playback, provider connections and other app actions.",
+      "related": [
+        "qa/setup",
+        "agent-browser/ui-regression",
+        "frontend-design-skills/frontend-testing-debugging"
+      ]
+    },
+    "qa/setup": {
+      "title": "Set up project QA journeys and integration tests",
+      "description": "Create reusable QA journeys for websites, browser extensions, Android apps and backends. Define real user workflows and evidence for integration checks.",
+      "related": [
+        "qa/run-qa",
+        "test-audit/test-audit"
+      ]
+    },
+    "react-skills/composition-patterns": {
+      "title": "React component composition patterns skill",
+      "description": "Refactor React components with composition, compound components and shared state. Replace growing boolean props with APIs that fit the actual component roles.",
+      "related": [
+        "react-skills/react-best-practices",
+        "react-skills/react-native-skills",
+        "react-skills/react-view-transitions"
+      ]
+    },
+    "react-skills/react-best-practices": {
+      "title": "React and Next.js performance review skill",
+      "description": "Review React and Next.js code for rendering, data fetching and bundle performance. Apply Vercel guidance to component and page implementation choices.",
+      "related": [
+        "react-skills/composition-patterns",
+        "react-skills/react-native-skills",
+        "react-skills/react-view-transitions"
+      ]
+    },
+    "react-skills/react-native-skills": {
+      "title": "React Native and Expo performance patterns skill",
+      "description": "Build React Native and Expo apps with guidance for lists, animations and native APIs. Review mobile component patterns and performance tradeoffs.",
+      "related": [
+        "react-skills/composition-patterns",
+        "react-skills/react-best-practices",
+        "react-skills/react-view-transitions"
+      ]
+    },
+    "react-skills/react-view-transitions": {
+      "title": "React View Transition animations skill",
+      "description": "Add React View Transition page and element animations. Work with transition types, route changes and shared elements while respecting motion preferences.",
+      "related": [
+        "react-skills/composition-patterns",
+        "react-skills/react-best-practices",
+        "react-skills/react-native-skills"
+      ]
+    },
+    "react-skills/web-design-guidelines": {
+      "title": "Web interface accessibility and design review skill",
+      "description": "Review interface code against Web Interface Guidelines. Check accessibility, interaction patterns and design details, then report actionable UI findings.",
+      "related": [
+        "react-skills/composition-patterns",
+        "react-skills/react-best-practices",
+        "react-skills/react-native-skills"
+      ]
+    },
+    "reusable-app-components/app-auth": {
+      "title": "Reusable app login, signup and password reset skill",
+      "description": "Reuse tested email and Google sign in components with shared account contracts. Preserve selected actions through signup, recovery and same tab login.",
+      "related": [
+        "reusable-app-components/tawk-support",
+        "reusable-app-components/email-design"
+      ]
+    },
+    "reusable-app-components/email-design": {
+      "title": "Design branded transactional app emails",
+      "description": "Theme account, billing and notification emails to match your app. Reuse the existing delivery pipeline for verification, password reset and other messages.",
+      "related": [
+        "reusable-app-components/app-auth",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
+    "reusable-app-components/tawk-support": {
+      "title": "Tawk support chat setup and signed visitor identity",
+      "description": "Add themed Tawk support chat with signed account identity, a product knowledge base and quiet widget defaults. Keep credentials and private app content out.",
+      "related": [
+        "reusable-app-components/app-auth",
+        "reusable-app-components/email-design"
+      ]
+    },
+    "seo-skills/programmatic-seo": {
+      "title": "Plan useful programmatic SEO pages at scale",
+      "description": "Assess whether a data set can support useful search pages. Choose page patterns, unique content, internal links and checks before publishing at scale.",
+      "related": [
+        "seo-skills/site-architecture",
+        "seo-skills/schema",
+        "aeo/aeo"
+      ]
+    },
+    "seo-skills/schema": {
+      "title": "JSON-LD schema and structured data review skill",
+      "description": "Add and review structured data for articles, products, FAQs and businesses. Match JSON-LD to visible content and investigate missing rich result eligibility.",
+      "related": [
+        "seo-skills/seo-audit",
+        "seo-skills/programmatic-seo"
+      ]
+    },
+    "seo-skills/seo-audit": {
+      "title": "Audit website SEO, metadata and crawl signals",
+      "description": "Review crawl access, page metadata, content and site structure in priority order. Separate observed SEO evidence from indexing and ranking claims.",
+      "related": [
+        "seo-skills/site-architecture",
+        "web-performance-skills/web-performance-optimization"
+      ]
+    },
+    "seo-skills/site-architecture": {
+      "title": "Plan SEO site architecture and internal links",
+      "description": "Design page hierarchy, navigation and URL structure around useful search journeys. Connect hubs and detail pages so people and crawlers can reach them.",
+      "related": [
+        "seo-skills/programmatic-seo",
+        "seo-skills/seo-audit"
+      ]
+    },
+    "simplify/simplify": {
+      "title": "Simplify code changes with four review angles",
+      "description": "Review changed code for reuse, unnecessary complexity, wasted work and misplaced logic. Apply focused cleanup findings before committing the staged diff.",
+      "related": [
+        "test-audit/test-audit",
+        "github-dev/commit-staged"
+      ]
+    },
+    "stripe-skills/connect-recommend": {
+      "title": "Choose a Stripe Connect integration for a platform",
+      "description": "Plan Stripe Connect for a marketplace or platform that pays sellers. Compare account setup, charge patterns and dashboard access for the business model.",
+      "related": [
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/metronome",
+        "stripe-skills/stripe-apps"
+      ]
+    },
+    "stripe-skills/connect-required-verification-information": {
+      "title": "Find Stripe Connect account verification requirements",
+      "description": "Look up Stripe Connect onboarding and verification requirements. Compare fields by country, business type, account configuration and payment capability.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/metronome",
+        "stripe-skills/stripe-apps"
+      ]
+    },
+    "stripe-skills/metronome": {
+      "title": "Metronome usage based billing integration skill",
+      "description": "Plan Metronome events, billable metrics, contracts and rate cards. Review credits, invoicing and Stripe synchronization for usage based billing.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/stripe-apps"
+      ]
+    },
+    "stripe-skills/stripe-apps": {
+      "title": "Build Stripe Apps and Dashboard extensions",
+      "description": "Build Stripe Apps, custom Dashboard interfaces and extensions. Select the relevant SDK and reference guides for authentication, events and workflow actions.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/metronome"
+      ]
+    },
+    "stripe-skills/stripe-best-practices": {
+      "title": "Stripe payments and billing integration guidelines",
+      "description": "Choose Stripe payment, subscription and Connect integration patterns. Review sandbox setup, API choices, tax handling, webhooks and credential security.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/metronome"
+      ]
+    },
+    "stripe-skills/stripe-docs": {
+      "title": "Read and search Stripe documentation with the CLI",
+      "description": "Use the Stripe CLI to read current documentation and API references. Follow the docs workflow for authenticated content and integration research.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/metronome"
+      ]
+    },
+    "stripe-skills/stripe-projects": {
+      "title": "Provision cloud services with Stripe Projects",
+      "description": "Browse and provision databases, hosting and other services through Stripe Projects. Check available providers and manage project resources with the CLI.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/metronome"
+      ]
+    },
+    "stripe-skills/upgrade-stripe": {
+      "title": "Upgrade Stripe APIs, webhooks and SDKs",
+      "description": "Plan Stripe API version and SDK upgrades across server, browser and mobile code. Check webhook compatibility and follow the migration guidance.",
+      "related": [
+        "stripe-skills/connect-recommend",
+        "stripe-skills/connect-required-verification-information",
+        "stripe-skills/metronome"
+      ]
+    },
+    "supabase-skills/supabase": {
+      "title": "Supabase app development and troubleshooting skill",
+      "description": "Build and debug Supabase apps using current product documentation. Work across database, auth, storage, realtime and Edge Functions with scoped guidance.",
+      "related": [
+        "supabase-skills/supabase-cli",
+        "supabase-skills/supabase-js",
+        "supabase-skills/supabase-postgres-best-practices"
+      ]
+    },
+    "supabase-skills/supabase-cli": {
+      "title": "Supabase CLI local development and migration skill",
+      "description": "Use the Supabase CLI for local services, database migrations and Edge Functions. Follow the project workflow for development and deployment commands.",
+      "related": [
+        "supabase-skills/supabase",
+        "supabase-skills/supabase-js",
+        "supabase-skills/supabase-postgres-best-practices"
+      ]
+    },
+    "supabase-skills/supabase-js": {
+      "title": "Supabase JavaScript SDK integration skill",
+      "description": "Build with supabase-js for database queries, authentication, storage and realtime. Consult the SDK references before changing JavaScript integrations.",
+      "related": [
+        "supabase-skills/supabase",
+        "supabase-skills/supabase-cli",
+        "supabase-skills/supabase-postgres-best-practices"
+      ]
+    },
+    "supabase-skills/supabase-postgres-best-practices": {
+      "title": "Supabase Postgres schema, SQL and performance skill",
+      "description": "Review Postgres schema, queries, migrations and row level security with Supabase guidance. Diagnose slow queries, indexing issues and database resource usage.",
+      "related": [
+        "supabase-skills/supabase",
+        "supabase-skills/supabase-cli",
+        "supabase-skills/supabase-js"
+      ]
+    },
+    "tavily-tools/setup": {
+      "title": "Tavily MCP setup and authentication skill",
+      "description": "Configure Tavily integration and diagnose API key or connection failures. Check the tooling setup when web search requests stop working.",
+      "related": [
+        "tavily-tools/tavily-usage"
+      ]
+    },
+    "tavily-tools/tavily-usage": {
+      "title": "Search the web and extract pages with Tavily",
+      "description": "Choose Tavily search for discovery and extraction for known URLs. Retrieve website content with the tool suited to the information you need.",
+      "related": [
+        "tavily-tools/setup"
+      ]
+    },
+    "test-audit/test-audit": {
+      "title": "Audit tests and remove low value coverage",
+      "description": "Review tests for meaningful behavior, regression value and duplicate coverage. Keep independent contracts and remove implementation coupled proof.",
+      "related": [
+        "qa/setup",
+        "simplify/simplify"
+      ]
+    },
+    "ultralytics-branding/ultralytics-branding": {
+      "title": "Ultralytics brand colors, typography and content skill",
+      "description": "Apply Ultralytics brand guidance to documents, slides, websites and marketing content. Use the official colors, typography, logo rules and naming conventions.",
+      "related": [
+        "frontend-design-skills/anthropic-frontend-design",
+        "openai-office-skills/slides"
+      ]
+    },
+    "ultralytics-dev/ultralytics-platform": {
+      "title": "Ultralytics Platform models, data and training skill",
+      "description": "Use Ultralytics Platform for model and dataset management, hosted training and inference. Check the generated SDK and live API contract before operations.",
+      "related": [
+        "ultralytics-dev/yolo-training"
+      ]
+    },
+    "ultralytics-dev/yolo-training": {
+      "title": "YOLO training diagnostics and hyperparameter skill",
+      "description": "Read YOLO training results before changing epochs, learning rates or model settings. Diagnose accuracy, overfitting and data issues from run evidence.",
+      "related": [
+        "ultralytics-dev/ultralytics-platform"
+      ]
+    },
+    "web-performance-skills/web-performance-optimization": {
+      "title": "Core Web Vitals and website performance audit skill",
+      "description": "Audit loading and interaction performance using current web metrics guidance. Investigate Lighthouse findings and measure changes to Core Web Vitals.",
+      "related": [
+        "cloudflare-skills/web-perf",
+        "seo-skills/seo-audit"
+      ]
+    }
+  }
+}

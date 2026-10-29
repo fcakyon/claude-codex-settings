@@ -6,7 +6,8 @@ description: This skill should be used when user asks to "update PR summary", "u
 # Update PR Summary
 
 Update a PR title and body to describe the final change and evidence. Treat extra invocation
-text as the PR reference and any requested corrections.
+text as the PR reference and any requested corrections. For issue title/body edits, use
+[create-issue](../create-issue/SKILL.md).
 
 1. Read repository guidance and fetch the current body before editing:
    `gh pr view <pr> --json title,body,baseRefName,headRefName,url`.

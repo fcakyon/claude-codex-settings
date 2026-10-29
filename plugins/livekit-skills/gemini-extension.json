@@ -1,5 +1,5 @@
 {
   "name": "livekit-skills",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Build, test, simulate, and deploy LiveKit voice AI agents."
 }

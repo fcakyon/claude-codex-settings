@@ -1,0 +1,47 @@
+.app-auth-panel {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 440px;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid var(--auth-border, #303039);
+  border-radius: var(--auth-radius, 24px);
+  background: var(--auth-surface, #15151c);
+  color: var(--auth-text, #f5f5f7);
+  box-shadow: 0 24px 80px #0003;
+  font: inherit;
+}
+
+.app-auth-panel header { text-align: center; }
+.app-auth-panel__brand {
+  margin-block-end: 24px;
+  color: var(--auth-accent, #00e2b4);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.app-auth-panel h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 1.75rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.app-auth-panel header p,
+.app-auth-panel footer {
+  color: var(--auth-muted, #b3b3be);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.app-auth-panel header p { margin: 12px 0 0; }
+.app-auth-panel__body { margin-block-start: 28px; }
+.app-auth-panel footer { margin-block-start: 24px; text-align: center; }
+.app-auth-panel .app-google-sign-in { max-inline-size: none; }
+.app-auth-panel .app-google-sign-in > :is(a, button) {
+  color: var(--auth-accent, #00e2b4);
+  font-size: 0.875rem;
+}
+.app-auth-panel [role="status"] { color: var(--auth-muted, #b3b3be); }
+.app-auth-panel [role="alert"] { color: var(--auth-error, #fda4af); }

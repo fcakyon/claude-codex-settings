@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "aeo",
+      "source": {
+        "source": "local",
+        "path": "./plugins/aeo"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "marketing"
+    },
+    {
       "name": "simplify",
       "source": {
         "source": "local",
@@ -441,6 +453,18 @@
       "source": {
         "source": "local",
         "path": "./plugins/qa"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "development"
+    },
+    {
+      "name": "reusable-app-components",
+      "source": {
+        "source": "local",
+        "path": "./plugins/reusable-app-components"
       },
       "policy": {
         "installation": "AVAILABLE",

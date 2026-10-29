@@ -111,7 +111,7 @@ For **separate charges and transfers**: collect fees by transferring less than t
 
 ## Webhooks
 
-Always use webhooks for reliable payment confirmation. Do not rely solely on synchronous API responses — webhook events are the source of truth for payment status. Verify incoming [webhook signatures](https://docs.stripe.com/webhooks.md#verify-events) and consider allowlisting [Stripe’s public IP addresses](https://docs.stripe.com/ips.md).
+Always use webhooks for reliable payment confirmation. Don’t rely solely on synchronous API responses — webhook events are the source of truth for payment status. Verify incoming [webhook signatures](https://docs.stripe.com/webhooks.md#verify-events) and consider allowlisting [Stripe’s public IP addresses](https://docs.stripe.com/ips.md).
 
 ## Subscriptions with Connect (v2)
 

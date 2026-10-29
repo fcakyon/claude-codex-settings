@@ -352,6 +352,16 @@ When writing README or docs content for this repo:
 - When two plugins are designed to be used together, end each plugin's README long block with a "Pairs naturally with `other-plugin`" line on BOTH sides, so the pairing is asserted from both directions
 - Plan for future before/after GIFs or demos per plugin to show value visually
 
+### Website catalog pages
+
+`site/src/lib/content.ts` discovers plugins and local skills and generates their pages, hub links and sitemaps. No selected-skill list is needed.
+
+- `site/src/lib/catalog-seo.json` owns public titles, summaries and related skill links. Pages, cards, social tags, structured data and the LLM catalog share this copy. Detailed instructions remain in `SKILL.md`; versions, tools and install commands come from repository sources. Vendor syncs keep website copy intact.
+- Add, remove or rename catalog entries with their source plugin/skill. Write unique, complete task summaries and distinguish similar skills by provider or workflow. Choose related links by task, including across plugins. Do not turn invocation triggers into search snippets.
+- Run `npm ci --prefix site` and `npm run build --prefix site`. Build checks cover every page, metadata uniqueness, canonical URLs, headings, social tags, schema, contextual links, sitemaps and missing/stale entries.
+- `InstallGuide.astro` owns installation choices for the guide and catalog pages. Show only supported tools and link ZIP downloads to published assets. `downloads.ts` sums GitHub release assets across paginated published releases once per build. Plugin totals combine skill ZIPs and earlier plugin ZIPs without counting the same asset twice. These are download actions, not installs or unique users. The `Website` workflow redeploys daily so counts stay fresh.
+- Titles use 20–70 characters and summaries use 90–160 as editorial budgets, not Google limits. Review meaning against source; indexing, ranking and Google snippet selection are not guaranteed.
+
 ### Plugin descriptions
 
 The `description` field in `plugin.json` and marketplace entries faces non-technical marketplace browsers. Lead with concrete user-visible outcomes, not the mechanism. Drop jargon (OTel, hook event names, internal config field names). Write one sentence of at least 40 chars ending in a period, short enough that name plus description fits the 100-char README row. CI enforces this shape.
@@ -419,6 +429,9 @@ bash .github/scripts/sync-openclaw-skills.sh
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
 
+`frontend-testing-debugging` is maintained locally. The frontend sync packages it without replacing it from upstream.
+OpenClaw test-audit keeps its detailed checklist in `references/audit.md`. Sync it alongside `SKILL.md` and `CAMPAIGN.md`, and adapt repository-specific workflow links in both the skill and checklist.
+
 #### When a sync script fails
 
 Failures usually mean the upstream repo restructured. Diagnostic steps:
@@ -444,11 +457,11 @@ Propagates `version` everywhere and `license` everywhere except `gemini-extensio
 bash .github/scripts/release.sh <version>
 ```
 
-Updates marketplace version, regenerates all skill zips, uploads them as release assets, generates release notes from README + auto-changelog.
+Packages every skill from the committed `HEAD` in a temporary Git snapshot, verifies each ZIP against its source, and publishes the assets with a tag targeting that commit. Release notes use the committed README and auto-changelog. Use `--dry-run` to package and verify without publishing.
 
-**Pre-flight**: run `bash .github/scripts/sync-versions.sh` and every `sync-*-skills.sh` manually first. `release.sh` re-runs them, but if any has broken on an upstream restructure the release will ship a stale or empty plugin. Surface those breakages BEFORE tagging.
+**Pre-flight**: run every `sync-*-skills.sh`, bump changed plugin versions, and run `bash .github/scripts/sync-versions.sh`. Resolve upstream path failures and validate the plugins before committing. The release command packages committed files without fetching upstream content or changing the checkout.
 
-**Versioning**: bump `metadata.version` in `.claude-plugin/marketplace.json` yourself, run `sync-versions.sh` to propagate it, and commit that before releasing. `release.sh <version>` only checks the committed value matches and stops if it does not, because `gh release create` tags the pushed branch and never sees a local edit. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
+**Versioning**: bump `metadata.version` in `.claude-plugin/marketplace.json`, run `sync-versions.sh` to propagate it, then commit, merge, and check out the release commit before running `release.sh <version>`. The command requires the committed version to match. Bump minor for new plugins or skill-set additions, patch for sync refreshes, bug fixes, or copy edits.
 
 **README zip URLs**: existing zip badges use `releases/latest/download/<skill>.zip` and auto-resolve to the new tag. Do NOT manually bump these URLs after release. New skills introduced in the release need new badge rows added via `/claude-tools:update-readme`.
 

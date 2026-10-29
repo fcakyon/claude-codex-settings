@@ -114,9 +114,10 @@ ${skills
   .map(
     (skill) => `### ${skill.name} (${skill.plugin})
 
-${skill.description}
+${skill.seo.description}
 
-- [Download ZIP](${skill.downloadUrl})
+- [Skill guide](${site.url}${skill.detailUrl})
+${skill.downloadUrl ? `- [Download ZIP](${skill.downloadUrl})` : `- [Install the plugin](${site.url}/plugins/${skill.plugin}/): A stable skill ZIP has not been published yet.`}
 - [Source](${skill.sourceUrl})
 `,
   )

@@ -15,6 +15,7 @@ fetch() { gh api "repos/$UPSTREAM/contents/$1?ref=$SHA" --jq .content | base64 -
 mkdir "$STAGING/references"
 fetch .agents/skills/test-audit/SKILL.md SKILL.md
 fetch .agents/skills/test-audit/CAMPAIGN.md references/campaign.md
+fetch .agents/skills/test-audit/references/audit.md references/audit.md
 fetch LICENSE LICENSE
 
 python3 - "$STAGING" <<'PY'
@@ -31,16 +32,11 @@ path = staging / "SKILL.md"
 text = path.read_text()
 replacements = {
     r'^description: .*$': 'description: This skill should be used when the user asks to "write a test", "review these tests", "audit tests", "prune low-value tests", or "find duplicate tests", and whenever writing, changing, reviewing, or sweeping tests. Gates new tests and audits low-value, implementation-coupled, or duplicative tests and the test-only production seams they demand.',
-    r'- core and packages \(`src/`, `packages/`\);\n- plugins \(`extensions/`\);\n': '- core source and packages;\n- plugins or extensions;\n',
-    r'Never edit source or tests while Vitest is running in the checkout\. Follow\n`\$openclaw-testing`; route heavy proof through its `\$crabbox` rules\.':
-        'Never edit source or tests while a test watcher is running in the checkout.\nFollow the repository testing guide when one exists.',
-    r'1\. Run the smallest owner and sibling tests with\n   `node scripts/run-vitest\.mjs <path-or-filter>`\.':
-        "1. Run the smallest owner and sibling tests with the project's test runner.",
-    r'4\. Classify with\n   `node scripts/check-changed\.mjs --dry-run -- <changed-paths>`, then run the\n   actual changed gate required by repository policy\.':
-        '4. Run the changed-file or CI gate required by repository policy.',
-    r'6\. After final audit edits, run mandatory `\$autoreview`\.': '6. After final audit edits, run a code review of the full diff.',
+    r'Use \[boundary and cost guide\]\(../../../docs/help/testing/writing-tests.md\)\.':
+        'Use the repository testing guide for boundary and cost decisions.',
+    r'Follow \[proof policy\]\(../openclaw-testing/SKILL.md#proof-policy\); preserve active\n  Vitest checkouts; run owner/sibling proof \+ changed checks; then autoreview\.':
+        'Follow the repository testing guide; preserve active test checkouts;\n  run owner and sibling tests plus required checks, then review the full diff.',
     r'read \[CAMPAIGN\.md\]\(CAMPAIGN\.md\)': 'read [references/campaign.md](references/campaign.md)',
-    r' Use\n`\$openclaw-pr-maintainer` and the repository `scripts/pr` flow\.': '',
 }
 for pattern, replacement in replacements.items():
     text, count = re.subn(pattern, lambda _: replacement, text, flags=re.M)
@@ -48,6 +44,28 @@ for pattern, replacement in replacements.items():
         raise SystemExit(f"Upstream changed, pattern not found: {pattern}")
 if leftover := re.findall(r"\$openclaw|\$crabbox|\$autoreview|scripts/\S+\.mjs|Vitest", text):
     raise SystemExit(f"Unadapted OpenClaw references: {leftover}")
+path.write_text(text)
+path = staging / "references/audit.md"
+text = path.read_text().replace("](../CAMPAIGN.md)", "](campaign.md)")
+text = text.replace(
+    "- Follow [proof policy](../../openclaw-testing/SKILL.md#proof-policy).\n"
+    "  Never edit checkout during active Vitest run. Run owner/sibling tests.",
+    "- Follow the repository testing guide.\n"
+    "  Never edit a checkout during an active test run. Run owner and sibling tests.",
+).replace(
+    "- Run targeted format, `git diff --check`; classify changed gate with\n"
+    "  `node scripts/check-changed.mjs --dry-run -- <changed-paths>` before running it.",
+    "- Run targeted formatting, `git diff --check`, and required changed-file checks.",
+).replace(
+    "- Before landing removal batches, run CI's `pnpm deadcode:dependencies`,\n"
+    "  `pnpm deadcode:unused-files`, and `pnpm deadcode:exports` (all phases): removed\n"
+    "  tests orphan support files/exports that ordinary PR CI misses and main's\n"
+    "  `check-dependencies` catches.",
+    "- Before landing removal batches, run the repository's unused dependency, file,\n"
+    "  and export checks when available. Removed tests can orphan support code.",
+).replace("get final autoreview", "review the full diff")
+if leftover := re.findall(r"openclaw-testing|scripts/\S+\.mjs|Vitest|pnpm deadcode:", text):
+    raise SystemExit(f"Unadapted OpenClaw audit references: {leftover}")
 path.write_text(text)
 PY
 

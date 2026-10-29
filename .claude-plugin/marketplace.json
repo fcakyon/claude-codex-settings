@@ -5,14 +5,29 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.9.0"
+    "version": "2.10.0"
   },
   "plugins": [
+    {
+      "name": "aeo",
+      "version": "1.0.1",
+      "description": "Turn buyer questions and AI citations into content that wins customers.",
+      "author": {
+        "name": "Fatih C. Akyon"
+      },
+      "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+      "repository": "https://github.com/fcakyon/claude-codex-settings",
+      "license": "Apache-2.0",
+      "source": "./plugins/aeo",
+      "keywords": ["aeo","geo","ai-search","content-strategy","citations"],
+      "category": "marketing",
+      "tags": ["search","content","analytics"]
+    },
     {
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
-      "version": "1.1.12",
+      "version": "1.1.13",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -147,7 +162,7 @@
       "name": "react-skills",
       "source": "./plugins/react-skills",
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
-      "version": "1.0.3",
+      "version": "1.0.5",
       "license": "MIT",
       "keywords": ["react", "react-native", "nextjs", "expo", "web-design", "performance"],
       "category": "frontend",
@@ -157,7 +172,7 @@
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Drive browsers and Electron apps, run UI QA, and turn websites into API clients.",
-      "version": "1.2.1",
+      "version": "1.2.5",
       "license": "Apache-2.0",
       "keywords": ["browser", "automation", "testing", "web", "screenshots", "e2e"],
       "category": "web-testing",
@@ -167,7 +182,7 @@
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Design frontends, test interactions, and write clear interface copy.",
-      "version": "1.2.1",
+      "version": "1.2.4",
       "license": "Apache-2.0",
       "keywords": ["frontend", "design", "ui", "landing-page", "web-design", "writing", "interface-copy"],
       "category": "frontend",
@@ -177,7 +192,7 @@
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
       "description": "Official MongoDB skills for schema design, queries, indexing, and Atlas Search.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "Apache-2.0",
@@ -189,7 +204,7 @@
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
       "description": "Supabase skills for Postgres, Auth, Edge Functions, the JS SDK, and the CLI.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
       "repository": "https://github.com/fcakyon/claude-codex-settings",
       "license": "MIT",
@@ -201,7 +216,7 @@
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe skills for payments, billing, Connect, Apps, and API upgrades.",
-      "version": "1.1.1",
+      "version": "1.1.3",
       "license": "MIT",
       "keywords": ["stripe", "payments", "billing", "subscriptions", "connect"],
       "category": "payment",
@@ -211,7 +226,7 @@
       "name": "polar-skills",
       "source": "./plugins/polar-skills",
       "description": "Official Polar skills for billing, subscriptions, and local development.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "Apache-2.0",
       "keywords": ["polar", "billing", "subscriptions", "local-dev"],
       "category": "payment",
@@ -221,7 +236,7 @@
       "name": "livekit-skills",
       "source": "./plugins/livekit-skills",
       "description": "Build, test, simulate, and deploy LiveKit voice AI agents.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "license": "MIT",
       "keywords": ["livekit", "voice-ai", "agents", "webrtc", "realtime"],
       "category": "voice-agents",
@@ -231,7 +246,7 @@
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
       "description": "Pick Cloudflare products and build with Workers, Durable Objects, and Wrangler.",
-      "version": "1.2.1",
+      "version": "1.2.3",
       "license": "Apache-2.0",
       "keywords": ["cloudflare", "workers", "durable-objects", "r2", "d1", "kv", "wrangler", "deploy"],
       "category": "deployment",
@@ -241,7 +256,7 @@
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance audits with Core Web Vitals and Chrome DevTools.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "Apache-2.0",
       "keywords": ["web-performance", "core-web-vitals", "lighthouse", "chrome-devtools", "accessibility"],
       "category": "web-testing",
@@ -261,7 +276,7 @@
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "MIT",
       "keywords": ["hetzner", "hcloud", "server", "cloud", "deploy", "dns", "firewall"],
       "category": "deployment",
@@ -271,7 +286,7 @@
       "name": "dokploy-skills",
       "source": "./plugins/dokploy-skills",
       "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "license": "MIT",
       "keywords": ["dokploy", "deploy", "cloud", "docker", "compose", "dashboard", "paas"],
       "category": "deployment",
@@ -361,8 +376,8 @@
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
-      "description": "Git and GitHub workflow skills for commits, PRs, code review, and comment resolution.",
-      "version": "2.7.6",
+      "description": "Write clear issues, commits, and PRs, review code, and resolve feedback.",
+      "version": "2.8.0",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -506,7 +521,7 @@
     {
       "name": "openship-skills",
       "description": "Deploy self-hosted OpenShip apps with the CLI and openship.json.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "Apache-2.0",
       "source": "./plugins/openship-skills",
       "keywords": ["deployment", "self-hosted", "cli", "docker"],
@@ -517,7 +532,7 @@
       "name": "test-audit",
       "source": "./plugins/test-audit",
       "description": "Keep only tests that catch real bugs, and prune ones that just restate the code.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "MIT",
       "keywords": ["testing", "test-quality", "code-review", "refactoring"],
       "category": "developer-tools",
@@ -551,7 +566,8 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.0.0",
+      "version": "1.0.2",
+      "license": "Apache-2.0",
       "keywords": [
         "qa",
         "testing",
@@ -562,6 +578,23 @@
       "tags": [
         "testing",
         "quality"
+      ]
+    },
+    {
+      "name": "reusable-app-components",
+      "source": "./plugins/reusable-app-components",
+      "description": "Reuse tested app journeys with code, design and integration checks.",
+      "version": "1.2.1",
+      "license": "Apache-2.0",
+      "keywords": [
+        "components",
+        "authentication",
+        "user-journeys"
+      ],
+      "category": "development",
+      "tags": [
+        "components",
+        "testing"
       ]
     }
   ]

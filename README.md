@@ -395,6 +395,8 @@ Frontend design, testing, and writing skills from [anthropics/claude-plugins-off
 | [`anthropic-frontend-design`](./plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md) | Bold aesthetic direction, distinctive typography, anti-generic AI aesthetics      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/anthropic-frontend-design.zip) |
 | [`writing-guidelines`](./plugins/frontend-design-skills/skills/writing-guidelines/SKILL.md)               | Review interface copy and text for clear, consistent writing                      | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/writing-guidelines.zip)        |
 
+Pairs naturally with `reusable-app-components`.
+
 </details>
 
 <details>
@@ -573,6 +575,9 @@ Choose the Cloudflare services your project needs, then load the relevant specia
 | [`turnstile-spin`](./plugins/cloudflare-skills/skills/turnstile-spin/SKILL.md) | Set up and verify Turnstile | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/turnstile-spin.zip) |
 | [`web-perf`](./plugins/cloudflare-skills/skills/web-perf/SKILL.md) | Audit loading and interaction performance | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/web-perf.zip) |
 | [`workers-best-practices`](./plugins/cloudflare-skills/skills/workers-best-practices/SKILL.md) | Write and review production Workers | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/workers-best-practices.zip) |
+| [`cf-cli`](./plugins/cloudflare-skills/skills/cf-cli/SKILL.md) | Build and deploy with the Cloudflare CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/cf-cli.zip) |
+| [`gateway-workers`](./plugins/cloudflare-skills/skills/gateway-workers/SKILL.md) | Transform Gateway HTTP traffic with Workers | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/gateway-workers.zip) |
+| [`workers-profiling`](./plugins/cloudflare-skills/skills/workers-profiling/SKILL.md) | Profile Worker CPU usage and find hotspots | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/workers-profiling.zip) |
 | [`wrangler`](./plugins/cloudflare-skills/skills/wrangler/SKILL.md) | Configure and operate the Wrangler CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/wrangler.zip) |
 
 </details>
@@ -774,6 +779,7 @@ Git and GitHub automation. Run the `setup` skill after install.
 **Skills:**
 
 - [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes and write the message
+- [`create-issue`](./plugins/github-dev/skills/create-issue/SKILL.md) - Create or revise a concise problem report
 - [`create-pr`](./plugins/github-dev/skills/create-pr/SKILL.md) - Create a pull request from the full branch diff
 - [`review-pr`](./plugins/github-dev/skills/review-pr/SKILL.md) - Review a pull request for bugs and regressions
 - [`resolve-pr-comments`](./plugins/github-dev/skills/resolve-pr-comments/SKILL.md) - Address unresolved PR review comments
@@ -994,6 +1000,36 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 </details>
 
 <details>
+<summary><strong>aeo</strong> - Turn buyer questions and AI citations into content that wins customers</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install aeo@claude-settings` | `codex plugin add aeo@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/aeo` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/aeo --skill '*'
+```
+
+Help people who have not heard of your product discover it through answer engine optimization (AEO).
+
+- Map acquisition questions by audience, buying stage, use case, market, and language, without naming your product.
+- Check content access and inspect the sources AI answers cite before choosing what to fix or publish.
+- Prioritize channels using customer evidence and keep prompt coverage within budget.
+- Measure unprompted discovery and customer outcomes, keeping branded accuracy checks separate.
+
+Use it for a strategy, audit, prompt portfolio, content brief, or performance review.
+
+**Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| --- | --- | --- |
+| [`aeo`](./plugins/aeo/skills/aeo/SKILL.md) | Evidence-led AI search strategy for any product | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/aeo.zip) |
+
+</details>
+
+<details>
 <summary><strong>google-telemetry</strong> - Read app usage and search traffic around releases</summary>
 
 | Claude Code | Codex CLI | Cursor | Gemini CLI |
@@ -1083,6 +1119,41 @@ References are tied to one upstream release. The two skills work together and ca
 </details>
 
 <details>
+<summary><strong>reusable-app-components</strong> - Reuse tested app journeys with code, design and integration checks</summary>
+
+| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| --- | --- | --- | --- |
+| `claude plugin install reusable-app-components@claude-settings` | `codex plugin add reusable-app-components@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/reusable-app-components` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/reusable-app-components --skill '*'
+```
+
+Reuse an app journey together with its code, integration rules and proof of behavior. The auth recipe covers email and Google login:
+
+- Keep returning-account sign-in and a same-tab fallback when popups or the Google script are unavailable.
+- Resume the original action while preserving the app's sessions, roles and signup policy.
+- Use a configurable Muvisafe-inspired panel or keep the host design, with auth behavior independent of the shell.
+- Adapt the React component, test it locally, then verify the real provider in each app.
+- Track production references separately from extractions and pending migrations.
+
+| Skill | Purpose | ZIP |
+| --- | --- | --- |
+| [app-auth](./plugins/reusable-app-components/skills/app-auth/SKILL.md) | Email signup, verification and recovery, Google login, shared panel and QA journeys | Available after the next release |
+| [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) | Brand themes, transactional copy, HTML and text layouts, and inbox checks | Available after the next release |
+| [tawk-support](./plugins/reusable-app-components/skills/tawk-support/SKILL.md) | Signed chat identity, account switching, product knowledge and quiet themed chat | Available after the next release |
+
+Use [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) to theme verification, reset, billing and notification emails with the app’s existing mail service. The layout keeps brand colors and wording separate and includes text alternatives and preview checks.
+
+The proposed PocketBase/Go auth, mail and OpenShip standard is included as migration guidance. It is not a shipped shared backend library.
+
+Pairs naturally with `frontend-design-skills` and `qa`.
+
+</details>
+
+<details>
 <summary><strong>qa</strong> - Test real app journeys with saved sessions</summary>
 
 - Discover website, extension, Android, backend and database components.
@@ -1096,6 +1167,8 @@ Install this plugin from the marketplace after publication. For a local checkout
 | --- | --- |
 | [setup](./plugins/qa/skills/setup/SKILL.md) | Discover components and build project-specific real journeys |
 | [run-qa](./plugins/qa/skills/run-qa/SKILL.md) | Run tracked journeys and inspect evidence |
+
+Pairs naturally with `reusable-app-components`.
 
 </details>
 

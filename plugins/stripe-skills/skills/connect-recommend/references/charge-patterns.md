@@ -180,7 +180,7 @@ const refund = await stripe.refunds.create({
 - When the platform handles disputes
 - **NOT for hold-and-release or delivery-gated payouts** — funds transfer automatically to the connected account upon payment success. Use separate charges and transfers for delivery-gated payouts or any scenario requiring the platform to hold funds before releasing.
 
-#### Destination Charges with `on_behalf_of`
+#### Destination Charges with on_behalf_of
 
 > **Not covered by this guide.** `on_behalf_of` is an advanced variant that changes the merchant of record to the connected account while the charge lives on the platform. It has narrow use cases and significant complexity.
 > 
@@ -211,7 +211,7 @@ const paymentIntent = await stripe.paymentIntents.create({
 // Step 2: After payment_intent.succeeded webhook fires — latest_charge is null
 // at creation time and only populated on the confirmed PaymentIntent from the event
 // IMPORTANT: Always verify the webhook signature before processing event data.
-// See https://stripe.com/docs/webhooks/signatures for verification steps.
+// See https://stripe.com/docs/events/manage-webhook-endpoints#signature-errors for verification steps.
 const confirmedIntent = event.data.object; // payment_intent.succeeded payload
 const transfer = await stripe.transfers.create({
   amount: 8500, // $85.00 to connected account
@@ -235,7 +235,7 @@ await stripe.paymentIntents.create({
 
 // After payment_intent.succeeded webhook fires — latest_charge is null at creation time.
 // IMPORTANT: Always verify the webhook signature before processing event data.
-// See https://stripe.com/docs/webhooks/signatures for verification steps.
+// See https://stripe.com/docs/events/manage-webhook-endpoints#signature-errors for verification steps.
 const confirmedIntent = event.data.object; // payment_intent.succeeded payload
 const chargeId = confirmedIntent.latest_charge;
 

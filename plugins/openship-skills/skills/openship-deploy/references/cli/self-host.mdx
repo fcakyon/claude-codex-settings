@@ -3,20 +3,26 @@ title: Servers and operations
 description: Manage servers, backup workflows, mail, and instance configuration.
 ---
 
-These operations require an authorized connection to a self-hosted installation. Provider and
-host permissions still apply in native mode.
+Connect to a self-hosted installation to manage its SSH servers, mail and instance settings. Project,
+backup and managed-server operations also support [Cloud](https://openship.io/docs/cli/cloud) where offered by that provider.
+Host and resource permissions still apply in native mode.
 
 ## Servers
 
 ```bash
 openship server list
 openship server check srv_123
+openship server add --host server.example.com --private-key-file /path/to/key
 ```
 
 Use the [server reference](https://openship.io/docs/cli/reference/server) to register connections, install components,
 set rate limits, and monitor a server. The [Servers API](https://openship.io/docs/api/servers) also exposes container,
 Git credential, and tunnel operations. Start with the [server guide](https://openship.io/docs/guides/custom-servers)
 for prerequisites.
+
+`--private-key-file` reads a key on the machine running the CLI and submits it through the controller's
+normal credential storage. `--key-path` instead refers to a file already on the controller host.
+`--password-file` reads a password without placing it in process arguments.
 
 ## Backups and restores
 
@@ -43,13 +49,46 @@ requirements before using the apply command. See [backups and restores](https://
 
 Use [mail commands](https://openship.io/docs/cli/reference/mail) to provision or adopt a server, manage domains and
 mailboxes, and inspect delivery health. The [email guide](https://openship.io/docs/guides/email-webmail) covers DNS,
-relay configuration, and webmail. Mail commands currently require an HTTP context.
+relay configuration, and webmail. Mail commands require an HTTP context.
+
+```bash
+openship mail certificate get srv_mail
+openship mail certificate check srv_mail
+openship mail certificate renew srv_mail
+openship mail certificate auto-renew srv_mail --state on
+```
+
+Renewal and monitoring reuse the platform's edge certificate workflow. Setup reports DNS/PTR checkpoints
+as pending work; an interrupted stream is not a successful installation. Use `mail status` before resuming.
 
 ## Installation settings and data
 
 Use [system commands](https://openship.io/docs/cli/reference/system) for instance settings, onboarding, filesystem
 browsing, and data transfer. Settings have native SDK support; remaining setup and migration actions
 require HTTP.
+
+Archive exports contain plaintext credentials. `system data-transfer export --out backup.json` creates
+a private file and refuses to overwrite an existing file. Use `--selection selection.json` to choose
+projects, history, credentials and dependencies. `system data-transfer preview --schema` describes that
+input. Import accepts reviewed mappings and an explicit `--mode merge` or confirmed `--mode wipe --yes`.
+Whole-instance actions require an unbound administrator credential; workspace membership alone is insufficient.
+
+## Move or copy workloads
+
+```bash
+openship migration scan srv_source
+openship migration preview --schema
+openship migration preview move.json
+openship migration start move.json --yes
+openship migration get mig_123
+openship migration events mig_123
+```
+
+The preview and start use the existing migration inputs, including exact container IDs. Inspect the
+returned state and target before `migration cutover mig_123 --token-file token.txt --originals retain --yes`.
+Choose `retire` only to authorize source removal. The CLI never substitutes a cutover token or repeats
+an uncertain start. Use `respond` for the exact pending prompt and `resume` for reviewed path overrides
+or skipped items after a partial transfer.
 
 For moving an installation, follow [control-plane migration](https://openship.io/docs/guides/migrate-control-plane).
 For moving a workload, follow [server-to-server migration](https://openship.io/docs/guides/server-to-server-migration).
