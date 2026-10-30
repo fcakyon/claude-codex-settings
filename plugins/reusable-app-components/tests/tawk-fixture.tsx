@@ -14,11 +14,10 @@ function Fixture() {
   const [visible, setVisible] = useState(false);
   const api = useMemo<TawkApi>(() => ({
     login(identity, done) {
-      setChat(identity.email); setHistory(previous => [...previous, identity.email]);
+      setChat(identity.email || "Guest"); setHistory(previous => previous.at(-1) === identity.userId ? previous : [...previous, identity.userId]);
       setVersion(identity["browser-release"]); done();
     },
-    logout(done) { setChat("Guest"); done(); },
-    setAttributes(attributes, done) { setVersion(attributes["browser-release"]); done(); },
+    logout(done) { setChat("Guest"); setHistory(previous => [...previous, "logout"]); done(); },
     minimize() {}, hideWidget() { setVisible(false); }, showWidget() { setVisible(true); },
   }), []);
   useEffect(() => { setReady(true); }, []);
@@ -39,7 +38,7 @@ function Fixture() {
       resolveIdentity={async signal => {
         const response = await fetch("/identity" + window.location.search, {signal});
         if (!response.ok) throw new Error("Private transport diagnostics");
-        return response.status === 204 ? null : response.json() as Promise<SupportIdentity>;
+        return response.json() as Promise<SupportIdentity>;
       }} onFailure={() => setFailure("Support could not sync. Try again.")} /> : null}
     <p role="status">{chat}</p><p>{version}</p>
     <div role="log" aria-label="Identity history">{history.join(",")}</div>
