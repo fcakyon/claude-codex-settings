@@ -161,6 +161,7 @@
   "outputStyle": "Concise",
   "model": "opus",
   "enabledPlugins": {
+    "reusable-app-components@claude-settings": true,
     "qa@claude-settings": true,
     "agent-browser@claude-settings": true,
     "intelligent-compact@claude-settings": true,
