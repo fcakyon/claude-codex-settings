@@ -355,19 +355,19 @@
       "tags": ["plugin", "development", "anthropic"]
     },
     {
-      "name": "phd-skills",
+      "name": "labrat",
       "source": {
         "source": "git-subdir",
-        "url": "https://github.com/fcakyon/phd-skills.git",
+        "url": "https://github.com/fcakyon/labrat.git",
         "path": "plugin"
       },
-      "description": "Research skills for paper auditing, citation checks, and experiment analysis.",
-      "version": "1.3.0",
+      "description": "Reproduce papers, compare and debug ML runs, and check paper claims before submission.",
+      "version": "2.0.0",
       "author": {
         "name": "Fatih C. Akyon"
       },
-      "homepage": "https://github.com/fcakyon/phd-skills",
-      "repository": "https://github.com/fcakyon/phd-skills",
+      "homepage": "https://github.com/fcakyon/labrat",
+      "repository": "https://github.com/fcakyon/labrat",
       "license": "MIT",
       "keywords": ["research", "academic", "phd", "paper-writing", "citations", "experiments", "latex"],
       "category": "research",
