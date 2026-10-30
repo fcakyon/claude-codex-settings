@@ -724,33 +724,23 @@ Actively maintained plugin development toolkit from [anthropics/claude-plugins-o
 </details>
 
 <details>
-<summary><strong>phd-skills</strong> - Hypothesis design, paper review, citation checks</summary>
+<summary><strong>labrat</strong> - Reproduce papers, compare and debug ML runs, check paper claims</summary>
 
-Academic research toolkit from [fcakyon/phd-skills](https://github.com/fcakyon/phd-skills). Experiment design, literature review, paper writing, citation verification, and reviewer defense for PhD workflows.
+Lab Rat, the ML research toolkit from [fcakyon/labrat](https://github.com/fcakyon/labrat) (formerly phd-skills). Paper reproduction, experiment design, run comparison, debugging, paper checks and rebuttals, with guardrail hooks that review conclusions in Claude Code.
 
 **Skills:**
 
-- [`dataset-curation`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/dataset-curation/SKILL.md) - Dataset preparation and annotation guidelines
-- [`experiment-design`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/experiment-design/SKILL.md) - Experiment setup and ablation planning
-- [`latex-setup`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/latex-setup/SKILL.md) - LaTeX project configuration
-- [`literature-research`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/literature-research/SKILL.md) - Literature search and review
-- [`paper-verification`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/paper-verification/SKILL.md) - Citation and claim verification
-- [`paper-writing`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/paper-writing/SKILL.md) - Academic paper drafting
-- [`research-publishing`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/research-publishing/SKILL.md) - Submission and publishing workflow
-- [`reviewer-defense`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/reviewer-defense/SKILL.md) - Reviewer response preparation
-
-**Agents:**
-
-- [`experiment-analyzer`](https://github.com/fcakyon/phd-skills/blob/main/plugin/agents/experiment-analyzer.md) - Analyze experiment results and suggest next steps
-- [`paper-auditor`](https://github.com/fcakyon/phd-skills/blob/main/plugin/agents/paper-auditor.md) - Audit paper for consistency and completeness
-
-**Commands:**
-
-- [`/factcheck`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/factcheck.md) - Verify citations and claims
-- [`/fortify`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/fortify.md) - Strengthen paper against reviewer critiques
-- [`/gaps`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/gaps.md) - Find gaps in literature coverage
-- [`/setup`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/setup.md) - Configure phd-skills
-- [`/xray`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/xray.md) - Deep analysis of a paper
+- [`compare`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/compare/SKILL.md) - Compare training runs at the same epoch and write experiment reports
+- [`dataset-curation`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/dataset-curation/SKILL.md) - Analyze dataset bias, stratified samples and fairness
+- [`debug`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/debug/SKILL.md) - Diagnose failing runs from evidence before claiming a cause
+- [`experiment-design`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/experiment-design/SKILL.md) - Plan ablations, baselines and experiment matrices
+- [`launch`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/launch/SKILL.md) - Pre-flight checklist before long training jobs
+- [`literature-research`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/literature-research/SKILL.md) - Find related work, literature gaps and open source code
+- [`paper-check`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/paper-check/SKILL.md) - Check numbers, formulas and citations against code, and prepare code release
+- [`paper-write`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/paper-write/SKILL.md) - Write and revise paper sections and fix the LaTeX build
+- [`rebuttal`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/rebuttal/SKILL.md) - Anticipate reviewer questions and draft rebuttals
+- [`reproduce`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/reproduce/SKILL.md) - Reproduce an arxiv paper from code clone to replication runs
+- [`setup`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/setup/SKILL.md) - Auto-detection tour and optional notifications, allowlist and LaTeX setup
 
 </details>
 

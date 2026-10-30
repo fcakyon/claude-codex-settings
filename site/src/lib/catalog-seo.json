@@ -104,9 +104,9 @@
       "title": "Build coding agent plugins, hooks and MCP tools",
       "description": "Build agent plugins with guidance for skills, commands, hooks and MCP servers. Inspect the included development toolkit and supported agent tools."
     },
-    "phd-skills": {
-      "title": "Research paper, citation and experiment review tools",
-      "description": "Review research papers, verify citations and analyze experiments with research focused tooling. Inspect the included workflows and source before use."
+    "labrat": {
+      "title": "Lab Rat: reproduce papers and check ML experiments",
+      "description": "Reproduce arxiv papers, launch and compare ML runs at the same epoch, and check paper claims against code and citations before you submit."
     },
     "github-dev": {
       "title": "GitHub issues, commits and pull request skills",
