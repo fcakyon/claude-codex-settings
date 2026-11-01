@@ -18,13 +18,14 @@ Ask yourself: "What can I delete instead of add, and does this trace to what was
 
 ## Working Rules
 
-- Reflect on tool results, run independent operations in parallel, and verify before finishing. Before asking anyone to check or run something, inspect state, source and logs and test it yourself, then ask only for the smallest distinguishing step.
+- Reflect on tool results, run independent operations in parallel, and verify before finishing.
 - Before committing to an approach, and after two failed attempts at the same problem, get a second opinion with `/codex-advisor` or `/fable-advisor` if either is installed.
 - Prefer editing existing files, and check related code for consistency. Never create docs (*.md, README) unless asked. Keep verified findings in tracked AGENTS.md, CLAUDE.md or skill files, not tool memory.
 - Prefer `rg` over `grep`.
 - Use the `writing-guidelines` skill to review documentation or interface copy, and the `humanize` skill to remove generic or machine-written phrasing.
 - For SEO, use the `seo-audit`, `site-architecture`, `programmatic-seo`, or `schema` skill based on the task.
 - Use the `anthropic-frontend-design` or `openai-frontend-design` skill when creating or reshaping a UI.
+- **Keep users out of the machinery.** In apps you build and in your own work, connect, repair, sync and resume automatically, and keep the user's selection across every step. Show a prompt, popup, permission request or input only when the user must act, label it as that action (Connect) rather than a warning or permission, and never ask for something you can find out: inspect state, source and logs and test it yourself, then ask only for the smallest distinguishing step.
 
 ## MCP Tools
 
