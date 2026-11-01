@@ -18,9 +18,9 @@ Ask yourself: "What can I delete instead of add, and does this trace to what was
 
 ## Working Rules
 
-- Reflect on tool results, run independent operations in parallel, and verify before finishing.
+- Reflect on tool results, run independent operations in parallel, and verify before finishing. Before asking anyone to check or run something, inspect state, source and logs and test it yourself, then ask only for the smallest distinguishing step.
 - Before committing to an approach, and after two failed attempts at the same problem, get a second opinion with `/codex-advisor` or `/fable-advisor` if either is installed.
-- Prefer editing existing files, and check related code for consistency. Never create docs (*.md, README) unless asked.
+- Prefer editing existing files, and check related code for consistency. Never create docs (*.md, README) unless asked. Keep verified findings in tracked AGENTS.md, CLAUDE.md or skill files, not tool memory.
 - Prefer `rg` over `grep`.
 - Use the `writing-guidelines` skill to review documentation or interface copy, and the `humanize` skill to remove generic or machine-written phrasing.
 - For SEO, use the `seo-audit`, `site-architecture`, `programmatic-seo`, or `schema` skill based on the task.
@@ -63,6 +63,8 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ## Git and Pull Request Workflows
 
+- Once a task is done, merged or outdated, remove its worktrees and local branches. Ask first only for dirty or unverified ones.
+
 ### Commit Messages
 
 - Run the `/simplify` skill on the staged diff before committing, then apply its findings. Docs-only diffs are a no-op
@@ -75,7 +77,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ### Pull Requests
 
-- PR titles: NO type prefix (unlike commits) - start with capital letter + verb
+- PR titles: NO type prefix (unlike commits) - start with capital letter + verb, unless the target repo titles PRs with Conventional Commits, then match its recent merged titles
 - Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
 - PR body: concise trigger, actual/expected behavior, fix, and verified results. Use short bullets, readable before/after examples, and small sections when useful
 - Include completed checks and material limits, not future test plans or changed file lists. Preserve uploaded visuals, bot context, and valid evidence when editing

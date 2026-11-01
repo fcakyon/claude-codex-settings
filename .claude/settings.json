@@ -224,7 +224,7 @@
       "GPU process interference: killing, pausing, or modifying GPU processes owned by other users on shared multi-user servers. Use nvidia-smi for read-only monitoring only"
     ]
   },
-  "ultracode": false,
+  "ultracode": true,
   "enableWorkflows": true,
   "outputStyle": "Concise",
   "model": "opus",
@@ -263,7 +263,7 @@
   "autoDreamEnabled": true,
   "spinnerTipsEnabled": false,
   "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
+  "effortLevel": "high",
   "cleanupPeriodDays": 9999,
   "showClearContextOnPlanAccept": false,
   "autoUpdatesChannel": "latest",
