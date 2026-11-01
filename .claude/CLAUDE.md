@@ -77,7 +77,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ### Pull Requests
 
-- PR titles: NO type prefix (unlike commits) - start with capital letter + verb, unless the target repo titles PRs with Conventional Commits, then match its recent merged titles
+- PR titles: use a Conventional Commits prefix (`fix: ...`) only when the repo squash-merges, since the title becomes the single commit. Otherwise no type prefix: start with capital letter + verb
 - Analyze ALL commits with `git diff <base-branch>...HEAD`, not just latest
 - PR body: concise trigger, actual/expected behavior, fix, and verified results. Use short bullets, readable before/after examples, and small sections when useful
 - Include completed checks and material limits, not future test plans or changed file lists. Preserve uploaded visuals, bot context, and valid evidence when editing
