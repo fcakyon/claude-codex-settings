@@ -47,8 +47,10 @@ issue reports, use [create-issue](../create-issue/SKILL.md).
 ## Title and body
 
 - PR title: start with a capitalized verb and name the concrete behavior, such as
-  `Fix copied session text losing line breaks`. No type prefix, internal brand names, or
-  vague claims. Rewrite the title and body when the final scope changes.
+  `Fix copied session text losing line breaks`. No internal brand names or vague claims.
+  Add a Conventional Commits prefix (`fix: ...`) only when the repo squash-merges, since
+  the title becomes the single commit, and match its recent merged titles. Otherwise use
+  no type prefix. Rewrite the title and body when the final scope changes.
 - Lead with the trigger and consequence: when does the bug happen, what goes wrong, and why
   does the fix matter? For a feature, show what the user can now do. Skip "This PR" openers.
 - Keep distinct points in short bullets, usually 1-3. Do not squeeze several ideas into a
