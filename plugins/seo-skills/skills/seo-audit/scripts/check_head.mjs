@@ -268,6 +268,21 @@ const inspect = async ([agent, userAgent]) => {
     card: content("twitter:card"),
     image: content("twitter:image", "twitter:image:src"),
   };
+  for (const [label, value] of [
+    ["og:image", openGraph.image],
+    ["twitter:image", twitter.image],
+  ]) {
+    if (label === "twitter:image" && value === openGraph.image) continue;
+    const imageUrl = URL.parse(value, url);
+    if (
+      imageUrl?.origin === url.origin &&
+      /\/(?:opengraph|twitter)-image$/.test(imageUrl.pathname) &&
+      !imageUrl.search
+    )
+      warnings.push(
+        `${label} has no version hash, so social caches keep the old card. Inherit the hashed URL from parent metadata or the opengraph-image file convention.`
+      );
+  }
   if (!twitter.card) {
     warnings.push("The page has no twitter:card, so X shows at most a small summary card.");
   }
