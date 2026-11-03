@@ -163,12 +163,12 @@ export const plugins = marketplace.plugins
     const directory = localSource ? resolve(root, localSource) : undefined;
     const hasCodex = codexPlugins.has(plugin.name);
     const hasCursor = cursorPlugins.has(plugin.name);
-    const hasGemini = Boolean(directory && existsSync(resolve(directory, "gemini-extension.json")));
+    const hasAntigravity = Boolean(directory && existsSync(resolve(directory, ".antigravity-plugin/plugin.json")));
     const tools = [
       "Claude Code",
       ...(hasCodex ? ["Codex"] : []),
       ...(hasCursor ? ["Cursor"] : []),
-      ...(hasGemini ? ["Gemini"] : []),
+      ...(hasAntigravity ? ["Antigravity"] : []),
     ];
     const externalUrl =
       typeof plugin.source === "object"
@@ -177,7 +177,7 @@ export const plugins = marketplace.plugins
     const claudeCommand = `claude plugin install ${plugin.name}@${marketplaceName}`;
     const codexCommand = hasCodex ? `codex plugin add ${plugin.name}@${marketplaceName}` : undefined;
     const cursorCommand = hasCursor ? `cursor-agent # enter /plugin, then install ${plugin.name}` : undefined;
-    const geminiCommand = hasGemini ? `gemini extensions install --path ./plugins/${plugin.name}` : undefined;
+    const antigravityCommand = hasAntigravity ? `uv run .github/scripts/antigravity.py install ${plugin.name}` : undefined;
     const components = directory
       ? {
           skills: componentNames(directory, "skills", true),
@@ -224,7 +224,7 @@ export const plugins = marketplace.plugins
       claudeCommand,
       codexCommand,
       cursorCommand,
-      geminiCommand,
+      antigravityCommand,
       installCommands: [
         {
           id: "claude",
@@ -252,13 +252,13 @@ export const plugins = marketplace.plugins
               },
             ]
           : []),
-        ...(geminiCommand
+        ...(antigravityCommand
           ? [
               {
-                id: "gemini",
-                icon: "gemini",
-                tool: "Gemini CLI",
-                command: geminiCommand,
+                id: "antigravity",
+                icon: "antigravity",
+                tool: "Antigravity CLI",
+                command: antigravityCommand,
               },
             ]
           : []),
@@ -383,7 +383,7 @@ export const codingTools = [
     label: "Cursor",
     marketplace: `cursor-agent plugin marketplace add ${repositoryUrl}`,
   },
-  { id: "gemini", icon: "gemini", label: "Gemini CLI", marketplace: undefined },
+  { id: "antigravity", icon: "antigravity", label: "Antigravity CLI", marketplace: undefined },
 ] as const;
 
 export const sourceDocuments = {

@@ -1,6 +1,6 @@
 {
   "name": "claude-telemetry-hooks",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Track Claude Code usage, rejections, and session stats in one dashboard.",
   "author": {
     "name": "Fatih C. Akyon"

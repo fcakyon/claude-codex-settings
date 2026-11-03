@@ -1,6 +1,6 @@
 {
   "name": "adhd-output-style",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Use fewer output tokens with short steps, quick insights, and next actions.",
   "author": {
     "name": "Fatih C. Akyon"

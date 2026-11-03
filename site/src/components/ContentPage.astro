@@ -102,8 +102,8 @@ let configuration: (typeof configurationCopy)[keyof typeof configurationCopy] | 
 let provider: (typeof providerCopy)[keyof typeof providerCopy] | undefined
 
 if (page.kind === "pluginHub") {
-  title = "Find plugins for Claude Code, Codex, Cursor, and Gemini"
-  description = `${plugins.length} plugins for Claude Code, Codex, Cursor and Gemini CLI. See what each one adds, which tools it supports and how to install it.`
+  title = "Find plugins for Claude Code, Codex, Cursor, and Antigravity"
+  description = `${plugins.length} plugins for Claude Code, Codex, Cursor and Antigravity CLI. See what each one adds, which tools it supports and how to install it.`
   intro = `${plugins.length} plugins with ${skills.length} skills, plus hooks and agents. Filter by category or search for a task.`
   breadcrumbs = [homeCrumb, { label: "Plugins" }]
 } else if (page.kind === "skillHub") {

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "adhd-output-style",
+  "version": "1.0.3",
+  "description": "Use fewer output tokens with short steps, quick insights, and next actions.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

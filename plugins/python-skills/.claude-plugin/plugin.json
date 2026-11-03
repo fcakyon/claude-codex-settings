@@ -1,6 +1,6 @@
 {
   "name": "python-skills",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Python best practices from PEP 8, Zen of Python, Google style, and Effective Python.",
   "license": "Apache-2.0"
 }

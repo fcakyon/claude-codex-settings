@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate all Claude Code plugins conform to specs."""
+"""Validate shared plugin metadata and tool-specific components."""
 
 from __future__ import annotations
 
@@ -11,21 +11,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-import yaml
-
-
-def parse_frontmatter(content: str) -> tuple[dict | None, str]:
-    """Parse YAML frontmatter from markdown content."""
-    if not content.startswith("---"):
-        return None, content
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return None, content
-    try:
-        frontmatter = yaml.safe_load(parts[1])
-        return frontmatter, parts[2].strip()
-    except yaml.YAMLError:
-        return None, content
+from antigravity import MANIFEST, manifest_for, parse_frontmatter
 
 
 VALID_MODEL_ALIASES = {"inherit", "sonnet", "opus", "haiku", "fable"}
@@ -110,8 +96,8 @@ def validate_skills(plugin_dir: Path, is_vendor: bool = False) -> list[str]:
             desc = frontmatter["description"]
             if not isinstance(desc, str):
                 errors.append(f"{prefix}/SKILL.md: 'description' must be string")
-            elif not is_vendor and len(desc) > 600:
-                errors.append(f"{prefix}/SKILL.md: 'description' exceeds 600 chars ({len(desc)})")
+            elif len(desc) > 1024:
+                errors.append(f"{prefix}/SKILL.md: 'description' exceeds 1024 chars ({len(desc)})")
 
         # Check body exists
         if not body or len(body.strip()) < 20:
@@ -378,17 +364,15 @@ def get_local_plugin_names() -> set[str]:
 
 
 def validate_symlinks() -> list[str]:
-    """Validate AGENTS.md and GEMINI.md are symlinks to CLAUDE.md."""
-    errors = []
-    for name in ("AGENTS.md", "GEMINI.md"):
-        path = REPO_ROOT / name
-        if not path.exists():
-            errors.append(f"missing {name} (should be symlink to CLAUDE.md)")
-        elif not path.is_symlink():
-            errors.append(f"{name} exists but is not a symlink (should point to CLAUDE.md)")
-        elif path.resolve().name != "CLAUDE.md":
-            errors.append(f"{name} points to {path.resolve().name}, expected CLAUDE.md")
-    return errors
+    """Validate the shared AGENTS.md link."""
+    path = REPO_ROOT / "AGENTS.md"
+    if not path.exists():
+        return ["missing AGENTS.md (should be symlink to CLAUDE.md)"]
+    if not path.is_symlink():
+        return ["AGENTS.md exists but is not a symlink (should point to CLAUDE.md)"]
+    if path.resolve().name != "CLAUDE.md":
+        return [f"AGENTS.md points to {path.resolve().name}, expected CLAUDE.md"]
+    return []
 
 
 def validate_cross_tool_manifests(plugin_dir: Path) -> list[str]:
@@ -405,7 +389,6 @@ def validate_cross_tool_manifests(plugin_dir: Path) -> list[str]:
     for label, manifest_path in [
         ("codex", plugin_dir / ".codex-plugin" / "plugin.json"),
         ("cursor", plugin_dir / ".cursor-plugin" / "plugin.json"),
-        ("gemini", plugin_dir / "gemini-extension.json"),
     ]:
         data = load_json(manifest_path)
         if data is None:
@@ -419,6 +402,11 @@ def validate_cross_tool_manifests(plugin_dir: Path) -> list[str]:
         errors.extend(description_errors(f"[{plugin_dir.name}] {label}", data.get("description", "")))
         if data.get("version", "") and ref_version and data["version"] != ref_version:
             errors.append(f"[{plugin_dir.name}] {label}: version '{data['version']}' != claude '{ref_version}'")
+
+    expected = manifest_for(plugin_dir)
+    native = load_json(plugin_dir / MANIFEST)
+    if native != expected:
+        errors.append(f"[{plugin_dir.name}] antigravity: run sync-versions.sh to update native metadata")
 
     return errors
 

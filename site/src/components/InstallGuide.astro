@@ -47,14 +47,14 @@ const guideTabs = [
     docs: ["Cursor plugin docs", "https://cursor.com/docs/plugins"],
   },
   {
-    id: "gemini-cli",
-    label: "Gemini CLI",
-    icon: "gemini",
-    title: "Install a local extension in Gemini CLI",
-    intro: "Gemini CLI installs extensions from a local folder, so clone the repository first.",
-    code: `git clone ${repositoryUrl}.git\ncd claude-codex-settings\n${target.geminiCommand}`,
-    note: "Start a new Gemini CLI session after installing.",
-    docs: ["Gemini CLI extension docs", "https://geminicli.com/docs/extensions/reference/"],
+    id: "antigravity-cli",
+    label: "Antigravity CLI",
+    icon: "antigravity",
+    title: "Install skills and MCP servers in Antigravity CLI",
+    intro: "Install Antigravity CLI and uv, then clone this repository to use its bundle installer.",
+    code: `git clone ${repositoryUrl}.git\ncd claude-codex-settings\n${target.antigravityCommand}`,
+    note: "Start a new Antigravity CLI session after installing. These bundles include skills and MCP servers; Claude-specific hooks and agents stay with their original tools.",
+    docs: ["Antigravity CLI plugin docs", "https://antigravity.google/docs/plugins"],
   },
   {
     id: "chatgpt",
@@ -91,7 +91,7 @@ const guideTabs = [
 const supportedTabs = guideTabs.filter((tab) => {
   if (!compact) return true
   if ("steps" in tab) return Boolean(skill || target.components?.skills.length)
-  return { "claude-code": target.claudeCommand, codex: target.codexCommand, cursor: target.cursorCommand, "gemini-cli": target.geminiCommand }[tab.id]
+  return { "claude-code": target.claudeCommand, codex: target.codexCommand, cursor: target.cursorCommand, "antigravity-cli": target.antigravityCommand }[tab.id]
 })
 ---
 

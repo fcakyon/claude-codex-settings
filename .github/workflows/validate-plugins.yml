@@ -13,7 +13,6 @@ on:
       - ".github/workflows/validate-plugins.yml"
       - "CLAUDE.md"
       - "AGENTS.md"
-      - "GEMINI.md"
   pull_request:
     branches: [main]
     paths:
@@ -26,7 +25,6 @@ on:
       - ".github/workflows/validate-plugins.yml"
       - "CLAUDE.md"
       - "AGENTS.md"
-      - "GEMINI.md"
 
 jobs:
   validate:
@@ -46,13 +44,27 @@ jobs:
         with:
           node-version: 22
 
+      - uses: astral-sh/setup-uv@v7
+
       - name: Install dependencies
-        run: pip install pyyaml
+        run: |
+          uv venv
+          uv pip install pyyaml
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+
+      - name: Install Antigravity CLI
+        run: |
+          curl -fsSL https://antigravity.google/cli/install.sh -o "$RUNNER_TEMP/install-agy.sh"
+          bash "$RUNNER_TEMP/install-agy.sh" --dir "$RUNNER_TEMP/agy-bin"
+          echo "$RUNNER_TEMP/agy-bin" >> "$GITHUB_PATH"
 
       - name: Validate plugins
         env:
           PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: python .github/scripts/validate_plugins.py
+
+      - name: Validate Antigravity bundles
+        run: python .github/scripts/antigravity.py validate
 
       - name: Test simplify guard
         run: python .github/scripts/test_simplify_guard.py

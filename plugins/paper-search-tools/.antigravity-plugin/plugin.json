@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "paper-search-tools",
+  "version": "3.0.1",
+  "description": "Search academic papers, look up DOIs, and download PDFs with Paper Search CLI.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

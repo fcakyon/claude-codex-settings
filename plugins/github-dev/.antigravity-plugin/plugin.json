@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "github-dev",
+  "version": "2.8.2",
+  "description": "Write clear issues, commits, and PRs, review code, and resolve feedback.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}
