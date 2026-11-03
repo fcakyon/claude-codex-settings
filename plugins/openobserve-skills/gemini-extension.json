@@ -1,5 +1,0 @@
-{
-  "name": "openobserve-skills",
-  "version": "1.0.4",
-  "description": "Search logs, metrics, and traces and build OpenObserve dashboards via curl."
-}

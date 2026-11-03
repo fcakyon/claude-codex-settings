@@ -1,0 +1,7 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "dokploy-skills",
+  "version": "1.0.8",
+  "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
+  "license": "MIT"
+}

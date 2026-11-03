@@ -1,5 +1,0 @@
-{
-  "name": "tavily-tools",
-  "version": "2.0.5",
-  "description": "Search the web and extract pages with Tavily, and route built-in web tools to it."
-}

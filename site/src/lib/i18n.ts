@@ -55,9 +55,9 @@ export const translations = {
     },
     plugins: {
       meta: {
-        title: "Agent Plugins for Claude Code, Codex, Cursor and Gemini",
+        title: "Agent Plugins for Claude Code, Codex, Cursor and Antigravity",
         description:
-          "Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Gemini by Fatih C. Akyon.",
+          "Browse installable skills, hooks and agents for Claude Code, OpenAI Codex, Cursor and Antigravity by Fatih C. Akyon.",
       },
       nav: [
         ["Browse", "#browse"],
@@ -65,7 +65,7 @@ export const translations = {
         ["Compatibility", "#compatibility"],
       ],
       hero: {
-        title: "Plugins for Claude Code, Codex, Cursor and Gemini",
+        title: "Plugins for Claude Code, Codex, Cursor and Antigravity",
         description: "Search by task, pick a plugin and copy its install command.",
       },
       compatibility: {
@@ -74,7 +74,7 @@ export const translations = {
           "Plugins, skills, agents, hooks and commands",
           "Plugins, skills and shared agent guidance",
           "Plugins, skills and project guidance",
-          "Extensions, skills, agents and hooks",
+          "Skills and MCP servers in native plugins",
         ],
       },
       directory: {
@@ -148,7 +148,7 @@ export const translations = {
     plugins: {
       meta: {
         title: "Claude Code 与 Codex CLI 插件目录 | Agent Plugins",
-        description: "浏览适用于 Claude Code、Codex CLI、Cursor 和 Gemini CLI 的技能、钩子与智能体，并复制安装命令。",
+        description: "浏览适用于 Claude Code、Codex CLI、Cursor 和 Antigravity CLI 的技能、钩子与智能体，并复制安装命令。",
       },
       nav: [
         ["浏览", "#browse"],
@@ -156,7 +156,7 @@ export const translations = {
         ["兼容性", "#compatibility"],
       ],
       hero: {
-        title: "适用于 Claude Code、Codex、Cursor 和 Gemini 的插件",
+        title: "适用于 Claude Code、Codex、Cursor 和 Antigravity 的插件",
         description: "按任务搜索，选择插件，复制安装命令。",
       },
       compatibility: {
@@ -165,7 +165,7 @@ export const translations = {
           "插件、技能、智能体、钩子和命令",
           "插件、技能和共享智能体指引",
           "插件、技能和项目指引",
-          "扩展、技能、智能体和钩子",
+          "原生插件中的技能与 MCP 服务器",
         ],
       },
       directory: {

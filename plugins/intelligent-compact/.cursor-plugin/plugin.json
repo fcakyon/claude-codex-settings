@@ -1,6 +1,6 @@
 {
   "name": "intelligent-compact",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Keep file paths, root causes, and open questions through auto-summaries.",
   "author": {
     "name": "Fatih C. Akyon"

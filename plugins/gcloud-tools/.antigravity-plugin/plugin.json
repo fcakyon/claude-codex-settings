@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "gcloud-tools",
+  "version": "2.0.6",
+  "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

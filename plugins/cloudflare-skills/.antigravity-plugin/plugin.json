@@ -1,0 +1,7 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "cloudflare-skills",
+  "version": "1.2.4",
+  "description": "Pick Cloudflare products and build with Workers, Durable Objects, and Wrangler.",
+  "license": "Apache-2.0"
+}

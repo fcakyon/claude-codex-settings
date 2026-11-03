@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "simplify",
+  "version": "1.1.14",
+  "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

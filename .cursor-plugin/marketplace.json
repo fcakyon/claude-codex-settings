@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "aeo",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "Turn buyer questions and AI citations into content that wins customers.",
       "author": {
         "name": "Fatih C. Akyon"
@@ -18,237 +18,237 @@
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
-      "version": "1.1.13",
+      "version": "1.1.14",
       "license": "Apache-2.0"
     },
     {
       "name": "humanize",
       "source": "./plugins/humanize",
       "description": "Write naturally and block AI buzzwords in files, commits, and messages.",
-      "version": "1.2.7",
+      "version": "1.2.8",
       "license": "Apache-2.0"
     },
     {
       "name": "fable-advisor",
       "source": "./plugins/fable-advisor",
       "description": "Get a second opinion from Claude Fable 5.1 before big decisions.",
-      "version": "1.4.2",
+      "version": "1.4.3",
       "license": "Apache-2.0"
     },
     {
       "name": "codex-advisor",
       "source": "./plugins/codex-advisor",
       "description": "Get a second opinion from GPT-6 Astra via Codex CLI before big decisions.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "license": "Apache-2.0"
     },
     {
       "name": "adhd-output-style",
       "source": "./plugins/adhd-output-style",
       "description": "Use fewer output tokens with short steps, quick insights, and next actions.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Keep file paths, root causes, and open questions through auto-summaries.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Track Claude Code usage, rejections, and session stats in one dashboard.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "license": "Apache-2.0"
     },
     {
       "name": "anthropic-office-skills",
       "source": "./plugins/anthropic-office-skills",
       "description": "Official Anthropic skills for PDF, Word, PowerPoint, and Excel files.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "MIT"
     },
     {
       "name": "openai-office-skills",
       "source": "./plugins/openai-office-skills",
       "description": "Official OpenAI skills for PDF, Word, PowerPoint, and Excel files.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "MIT"
     },
     {
       "name": "python-skills",
       "source": "./plugins/python-skills",
       "description": "Python best practices from PEP 8, Zen of Python, Google style, and Effective Python.",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "license": "Apache-2.0"
     },
     {
       "name": "react-skills",
       "source": "./plugins/react-skills",
       "description": "React, Next.js, and React Native best practices with web design guidelines.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "license": "MIT"
     },
     {
       "name": "agent-browser",
       "source": "./plugins/agent-browser",
       "description": "Drive browsers and Electron apps, run UI QA, and turn websites into API clients.",
-      "version": "1.2.5",
+      "version": "1.2.6",
       "license": "Apache-2.0"
     },
     {
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Design frontends, test interactions, and write clear interface copy.",
-      "version": "1.2.4",
+      "version": "1.2.5",
       "license": "Apache-2.0"
     },
     {
       "name": "mongodb-skills",
       "source": "./plugins/mongodb-skills",
       "description": "Official MongoDB skills for schema design, queries, indexing, and Atlas Search.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "Apache-2.0"
     },
     {
       "name": "supabase-skills",
       "source": "./plugins/supabase-skills",
       "description": "Supabase skills for Postgres, Auth, Edge Functions, the JS SDK, and the CLI.",
-      "version": "1.1.2",
+      "version": "1.1.3",
       "license": "MIT"
     },
     {
       "name": "stripe-skills",
       "source": "./plugins/stripe-skills",
       "description": "Official Stripe skills for payments, billing, Connect, Apps, and API upgrades.",
-      "version": "1.1.3",
+      "version": "1.1.4",
       "license": "MIT"
     },
     {
       "name": "polar-skills",
       "source": "./plugins/polar-skills",
       "description": "Official Polar skills for billing, subscriptions, and local development.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "Apache-2.0"
     },
     {
       "name": "livekit-skills",
       "source": "./plugins/livekit-skills",
       "description": "Build, test, simulate, and deploy LiveKit voice AI agents.",
-      "version": "1.1.2",
+      "version": "1.1.3",
       "license": "MIT"
     },
     {
       "name": "cloudflare-skills",
       "source": "./plugins/cloudflare-skills",
       "description": "Pick Cloudflare products and build with Workers, Durable Objects, and Wrangler.",
-      "version": "1.2.3",
+      "version": "1.2.4",
       "license": "Apache-2.0"
     },
     {
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance audits with Core Web Vitals and Chrome DevTools.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "Apache-2.0"
     },
     {
       "name": "openobserve-skills",
       "source": "./plugins/openobserve-skills",
       "description": "Search logs, metrics, and traces and build OpenObserve dashboards via curl.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "Apache-2.0"
     },
     {
       "name": "hetzner-skills",
       "source": "./plugins/hetzner-skills",
       "description": "Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "MIT"
     },
     {
       "name": "dokploy-skills",
       "source": "./plugins/dokploy-skills",
       "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted.",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "license": "MIT"
     },
     {
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "Write clear issues, commits, and PRs, review code, and resolve feedback.",
-      "version": "2.8.1",
+      "version": "2.8.2",
       "license": "Apache-2.0"
     },
     {
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
-      "version": "2.5.0",
+      "version": "2.5.1",
       "license": "Apache-2.0"
     },
     {
       "name": "ultralytics-branding",
       "source": "./plugins/ultralytics-branding",
       "description": "Ultralytics brand colors, fonts, logo, naming, and tone for branded content.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "license": "Apache-2.0"
     },
     {
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
       "description": "Query and manage Azure resources through the Azure MCP server and Azure CLI login.",
-      "version": "2.0.4",
+      "version": "2.0.5",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Sync CLAUDE.md and the permissions allowlist, and refresh context on demand.",
-      "version": "2.1.5",
+      "version": "2.1.6",
       "license": "Apache-2.0"
     },
     {
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
       "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP.",
-      "version": "2.0.5",
+      "version": "2.0.6",
       "license": "Apache-2.0"
     },
     {
       "name": "paper-search-tools",
       "source": "./plugins/paper-search-tools",
       "description": "Search academic papers, look up DOIs, and download PDFs with Paper Search CLI.",
-      "version": "3.0.0",
+      "version": "3.0.1",
       "license": "Apache-2.0"
     },
     {
       "name": "tavily-tools",
       "source": "./plugins/tavily-tools",
       "description": "Search the web and extract pages with Tavily, and route built-in web tools to it.",
-      "version": "2.0.5",
+      "version": "2.0.6",
       "license": "Apache-2.0"
     },
     {
       "name": "overleaf-skills",
       "source": "./plugins/overleaf-skills",
       "description": "Pull Overleaf review comments into your .tex repo and apply the edits.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "seo-skills",
       "source": "./plugins/seo-skills",
       "description": "Audit SEO, plan scalable pages, validate schema, and improve site architecture.",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "license": "MIT"
     },
     {
       "name": "openship-skills",
       "description": "Deploy self-hosted OpenShip apps with the CLI and openship.json.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0",
       "source": "./plugins/openship-skills"
     },
@@ -256,21 +256,21 @@
       "name": "test-audit",
       "source": "./plugins/test-audit",
       "description": "Keep only tests that catch real bugs, and prune ones that just restate the code.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "MIT"
     },
     {
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "license": "Apache-2.0"
     },
     {
       "name": "reusable-app-components",
       "source": "./plugins/reusable-app-components",
       "description": "Reuse tested app journeys with code, design and integration checks.",
-      "version": "1.2.5",
+      "version": "1.2.6",
       "license": "Apache-2.0"
     }
   ]

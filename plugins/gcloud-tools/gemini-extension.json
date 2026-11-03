@@ -1,5 +1,0 @@
-{
-  "name": "gcloud-tools",
-  "version": "2.0.5",
-  "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP."
-}

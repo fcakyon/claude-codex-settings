@@ -1,5 +1,0 @@
-{
-  "name": "dokploy-skills",
-  "version": "1.0.7",
-  "description": "Deploy Docker Compose apps, databases, and domains on Dokploy Cloud or self-hosted."
-}

@@ -33,7 +33,7 @@ const copy = translations[locale].settings
   </div>
   <div class="tool-band-grid">
     {codingTools.map(({ icon, label, marketplace }, index) => {
-      const command = marketplace ?? pluginByName.get("simplify")!.geminiCommand
+      const command = marketplace ?? pluginByName.get("simplify")!.antigravityCommand
       return (
         <div class="tool-band-item">
           <strong><Icon name={icon} size={24} />{label}</strong>
