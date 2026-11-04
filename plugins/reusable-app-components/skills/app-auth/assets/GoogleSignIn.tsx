@@ -7,7 +7,6 @@ export interface GoogleIdentity {
   initialize(options: {
     client_id: string;
     callback: (response: { credential: string }) => void;
-    login_hint?: string;
     nonce?: string;
     use_fedcm_for_button: boolean;
     button_auto_select: boolean;
@@ -26,29 +25,25 @@ type Props<User> = {
   clientId: string;
   nonce?: string;
   locale: string;
-  accountHint: string;
   redirectEndpoint: string;
   returnTo: string;
   theme?: "outline" | "filled_black" | "filled_blue";
   initialError?: string;
-  copy: { fallback: string; anotherAccount: string; pending: string };
+  copy: { fallback: string; pending: string };
   onCredential: (credential: string, signal: AbortSignal) => Promise<User>;
   onAuthenticated: (user: User) => void;
   onFailure: (error: unknown) => string;
-  onUseAnotherAccount: () => void;
 };
 
 export function GoogleSignIn<User>({
-  identity, clientId, nonce, locale, accountHint, redirectEndpoint, returnTo,
+  identity, clientId, nonce, locale, redirectEndpoint, returnTo,
   theme = "outline", initialError = "", copy, onCredential,
-  onAuthenticated, onFailure, onUseAnotherAccount,
+  onAuthenticated, onFailure,
 }: Props<User>) {
   const button = useRef<HTMLDivElement>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(initialError);
-  const params = new URLSearchParams({ returnTo });
-  if (accountHint) params.set("login_hint", accountHint);
-  else params.set("prompt", "select_account");
+  const params = new URLSearchParams({ returnTo, prompt: "select_account" });
 
   const acceptCredential = useEffectEvent(async (credential: string, signal: AbortSignal) => {
     if (signal.aborted) return;
@@ -77,24 +72,20 @@ export function GoogleSignIn<User>({
       client_id: clientId,
       nonce,
       callback: ({ credential }) => { void acceptCredential(credential, operation.signal); },
-      login_hint: accountHint || undefined,
       use_fedcm_for_button: true,
-      button_auto_select: Boolean(accountHint),
+      button_auto_select: false,
     });
     identity.renderButton(parent, {
       theme, size: "large", text: "continue_with", shape: "rectangular",
       locale,
     });
     return () => { operation.abort(); parent.replaceChildren(); };
-  }, [identity, clientId, nonce, accountHint, locale, theme]);
+  }, [identity, clientId, nonce, locale, theme]);
 
   return (
     <div className="app-google-sign-in" aria-busy={pending}>
       <div ref={button} inert={pending} aria-hidden={pending} className="app-google-sign-in__button" />
-      {pending ? <p role="status">{copy.pending}</p> : <>
-        <a href={`${redirectEndpoint}?${params}`}>{copy.fallback}</a>
-        {accountHint ? <button type="button" onClick={onUseAnotherAccount}>{copy.anotherAccount}</button> : null}
-      </>}
+      {pending ? <p role="status">{copy.pending}</p> : <a href={`${redirectEndpoint}?${params}`}>{copy.fallback}</a>}
       {error ? <p role="alert">{error}</p> : null}
     </div>
   );

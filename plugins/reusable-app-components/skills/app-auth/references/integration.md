@@ -9,30 +9,27 @@ Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `goog
 | Input | App responsibility |
 | --- | --- |
 | `clientId`, `nonce`, `locale`, `theme` | Public client, optional server-issued challenge, language and official Google button theme |
-| `accountHint`, `onUseAnotherAccount` | Remember the successful Google account and clear it on an explicit switch |
 | `redirectEndpoint`, `returnTo` | Existing start endpoint without a query string and an app-relative destination |
 | `onCredential(credential, signal)` | Submit to the backend with the supplied cancellation signal, return its authenticated user |
-| `onAuthenticated(user)` | Remember the verified Google account, update/reload the session and resume the action |
+| `onAuthenticated(user)` | Update/reload the verified session and resume the action |
 | `onFailure(error)` | Report redacted diagnostics and return a localized safe message, including rate-limit guidance |
 | `initialError`, `copy` | Retry feedback and localized control labels |
 
 Never display arbitrary provider payloads or `error.message`. Bound credential requests at the transport owner. Closing the surface aborts its operation and ignores that cancelled callback. It cannot undo a session already created by the server, so the next visit must resolve the actual session.
 
-The hint is not authentication proof. Store no credential, session token or code in localStorage. Remember the successful Google identity on redirect completion too, including when Google authenticated an existing local account. The user's registration method does not necessarily identify their last sign-in method.
+Let Google own account selection. Omit `login_hint`, leave `button_auto_select` false, and request `prompt=select_account` for the same-tab fallback. Google can still personalize its button from its own sessions. Do not cache an email to steer login or add a separate account-switch control. Store no credential, session token or code in localStorage.
 
 ```tsx
 <GoogleSignIn
   identity={googleIdentity}
   clientId={publicGoogleClientId}
   locale={locale}
-  accountHint={lastGoogleAccount}
   redirectEndpoint="/auth/google/login"
   returnTo={selectedAction.returnTo}
   copy={loginCopy}
   onCredential={exchangeGoogleCredential}
   onAuthenticated={finishGoogleLogin}
   onFailure={reportAndDescribeLoginFailure}
-  onUseAnotherAccount={forgetGoogleAccount}
 />
 ```
 
@@ -86,13 +83,13 @@ Preserve the framework's state, PKCE and nonce checks. Bind return context to ve
 
 Validate the destination against the allowed app origin and routes. Cover roots, language roots, queries, fragments, encoded separators, protocol-relative paths and backslashes. Keep sensitive draft state server-side behind an opaque reference. Preserve registered callbacks and scopes. Register new callbacks under the OAuth client's Authorized redirect URIs and every origin serving the button, local ports included, under its Authorized JavaScript origins before rollout. Redirect URIs cover only the same-tab path, so a missing origin fails the button with `no registered origin` (`invalid_client`). Confirm each origin with `curl -H 'X-Requested-With: XmlHttpRequest' "https://accounts.google.com/o/oauth2/iframerpc?action=checkOrigin&origin=<origin>&client_id=<client id>"`, an undocumented endpoint that returns `"valid":true` once Google accepts it.
 
-Pass `login_hint` for the remembered account. Explicit account switching clears it and requests account selection in the redirect path. Return failures to localized login with the original context and a safe retry message. Success normally uses an HTTP redirect without tokens in the URL. Muvisafe's HTTP 200 callback exists for extension account events and is not a universal requirement.
+Request account selection in Google for both paths. Return failures to localized login with the original context and a safe retry message. Success normally uses an HTTP redirect without tokens in the URL. Muvisafe's HTTP 200 callback exists for extension account events and is not a universal requirement.
 
 ## Design and journey ownership
 
 A valid app session bypasses login. Preserve existing email/password methods, signup verification, invitations, terms and consent. Google login must not open registration in a private app. Do not trigger One Tap automatically after logout.
 
-Keep the official Google button, an underlined same-tab fallback and an explicit account-switch control. Preserve host typography, surfaces and primary color. Use a supported button theme rather than restyling the Google iframe. Keep controls at least 44px high, focus visible, pending state announced and errors actionable. The CSS is scoped and inherits app type and color. Authorization, upgrades and action resumption belong to the action owner after login.
+Center the official Google button in a flex container with `color-scheme: light`. A dark ancestor otherwise makes Chrome paint an opaque white canvas behind Google’s light iframe. Keep the fallback as a secondary 14px link labeled “Continue in this tab”. Preserve host typography, surfaces and primary color. Use a supported button theme rather than restyling the Google iframe. Keep email fields and primary buttons 44px high with visible focus, announced pending state and actionable errors. Use 16px input text to avoid mobile focus zoom, 14px submit/link text, 6px label gaps and 12px field gaps. Scope button padding to form actions so inline terms and password controls do not inherit submit-button sizing. The CSS is scoped and inherits app type and color. Authorization, upgrades and action resumption belong to the action owner after login.
 
 Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app’s real logo or icon through its ReactNode brand slot, a title and optional description/footer. Give the logo useful alt text. The fixture mark is an example asset, not a product logo. Use a task heading such as “Create your account” or “Reset your password” rather than a vague “Get started” inside a form. Keep modal focus trapping and dismissal in the existing modal owner. Remove ornamental accent rules without stripping useful card grouping, field borders or focus outlines. The panel is a section, not a replacement dialog. It inherits typography. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
 
