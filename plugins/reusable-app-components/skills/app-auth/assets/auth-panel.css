@@ -39,9 +39,5 @@
 .app-auth-panel__body { margin-block-start: 28px; }
 .app-auth-panel footer { margin-block-start: 24px; text-align: center; }
 .app-auth-panel .app-google-sign-in { max-inline-size: none; }
-.app-auth-panel .app-google-sign-in > :is(a, button) {
-  color: var(--auth-accent, #00e2b4);
-  font-size: 0.875rem;
-}
 .app-auth-panel [role="status"] { color: var(--auth-muted, #b3b3be); }
 .app-auth-panel [role="alert"] { color: var(--auth-error, #fda4af); }
