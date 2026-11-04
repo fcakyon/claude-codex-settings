@@ -4,7 +4,7 @@
 
 The component needs React and React DOM 19.2+ for `useEffectEvent`. It has no Next.js, HeroUI, PocketBase or routing dependency. Copy the TSX and CSS together. The optional AuthPanel and its CSS provide a Muvisafe-inspired dark panel without coupling auth to a design system. The plugin package.json is for validating the extraction, not for installation in every deployed app.
 
-Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `google.accounts.id` as `identity` when ready, or null while unavailable. Supply the public client ID from existing public configuration or server rendering, outside credential-attempt rate limits. Mount only the active login/signup surface because GIS initialization is global to the page.
+Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `google.accounts.id` as `identity` when ready, or null while unavailable. Supply the public client ID from existing public configuration or server rendering, outside credential-attempt rate limits. Mount only the active login/signup surface because GIS initialization is global to the page. Render the button once per active configuration and let Google choose its intrinsic width. Do not observe the rendered widget to clear and rebuild it: its iframe height changes can retrigger the observer indefinitely, replacing an active button. Keep the button mounted through provider layout and viewport changes; remove it only when the auth surface closes or its identity configuration changes.
 
 | Input | App responsibility |
 | --- | --- |

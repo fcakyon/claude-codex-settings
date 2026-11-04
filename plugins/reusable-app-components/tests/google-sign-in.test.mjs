@@ -116,6 +116,28 @@ test('missing SDK still offers account switching and same-tab navigation', async
   } finally { await page.close(); }
 });
 
+test('Google button retains keyboard focus through content and viewport resizing', async () => {
+  const page = await browser.newPage({viewport: {width: 1365, height: 900}});
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  try {
+    await page.goto(origin);
+    const button = page.getByRole('button', {name: 'Test Google sign-in'});
+    await button.focus();
+    await button.evaluate(async element => {
+      element.style.height = '60px';
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    });
+    assert.equal(await button.evaluate(element => element === document.activeElement), true, 'Provider layout changes lost keyboard focus');
+    await page.setViewportSize({width: 390, height: 844});
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(await button.evaluate(element => element === document.activeElement), true, 'Viewport resizing lost keyboard focus');
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    assert.deepEqual(errors, []);
+    await page.keyboard.press('Enter');
+    await page.getByText('Signed in as verified@example.test', {exact: true}).waitFor();
+  } finally { await page.close(); }
+});
+
 test('credential transport reaches the host and resumes with its verified user', async () => {
   const page = await browser.newPage(); const initial = submissions.length;
   try {

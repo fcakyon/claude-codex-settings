@@ -10,6 +10,7 @@ Use the project's tracked QA harness and saved test sessions. Capture analytics 
 | Forgotten password | Email, code, new password | In-place reset, old password rejected and new password accepted |
 | Invalid, expired or reused code | Verify | Visible retry path, no unauthorized session or reset |
 | Valid app session | Protected deep link | Original action without login |
+| Google button focused | Provider content height changes, desktop/mobile resize | Same focused button, no resize loop, keyboard login still works |
 | Remembered Google account | Official button | Existing account session, intended action, no duplicate user |
 | Multiple Google accounts | Use another account | Old hint cleared, chooser available |
 | Popup blocked or GIS unavailable | Same-tab link | No new tab, real Google flow and app session on return |

@@ -18,7 +18,6 @@ export interface GoogleIdentity {
     text: "continue_with";
     shape: "rectangular";
     locale: string;
-    width: number;
   }): void;
 }
 
@@ -82,15 +81,11 @@ export function GoogleSignIn<User>({
       use_fedcm_for_button: true,
       button_auto_select: Boolean(accountHint),
     });
-    const resize = new ResizeObserver(() => {
-      parent.replaceChildren();
-      identity.renderButton(parent, {
-        theme, size: "large", text: "continue_with", shape: "rectangular",
-        locale, width: Math.min(parent.clientWidth, 400),
-      });
+    identity.renderButton(parent, {
+      theme, size: "large", text: "continue_with", shape: "rectangular",
+      locale,
     });
-    resize.observe(parent);
-    return () => { operation.abort(); resize.disconnect(); parent.replaceChildren(); };
+    return () => { operation.abort(); parent.replaceChildren(); };
   }, [identity, clientId, nonce, accountHint, locale, theme]);
 
   return (
