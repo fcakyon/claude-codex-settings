@@ -46,6 +46,7 @@ const ATTRIBUTE = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
 const ABSOLUTE_URL = /^https?:\/\//i;
 const CACHE_QUERY = new RegExp(`([?&])${CACHE_PARAM}=[^&]*(&|$)`);
 const CHARSET = /charset\s*=\s*["']?([\w:.-]+)/i;
+const ORGANIZATION = /Organization$|^(Corporation|LocalBusiness|OnlineBusiness|OnlineStore)$/;
 const VALUED_RULE = /^(max-snippet|max-image-preview|max-video-preview|unavailable_after)$/i;
 const WORDS = new Intl.Segmenter(undefined, { granularity: "word" });
 
@@ -80,13 +81,12 @@ const mainWords = (text) =>
       )
       .map(({ segment }) => (segment.length > 3 ? segment.replace(/['\u2019]?s$/, "") : segment))
   );
-const typesOf = (value) => {
-  if (Array.isArray(value)) return value.flatMap(typesOf);
+const nodesOf = (value) => {
+  if (Array.isArray(value)) return value.flatMap(nodesOf);
   if (typeof value !== "object" || value === null) return [];
-  return [value["@type"], typesOf(value["@graph"] ?? [])]
-    .flat(2)
-    .filter((type) => typeof type === "string");
+  return [value, ...nodesOf(value["@graph"] ?? [])];
 };
+const typesOf = (node) => [node["@type"]].flat().filter((type) => typeof type === "string");
 // Edit the query as a string, since URLSearchParams re-encodes it (%20 becomes +).
 const withoutCache = (search) =>
   search.replace(CACHE_QUERY, (match, start, end) => (end ? start : ""));
@@ -223,6 +223,9 @@ const inspect = async ([agent, userAgent]) => {
     (RUNS_JAVASCRIPT.has(agent) ? warnings : errors).push(message);
   }
 
+  if (redirects.length > 5) {
+    warnings.push(`The URL takes ${redirects.length} redirects. Discord previews stop after 5.`);
+  }
   if (!title) errors.push("The page has no <title> text.");
   if (!description) warnings.push("The page has no meta description.");
 
@@ -268,11 +271,11 @@ const inspect = async ([agent, userAgent]) => {
     card: content("twitter:card"),
     image: content("twitter:image", "twitter:image:src"),
   };
-  for (const [label, value] of [
+  const shareImages = [
     ["og:image", openGraph.image],
-    ["twitter:image", twitter.image],
-  ]) {
-    if (label === "twitter:image" && value === openGraph.image) continue;
+    ["twitter:image", twitter.image !== openGraph.image && twitter.image],
+  ].filter(([, value]) => value);
+  for (const [label, value] of shareImages) {
     const imageUrl = URL.parse(value, url);
     if (
       imageUrl?.origin === url.origin &&
@@ -282,6 +285,9 @@ const inspect = async ([agent, userAgent]) => {
       warnings.push(
         `${label} has no version hash, so social caches keep the old card. Inherit the hashed URL from parent metadata or the opengraph-image file convention.`
       );
+  }
+  for (const key of ["og:title", "og:description"]) {
+    if (!content(key)) warnings.push(`The page has no ${key}, which WhatsApp needs for a preview.`);
   }
   if (!twitter.card) {
     warnings.push("The page has no twitter:card, so X shows at most a small summary card.");
@@ -303,14 +309,23 @@ const inspect = async ([agent, userAgent]) => {
     warnings.push("The title and the first <h1> share no main words.");
   }
 
-  const types = [];
-  jsonLd.forEach((block, index) => {
+  const nodes = jsonLd.flatMap((block, index) => {
     try {
-      types.push(...typesOf(JSON.parse(block)));
+      return nodesOf(JSON.parse(block));
     } catch (error) {
       errors.push(`JSON-LD block ${index + 1} is not valid JSON: ${error.message}.`);
+      return [];
     }
   });
+  const types = nodes.flatMap(typesOf);
+  const organization = nodes.find((node) => typesOf(node).some((type) => ORGANIZATION.test(type)));
+  // A logo can be a URL, an ImageObject, or an @id reference to an ImageObject elsewhere in the graph.
+  const logoRef = [organization?.logo].flat()[0];
+  const logoNode = nodes.find((node) => logoRef?.["@id"] && node["@id"] === logoRef["@id"]) ?? logoRef;
+  const logo = logoNode?.contentUrl ?? logoNode?.url ?? logoNode;
+  const icons = tags
+    .filter((tag) => tag.name === "link" && tag.keys.some((key) => /^(icon|apple-touch-icon)/.test(key)))
+    .map((tag) => ({ href: tag.attributes.href, rel: tag.keys.join(" ") }));
 
   return {
     ...base,
@@ -327,6 +342,265 @@ const inspect = async ([agent, userAgent]) => {
     jsonLd: { blocks: jsonLd.length, types: [...new Set(types)] },
     errors,
     warnings,
+    // Inputs for the once-per-run site checks, left out of the per-agent output.
+    site: {
+      bytes: {
+        head: Buffer.byteLength(html.split(/<\/head\s*>|<body\b/i)[0]),
+        html: Buffer.byteLength(html),
+      },
+      emailObfuscated: html.includes("/cdn-cgi/l/email-protection"),
+      icons,
+      organization: organization && {
+        logo: typeof logo === "string" ? logo : null,
+        sameAs: [organization.sameAs ?? []].flat(),
+        url: organization.url ?? null,
+      },
+      shareImageMeta: {
+        alt: content("og:image:alt", "twitter:image:alt"),
+        height: Number(content("og:image:height")) || null,
+        width: Number(content("og:image:width")) || null,
+      },
+      shareImages,
+    },
+  };
+};
+
+const KB = 1024;
+const SHARE_FORMATS = /^image\/(jpeg|png|gif)$/;
+const GOOGLE_IMAGE_FORMATS = /^image\/(bmp|gif|jpeg|png|webp|svg\+xml|avif)$/;
+const UNREACHABLE = /^(ENOTFOUND|ECONNREFUSED)$/;
+// Read pixel size from the file header of the formats share cards and icons use.
+const imageSize = (bytes) => {
+  if (bytes.length < 22) return null;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const ascii = (start, end) => String.fromCharCode(...bytes.subarray(start, end));
+  const u24 = (at) => bytes[at] | (bytes[at + 1] << 8) | (bytes[at + 2] << 16);
+  if (ascii(1, 4) === "PNG" && bytes.length >= 24) return { width: view.getUint32(16), height: view.getUint32(20) };
+  if (ascii(0, 3) === "GIF")
+    return { width: view.getUint16(6, true), height: view.getUint16(8, true) };
+  if (ascii(0, 4) === "RIFF" && ascii(8, 12) === "WEBP" && bytes.length >= 30) {
+    const chunk = ascii(12, 16);
+    if (chunk === "VP8X") return { width: u24(24) + 1, height: u24(27) + 1 };
+    if (chunk === "VP8L") {
+      const bits = view.getUint32(21, true);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+    }
+    return { width: view.getUint16(26, true) & 0x3fff, height: view.getUint16(28, true) & 0x3fff };
+  }
+  if (bytes[0] === 0 && bytes[2] === 1 && bytes[3] === 0) {
+    const count = Math.min(view.getUint16(4, true), Math.floor((bytes.length - 6) / 16));
+    const sides = Array.from({ length: count }, (_, i) => bytes[6 + i * 16] || 256);
+    return count ? { width: Math.max(...sides), height: Math.max(...sides) } : null;
+  }
+  if (bytes[0] === 0xff && bytes[1] === 0xd8) {
+    for (let at = 2; at + 9 < bytes.length && bytes[at] === 0xff; at += 2 + view.getUint16(at + 2)) {
+      const marker = bytes[at + 1];
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker))
+        return { width: view.getUint16(at + 7), height: view.getUint16(at + 5) };
+    }
+  }
+  return null;
+};
+// A logo drawn only in light fills disappears on the white background Google may show it on.
+// Shapes with no fill of their own and no fill on an svg or g ancestor draw in black.
+const lightOnly = (svg) => {
+  const inherits = /<(svg|g)\b[^>]*\bfill\s*=/i.test(svg);
+  const bare = /<(path|rect|circle|ellipse|polygon|polyline|text)\b(?![^>]*\bfill\s*[=:])[^>]*>/i.test(svg);
+  if (bare && !inherits) return false;
+  const colors = [
+    ...svg.matchAll(/(?:fill|stroke|stop-color)\s*[=:]\s*["']?\s*(#[\da-f]{3,8}|rgba?\([^)]*\)|[a-z]+)/gi),
+  ]
+    .map(([, color]) => color.toLowerCase())
+    .filter((color) => color !== "none" && color !== "transparent");
+  const luminance = (color) => {
+    if (color === "white") return 1;
+    if (color.startsWith("#")) {
+      const hex = color.length < 6 ? [...color.slice(1, 4)].map((c) => c + c).join("") : color.slice(1, 7);
+      color = `rgb(${[0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16))})`;
+    }
+    const rgb = color.match(/[\d.]+%?/g)?.slice(0, 3).map((v) => (v.endsWith("%") ? parseFloat(v) * 2.55 : Number(v)));
+    return rgb?.length === 3 ? (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2]) / 255 : 0;
+  };
+  return colors.length > 0 && colors.every((color) => luminance(color) > 0.85);
+};
+// Each asset URL is downloaded once per run, however many tags point at it.
+const assets = new Map();
+const fetchAsset = (href, base) => {
+  const url = href ? URL.parse(href, base) : null;
+  if (!url) return { url: href ?? null, problem: href ? "is not a valid URL" : "has no href" };
+  if (!assets.has(url.href)) assets.set(url.href, downloadAsset(url));
+  return assets.get(url.href);
+};
+const downloadAsset = async (url) => {
+  try {
+    const response = await fetch(url, {
+      headers: { "user-agent": AGENTS.browser },
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    const type = response.headers.get("content-type")?.split(";")[0].trim() ?? "";
+    const length = Number(response.headers.get("content-length"));
+    // Browsers sniff favicons, so a generic binary type still counts when the header is an image.
+    const problem = !response.ok
+      ? `returned ${response.status}`
+      : !type.startsWith("image/") && type !== "application/octet-stream"
+        ? `is ${type || "untyped"}, not an image`
+        : null;
+    if (problem || length >= 5 * KB * KB) {
+      await response.body?.cancel();
+      return problem ? { problem, url: url.href } : { bytes: length, size: null, type, url: url.href };
+    }
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    const svg = type === "image/svg+xml" ? new TextDecoder().decode(bytes) : null;
+    const size = svg ? null : imageSize(bytes);
+    if (type === "application/octet-stream" && !size) return { problem: "is not an image", url: url.href };
+    return { bytes: bytes.length, size, svg, type, url: url.href };
+  } catch (error) {
+    return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message, url: url.href };
+  }
+};
+const probe = async (url, redirect = "manual") => {
+  try {
+    const response = await fetch(url, {
+      headers: { "user-agent": AGENTS.browser },
+      redirect,
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    await response.body?.cancel();
+    return { location: response.headers.get("location"), status: response.status };
+  } catch (error) {
+    return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
+  }
+};
+
+// Site checks run once with the browser user agent, against the page the browser reached.
+const checkSite = async ({ site, url }) => {
+  const errors = [];
+  const warnings = [];
+  const page = new URL(url);
+  const host = page.hostname;
+  const twin = host.startsWith("www.")
+    ? host.slice(4)
+    : host.split(".").length === 2
+      ? `www.${host}`
+      : null;
+  const twinUrl = twin && Object.assign(new URL(page), { hostname: twin });
+  const touchLinked = site.icons.some((icon) => icon.rel.includes("apple-touch-icon"));
+  const [shares, logo, icons, rootTouchIcon, unknown, twinHop] = await Promise.all([
+    Promise.all(site.shareImages.map(async ([label, href]) => ({ ...(await fetchAsset(href, page)), label }))),
+    site.organization?.logo ? fetchAsset(site.organization.logo, page) : null,
+    Promise.all(site.icons.map(async (icon) => ({ ...(await fetchAsset(icon.href, page)), rel: icon.rel }))),
+    touchLinked ? null : fetchAsset("/apple-touch-icon.png", page),
+    probe(new URL(`/check-head-${crypto.randomUUID().slice(0, 8)}`, page), "follow"),
+    twinUrl ? probe(twinUrl) : null,
+  ]);
+  const side = ({ size }) => Math.min(size.width, size.height);
+  // A declared asset that answers with an error is broken metadata. A failed connection is only unchecked.
+  const broken = (label, asset) => {
+    if (asset.problem) errors.push(`${label}${asset.url ? ` ${asset.url}` : ""} ${asset.problem}.`);
+    else if (asset.unchecked) warnings.push(`${label} ${asset.url} could not be checked (${asset.unchecked}).`);
+    return asset.problem || asset.unchecked;
+  };
+
+  for (const image of shares) {
+    const { label } = image;
+    if (broken(label, image)) continue;
+    if (image.svg) {
+      errors.push(`${label} is SVG, which X, Meta and Discord don't render. Use PNG or JPEG.`);
+      continue;
+    }
+    if (!SHARE_FORMATS.test(image.type))
+      warnings.push(`${label} is ${image.type}. Meta documents only JPEG, PNG and GIF share images.`);
+    if (image.bytes >= 5 * KB * KB)
+      errors.push(`${label} is ${(image.bytes / KB / KB).toFixed(1)} MB. LinkedIn and X reject images of 5 MB or more.`);
+    else if (label === "og:image" && image.bytes > 600 * KB)
+      warnings.push(`${label} is ${Math.round(image.bytes / KB)} KB. WhatsApp falls back to a small preview above 600 KB.`);
+    if (!image.size) continue;
+    const { width, height } = image.size;
+    if (side(image) < 200) errors.push(`${label} is ${width}x${height}, under Meta's 200x200 minimum.`);
+    else if (width < 1200 || height < 630)
+      warnings.push(`${label} is ${width}x${height}. Meta recommends at least 1200x630 for sharp cards.`);
+    if (label === "og:image" && (width / height < 1.7 || width / height > 2.1))
+      warnings.push(`og:image is ${(width / height).toFixed(2)}:1. Meta and LinkedIn crop to about 1.91:1.`);
+  }
+  const share = shares.find((image) => image.label === "og:image" && image.size);
+  const meta = site.shareImageMeta;
+  if (site.shareImages.length && (!meta.width || !meta.height))
+    warnings.push("og:image has no og:image:width and og:image:height, so Meta and Discord download it before rendering.");
+  else if (share && (meta.width !== share.size.width || meta.height !== share.size.height))
+    warnings.push(
+      `og:image:width and og:image:height say ${meta.width}x${meta.height}, but the file is ${share.size.width}x${share.size.height}.`
+    );
+  if (site.shareImages.length && !meta.alt)
+    warnings.push("og:image has no og:image:alt, which the Open Graph protocol asks for.");
+
+  const raster = icons.filter((icon) => !broken(`The ${icon.rel} link`, icon) && icon.size);
+  const largest = Math.max(0, ...raster.map(side));
+  if (!site.icons.length) warnings.push("The page links no icon, so Google has no favicon to show beside the result.");
+  else if (!raster.length && icons.some((icon) => icon.svg))
+    warnings.push("Every linked icon is SVG, which Google Search doesn't list as a favicon format. Add a PNG or ICO.");
+  else if (raster.length && largest <= 48)
+    warnings.push(`The largest raster icon is ${largest}px. Google recommends a favicon larger than 48x48.`);
+
+  // iOS picks the largest apple-touch-icon it is offered, and looks for /apple-touch-icon.png when none is linked.
+  const touch = touchLinked
+    ? icons.filter((icon) => icon.rel.includes("apple-touch-icon") && icon.size).sort((a, b) => side(b) - side(a))[0]
+    : rootTouchIcon;
+  if (!touchLinked && (rootTouchIcon.problem || rootTouchIcon.unchecked))
+    warnings.push(`No apple-touch-icon link, and ${rootTouchIcon.url}, which iOS looks for instead, ${rootTouchIcon.problem ?? "could not be checked"}.`);
+  else if (touch?.size && (touch.size.width !== touch.size.height || side(touch) < 108))
+    warnings.push(
+      `The apple-touch-icon is ${touch.size.width}x${touch.size.height}. Apple asks for a square icon of at least 108px for Messages previews.`
+    );
+
+  if (site.organization) {
+    if (!logo) warnings.push("The Organization JSON-LD has no logo for Google to show.");
+    else if (broken("The Organization logo", logo));
+    else if (!GOOGLE_IMAGE_FORMATS.test(logo.type))
+      warnings.push(`The Organization logo is ${logo.type}, which Google Images doesn't support.`);
+    else if (logo.svg && lightOnly(logo.svg))
+      warnings.push(
+        "The Organization logo is drawn only in light colors, so it vanishes on the white background Google may show it on."
+      );
+    else if (logo.size && side(logo) < 112)
+      warnings.push(`The Organization logo is ${logo.size.width}x${logo.size.height}. Google needs at least 112x112.`);
+    if (!site.organization.url)
+      warnings.push("The Organization JSON-LD has no url, which Google uses to identify the organization.");
+    if (!site.organization.sameAs.length)
+      warnings.push("The Organization JSON-LD has no sameAs, so Google can't tie the brand to its official profiles.");
+  }
+
+  if (site.bytes.head > 300 * KB)
+    warnings.push(`The head ends ${Math.round(site.bytes.head / KB)} KB into the HTML. WhatsApp reads preview tags only in the first 300 KB.`);
+  if (site.bytes.html > KB * KB)
+    warnings.push(`The HTML is ${(site.bytes.html / KB / KB).toFixed(1)} MB. Apple Messages previews stop reading at 1 MB.`);
+  if (unknown.status >= 200 && unknown.status < 300)
+    warnings.push(`An unknown URL returns ${unknown.status}, a soft 404. Serve 404 or 410 for paths that don't exist.`);
+  const landing = URL.parse(twinHop?.location ?? "", twinUrl ?? undefined);
+  if (twinHop?.unchecked)
+    warnings.push(
+      UNREACHABLE.test(twinHop.unchecked)
+        ? `${twin} doesn't answer (${twinHop.unchecked}), so visitors who type it get an error. Redirect it to ${host} with a 301.`
+        : `${twin} could not be checked (${twinHop.unchecked}).`
+    );
+  else if (twinHop && ![301, 308].includes(twinHop.status))
+    warnings.push(`${twin} returns ${twinHop.status} instead of a permanent redirect to ${host}.`);
+  else if (twinHop && (landing?.origin !== page.origin || landing.pathname !== page.pathname))
+    warnings.push(`${twinUrl.href} redirects to ${twinHop.location}, not to ${page.origin}${page.pathname}.`);
+  if (site.emailObfuscated)
+    warnings.push('Cloudflare Email Obfuscation rewrote email addresses, so crawlers that skip JavaScript see "[email protected]".');
+
+  const summary = (asset) => ({ size: asset.size ?? null, type: asset.type ?? null, url: asset.url });
+  return {
+    agent: "site",
+    errors,
+    warnings,
+    shareImages: shares.map((image) => ({ bytes: image.bytes ?? null, label: image.label, ...summary(image) })),
+    logo: logo && summary(logo),
+    icons: [...icons, ...(rootTouchIcon ? [{ ...rootTouchIcon, rel: "apple-touch-icon (root)" }] : [])].map(
+      (icon) => ({ rel: icon.rel, ...summary(icon) })
+    ),
+    unknownUrlStatus: unknown.status ?? null,
+    twin: twin && { host: twin, location: twinHop.location ?? null, status: twinHop.status ?? null },
   };
 };
 
@@ -352,9 +626,15 @@ const rows = (r) => [
   ],
 ];
 
-const reports = await Promise.all(Object.entries(AGENTS).map(inspect));
-const valid = reports.every((report) => report.errors.length === 0);
-if (json) console.log(JSON.stringify({ agents: reports, url: target, valid }, null, 2));
+// The site checks start as soon as the browser fetch, which comes first in AGENTS, finishes.
+const pending = Object.entries(AGENTS).map(inspect);
+const [inspected, site] = await Promise.all([
+  Promise.all(pending),
+  pending[0].then((browser) => (browser.site ? checkSite(browser) : null)),
+]);
+const reports = inspected.map(({ site, ...report }) => report);
+const failing = [...reports, site].filter((report) => report?.errors.length).map(({ agent }) => agent);
+if (json) console.log(JSON.stringify({ agents: reports, site, url: target, valid: !failing.length }, null, 2));
 else {
   const groups = new Map();
   for (const report of reports) {
@@ -374,7 +654,22 @@ else {
     for (const message of report.warnings) console.log(`  warning: ${message}`);
     console.log();
   }
-  const failing = reports.filter((report) => report.errors.length).map(({ agent }) => agent);
+  if (site) {
+    console.log(`site: ${reports[0].url}`);
+    const size = (asset) => (asset.size ? `${asset.size.width}x${asset.size.height}` : (asset.type ?? "broken"));
+    const twin = site.twin && `${site.twin.host} ${site.twin.status ?? "unreachable"}`;
+    for (const [label, value] of [
+      ...site.shareImages.map((image) => [image.label, `${size(image)}, ${Math.round(image.bytes / KB)} KB`]),
+      ["logo", site.logo ? `${size(site.logo)}, ${site.logo.url}` : "none"],
+      ["icons", site.icons.map((icon) => `${icon.rel} ${size(icon)}`).join(", ") || "none"],
+      ["unknown url", site.unknownUrlStatus ?? "no response"],
+      ["twin host", twin ? `${twin}${site.twin.location ? ` -> ${site.twin.location}` : ""}` : "n/a"],
+    ])
+      console.log(`  ${label.padEnd(14)}${value}`);
+    for (const message of site.errors) console.log(`  error: ${message}`);
+    for (const message of site.warnings) console.log(`  warning: ${message}`);
+    console.log();
+  }
   console.log(failing.length ? `Errors for ${failing.join(", ")}.` : "No errors.");
 }
-process.exitCode = valid ? 0 : 1;
+process.exitCode = failing.length ? 1 : 0;
