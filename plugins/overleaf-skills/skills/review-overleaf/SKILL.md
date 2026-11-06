@@ -12,20 +12,18 @@ Pull unresolved review threads from an Overleaf project, locate each in the loca
 Accept any of:
 
 - Raw 24-char hex ID (`^[0-9a-f]{24}$`)
-- Full URL like `https://www.overleaf.com/project/<id>` — extract via regex
+- Full URL like `https://www.overleaf.com/project/<id>`, passed to the script as is
 - Project name in quotes — call:
   ```bash
-  python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf_reviews.py --list-projects
+  python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf.py --list-projects
   ```
   Each line is `<24-hex>  <accessLevel>  <name>`. Fuzzy-match the name. If multiple match, AskUserQuestion to disambiguate.
 
 If the user has not given a project ID at all, run `--list-projects` and show the user the table so they can pick one.
 
-## Step 2: Cookie precheck
+## Step 2: Auth
 
-If `~/.claude/overleaf-skills/cookie` does not exist, tell the user to "set up overleaf" (which triggers the `setup` skill) and stop.
-
-If it exists but auth fails (the next script call returns a refresh hint), point at the same setup skill and stop.
+The script finds a session by itself (env var, cookie file, then a logged-in Chrome via `agent-browser`). If any call exits with the refresh hint, point the user at the `setup` skill and stop.
 
 ## Step 3: Access-level guard
 
@@ -38,7 +36,7 @@ For `owner`, `readAndWrite`, or `review`, proceed silently.
 ## Step 4: Fetch comments
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf_reviews.py --json --repo . < project-id > --unresolved-only
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf.py --json --repo . < project-id > --unresolved-only
 ```
 
 Parses to a JSON array. Each record has: `thread_id`, `doc_id`, `snippet`, `offset`, `resolved`, `messages` (list of `{user, ts, content}`), `file`, `line`. The `file` and `line` are null when the snippet did not match any local `*.tex`.
@@ -62,10 +60,17 @@ After the loop:
 2. List the `<unmapped>` records (if any) with `doc_id` + snippet preview, so the user can hunt them manually.
 3. Suggest a commit message in the style: `address overleaf review: <one-line summary of the changes>`. Do NOT auto-commit. The user can run `/github-dev:commit-staged` or commit by hand.
 4. Remind the user to mark the addressed threads as resolved in the Overleaf web UI once they verify the local diff.
+5. If the project has Overleaf GitHub sync and the user pushed the commit, offer to pull it into Overleaf and recompile:
+
+   ```bash
+   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf.py <project-id> --sync-github --compile
+   ```
+
+   Prints `SYNC pull <repo> (<n> commit(s))` and `COMPILE <status> (<pages> pages, ..., errors=<n>)`. Add `--download-pdf <path>` to save the PDF, or `--push "<message>"` to push Overleaf-side edits to GitHub instead of pulling.
 
 ## Non-goals
 
-- No re-upload to Overleaf (no write API used).
+- No file uploads to Overleaf. Changes reach Overleaf only through its GitHub sync (`--sync-github`).
 - No thread resolution in Overleaf (web UI only).
 - No `.bib` edits unless a comment specifically targets a citation.
 - No multi-line snippets that span paragraph breaks — those land in `<unmapped>` for v1; the snippet matcher is line-anchored.
