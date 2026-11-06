@@ -7,7 +7,7 @@ description: This skill should be used when writing or revising text, including 
 
 Write like a person with a reason to write. Choose words for meaning, not to sound polished. Match the user's vocabulary, tone, and level of formality. Keep useful detail and remove generic filler.
 
-These patterns are warning signs, not proof of AI authorship. Fix the underlying weakness rather than hiding a tell with a synonym.
+These patterns are warning signs, not proof of AI authorship. Fix the underlying weakness. Swapping in a synonym only hides it.
 
 ## Rewrite method
 
@@ -42,11 +42,11 @@ Better: The archive added 3,000 photographs from the city newspaper's collection
 
 ### Vague attribution and invented consensus
 
-Do not hide claims behind unnamed groups. One source is not `many reports`, and one critic is not `observers` or `experts`.
+Do not hide claims behind unnamed groups. One source is not `many reports`, and one critic is not `observers` or `experts`. Do not put `such as` or `including` before a list that is already complete.
 
 ```text
 Bad: Experts argue that the policy has had a significant effect on small firms.
-Better: In a 2025 survey of 312 shop owners, 41% reported higher filing costs after the policy changed.
+Better: In the Chamber of Commerce's 2025 survey of 312 shop owners, 41% reported higher filing costs after the policy changed.
 
 Bad: Several publications have praised the album's production.
 Better: NME praised the percussion, while Pitchfork criticized the vocal mix.
@@ -70,11 +70,11 @@ Better: The outage began when the certificate rotation restarted every proxy at 
 
 ### Narrating what a source says
 
-State the fact and cite the source. Do not build the sentence around a profile, record, listing, or file that `identifies`, `lists`, or `describes` the subject.
+When the source has the fact, state it and cite the source. Do not build the sentence around a profile, record, listing, or file that `identifies`, `lists`, or `describes` the subject.
 
 ```text
 Bad: The package registry lists the library as compatible with Python 3.9 and later.
-Better: The library supports Python 3.9 and later (setup.cfg).
+Better: The library supports Python 3.9 and later (PyPI listing).
 ```
 
 ### Empty challenges and future outlooks
@@ -88,13 +88,13 @@ Better: The organization lost its city grant in 2025 and cut weekend service fro
 
 ### Speculation and corrective framing
 
-Do not guess why a fact is absent. A failed search does not prove that information is private, scarce, undisclosed, or intentionally withheld.
+Do not guess why a fact is absent. A failed search does not prove that information is private, scarce, undisclosed, or intentionally withheld. Cut openers such as `based on available information` or `in the provided sources`.
 
 Do not tell the reader how to read a source or claim, as in `should be treated as X rather than Y`, `does not by itself establish`, or `should not be confused with` when no reader would confuse the two. State what the source supports and cite it. Mention a limit only when the reader would otherwise reach a wrong conclusion.
 
 ```text
 Bad: Details about her early life are not widely available, likely because she maintains a low profile.
-Better: Her earliest documented role is a 1998 teaching post in Lyon (Martin 2019, p. 41).
+Better: Martin's 2019 biography begins with her 1998 teaching post in Lyon and does not cover her childhood.
 
 Bad: The figure should be treated as a rough estimate rather than a confirmed total.
 Better: The report estimates 4,000 attendees (p. 12).
@@ -113,11 +113,11 @@ intricate, landscape, meticulous, pivotal, robust, showcase, tapestry,
 testament, underscore, valuable, vibrant
 ```
 
-Models from mid-2026 on add their own set:
+Output from mid-2026 models (GPT-6 era) adds another set:
 
 ```text
-dependable, echoed, leverage, matters, multifaceted, prioritize, quietly,
-steady, universally
+challenge, clearer, dependable, echoed, foster, leverage, matters,
+multifaceted, practical, prioritize, quietly, steady, universally
 ```
 
 Also remove stock phrases such as:
@@ -129,6 +129,7 @@ a testament to
 plays a pivotal role
 reflects a broader trend
 marks a significant shift
+evolving landscape
 it is important to note
 ```
 
@@ -148,7 +149,7 @@ Better: Rivera wrote the report and used three public datasets.
 
 ### Formulaic contrasts
 
-Use contrast only when the distinction matters. Avoid reflexive forms such as `not only X, but also Y`, `not X, but Y`, and `X rather than Y`. Recent models lean on `rather than` most.
+Use a contrast only when the reader needs it. Avoid the reflexive forms `not only X, but also Y`, `not X, but Y`, and `X rather than Y`. Recent models use `rather than` often, especially to tell the reader how to treat a claim.
 
 ```text
 Bad: The tool is not merely a parser, but a powerful gateway to better configuration management.
@@ -172,7 +173,7 @@ Better: The program pays course fees for 80 apprentices each year.
 
 ### Uniform short sentences
 
-Newer models avoid dashes and fall back on strings of short sentences joined only by commas and periods. Let sentence length follow the content, and use the punctuation each clause needs.
+Some recent models are tuned to avoid dashes and fall back on runs of short sentences joined only by commas and periods. Let sentence length follow the content. Join related clauses with `because`, `so`, `while`, a colon, or parentheses instead of giving each clause its own sentence.
 
 ```text
 Bad: The import failed. The file was too large. We split it. The retry worked.
@@ -234,24 +235,25 @@ Better: The June invoice lists 14 seats, while the account had 12 active users.
 - Verify titles, authors, dates, DOI values, ISBN values, and quoted text.
 - For books and long reports, cite the page or section that supports the claim, and check that it does.
 - Cite every listed source in the text, and make every footnote marker point to an entry.
+- Do not cite a search-results page as evidence.
 - Remove tracking parameters from links when they are not required.
 - Do not invent a citation because a plausible source probably exists.
 - If evidence is missing, say what you checked and what remains unknown.
 
 ```text
 Bad: Multiple studies confirm the effect. [citation to an unrelated paper]
-Better: The 2024 trial reported a 6% reduction in recovery time on page 18.
+Better: Recovery time fell 6% (Okafor et al. 2024, p. 18).
 ```
 
 ## Change summaries and short messages
 
-Describe the concrete change. Do not narrate the editing process, claim compliance, neutrality, clarity, or careful preservation, or list what you avoided, kept, or ensured. Do not open with a label such as `Comprehensive update:` or `Addressed review feedback by`, and do not close with `All changes verified`.
+Describe the concrete change. Do not narrate the editing process or claim compliance, neutrality, clarity, or careful preservation. Do not list what you avoided, kept, or ensured, or describe added material only as sourced, tested, or verified. Do not open with a label such as `Comprehensive update:` or `Addressed review feedback by`, and do not close with `All changes verified`.
 
 ```text
 Bad: Revised the section to improve clarity and ensure compliance while preserving all relevant information.
 Better: Removed the repeated paragraph and corrected the 2023 revenue figure.
 
-Bad: Addressed reviewer feedback by improving error handling and test coverage. All changes verified.
+Bad: Updated the upload flow based on code review comments and confirmed everything works as expected.
 Better: Retry the upload once after a 503 and add a test for a second failure.
 
 Bad: Refactored the parser while preserving existing behavior and avoiding breaking changes.
