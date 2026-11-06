@@ -1,0 +1,5 @@
+{
+  "name": "google-telemetry",
+  "version": "1.0.0",
+  "description": "Read app usage and search traffic before and after releases with API-backed CLIs."
+}
