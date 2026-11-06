@@ -979,7 +979,7 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/overleaf-skills --skill '*'
 ```
 
-Pull reviewer comments from an Overleaf project, locate each in your local git-tracked `*.tex` files, and apply edits you review. Run setup once to paste your Overleaf session cookie; sessions slide ~5 days idle. Pairs naturally with `github-dev` for the commit step.
+Pull reviewer comments from an Overleaf project, locate each in your local git-tracked `*.tex` files, and apply edits you review. Auth comes from a logged-in Chrome via agent-browser, with a pasted session cookie as fallback. The same script pulls GitHub commits into Overleaf and recompiles the PDF. Pairs naturally with `github-dev` for the commit step.
 
 **Skills:**
 

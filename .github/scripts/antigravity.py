@@ -83,12 +83,6 @@ def package_plugin(plugin: Path, target: Path) -> None:
                 "Read [INSTRUCTIONS.md](INSTRUCTIONS.md) in this skill directory in full before starting. "
                 "Continue reading if a tool truncates it. Resolve its relative paths from this directory.\n"
             )
-        if "${CLAUDE_PLUGIN_ROOT}" in body:
-            with skill.open("a") as stream:
-                stream.write(
-                    "\nFor executable commands, resolve `${CLAUDE_PLUGIN_ROOT}` to this plugin's root, "
-                    "two directories above this skill, and substitute its absolute path.\n"
-                )
     if (plugin / ".mcp.json").exists():
         servers = json.loads((plugin / ".mcp.json").read_text())
         (target / "mcp_config.json").write_text(json.dumps({"mcpServers": servers}, indent=2) + "\n")
