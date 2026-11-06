@@ -7,6 +7,8 @@ description: This skill should be used when user asks to "set up overleaf", "con
 
 Make sure `overleaf.py` can authenticate. It tries `OVERLEAF_COOKIE`, then `~/.claude/overleaf-skills/cookie`, then reads `overleaf_session2` from a logged-in Chrome through `agent-browser` and saves it to the cookie file. The Chrome is the local one, or the one on the SSH host named by `OVERLEAF_CHROME_SSH_HOST` when this machine has no Chrome. Pasting a cookie by hand is the last resort.
 
+Commands use `${CLAUDE_PLUGIN_ROOT}`, this plugin's root. Claude Code fills it in. Codex and Antigravity leave it as written, so replace it with the absolute path two directories above this SKILL.md.
+
 ## Step 1: Status check
 
 ```bash

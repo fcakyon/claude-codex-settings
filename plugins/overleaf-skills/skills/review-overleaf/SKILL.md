@@ -7,6 +7,8 @@ description: This skill should be used when user asks to "fetch overleaf review 
 
 Pull unresolved review threads from an Overleaf project, locate each in the local repo, propose edits the user reviews, and apply them. Does not push back to Overleaf — the web UI is still the place to mark threads resolved after the user verifies the local change.
 
+Commands use `${CLAUDE_PLUGIN_ROOT}`, this plugin's root. Claude Code fills it in. Codex and Antigravity leave it as written, so replace it with the absolute path two directories above this SKILL.md.
+
 ## Step 1: Resolve project ID
 
 Accept any of:
