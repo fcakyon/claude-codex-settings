@@ -68,7 +68,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ### Commit Messages
 
-- Run the `/simplify` skill on the staged diff before committing, then apply its findings. Docs-only diffs are a no-op
+- Run the `/simplify` skill on the staged diff before every commit, docs-only commits included, as four parallel review agents, never inline.
 - Format: `{type}: brief description` (max 50 chars first line)
 - Optional second line: 1 sentence with findings/motivation
 - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`

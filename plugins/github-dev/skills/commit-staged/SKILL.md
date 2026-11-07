@@ -14,7 +14,7 @@ points in the commit message body instead of relying on the diff alone.
 
 ## Process
 
-**First, run the `/simplify` skill on the staged diff and apply its findings before committing. Docs-only diffs are a no-op.**
+**First, run the `/simplify` skill on the staged diff and apply its findings before committing, docs-only commits included.**
 
 1. **Preferred execution**
    - If subagents are available, use `github-dev:commit-creator` for the full workflow.
