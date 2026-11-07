@@ -379,7 +379,7 @@ See `### Description handling` (Marketplace Plugin Conventions) for the list of 
 
 ## Commit and PR Writing Style
 
-**Run the `/simplify` skill on the staged diff before every commit, then apply its findings. Docs-only diffs are a no-op.**
+**Run the `/simplify` skill on the staged diff before every commit, docs-only commits included, then apply its findings.**
 
 This repo contains config files (JSON settings, allowlist rules, hooks) rather than application code. Commit messages and PR descriptions should be written in plain language that anyone can understand, not just Claude Code plugin developers.
 

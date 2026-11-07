@@ -32,7 +32,7 @@ Run `git diff @{upstream}...HEAD` (or `git diff main...HEAD` / `git diff HEAD~1`
 
 ## Phase 1 — Review (4 cleanup agents in parallel)
 
-Run **4 distinct reviews**, one for each angle below. Launch four independent agents concurrently when capacity allows. If fewer than four slots are available, run the remaining angles in the primary agent or in later waves. Never omit or combine an angle. Pass each agent the diff and its assigned angle. Each returns its findings with `file`, `line`, a one-line `summary`, and the concrete cost (what is duplicated, wasted, or harder to maintain).
+Run **4 distinct reviews**, one for each angle below. Launch four independent agents concurrently when capacity allows. If fewer than four slots are available, run the remaining angles in later waves, never in the primary agent. Never omit or combine an angle. Pass each agent the diff and its assigned angle. Each returns its findings with `file`, `line`, a one-line `summary`, and the concrete cost (what is duplicated, wasted, or harder to maintain).
 
 ### Reuse
 

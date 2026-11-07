@@ -27,7 +27,7 @@
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
-      "version": "1.1.14",
+      "version": "1.1.15",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -377,7 +377,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "Write clear issues, commits, and PRs, review code, and resolve feedback.",
-      "version": "2.8.2",
+      "version": "2.8.3",
       "author": {
         "name": "Fatih C. Akyon"
       },

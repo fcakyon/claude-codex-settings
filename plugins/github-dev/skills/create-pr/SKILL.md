@@ -24,8 +24,8 @@ issue reports, use [create-issue](../create-issue/SKILL.md).
    - Create a short branch using the repo's naming convention. Never commit directly to main.
 
 2. **Finish and inspect the change**
-   - Run `/simplify` on the staged diff before committing and apply its findings. Docs-only
-     diffs are a no-op. Follow `commit-staged` for any staged changes.
+   - Run `/simplify` on the staged diff before committing and apply its findings, docs-only
+     commits included. Follow `commit-staged` for any staged changes.
    - Update existing documentation only when the requested change makes it inaccurate.
    - Review `git diff <remote>/<base>...HEAD` across all commits. For an existing PR, use its
      actual base and head, or `gh pr diff <pr>` if this checkout is on another branch.
