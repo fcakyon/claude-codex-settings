@@ -98,6 +98,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   const findings = []
   const add = (rule, status, url, evidence, source) => findings.push({ rule, status, url, evidence, ...(source ? { source: SOURCES[source] } : {}) })
   const root = await readUrl(target)
+  if (root.redirects.length) add('page.redirect', 'review', target, root.redirects, 'canonical')
   const origin = new URL(root.url).origin
   const requests = new Map([[target, Promise.resolve(root)]])
   let robots = null
@@ -127,7 +128,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   }
 
   const queue = new Map([[root.url, new Set(['entry'])]])
-  if (root.url !== target) requests.set(root.url, Promise.resolve(root))
+  if (root.url !== target) requests.set(root.url, Promise.resolve({ ...root, redirects: [] }))
   const sitemapAlternates = new Map()
   const enqueue = (url, source, reportExternal = false) => {
     if (!url || new URL(url).origin !== origin) {
@@ -195,7 +196,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
     }
   }
   requests.clear()
-  requests.set(root.url, Promise.resolve(root))
+  requests.set(root.url, Promise.resolve({ ...root, redirects: [] }))
   if (maps.size > parsedMaps.size) add('sitemap.limit', 'unchecked', root.url, `${parsedMaps.size} of ${maps.size} discovered sitemaps checked.`)
 
   const pages = new Map()
