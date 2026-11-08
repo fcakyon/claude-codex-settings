@@ -3,6 +3,7 @@
 | Surface | Outcome to observe | Execution |
 | --- | --- | --- |
 | Website | Visible result, route, persistence, mobile and localized flows | Real Chrome and HTTP |
+| Touch | Gesture outcome while the finger is down, after release, and page scroll | Real touch points on an emulated phone |
 | Extension | Built package, background auth, content-script UI and effect on host page | Chrome for Testing and real backend |
 | Provider | Expected session and successful authorized action | Saved session, scoped cookie recovery, ordinary login |
 | Video | Decoded frames, advancing time, selected skip and same interval without filter | Real provider subscription/player |
@@ -20,6 +21,10 @@ Media helpers observe dimensions, frames, time and a discontinuous jump. Seek be
 Invoke existing backend tests with `qa.command`. Require tests to execute because a no-match filter may exit 0. SQLite helpers open read-only. Mutate through application routes and restore test records in `finally`. Never treat production databases as disposable or send test purchases/webhooks to live billing.
 
 Android requires explicit serial, installed app and test runner. `qa.androidInstrumentation` runs `adb -s <serial> shell am instrument -w -r <runner>` and requires positive `OK (N tests)` output. Project instrumentation owns UI assertions. Physical DRM/hardware playback needs a compatible physical device. Appium can run through `qa.command` when the project already uses it.
+
+Mouse events and Playwright `tap()` never hold, drag or let the browser take a gesture over for scrolling, so touch interactions need `qa.touchGesture` on a page set up with `qa.emulateTouch`.
+
+Assert the `during` sample as well as `after`, since a hold that only acts on release passes an after-only check. `pointercancel` in `events` means the browser took the gesture over for scrolling, which ends drags that `touch-action` lets through. Cover both outcomes: gestures that drive the control must not scroll, and vertical swipes over it must still scroll. Use the `qa.gestures` hold, hold-then-drag on each axis, sideways swipe, jittery sideways start, and fast and slow vertical swipes. A page at the top cannot scroll for a downward finger, so assert `scrolled` with upward finger moves. Navigate again before each gesture so earlier state does not carry over. Emulated touch never opens the long-press menu, so check it on a real device.
 
 Keep missing integrations blocked until scripts exist. Do not create fake Android, payment, OAuth or provider cases to fill a coverage table.
 
