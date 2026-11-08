@@ -219,3 +219,16 @@ test('does not follow a discovered redirect into a robots-disallowed path', asyn
   assert.equal(hits.includes('/blocked'), false)
   assert(result.findings.some((f) => f.url.endsWith('/go') && f.status === 'unchecked'))
 })
+
+test('keeps entry redirects separate from the canonical sitemap destination', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/') return { status: 307, headers: { location: '/en' } }
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/sitemap.xml') return { type: 'application/xml', body: `<urlset><url><loc>${u.origin}/en</loc></url></urlset>` }
+    if (u.pathname === '/en') return { body: html(u.origin, '/en') }
+  })
+  const result = await auditSite(origin)
+  assert.deepEqual(failures(result), [])
+  assert(result.findings.some((f) => f.rule === 'page.redirect' && f.url === `${origin}/` && f.status === 'review'))
+  assert(!result.findings.some((f) => f.rule === 'page.redirect' && f.url === `${origin}/en`))
+})
