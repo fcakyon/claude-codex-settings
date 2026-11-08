@@ -66,7 +66,7 @@ def package_plugin(plugin: Path, target: Path) -> None:
     for name in ("skills", "scripts", "assets", "package.json", "package-lock.json", "tsconfig.json", "LICENSE"):
         source = plugin / name
         if source.is_dir():
-            shutil.copytree(source, target / name, ignore=shutil.ignore_patterns("*.zip", "__pycache__"))
+            shutil.copytree(source, target / name, ignore=shutil.ignore_patterns("*.zip", "__pycache__", "node_modules"))
         elif source.is_file():
             shutil.copyfile(source, target / name)
     for skill in sorted((target / "skills").glob("*/SKILL.md")):

@@ -66,6 +66,11 @@ jobs:
       - name: Validate Antigravity bundles
         run: python .github/scripts/antigravity.py validate
 
+      - name: Test SEO audit and local packaging
+        run: |
+          npm ci --prefix plugins/seo-skills/skills/seo-audit/scripts --ignore-scripts
+          node --test .github/scripts/test_seo_audit.mjs
+
       - name: Test simplify guard
         run: python .github/scripts/test_simplify_guard.py
 

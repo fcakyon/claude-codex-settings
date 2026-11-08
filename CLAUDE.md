@@ -409,7 +409,7 @@ Per-vendor scripts sync official agent-skills repos into local plugins:
 
 - `_helpers.sh` — shared functions (clone/update, copy, zip)
 - `sync-<name>-skills.sh` — per-vendor: clone repo to ~/dev/, copy SKILL.md + subdirs, create zip
-- Local additions: each sync overwrites the copied skill files, so keep repo-specific content in `.github/scripts/<plugin>/` and let the sync script add it. `sync-seo-skills.sh` inserts `seo-skills/field-notes/<skill>.md` before each skill's References or Sources section
+- Local additions: each sync overwrites the copied skill files, so keep repo-specific content in `.github/scripts/<plugin>/` and let the sync script add it. SEO is maintained locally under `plugins/seo-skills/skills/`, including its scripts and references. `sync-seo-skills.sh` only packages those files and never fetches or copies upstream content. Review upstream changes separately. Do not restore the old destructive vendor sync or duplicate field-note sources.
 
 ```bash
 bash .github/scripts/sync-mongodb-skills.sh
