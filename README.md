@@ -1021,9 +1021,9 @@ Use it for a strategy, audit, prompt portfolio, content brief, or performance re
 <details>
 <summary><strong>google-telemetry</strong> - Read app usage and search traffic around releases</summary>
 
-| Claude Code | Codex CLI | Cursor | Gemini CLI |
-| ----------- | --------- | ------ | ---------- |
-| `claude plugin install google-telemetry@claude-settings` | `codex plugin add google-telemetry@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/google-telemetry` |
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
+| --- | --- | --- | --- |
+| `claude plugin install google-telemetry@claude-settings` | `codex plugin add google-telemetry@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install google-telemetry` |
 
 **Skills CLI**
 
