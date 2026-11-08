@@ -1,0 +1,12 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "aeo",
+  "version": "1.0.2",
+  "description": "Turn buyer questions and AI citations into content that wins customers.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

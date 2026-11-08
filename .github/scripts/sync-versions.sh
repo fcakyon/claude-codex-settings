@@ -16,6 +16,8 @@ import sys
 from pathlib import Path
 
 repo = Path(sys.argv[1])
+sys.path.insert(0, str(repo / ".github/scripts"))
+from antigravity import MANIFEST, manifest_for
 changes = []
 warnings = []
 
@@ -35,13 +37,12 @@ for plugin_dir in sorted((repo / "plugins").iterdir()):
     if not data.get("license"):
         warnings.append(f"  {plugin_dir.name}: missing 'license' in .claude-plugin/plugin.json")
 
-# Sibling plugin.json files. Gemini's manifest spec excludes 'license'.
+# Sibling plugin manifests keep their tool-specific settings.
 for name, meta in plugin_meta.items():
     plugin_dir = meta["dir"]
-    for label, path, syncs_license in [
-        ("codex",  plugin_dir / ".codex-plugin"  / "plugin.json", True),
-        ("cursor", plugin_dir / ".cursor-plugin" / "plugin.json", True),
-        ("gemini", plugin_dir / "gemini-extension.json",          False),
+    for label, path in [
+        ("codex",  plugin_dir / ".codex-plugin"  / "plugin.json"),
+        ("cursor", plugin_dir / ".cursor-plugin" / "plugin.json"),
     ]:
         if not path.exists():
             continue
@@ -49,7 +50,7 @@ for name, meta in plugin_meta.items():
         before = dict(manifest)
         if meta["version"] and manifest.get("version") != meta["version"]:
             manifest["version"] = meta["version"]
-        if syncs_license and meta["license"] and manifest.get("license") != meta["license"]:
+        if meta["license"] and manifest.get("license") != meta["license"]:
             manifest["license"] = meta["license"]
         if manifest != before:
             path.write_text(json.dumps(manifest, indent=2) + "\n")
@@ -59,6 +60,13 @@ for name, meta in plugin_meta.items():
             if before.get("license") != manifest.get("license"):
                 diff.append(f"license={manifest['license']}")
             changes.append(f"  {plugin_dir.name}/{label}: " + ", ".join(diff))
+
+    native = manifest_for(plugin_dir)
+    native_path = plugin_dir / MANIFEST
+    if native and (not native_path.exists() or json.loads(native_path.read_text()) != native):
+        native_path.parent.mkdir(exist_ok=True)
+        native_path.write_text(json.dumps(native, indent=2) + "\n")
+        changes.append(f"  {plugin_dir.name}/antigravity: updated native metadata")
 
 
 def find_entry_span(text, name):

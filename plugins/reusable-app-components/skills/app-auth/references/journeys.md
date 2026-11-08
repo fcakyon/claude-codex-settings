@@ -10,8 +10,9 @@ Use the project's tracked QA harness and saved test sessions. Capture analytics 
 | Forgotten password | Email, code, new password | In-place reset, old password rejected and new password accepted |
 | Invalid, expired or reused code | Verify | Visible retry path, no unauthorized session or reset |
 | Valid app session | Protected deep link | Original action without login |
+| Google button focused | Provider content height changes, desktop/mobile resize | Same focused button, no resize loop, keyboard login still works |
 | Remembered Google account | Official button | Existing account session, intended action, no duplicate user |
-| Multiple Google accounts | Use another account | Old hint cleared, chooser available |
+| Multiple Google accounts | Official Google button or same-tab fallback | Google owns account selection without an app-level switch action |
 | Popup blocked or GIS unavailable | Same-tab link | No new tab, real Google flow and app session on return |
 | Pending exchange | Close auth surface | Request cancelled, no stale navigation or orphaned rejection |
 | Rejected credential or rate limit | Retry | Safe visible error, working controls, no rejected session |
@@ -20,7 +21,7 @@ Use the project's tracked QA harness and saved test sessions. Capture analytics 
 | Unsafe target, altered/expired state | Callback | No external redirect, session or action |
 | Uninvited/disabled account | Either login path | Existing policy rejects access |
 | Signed in | Logout, protected route | Session invalidation matches the app's model |
-| Every locale, desktop/mobile | Login/signup switch and keyboard | Correct copy, focus, 44px controls, equal-width fields, no overflow |
+| Every locale, desktop/mobile | Login/signup switch and keyboard | Correct copy, focus, compact 44px fields/actions, centered Google control, no white iframe surround or overflow |
 
 Pair representative states and destinations. Put the full transport/security matrix at the owning backend boundary rather than duplicating it in every browser test. Treat API tokens and web sessions as separate contracts.
 

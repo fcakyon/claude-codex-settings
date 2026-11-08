@@ -5,18 +5,18 @@ description: This skill should be used when user asks to "set up overleaf", "con
 
 # Overleaf Skills Setup
 
-Walk the user through pasting a fresh `overleaf_session2` cookie into `~/.claude/overleaf-skills/cookie`. Cookies slide ~5 days idle; users will hit this every few days.
+Make sure `overleaf.py` can authenticate. It tries `OVERLEAF_COOKIE`, then `~/.claude/overleaf-skills/cookie`, then reads `overleaf_session2` from a logged-in Chrome through `agent-browser` and saves it to the cookie file. The Chrome is the local one, or the one on the SSH host named by `OVERLEAF_CHROME_SSH_HOST` when this machine has no Chrome. Pasting a cookie by hand is the last resort.
+
+Commands use `${CLAUDE_PLUGIN_ROOT}`, this plugin's root. Claude Code fills it in. Codex and Antigravity leave it as written, so replace it with the absolute path two directories above this SKILL.md.
 
 ## Step 1: Status check
 
-Check if `~/.claude/overleaf-skills/cookie` already exists. If yes, run:
-
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf_reviews.py --check-auth
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf.py --check-auth
 ```
 
-- If `OK <email>`: tell user "Already configured, logged in as <email>". Ask via AskUserQuestion whether to refresh or keep.
-- If `FAIL`: tell user the stored cookie is expired and continue to Step 2.
+- If `OK <email>`: report "Configured, logged in as <email>." Done.
+- If it exits non-zero with the refresh hint: ask the user to log into overleaf.com in Chrome (on the `OVERLEAF_CHROME_SSH_HOST` machine when set), then rerun the check. If it still fails, or the user has no Chrome with `agent-browser` access, continue to Step 2.
 
 ## Step 2: Show browser guide
 
@@ -63,8 +63,8 @@ chmod 600 ~/.claude/overleaf-skills/cookie
 ## Step 6: Verify
 
 ```bash
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf_reviews.py --check-auth
+python3 ${CLAUDE_PLUGIN_ROOT}/scripts/overleaf.py --check-auth
 ```
 
 - If `OK <email>`: report "Configured. Logged in as <email>." Done.
-- If `FAIL`: restore from `cookie.backup` if it exists (`mv ~/.claude/overleaf-skills/cookie.backup ~/.claude/overleaf-skills/cookie`), tell user the new cookie did not authenticate, loop back to Step 2.
+- If it exits non-zero: restore from `cookie.backup` if it exists (`mv ~/.claude/overleaf-skills/cookie.backup ~/.claude/overleaf-skills/cookie`), tell user the new cookie did not authenticate, loop back to Step 2.

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "reusable-app-components",
+  "version": "1.3.0",
+  "description": "Reuse tested app journeys with code, design and integration checks.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

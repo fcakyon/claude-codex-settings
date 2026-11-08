@@ -1,6 +1,6 @@
 {
   "name": "livekit-skills",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Build, test, simulate, and deploy LiveKit voice AI agents.",
   "license": "MIT"
 }

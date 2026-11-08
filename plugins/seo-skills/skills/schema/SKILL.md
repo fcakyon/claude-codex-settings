@@ -48,6 +48,18 @@ Then point the user at the Rich Results Test at https://search.google.com/test/r
 
 Give the complete block, ready to paste, with the page's real values filled in rather than placeholders. Say where it goes, name any property you had to leave out and why, and note which rich result it makes the page eligible for, with eligible being the honest word. Google decides whether to show one.
 
+## Rich result limits and entity identity
+
+These rules decide whether markup is safe and whether it can earn anything:
+
+- Retired rich results: Google [stopped showing FAQ rich results for every site on May 7, 2026](https://developers.google.com/search/updates) and removed their documentation, after [dropping HowTo results in 2023](https://developers.google.com/search/blog/2023/08/howto-faq-changes) and the [sitelinks search box in November 2024](https://developers.google.com/search/blog/2024/10/sitelinks-search-box). `FAQPage`, `HowTo`, and a `WebSite` `SearchAction` earn nothing in Google Search, so add them only for other consumers and never promise the rich result. `WebSite` with `name` and `url` still sets the [site name](https://developers.google.com/search/docs/appearance/site-names).
+- Required properties: Google lists [no required properties for Article](https://developers.google.com/search/docs/appearance/structured-data/article) or Organization, so treat the bundled validator's Article, BlogPosting, and Organization errors as recommendations. [Software apps](https://developers.google.com/search/docs/appearance/structured-data/software-app) need `offers.price` and either `aggregateRating` or `review`, and [events](https://developers.google.com/search/docs/appearance/structured-data/event) need a physical `Place` with an address, since online-only events aren't eligible.
+- Inline JSON-LD: `JSON.stringify` doesn't escape `</script>`, so [Next.js recommends](https://nextjs.org/docs/app/guides/json-ld) `JSON.stringify(schema).replace(/</g, "\\u003c")` before `dangerouslySetInnerHTML`.
+- Ratings from other sites: Google's review snippet guidelines say [don't aggregate reviews or ratings from other websites](https://developers.google.com/search/docs/appearance/structured-data/review-snippet), so IMDb, Rotten Tomatoes, or app store scores never go into `aggregateRating`. Show them as attributed text instead.
+- Organization logo: Google [may show the logo on a purely white background](https://developers.google.com/search/docs/appearance/structured-data/organization), where a white or light-gray wordmark vanishes. Point `logo` at a version that reads on white, at least 112x112 px, at a crawlable URL.
+- Profile pages: a [`ProfilePage`](https://developers.google.com/search/docs/appearance/structured-data/profile-page) needs a `mainEntity` Person or Organization with a `name`, or an `alternateName` when no name is available. Google recommends the real name in `name` and social handles in `alternateName`, plus `dateCreated` and `dateModified` on the page, where `dateModified` ideally changes only when a person edits the profile.
+- Entity identity: schema.org defines [`sameAs`](https://schema.org/sameAs) as a page that unambiguously identifies the item, such as its Wikipedia page, Wikidata entry, or official website. On a movie or show page, the IMDb title URL does the same job and tells apart remakes that share a name.
+
 ## Sources
 
 - Google Search Central, Intro to how structured data works: https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data

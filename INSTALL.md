@@ -1,6 +1,6 @@
 # Installation Guide
 
-Installation guide for Claude Code, OpenAI Codex, Cursor, Gemini CLI, dependencies, and this configuration.
+Installation guide for Claude Code, OpenAI Codex, Cursor, Antigravity CLI, dependencies, and this configuration.
 
 > Use the [plugin marketplace](README.md#installation) to install agents/commands/hooks/MCP. You'll still need to complete prerequisites and set up the shared guidance file.
 
@@ -91,19 +91,26 @@ cursor-agent
 
 Enter `/plugin`, open the marketplace, and install the plugin at user or project scope. In the Cursor app, open **Customize** and select **Install**.
 
-### Gemini CLI
+### Antigravity CLI
 
-Install Gemini CLI:
-
-```bash
-npm install -g @anthropic-ai/gemini-cli
-```
-
-Install individual plugins:
+Install Antigravity CLI:
 
 ```bash
-gemini extensions install --path ./plugins/simplify
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+agy --version
 ```
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then use the repository installer:
+
+```bash
+git clone https://github.com/fcakyon/claude-codex-settings.git
+cd claude-codex-settings
+uv run .github/scripts/antigravity.py install simplify
+```
+
+The installer builds native Antigravity bundles from the shared skills and MCP servers, then calls `agy plugin install`. It keeps full instructions when a skill exceeds Antigravity's 24 KB loading limit. Claude-only hooks, agents, commands, and output styles are not part of these bundles. Plugins without skills or MCP servers are unavailable in Antigravity. Start a new session and use `/simplify`, `/seo-audit`, or another installed skill.
+
+Codex and Cursor also accept the portable [Agent Plugins format](https://agent-plugins.org/). Their marketplace files and existing hook and agent settings differ, so this repo shares source content and generates tool-specific metadata instead of treating the APIs as identical.
 
 ### Required Tools
 
@@ -166,7 +173,6 @@ Start from [`.claude/CLAUDE.md`](https://github.com/fcakyon/claude-codex-setting
 
 ```bash
 ln -sfn CLAUDE.md AGENTS.md
-ln -sfn CLAUDE.md GEMINI.md
 ```
 
-This lets tools like [OpenAI Codex](https://openai.com/codex/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.
+This lets tools like [OpenAI Codex](https://openai.com/codex/), [Antigravity CLI](https://antigravity.google/docs/getting-started), [Cursor](https://cursor.com), [Github Copilot](https://github.com/features/copilot) and [Qwen Code](https://github.com/QwenLM/qwen-code) reuse the same instructions.

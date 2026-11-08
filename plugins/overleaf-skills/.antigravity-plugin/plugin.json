@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "overleaf-skills",
+  "version": "1.1.0",
+  "description": "Pull Overleaf review comments into your .tex repo and apply the edits.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

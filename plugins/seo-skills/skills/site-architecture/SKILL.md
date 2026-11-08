@@ -51,7 +51,7 @@ The mistakes that cost the most:
 
 Primary navigation holds 4 to 7 items, ordered by importance, with the logo linking home and the call to action rightmost. Past 7, people stop reading the list and start hunting.
 
-Footers group into columns: product, resources, company, legal. Sidebars carry within-section navigation for docs and long content. Breadcrumbs mirror the URL path exactly, with every segment linked except the current page, and they pair with `BreadcrumbList` schema.
+Footers group into columns: product, resources, company, legal. Sidebars carry within-section navigation for docs and long content. Breadcrumbs follow the path a typical user takes to the page, which Google recommends over mirroring the URL, with every segment linked except the current page, and they pair with `BreadcrumbList` schema.
 
 Breadcrumbs are the cheapest structural win available: they add internal links on every page, they make hierarchy legible to a crawler, and they can earn a richer result.
 
@@ -68,6 +68,11 @@ Hub and spoke is what makes a set of posts add up to more than its pages, becaus
 ## What to hand back
 
 An ASCII tree of the hierarchy with the URL at each node, a URL map table (page, URL, parent, where it appears in navigation, priority), the redirect list when anything moves, and a Mermaid diagram when the structure is worth seeing rather than reading. `references/patterns.md` has the formats.
+
+## Checks from live audits
+
+- Fragment routes: Google [generally ignores URL fragments](https://developers.google.com/search/docs/crawling-indexing/url-structure), so client-side routes like `/#/pricing` need real paths through the History API.
+- Breadcrumb results: Google shows them [on desktop only](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb), so don't expect them in mobile results.
 
 ## Sources
 

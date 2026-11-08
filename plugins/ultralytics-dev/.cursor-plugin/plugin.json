@@ -1,6 +1,6 @@
 {
   "name": "ultralytics-dev",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
   "author": {
     "name": "Fatih C. Akyon"

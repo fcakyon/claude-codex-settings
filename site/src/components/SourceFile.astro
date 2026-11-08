@@ -1,0 +1,18 @@
+---
+import Icon from "./Icon.astro"
+import type { editorFiles } from "../lib/content"
+
+interface Props {
+  file: Pick<(typeof editorFiles)[number], "path" | "content" | "url">
+}
+
+const { file } = Astro.props
+---
+
+<figure class="source-file">
+  <figcaption>
+    <a href={file.url}>{file.path}</a>
+    <button class="icon-button" type="button" data-copy-command aria-label={`Copy ${file.path}`}><Icon name="copy" size={16} /></button>
+  </figcaption>
+  <pre tabindex="0"><code>{file.content}</code></pre>
+</figure>

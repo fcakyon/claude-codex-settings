@@ -21,9 +21,9 @@ before(async () => {
     stdin: {contents: `import {renderToString} from 'react-dom/server';
       import {GoogleSignIn} from './skills/app-auth/assets/GoogleSignIn';
       export const html = renderToString(<GoogleSignIn identity={null} clientId="fixture-client" locale="en"
-        accountHint="" redirectEndpoint="/auth/google/login" returnTo="/en?filter=active#details"
-        copy={{fallback:'Continue in this tab',anotherAccount:'Use another account',pending:'Signing in'}}
-        onCredential={async()=>null} onAuthenticated={()=>{}} onFailure={()=>'Failed'} onUseAnotherAccount={()=>{}} />);`,
+        redirectEndpoint="/auth/google/login" returnTo="/en?filter=active#details"
+        copy={{fallback:'Continue in this tab',pending:'Signing in'}}
+        onCredential={async()=>null} onAuthenticated={()=>{}} onFailure={()=>'Failed'} />);`,
       resolveDir: root, loader: 'tsx'},
     bundle: true, platform: 'node', format: 'cjs', packages: 'external', jsx: 'automatic', outfile: path.join(temporary, 'ssr.cjs'),
   });
@@ -75,7 +75,7 @@ before(async () => {
     } else {
       response.setHeader('Content-Type', 'text/html');
       response.end(`<!doctype html><html lang="en"><meta name="viewport" content="width=device-width,initial-scale=1">
-        <link rel="stylesheet" href="/fixture.css"><style>body{margin:0;padding:24px;font:16px system-ui;color:#f5f5f7;background:#09090d}main{max-width:440px;margin:clamp(24px,10vh,100px) auto}.fixture-google-button{width:100%;min-height:44px;border:1px solid #777781;border-radius:6px;background:#24242d;color:#fff;font:500 14px system-ui}.fixture-note{color:#a3a3af;font-size:12px;text-align:center;margin:24px 0}details{margin-top:40px;color:#a3a3af;font-size:12px}details button{margin:12px 8px 0 0;min-height:44px}</style>
+        <link rel="stylesheet" href="/fixture.css"><style>body{margin:0;padding:24px;font:16px system-ui;color:#f5f5f7;background:#09090d}main{max-width:440px;margin:clamp(24px,10vh,100px) auto}.fixture-google-button{width:210px;min-height:44px;border:1px solid #777781;border-radius:6px;background:#24242d;color:#fff;font:500 14px system-ui}.fixture-note{color:#a3a3af;font-size:12px;text-align:center;margin:24px 0}details{margin-top:40px;color:#a3a3af;font-size:12px}details button{margin:12px 8px 0 0;min-height:44px}</style>
         <div id="root">${url.pathname === '/no-js' ? ssr : ''}</div>${url.pathname === '/no-js' ? '' : '<script src="/fixture.js"></script>'}</html>`);
     }
   }).listen(0, '127.0.0.1');
@@ -100,19 +100,39 @@ test('server-rendered fallback works without JavaScript and preserves the root a
   } finally { await context.close(); }
 });
 
-test('missing SDK still offers account switching and same-tab navigation', async () => {
+test('missing SDK still offers same-tab Google account selection', async () => {
   const page = await browser.newPage();
   try {
     await page.goto(origin + '/?sdk=missing');
-    const link = page.getByRole('link', {name: 'Having trouble? Continue in this tab'});
-    assert.equal(new URL(await link.getAttribute('href'), origin).searchParams.get('login_hint'), 'returning@example.test');
-    await page.getByRole('button', {name: 'Use a different Google account'}).click();
+    const link = page.getByRole('link', {name: 'Continue in this tab'});
     await link.click(); await page.waitForURL('**/provider?**');
     const query = new URL(page.url()).searchParams;
     assert.equal(query.has('login_hint'), false);
     assert.equal(query.get('prompt'), 'select_account');
     assert.equal(query.get('returnTo'), '/workspace?filter=active#details');
     assert.equal(page.context().pages().length, 1);
+  } finally { await page.close(); }
+});
+
+test('Google button retains keyboard focus through content and viewport resizing', async () => {
+  const page = await browser.newPage({viewport: {width: 1365, height: 900}});
+  const errors = []; page.on('pageerror', error => errors.push(error.message));
+  try {
+    await page.goto(origin);
+    const button = page.getByRole('button', {name: 'Test Google sign-in'});
+    await button.focus();
+    await button.evaluate(async element => {
+      element.style.height = '60px';
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    });
+    assert.equal(await button.evaluate(element => element === document.activeElement), true, 'Provider layout changes lost keyboard focus');
+    await page.setViewportSize({width: 390, height: 844});
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    assert.equal(await button.evaluate(element => element === document.activeElement), true, 'Viewport resizing lost keyboard focus');
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    assert.deepEqual(errors, []);
+    await page.keyboard.press('Enter');
+    await page.getByText('Signed in as verified@example.test', {exact: true}).waitFor();
   } finally { await page.close(); }
 });
 
@@ -135,7 +155,7 @@ for (const status of [401, 429, 500]) test(`HTTP ${status} is visible, redacted 
     assert.equal(await page.getByRole('alert').innerText(), status === 429 ? 'Please wait before retrying.' : 'Sign-in failed. Try again.');
     assert.equal((await page.locator('body').innerText()).includes('private provider diagnostics'), false);
     await page.getByText('Failures reported: 1', {exact: true}).waitFor();
-    assert.equal(await page.getByRole('link', {name: 'Having trouble? Continue in this tab'}).isVisible(), true);
+    assert.equal(await page.getByRole('link', {name: 'Continue in this tab'}).isVisible(), true);
     assert.equal(await page.getByRole('button', {name: 'Test Google sign-in'}).isEnabled(), true);
   } finally { await page.close(); }
 });
@@ -149,7 +169,7 @@ for (const action of ['Close sign-in', 'Unload SDK']) test(`${action} cancels tr
     await page.getByRole('button', {name: 'Test Google sign-in'}).click();
     await started;
     await page.getByText('Signing in…', {exact: true}).waitFor();
-    assert.equal(await page.getByRole('link', {name: 'Having trouble? Continue in this tab'}).count(), 0);
+    assert.equal(await page.getByRole('link', {name: 'Continue in this tab'}).count(), 0);
     const initial = submissions.length;
     await page.getByRole('button', {name: action, exact: true}).click();
     await page.getByText('Cancelled: true', {exact: true}).waitFor();
@@ -159,7 +179,7 @@ for (const action of ['Close sign-in', 'Unload SDK']) test(`${action} cancels tr
     await closed;
     assert.deepEqual(errors, []);
     if (action === 'Close sign-in') await page.getByRole('button', {name: 'Open sign-in'}).click();
-    await page.getByRole('link', {name: 'Having trouble? Continue in this tab'}).waitFor({timeout: 5000});
+    await page.getByRole('link', {name: 'Continue in this tab'}).waitFor({timeout: 5000});
   } finally { await page.close(); }
 });
 
@@ -167,9 +187,17 @@ for (const [locale, width] of [['en', 1365], ['tr', 390]]) test(`${locale} at ${
   const page = await browser.newPage({viewport: {width, height: 900}});
   try {
     await page.goto(origin + '/?lang=' + locale);
-    const link = page.getByRole('link', {name: locale === 'en' ? 'Having trouble? Continue in this tab' : 'Sorun mu yaşıyorsun? Bu sekmede devam et'});
+    const link = page.getByRole('link', {name: locale === 'en' ? 'Continue in this tab' : 'Bu sekmede devam et'});
     await link.waitFor();
     assert.ok((await link.boundingBox()).height >= 44);
+    const google = page.getByRole('button', {name: 'Test Google sign-in'});
+    const centered = await google.evaluate(element => {
+      const button = element.getBoundingClientRect(), container = element.parentElement.getBoundingClientRect();
+      return Math.abs(button.x + button.width / 2 - container.x - container.width / 2) < 1;
+    });
+    assert.equal(centered, true, 'The Google control must be centered in its container');
+    assert.equal(await page.locator('.app-google-sign-in__button').evaluate(element => getComputedStyle(element).colorScheme), 'light');
+    assert.equal(await page.locator('.app-google-sign-in > button').count(), 0);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
     await page.getByRole('button', {name: 'Test Google sign-in'}).focus();
     await page.keyboard.press('Tab');
@@ -197,6 +225,10 @@ for(const locale of ['en','tr'])test('email signup, existing-email login and rec
     const toggle=form.getByRole('button',{name:tr?'Göster':'Show',exact:true});
     const [emailBox,passwordBox,toggleBox]=await Promise.all([form.getByLabel(tr?'E-posta':'Email',{exact:true}).boundingBox(),form.getByLabel(tr?'Şifre':'Password',{exact:true}).boundingBox(),toggle.boundingBox()]);
     assert.equal(passwordBox.width,emailBox.width);
+    assert.equal(emailBox.height,44); assert.equal(passwordBox.height,44);
+    const submit=form.getByRole('button',{name:tr?'Devam et':'Continue',exact:true});
+    assert.equal((await submit.boundingBox()).height,44);
+    assert.equal(await submit.evaluate(element=>getComputedStyle(element).fontSize),'14px');
     assert.ok(toggleBox.x>passwordBox.x&&toggleBox.x+toggleBox.width<=passwordBox.x+passwordBox.width&&toggleBox.y>=passwordBox.y&&toggleBox.y+toggleBox.height<=passwordBox.y+passwordBox.height);
     await toggle.click();
     assert.equal(await form.locator('input[name=password]').getAttribute('type'),'text');

@@ -40,10 +40,10 @@ Page weight and blocking scripts are partly visible in fetched HTML: a head full
 
 | Check | Target |
 | --- | --- |
-| Title tag | Unique per page, primary keyword near the front, roughly 50 to 60 characters, brand at the end if included |
-| Meta description | Unique, roughly 150 characters or under since mobile truncates near 120, states the value and earns the click. Not a ranking factor |
-| H1 | Exactly one, describes the page, contains the target query or its clear paraphrase |
-| Heading order | H1 then H2 then H3 with no skipped levels, subheads readable as a map of the page |
+| Title tag | Unique per page, primary keyword near the front, descriptive and concise. Google sets no length limit and truncates the title link to fit the device width, so there is no fixed character cutoff. Brand with just the site name at the start or end after a hyphen, colon, or pipe, which Google may leave out when the result already shows it |
+| Meta description | Unique, states the value and earns the click. Google sets no length limit and truncates the snippet to fit the device width. Not a ranking factor |
+| H1 | Describes the page, contains the target query or its clear paraphrase |
+| Heading order | Subheads read as a map of the page. Google says heading order and count do not matter for Search, so report skipped levels as an accessibility fix |
 | Target query | Appears in the first 100 words, naturally, along with the phrasings a reader would actually use |
 | Keyword alignment | Title, H1, URL, and opening all point at the same query |
 | Cannibalization | No other page on the site targets the same query |
@@ -81,6 +81,9 @@ Off-page work needs a backlink tool, so treat this as scoping rather than measur
 - Google Search Central, Creating helpful, reliable, people-first content: https://developers.google.com/search/docs/fundamentals/creating-helpful-content
 - Google Search Central, Robots.txt introduction: https://developers.google.com/search/docs/crawling-indexing/robots/intro
 - Google Search Central, Consolidate duplicate URLs: https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
+- Google Search Central, Influencing title links: https://developers.google.com/search/docs/appearance/title-link
+- Google Search Central, Control your snippets: https://developers.google.com/search/docs/appearance/snippet
+- Google Search Central, SEO Starter Guide: https://developers.google.com/search/docs/fundamentals/seo-starter-guide
 - Google Search Central, Sitemaps overview: https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview
 - web.dev, Core Web Vitals: https://web.dev/articles/vitals
 - Google Rich Results Test: https://search.google.com/test/rich-results

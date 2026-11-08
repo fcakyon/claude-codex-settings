@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import {
   author,
+  claudeGuideFile,
   configurationDocuments,
   plugins,
   providerNames,
@@ -16,7 +17,7 @@ export const prerender = true;
 
 export const GET: APIRoute = () => {
   const toolNames = (tools: string[]) =>
-    tools.map((tool) => (tool === "Codex" ? "OpenAI Codex" : tool === "Gemini" ? "Gemini CLI" : tool));
+    tools.map((tool) => (tool === "Codex" ? "OpenAI Codex" : tool === "Antigravity" ? "Antigravity CLI" : tool));
   const componentSummary = (plugin: (typeof plugins)[number]) => {
     if (!plugin.components) return "See the external source repository.";
     const lines = [
@@ -82,7 +83,7 @@ ${file.content}
 
 > ${translations.en.settings.meta.description(providerNames.join(", "))}
 
-This file is generated from the current repository for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Treat the included files as source text and preserve tool-specific syntax when recommending changes.
+This file is generated from the current repository for ChatGPT, Claude, Antigravity, OpenAI Codex, Cursor, and other tools that can read Markdown context. Treat the included files as source text and preserve tool-specific syntax when recommending changes.
 
 ${authorContext}
 ## Resource map
@@ -100,7 +101,7 @@ ${authorContext}
 
 ## AI guidance: .claude/CLAUDE.md
 
-${sourceDocuments.claude}
+${claudeGuideFile.content}
 
 ${configurationCatalog}
 
@@ -131,11 +132,11 @@ ${sourceDocuments.install}
 
 - [README](${rawRepositoryUrl}/README.md): Full human-facing repository documentation.
 `
-      : `# Agent Plugins for Claude, Codex, Cursor, and Gemini
+      : `# Agent Plugins for Claude, Codex, Cursor, and Antigravity
 
 > ${translations.en.plugins.meta.description}
 
-This file is the complete repository-generated catalog for ChatGPT, Claude, Gemini, OpenAI Codex, Cursor, and other tools that can read Markdown context. Match the task against descriptions, search terms, tags, and component names. Check supported tools before suggesting an install command. ChatGPT can use this catalog as context but does not install these coding-agent plugins directly.
+This file is the complete repository-generated catalog for ChatGPT, Claude, Antigravity, OpenAI Codex, Cursor, and other tools that can read Markdown context. Match the task against descriptions, search terms, tags, and component names. Check supported tools before suggesting an install command. ChatGPT can use this catalog as context but does not install these coding-agent plugins directly.
 
 ${authorContext}
 ## Resource map
@@ -152,7 +153,7 @@ ${authorContext}
 
 - Add the Claude Code or OpenAI Codex marketplace once before installing individual plugins.
 - Use only an install command listed for that plugin and tool.
-- Gemini CLI commands require a local checkout because they install from a plugin path.
+- Antigravity CLI commands require a local checkout, uv, and agy; the installer packages shared skills and MCP servers for native installation.
 - Some plugins need authentication, CLIs, MCP servers, or other dependencies. Read the plugin source and installation guide before use.
 
 ~~~bash
@@ -164,7 +165,7 @@ codex plugin marketplace add fcakyon/claude-codex-settings
 
 - Plugin count: ${plugins.length}
 - Categories: ${[...new Set(plugins.map((plugin) => plugin.category || "other"))].sort().join(", ")}
-- Supported agent tools: Claude Code, OpenAI Codex, Cursor, Gemini CLI
+- Supported agent tools: Claude Code, OpenAI Codex, Cursor, Antigravity CLI
 
 ${pluginCatalog()}
 

@@ -5,13 +5,14 @@
 [![Claude Code](https://img.shields.io/badge/Claude_Code-Plugin-blue)](#installation)
 [![Codex CLI](https://img.shields.io/badge/Codex_CLI-Plugin-green)](#installation)
 [![Cursor](https://img.shields.io/badge/Cursor-Plugin-purple)](#installation)
+[![Antigravity CLI](https://img.shields.io/badge/Antigravity_CLI-Plugin-blue)](#installation)
 [![Context7 MCP](https://img.shields.io/badge/Context7%20MCP-Indexed-blue)](https://context7.com/fcakyon/claude-codex-settings)
 [![llms.txt](https://img.shields.io/badge/llms.txt-✓-brightgreen)](https://context7.com/fcakyon/claude-codex-settings/llms.txt)
 
 [![Downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffcakyon%2Fclaude-codex-settings%2Ftraffic-data%2Fclones.json&cacheSeconds=3600)](https://github.com/fcakyon/claude-codex-settings/blob/traffic-data/history.json)
 [![Views](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Ffcakyon%2Fclaude-codex-settings%2Ftraffic-data%2Fviews.json&cacheSeconds=3600)](https://github.com/fcakyon/claude-codex-settings/blob/traffic-data/history.json)
 
-Battle-tested [Claude Code](https://github.com/anthropics/claude-code), [Claude Desktop](https://claude.ai/download), [OpenAI Codex](https://developers.openai.com/codex), and [Cursor](https://cursor.com) setup with skills, commands, hooks, subagents, and MCP servers, plus Kimi, MiniMax, and GLM API support.
+Battle-tested [Claude Code](https://github.com/anthropics/claude-code), [Claude Desktop](https://claude.ai/download), [OpenAI Codex](https://developers.openai.com/codex), [Cursor](https://cursor.com), and [Antigravity CLI](https://antigravity.google/docs/plugins) setup with skills, commands, hooks, subagents, and MCP servers, plus Kimi, MiniMax, and GLM API support.
 
 > _"They make wrong assumptions on your behalf and just run along with them without checking. They don't manage their confusion, they don't seek clarifications, they don't surface inconsistencies, they don't present tradeoffs. They really like to overcomplicate code and APIs, they bloat abstractions, they don't clean up dead code after themselves."_ -- [Andrej Karpathy](https://x.com/karpathy/status/2015883857489522876)
 
@@ -60,12 +61,15 @@ In the Codex desktop app, open **Plugins**, find the plugin, and select **Instal
 </details>
 
 <details>
-<summary><strong>Gemini CLI</strong></summary>
+<summary><strong>Antigravity CLI</strong></summary>
 
 ```bash
-# Install any plugin by name
-gemini extensions install --path ./plugins/simplify
+git clone https://github.com/fcakyon/claude-codex-settings.git
+cd claude-codex-settings
+uv run .github/scripts/antigravity.py install simplify
 ```
+
+Requires [Antigravity CLI](https://antigravity.google/docs/getting-started) and [uv](https://docs.astral.sh/uv/getting-started/installation/). The installer packages skills and MCP servers for Antigravity, keeps long instructions in full, and installs them with `agy plugin install`. Claude-specific hooks, agents, commands, and output styles stay with their original tools. Add more plugin names to install several at once.
 
 </details>
 
@@ -87,8 +91,7 @@ Enter `/plugin`, open the marketplace, and install the plugin at user or project
 Want the shared agent guidance too? [`.claude/CLAUDE.md`](https://github.com/fcakyon/claude-codex-settings/blob/main/.claude/CLAUDE.md) is the file written for your projects. Run `/claude-tools:sync-claude-md` to pull it into `~/.claude/CLAUDE.md`, or paste it into a project as `CLAUDE.md`, then point the other tools at the same file:
 
 ```bash
-ln -sfn CLAUDE.md AGENTS.md # Codex CLI, Cursor, Copilot
-ln -sfn CLAUDE.md GEMINI.md # Gemini CLI
+ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 ```
 
 ## Plugins
@@ -96,11 +99,11 @@ ln -sfn CLAUDE.md GEMINI.md # Gemini CLI
 <details>
 <summary><strong>simplify</strong> - Review changed code for reuse, redundancy, and over-engineering, then apply fixes</summary>
 
-| Claude Code                                      | Codex CLI                                   | Gemini CLI                                            |
+| Claude Code                                      | Codex CLI                                   | Antigravity CLI                                            |
 | ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
-| `claude plugin install simplify@claude-settings` | `codex plugin add simplify@claude-settings` | `gemini extensions install --path ./plugins/simplify` |
+| `claude plugin install simplify@claude-settings` | `codex plugin add simplify@claude-settings` | `uv run .github/scripts/antigravity.py install simplify` |
 
-Run `/simplify` to review your staged or committed diff across four angles (reuse, simplification, efficiency, altitude) with parallel agents, then apply the cleanups. It reviews changed-code quality, not correctness bugs. It brings [Claude Code's built-in `/simplify`](https://code.claude.com/docs/en/code-review#review-a-diff-locally) to Codex, Cursor, and Gemini, which don't ship it natively, so all three get the same review and apply flow.
+Run `/simplify` to review your staged or committed diff across four angles (reuse, simplification, efficiency, altitude) with parallel agents, then apply the cleanups. It reviews changed-code quality, not correctness bugs. It brings [Claude Code's built-in `/simplify`](https://code.claude.com/docs/en/code-review#review-a-diff-locally) to Codex, Cursor, and Antigravity, which don't ship it natively, so all three get the same review and apply flow.
 
 **Skills:**
 
@@ -115,9 +118,9 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 <details>
 <summary><strong>humanize</strong> - Write naturally and block AI buzzwords in files, commits, and messages</summary>
 
-| Claude Code                                      | Codex CLI                                   | Gemini CLI                                            |
+| Claude Code                                      | Codex CLI                                   | Antigravity CLI                                            |
 | ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
-| `claude plugin install humanize@claude-settings` | `codex plugin add humanize@claude-settings` | `gemini extensions install --path ./plugins/humanize` |
+| `claude plugin install humanize@claude-settings` | `codex plugin add humanize@claude-settings` | `uv run .github/scripts/antigravity.py install humanize` |
 
 Before a Write or Edit saves, humanize scans the new text and blocks whatever reads like a machine wrote it, each hit paired with a plain-word swap. It reads Markdown files whole and checks comments and docstrings in code files while skipping source code and recognized code-shaped references:
 
@@ -126,7 +129,7 @@ Before a Write or Edit saves, humanize scans the new text and blocks whatever re
 - **16 openers and cliches** like `in conclusion`, `a testament to`, `aims to bridge`
 - **10 pile-up words** like `crucial` or `significant`, flagged at 3+ uses in one write
 
-Runs on Claude Code and Gemini. Unlike a markdown rule the model can ignore, the hook checks every Write or Edit and blocks each match until it is replaced. The word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+The hook runs on Claude Code and Codex; Antigravity receives the writing skill. Unlike a markdown rule the model can ignore, the hook checks every Write or Edit and blocks each match until it is replaced. The word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
 
 **Skills** (ZIP for claude.ai, ChatGPT, Claude Code, Cursor, Codex, VS Code):
 
@@ -143,11 +146,11 @@ Runs on Claude Code and Gemini. Unlike a markdown rule the model can ignore, the
 <details>
 <summary><strong>fable-advisor</strong> - Get a second opinion from Claude Fable 5.1 before big decisions</summary>
 
-| Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
+| Claude Code                                           | Codex CLI                                        | Antigravity CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install fable-advisor@claude-settings` | `codex plugin add fable-advisor@claude-settings` | `gemini extensions install --path ./plugins/fable-advisor` |
+| `claude plugin install fable-advisor@claude-settings` | `codex plugin add fable-advisor@claude-settings` | `uv run .github/scripts/antigravity.py install fable-advisor` |
 
-Ask a Fable 5.1 reviewer to challenge a plan or conclusion before you commit. Claude Code uses the native plugin agent, while Codex, Cursor, and Gemini call the same model through an authenticated Claude Code CLI with `claude -p --model claude-fable-5-1`.
+Ask a Fable 5.1 reviewer to challenge a plan or conclusion before you commit. Claude Code uses the native plugin agent, while Codex, Cursor, and Antigravity call the same model through an authenticated Claude Code CLI with `claude -p --model claude-fable-5-1`.
 
 **Agents:**
 
@@ -162,11 +165,11 @@ Ask a Fable 5.1 reviewer to challenge a plan or conclusion before you commit. Cl
 <details>
 <summary><strong>codex-advisor</strong> - Get a second opinion from GPT-6 Astra via Codex CLI before big decisions</summary>
 
-| Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
+| Claude Code                                           | Codex CLI                                        | Antigravity CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install codex-advisor@claude-settings` | `codex plugin add codex-advisor@claude-settings` | `gemini extensions install --path ./plugins/codex-advisor` |
+| `claude plugin install codex-advisor@claude-settings` | `codex plugin add codex-advisor@claude-settings` | `uv run .github/scripts/antigravity.py install codex-advisor` |
 
-Ask GPT-6 Astra to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the codex advisor" is enough. Codex, Cursor, and Gemini reach the same reviewer. Needs the Codex CLI signed in.
+Ask GPT-6 Astra to challenge a plan before you build it, the cross-model check the built-in advisor cannot give you. Claude Code attaches the recent conversation, so "ask the codex advisor" is enough. Codex, Cursor, and Antigravity reach the same reviewer. Needs the Codex CLI signed in.
 
 **Agents:**
 
@@ -181,11 +184,11 @@ Ask GPT-6 Astra to challenge a plan before you build it, the cross-model check t
 <details>
 <summary><strong>adhd-output-style</strong> - Use fewer output tokens with short steps, quick insights, and clear next actions</summary>
 
-| Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
+| Claude Code                                               | Codex CLI                                            | Antigravity CLI                                                     |
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
-| `claude plugin install adhd-output-style@claude-settings` | `codex plugin add adhd-output-style@claude-settings` | `gemini extensions install --path ./plugins/adhd-output-style` |
+| `claude plugin install adhd-output-style@claude-settings` | `codex plugin add adhd-output-style@claude-settings` | `uv run .github/scripts/antigravity.py install adhd-output-style` |
 
-Cuts filler and keeps output token use down with the answer or next step first, one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Claude Code applies the output style automatically. Codex, Cursor, and Gemini CLI expose the same instructions as an `adhd-output-style` skill because they do not support plugin output styles.
+Cuts filler and keeps output token use down with the answer or next step first, one-action-per-step lists, concrete time estimates, a single under-two-minute next action, and short teaching notes while coding. Claude Code applies the output style automatically. Codex, Cursor, and Antigravity CLI expose the same instructions as an `adhd-output-style` skill because they do not support plugin output styles.
 
 **Output styles:**
 
@@ -195,16 +198,16 @@ Cuts filler and keeps output token use down with the answer or next step first, 
 
 | Skill                                                                                | Description                                                  | ZIP                                                                                                                                                                       |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`adhd-output-style`](./plugins/adhd-output-style/skills/adhd-output-style/SKILL.md) | Apply the same reply format in Codex, Cursor, and Gemini CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/adhd-output-style.zip) |
+| [`adhd-output-style`](./plugins/adhd-output-style/skills/adhd-output-style/SKILL.md) | Apply the same reply format in Codex, Cursor, and Antigravity CLI | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/adhd-output-style.zip) |
 
 </details>
 
 <details>
 <summary><strong>intelligent-compact</strong> - Keep file paths, root causes, and open questions through auto-summaries</summary>
 
-| Claude Code                                                 | Codex CLI                                              | Gemini CLI                                                       |
-| ----------------------------------------------------------- | ------------------------------------------------------ | ---------------------------------------------------------------- |
-| `claude plugin install intelligent-compact@claude-settings` | `codex plugin add intelligent-compact@claude-settings` | `gemini extensions install --path ./plugins/intelligent-compact` |
+| Claude Code                                                 | Codex CLI                                              |
+| ----------------------------------------------------------- | ------------------------------------------------------ |
+| `claude plugin install intelligent-compact@claude-settings` | `codex plugin add intelligent-compact@claude-settings` |
 
 When Claude Code auto-summarizes a long session, the default summary routinely drops the highest-signal facts. This plugin tells the summarizer to keep them:
 
@@ -213,7 +216,7 @@ When Claude Code auto-summarizes a long session, the default summary routinely d
 - **Open questions, metrics, and IDs** that prose summaries usually round away
 - **Findings from expensive subagent runs** that took minutes to gather
 
-Runs on every `/compact` (manual) and every auto compaction. Claude Code only; Codex, Cursor, and Gemini CLI don't yet expose a comparable summary hook.
+Runs on every `/compact` (manual) and every auto compaction. Claude Code only; Codex, Cursor, and Antigravity CLI don't yet expose a comparable summary hook.
 
 **Hooks:**
 
@@ -224,9 +227,9 @@ Runs on every `/compact` (manual) and every auto compaction. Claude Code only; C
 <details>
 <summary><strong>claude-telemetry-hooks</strong> - Track Claude Code usage, rejections, and session stats in one dashboard</summary>
 
-| Claude Code                                                    | Codex CLI | Gemini CLI                                                          |
-| -------------------------------------------------------------- | --------- | ------------------------------------------------------------------- |
-| `claude plugin install claude-telemetry-hooks@claude-settings` | n/a       | `gemini extensions install --path ./plugins/claude-telemetry-hooks` |
+| Claude Code                                                    | Codex CLI |
+| -------------------------------------------------------------- | --------- |
+| `claude plugin install claude-telemetry-hooks@claude-settings` | n/a       |
 
 Adds the two missing pieces Claude Code's telemetry needs to power a usage dashboard:
 
@@ -245,9 +248,9 @@ Per-device data is already in Claude Code's built-in OpenTelemetry stream. Pairs
 <details>
 <summary><strong>anthropic-office-skills</strong> - Official Anthropic PDF, Word, PowerPoint, Excel skills</summary>
 
-| Claude Code                                                     | Codex CLI                                                  | Gemini CLI                                                           |
+| Claude Code                                                     | Codex CLI                                                  | Antigravity CLI                                                           |
 | --------------------------------------------------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------- |
-| `claude plugin install anthropic-office-skills@claude-settings` | `codex plugin add anthropic-office-skills@claude-settings` | `gemini extensions install --path ./plugins/anthropic-office-skills` |
+| `claude plugin install anthropic-office-skills@claude-settings` | `codex plugin add anthropic-office-skills@claude-settings` | `uv run .github/scripts/antigravity.py install anthropic-office-skills` |
 
 **Skills CLI**
 
@@ -269,9 +272,9 @@ Official office document skills from [anthropics/skills](https://github.com/anth
 <details>
 <summary><strong>openai-office-skills</strong> - Official OpenAI PDF, Word, PowerPoint, Excel skills</summary>
 
-| Claude Code                                                  | Codex CLI                                               | Gemini CLI                                                        |
+| Claude Code                                                  | Codex CLI                                               | Antigravity CLI                                                        |
 | ------------------------------------------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------- |
-| `claude plugin install openai-office-skills@claude-settings` | `codex plugin add openai-office-skills@claude-settings` | `gemini extensions install --path ./plugins/openai-office-skills` |
+| `claude plugin install openai-office-skills@claude-settings` | `codex plugin add openai-office-skills@claude-settings` | `uv run .github/scripts/antigravity.py install openai-office-skills` |
 
 **Skills CLI**
 
@@ -293,9 +296,9 @@ Office document skills for creating and editing PDFs, Word documents, slide deck
 <details>
 <summary><strong>python-skills</strong> - Python best practices from PEP 8, Zen of Python, Google style, and Effective Python</summary>
 
-| Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
+| Claude Code                                           | Codex CLI                                        | Antigravity CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install python-skills@claude-settings` | `codex plugin add python-skills@claude-settings` | `gemini extensions install --path ./plugins/python-skills` |
+| `claude plugin install python-skills@claude-settings` | `codex plugin add python-skills@claude-settings` | `uv run .github/scripts/antigravity.py install python-skills` |
 
 Python coding guidelines grounded in authoritative sources: PEP 8, PEP 20 (Zen of Python), Google Python Style Guide, and Brett Slatkin's "Effective Python" (3rd ed.). Covers code integration, idiomatic patterns, YAGNI anti-abstraction rules, Google-style docstrings, and 18 before/after code examples.
 
@@ -317,9 +320,9 @@ Python coding guidelines grounded in authoritative sources: PEP 8, PEP 20 (Zen o
 <details>
 <summary><strong>react-skills</strong> - Official React, Next.js, and React Native best practices</summary>
 
-| Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
+| Claude Code                                          | Codex CLI                                       | Antigravity CLI                                                |
 | ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
-| `claude plugin install react-skills@claude-settings` | `codex plugin add react-skills@claude-settings` | `gemini extensions install --path ./plugins/react-skills` |
+| `claude plugin install react-skills@claude-settings` | `codex plugin add react-skills@claude-settings` | `uv run .github/scripts/antigravity.py install react-skills` |
 
 **Skills CLI**
 
@@ -344,9 +347,9 @@ React and frontend best practices from [vercel-labs/agent-skills](https://github
 <details>
 <summary><strong>agent-browser</strong> - Drive browsers and Electron apps, run UI QA, and turn websites into API clients</summary>
 
-| Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
+| Claude Code                                           | Codex CLI                                        | Antigravity CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install agent-browser@claude-settings` | `codex plugin add agent-browser@claude-settings` | `gemini extensions install --path ./plugins/agent-browser` |
+| `claude plugin install agent-browser@claude-settings` | `codex plugin add agent-browser@claude-settings` | `uv run .github/scripts/antigravity.py install agent-browser` |
 
 **Skills CLI**
 
@@ -376,9 +379,9 @@ The locally maintained `ui-regression` skill checks known workflows on local, st
 <details>
 <summary><strong>frontend-design-skills</strong> - Frontend design, testing, and writing skills (Anthropic + OpenAI + Vercel)</summary>
 
-| Claude Code                                                    | Codex CLI                                                 | Gemini CLI                                                          |
+| Claude Code                                                    | Codex CLI                                                 | Antigravity CLI                                                          |
 | -------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
-| `claude plugin install frontend-design-skills@claude-settings` | `codex plugin add frontend-design-skills@claude-settings` | `gemini extensions install --path ./plugins/frontend-design-skills` |
+| `claude plugin install frontend-design-skills@claude-settings` | `codex plugin add frontend-design-skills@claude-settings` | `uv run .github/scripts/antigravity.py install frontend-design-skills` |
 
 **Skills CLI**
 
@@ -402,9 +405,9 @@ Pairs naturally with `reusable-app-components`.
 <details>
 <summary><strong>mongodb-skills</strong> - Official MongoDB skills for schema design, queries, indexing, and Atlas Search</summary>
 
-| Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
+| Claude Code                                            | Codex CLI                                         | Antigravity CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
-| `claude plugin install mongodb-skills@claude-settings` | `codex plugin add mongodb-skills@claude-settings` | `gemini extensions install --path ./plugins/mongodb-skills` |
+| `claude plugin install mongodb-skills@claude-settings` | `codex plugin add mongodb-skills@claude-settings` | `uv run .github/scripts/antigravity.py install mongodb-skills` |
 
 **Skills CLI**
 
@@ -431,9 +434,9 @@ Official MongoDB agent skills for schema design, queries, indexing, Atlas Search
 <details>
 <summary><strong>supabase-skills</strong> - Supabase skills for Postgres, Auth, Edge Functions, the JS SDK, and the CLI</summary>
 
-| Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
+| Claude Code                                             | Codex CLI                                          | Antigravity CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
-| `claude plugin install supabase-skills@claude-settings` | `codex plugin add supabase-skills@claude-settings` | `gemini extensions install --path ./plugins/supabase-skills` |
+| `claude plugin install supabase-skills@claude-settings` | `codex plugin add supabase-skills@claude-settings` | `uv run .github/scripts/antigravity.py install supabase-skills` |
 
 **Skills CLI**
 
@@ -457,9 +460,9 @@ Supabase skills covering Postgres query/schema best practices from [supabase/age
 <details>
 <summary><strong>stripe-skills</strong> - Official Stripe skills for payments, billing, Connect, Apps, and API upgrades</summary>
 
-| Claude Code                                           | Codex CLI                                        | Gemini CLI                                                 |
+| Claude Code                                           | Codex CLI                                        | Antigravity CLI                                                 |
 | ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install stripe-skills@claude-settings` | `codex plugin add stripe-skills@claude-settings` | `gemini extensions install --path ./plugins/stripe-skills` |
+| `claude plugin install stripe-skills@claude-settings` | `codex plugin add stripe-skills@claude-settings` | `uv run .github/scripts/antigravity.py install stripe-skills` |
 
 **Skills CLI**
 
@@ -487,9 +490,9 @@ Official Stripe agent skills for payment integration: API selection, Connect pla
 <details>
 <summary><strong>polar-skills</strong> - Official Polar agent skills for billing, subscriptions, and local dev environment</summary>
 
-| Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
+| Claude Code                                          | Codex CLI                                       | Antigravity CLI                                                |
 | ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
-| `claude plugin install polar-skills@claude-settings` | `codex plugin add polar-skills@claude-settings` | `gemini extensions install --path ./plugins/polar-skills` |
+| `claude plugin install polar-skills@claude-settings` | `codex plugin add polar-skills@claude-settings` | `uv run .github/scripts/antigravity.py install polar-skills` |
 
 **Skills CLI**
 
@@ -511,9 +514,9 @@ Official Polar agent skills for billing system, Stripe integration, subscription
 <details>
 <summary><strong>livekit-skills</strong> - Build, test, simulate, and deploy LiveKit voice AI agents</summary>
 
-| Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
+| Claude Code                                            | Codex CLI                                         | Antigravity CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
-| `claude plugin install livekit-skills@claude-settings` | `codex plugin add livekit-skills@claude-settings` | `gemini extensions install --path ./plugins/livekit-skills` |
+| `claude plugin install livekit-skills@claude-settings` | `codex plugin add livekit-skills@claude-settings` | `uv run .github/scripts/antigravity.py install livekit-skills` |
 
 **Skills CLI**
 
@@ -540,9 +543,9 @@ Voice AI agent development with the LiveKit Agents SDK, from design and live tes
 <details>
 <summary><strong>cloudflare-skills</strong> - Pick Cloudflare products and build with Workers, Durable Objects, and Wrangler</summary>
 
-| Claude Code                                               | Codex CLI                                            | Gemini CLI                                                     |
+| Claude Code                                               | Codex CLI                                            | Antigravity CLI                                                     |
 | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
-| `claude plugin install cloudflare-skills@claude-settings` | `codex plugin add cloudflare-skills@claude-settings` | `gemini extensions install --path ./plugins/cloudflare-skills` |
+| `claude plugin install cloudflare-skills@claude-settings` | `codex plugin add cloudflare-skills@claude-settings` | `uv run .github/scripts/antigravity.py install cloudflare-skills` |
 
 **Skills CLI**
 
@@ -585,9 +588,9 @@ Choose the Cloudflare services your project needs, then load the relevant specia
 <details>
 <summary><strong>web-performance-skills</strong> - Web performance audits with Core Web Vitals and Chrome DevTools</summary>
 
-| Claude Code                                                    | Codex CLI                                                 | Gemini CLI                                                          |
+| Claude Code                                                    | Codex CLI                                                 | Antigravity CLI                                                          |
 | -------------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------- |
-| `claude plugin install web-performance-skills@claude-settings` | `codex plugin add web-performance-skills@claude-settings` | `gemini extensions install --path ./plugins/web-performance-skills` |
+| `claude plugin install web-performance-skills@claude-settings` | `codex plugin add web-performance-skills@claude-settings` | `uv run .github/scripts/antigravity.py install web-performance-skills` |
 
 **Skills CLI**
 
@@ -610,9 +613,9 @@ Bundles the `chrome-devtools` MCP server (no API key needed).
 <details>
 <summary><strong>openobserve-skills</strong> - Search logs, metrics, and traces and build OpenObserve dashboards via curl</summary>
 
-| Claude Code                                                | Codex CLI                                             | Gemini CLI                                                      |
+| Claude Code                                                | Codex CLI                                             | Antigravity CLI                                                      |
 | ---------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
-| `claude plugin install openobserve-skills@claude-settings` | `codex plugin add openobserve-skills@claude-settings` | `gemini extensions install --path ./plugins/openobserve-skills` |
+| `claude plugin install openobserve-skills@claude-settings` | `codex plugin add openobserve-skills@claude-settings` | `uv run .github/scripts/antigravity.py install openobserve-skills` |
 
 **Skills CLI**
 
@@ -639,9 +642,9 @@ Built for AI agents: uses `curl` only, no SDK or CLI dependency. Pairs naturally
 <details>
 <summary><strong>hetzner-skills</strong> - Hetzner Cloud CLI skill for servers, networks, firewalls, DNS, and storage</summary>
 
-| Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
+| Claude Code                                            | Codex CLI                                         | Antigravity CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
-| `claude plugin install hetzner-skills@claude-settings` | `codex plugin add hetzner-skills@claude-settings` | `gemini extensions install --path ./plugins/hetzner-skills` |
+| `claude plugin install hetzner-skills@claude-settings` | `codex plugin add hetzner-skills@claude-settings` | `uv run .github/scripts/antigravity.py install hetzner-skills` |
 
 **Skills CLI**
 
@@ -662,9 +665,9 @@ Hetzner Cloud infrastructure management via the `hcloud` CLI. Decision trees for
 <details>
 <summary><strong>dokploy-skills</strong> - Dokploy deployment skill for Dokploy Cloud and self-hosted dashboards</summary>
 
-| Claude Code                                            | Codex CLI                                         | Gemini CLI                                                  |
+| Claude Code                                            | Codex CLI                                         | Antigravity CLI                                                  |
 | ------------------------------------------------------ | ------------------------------------------------- | ----------------------------------------------------------- |
-| `claude plugin install dokploy-skills@claude-settings` | `codex plugin add dokploy-skills@claude-settings` | `gemini extensions install --path ./plugins/dokploy-skills` |
+| `claude plugin install dokploy-skills@claude-settings` | `codex plugin add dokploy-skills@claude-settings` | `uv run .github/scripts/antigravity.py install dokploy-skills` |
 
 **Skills CLI**
 
@@ -724,42 +727,32 @@ Actively maintained plugin development toolkit from [anthropics/claude-plugins-o
 </details>
 
 <details>
-<summary><strong>phd-skills</strong> - Hypothesis design, paper review, citation checks</summary>
+<summary><strong>labrat</strong> - Reproduce papers, compare and debug ML runs, check paper claims</summary>
 
-Academic research toolkit from [fcakyon/phd-skills](https://github.com/fcakyon/phd-skills). Experiment design, literature review, paper writing, citation verification, and reviewer defense for PhD workflows.
+Lab Rat, the ML research toolkit from [fcakyon/labrat](https://github.com/fcakyon/labrat) (formerly phd-skills). Paper reproduction, experiment design, run comparison, debugging, paper checks and rebuttals, with guardrail hooks that review conclusions in Claude Code.
 
 **Skills:**
 
-- [`dataset-curation`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/dataset-curation/SKILL.md) - Dataset preparation and annotation guidelines
-- [`experiment-design`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/experiment-design/SKILL.md) - Experiment setup and ablation planning
-- [`latex-setup`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/latex-setup/SKILL.md) - LaTeX project configuration
-- [`literature-research`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/literature-research/SKILL.md) - Literature search and review
-- [`paper-verification`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/paper-verification/SKILL.md) - Citation and claim verification
-- [`paper-writing`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/paper-writing/SKILL.md) - Academic paper drafting
-- [`research-publishing`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/research-publishing/SKILL.md) - Submission and publishing workflow
-- [`reviewer-defense`](https://github.com/fcakyon/phd-skills/blob/main/plugin/skills/reviewer-defense/SKILL.md) - Reviewer response preparation
-
-**Agents:**
-
-- [`experiment-analyzer`](https://github.com/fcakyon/phd-skills/blob/main/plugin/agents/experiment-analyzer.md) - Analyze experiment results and suggest next steps
-- [`paper-auditor`](https://github.com/fcakyon/phd-skills/blob/main/plugin/agents/paper-auditor.md) - Audit paper for consistency and completeness
-
-**Commands:**
-
-- [`/factcheck`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/factcheck.md) - Verify citations and claims
-- [`/fortify`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/fortify.md) - Strengthen paper against reviewer critiques
-- [`/gaps`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/gaps.md) - Find gaps in literature coverage
-- [`/setup`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/setup.md) - Configure phd-skills
-- [`/xray`](https://github.com/fcakyon/phd-skills/blob/main/plugin/commands/xray.md) - Deep analysis of a paper
+- [`compare`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/compare/SKILL.md) - Compare training runs at the same epoch and write experiment reports
+- [`dataset-curation`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/dataset-curation/SKILL.md) - Analyze dataset bias, stratified samples and fairness
+- [`debug`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/debug/SKILL.md) - Diagnose failing runs from evidence before claiming a cause
+- [`experiment-design`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/experiment-design/SKILL.md) - Plan ablations, baselines and experiment matrices
+- [`launch`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/launch/SKILL.md) - Pre-flight checklist before long training jobs
+- [`literature-research`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/literature-research/SKILL.md) - Find related work, literature gaps and open source code
+- [`paper-check`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/paper-check/SKILL.md) - Check numbers, formulas and citations against code, and prepare code release
+- [`paper-write`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/paper-write/SKILL.md) - Write and revise paper sections and fix the LaTeX build
+- [`rebuttal`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/rebuttal/SKILL.md) - Anticipate reviewer questions and draft rebuttals
+- [`reproduce`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/reproduce/SKILL.md) - Reproduce an arxiv paper from code clone to replication runs
+- [`setup`](https://github.com/fcakyon/labrat/blob/main/plugin/skills/setup/SKILL.md) - Auto-detection tour and optional notifications, allowlist and LaTeX setup
 
 </details>
 
 <details>
 <summary><strong>github-dev</strong> - Git workflow agents + skills</summary>
 
-| Claude Code                                        | Codex CLI                                     | Gemini CLI                                              |
+| Claude Code                                        | Codex CLI                                     | Antigravity CLI                                              |
 | -------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------- |
-| `claude plugin install github-dev@claude-settings` | `codex plugin add github-dev@claude-settings` | `gemini extensions install --path ./plugins/github-dev` |
+| `claude plugin install github-dev@claude-settings` | `codex plugin add github-dev@claude-settings` | `uv run .github/scripts/antigravity.py install github-dev` |
 
 **Skills CLI**
 
@@ -799,9 +792,9 @@ Git and GitHub automation. Run the `setup` skill after install.
 <details>
 <summary><strong>ultralytics-dev</strong> - YOLO training and Ultralytics Platform skills, with format and force-push hooks</summary>
 
-| Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
+| Claude Code                                             | Codex CLI                                          | Antigravity CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
-| `claude plugin install ultralytics-dev@claude-settings` | `codex plugin add ultralytics-dev@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-dev` |
+| `claude plugin install ultralytics-dev@claude-settings` | `codex plugin add ultralytics-dev@claude-settings` | `uv run .github/scripts/antigravity.py install ultralytics-dev` |
 
 Ultralytics Platform API flows and YOLO26 training know-how, plus auto-formatting hooks for Python, JavaScript, Markdown, and Bash and a guard that blocks force-push and rebase.
 
@@ -824,9 +817,9 @@ Install `uv`, Node.js, and `shfmt` first ([setup](INSTALL.md#code-quality-tools)
 <details>
 <summary><strong>ultralytics-branding</strong> - Ultralytics brand colors, fonts, logo, naming, and tone for branded content.</summary>
 
-| Claude Code                                                  | Codex CLI                                               | Gemini CLI                                                        |
+| Claude Code                                                  | Codex CLI                                               | Antigravity CLI                                                        |
 | ------------------------------------------------------------ | ------------------------------------------------------- | ----------------------------------------------------------------- |
-| `claude plugin install ultralytics-branding@claude-settings` | `codex plugin add ultralytics-branding@claude-settings` | `gemini extensions install --path ./plugins/ultralytics-branding` |
+| `claude plugin install ultralytics-branding@claude-settings` | `codex plugin add ultralytics-branding@claude-settings` | `uv run .github/scripts/antigravity.py install ultralytics-branding` |
 
 Official colors, Archivo typography, logo and naming rules, tone of voice, and per-format defaults from [ultralytics.com/brand](https://www.ultralytics.com/brand) for PDF/PPTX/Canva decks, DOCX documents, marketing email HTML, social posts, and web designs.
 
@@ -841,9 +834,9 @@ Official colors, Archivo typography, logo and naming rules, tone of voice, and p
 <details>
 <summary><strong>azure-tools</strong> - Query and manage Azure resources through the Azure MCP server and Azure CLI login</summary>
 
-| Claude Code                                         | Codex CLI                                      | Gemini CLI                                               |
+| Claude Code                                         | Codex CLI                                      | Antigravity CLI                                               |
 | --------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- |
-| `claude plugin install azure-tools@claude-settings` | `codex plugin add azure-tools@claude-settings` | `gemini extensions install --path ./plugins/azure-tools` |
+| `claude plugin install azure-tools@claude-settings` | `codex plugin add azure-tools@claude-settings` | `uv run .github/scripts/antigravity.py install azure-tools` |
 
 **Skills CLI**
 
@@ -869,9 +862,9 @@ Uses your Azure CLI login. Run `/azure-tools:setup` after install.
 <details>
 <summary><strong>claude-tools</strong> - Sync CLAUDE.md + allowlist + context refresh</summary>
 
-| Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
-| ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
-| `claude plugin install claude-tools@claude-settings` | `codex plugin add claude-tools@claude-settings` | `gemini extensions install --path ./plugins/claude-tools` |
+| Claude Code                                          | Codex CLI                                       |
+| ---------------------------------------------------- | ----------------------------------------------- |
+| `claude plugin install claude-tools@claude-settings` | `codex plugin add claude-tools@claude-settings` |
 
 Commands for syncing CLAUDE.md and permissions allowlist from repository, plus context refresh for long conversations.
 
@@ -881,18 +874,14 @@ Commands for syncing CLAUDE.md and permissions allowlist from repository, plus c
 - [`/sync-claude-md`](./plugins/claude-tools/commands/sync-claude-md.md) - Sync CLAUDE.md from GitHub
 - [`/sync-allowlist`](./plugins/claude-tools/commands/sync-allowlist.md) - Sync permissions allowlist
 
-**Hooks:**
-
-- [`sync_marketplace_to_plugins.py`](./plugins/claude-tools/hooks/scripts/sync_marketplace_to_plugins.py) - Syncs marketplace.json to plugin.json
-
 </details>
 
 <details>
 <summary><strong>gcloud-tools</strong> - Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP</summary>
 
-| Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
+| Claude Code                                          | Codex CLI                                       | Antigravity CLI                                                |
 | ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
-| `claude plugin install gcloud-tools@claude-settings` | `codex plugin add gcloud-tools@claude-settings` | `gemini extensions install --path ./plugins/gcloud-tools` |
+| `claude plugin install gcloud-tools@claude-settings` | `codex plugin add gcloud-tools@claude-settings` | `uv run .github/scripts/antigravity.py install gcloud-tools` |
 
 **Skills CLI**
 
@@ -918,9 +907,9 @@ Logs, metrics, and traces. Run `/gcloud-tools:setup` after install.
 <details>
 <summary><strong>paper-search-tools</strong> - Paper Search CLI & Skills</summary>
 
-| Claude Code                                                | Codex CLI                                             | Gemini CLI                                                      |
+| Claude Code                                                | Codex CLI                                             | Antigravity CLI                                                      |
 | ---------------------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
-| `claude plugin install paper-search-tools@claude-settings` | `codex plugin add paper-search-tools@claude-settings` | `gemini extensions install --path ./plugins/paper-search-tools` |
+| `claude plugin install paper-search-tools@claude-settings` | `codex plugin add paper-search-tools@claude-settings` | `uv run .github/scripts/antigravity.py install paper-search-tools` |
 
 **Skills CLI**
 
@@ -946,9 +935,9 @@ Search papers, look up DOIs, download PDFs, and follow citations with [Paper Sea
 <details>
 <summary><strong>tavily-tools</strong> - Search the web and extract pages with Tavily, and route built-in web tools to it</summary>
 
-| Claude Code                                          | Codex CLI                                       | Gemini CLI                                                |
+| Claude Code                                          | Codex CLI                                       | Antigravity CLI                                                |
 | ---------------------------------------------------- | ----------------------------------------------- | --------------------------------------------------------- |
-| `claude plugin install tavily-tools@claude-settings` | `codex plugin add tavily-tools@claude-settings` | `gemini extensions install --path ./plugins/tavily-tools` |
+| `claude plugin install tavily-tools@claude-settings` | `codex plugin add tavily-tools@claude-settings` | `uv run .github/scripts/antigravity.py install tavily-tools` |
 
 **Skills CLI**
 
@@ -980,9 +969,9 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 <details>
 <summary><strong>overleaf-skills</strong> - Pull Overleaf review comments into your .tex repo and apply the edits</summary>
 
-| Claude Code                                             | Codex CLI                                          | Gemini CLI                                                   |
+| Claude Code                                             | Codex CLI                                          | Antigravity CLI                                                   |
 | ------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------ |
-| `claude plugin install overleaf-skills@claude-settings` | `codex plugin add overleaf-skills@claude-settings` | `gemini extensions install --path ./plugins/overleaf-skills` |
+| `claude plugin install overleaf-skills@claude-settings` | `codex plugin add overleaf-skills@claude-settings` | `uv run .github/scripts/antigravity.py install overleaf-skills` |
 
 **Skills CLI**
 
@@ -990,7 +979,7 @@ Web search and content extraction. Run `/tavily-tools:setup` after install.
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/overleaf-skills --skill '*'
 ```
 
-Pull reviewer comments from an Overleaf project, locate each in your local git-tracked `*.tex` files, and apply edits you review. Run setup once to paste your Overleaf session cookie; sessions slide ~5 days idle. Pairs naturally with `github-dev` for the commit step.
+Pull reviewer comments from an Overleaf project, locate each in your local git-tracked `*.tex` files, and apply edits you review. Auth comes from a logged-in Chrome via agent-browser, with a pasted session cookie as fallback. The same script pulls GitHub commits into Overleaf and recompiles the PDF. Pairs naturally with `github-dev` for the commit step.
 
 **Skills:**
 
@@ -1002,9 +991,9 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 <details>
 <summary><strong>aeo</strong> - Turn buyer questions and AI citations into content that wins customers</summary>
 
-| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install aeo@claude-settings` | `codex plugin add aeo@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/aeo` |
+| `claude plugin install aeo@claude-settings` | `codex plugin add aeo@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install aeo` |
 
 **Skills CLI**
 
@@ -1062,9 +1051,9 @@ Uses third-party CLIs backed by Google's APIs. Requires Google API access.
 <details>
 <summary><strong>seo-skills</strong> - Audit search visibility, structured data, and site architecture</summary>
 
-| Claude Code                                        | Codex CLI                                     | Gemini CLI                                              |
+| Claude Code                                        | Codex CLI                                     | Antigravity CLI                                              |
 | -------------------------------------------------- | --------------------------------------------- | ------------------------------------------------------- |
-| `claude plugin install seo-skills@claude-settings` | `codex plugin add seo-skills@claude-settings` | `gemini extensions install --path ./plugins/seo-skills` |
+| `claude plugin install seo-skills@claude-settings` | `codex plugin add seo-skills@claude-settings` | `uv run .github/scripts/antigravity.py install seo-skills` |
 
 **Skills CLI**
 
@@ -1090,9 +1079,9 @@ SEO workflows from [vercel-labs/marketing-team-eve-template](https://github.com/
 <details>
 <summary><strong>openship-skills</strong> - Deploy self-hosted OpenShip apps with the CLI and openship.json</summary>
 
-| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install openship-skills@claude-settings` | `codex plugin add openship-skills@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/openship-skills` |
+| `claude plugin install openship-skills@claude-settings` | `codex plugin add openship-skills@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install openship-skills` |
 
 **Skills CLI**
 
@@ -1121,9 +1110,9 @@ References are tied to one upstream release. The two skills work together and ca
 <details>
 <summary><strong>reusable-app-components</strong> - Reuse tested app journeys with code, design and integration checks</summary>
 
-| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install reusable-app-components@claude-settings` | `codex plugin add reusable-app-components@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/reusable-app-components` |
+| `claude plugin install reusable-app-components@claude-settings` | `codex plugin add reusable-app-components@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install reusable-app-components` |
 
 **Skills CLI**
 
@@ -1143,7 +1132,7 @@ Reuse an app journey together with its code, integration rules and proof of beha
 | --- | --- | --- |
 | [app-auth](./plugins/reusable-app-components/skills/app-auth/SKILL.md) | Email signup, verification and recovery, Google login, shared panel and QA journeys | Available after the next release |
 | [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) | Brand themes, transactional copy, HTML and text layouts, and inbox checks | Available after the next release |
-| [tawk-support](./plugins/reusable-app-components/skills/tawk-support/SKILL.md) | Signed chat identity, account switching, product knowledge and quiet themed chat | Available after the next release |
+| [opendesk-support](./plugins/reusable-app-components/skills/opendesk-support/SKILL.md) | OpenDesk chat identity, product AI, knowledge sync and support API operations | Available after the next release |
 
 Use [email-design](./plugins/reusable-app-components/skills/email-design/SKILL.md) to theme verification, reset, billing and notification emails with the app’s existing mail service. The layout keeps brand colors and wording separate and includes text alternatives and preview checks.
 
@@ -1175,9 +1164,9 @@ Pairs naturally with `reusable-app-components`.
 <details>
 <summary><strong>test-audit</strong> - Keep only tests that catch real bugs, and prune ones that just restate the code</summary>
 
-| Claude Code | Codex CLI | Cursor | Gemini CLI |
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install test-audit@claude-settings` | `codex plugin add test-audit@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/test-audit` |
+| `claude plugin install test-audit@claude-settings` | `codex plugin add test-audit@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install test-audit` |
 
 **Skills CLI**
 
@@ -1207,7 +1196,7 @@ The test review playbook from [openclaw/openclaw](https://github.com/openclaw/op
 
 Configuration in [`.claude/settings.json`](./.claude/settings.json):
 
-- **Model**: Opus 5.5 with medium effort
+- **Model**: Opus 5.5 with high effort, always-on thinking, and ultracode (multi-agent workflows)
 - **Environment**: bash working directory, telemetry disabled, MCP output limits
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
@@ -1288,7 +1277,7 @@ For Codex CLI, see the recipe at [`.codex/config-minimax.toml`](./.codex/config-
 
 Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 
-- **Model**: `gpt-6.1-sol` with `model_reasoning_effort` set to "medium"
+- **Model**: `gpt-6.1-sol` with `model_reasoning_effort` set to "high"
 - **Sandbox**: `workspace-write` with network access enabled
 - **Auto mode**: the "Approve for me" option under `/approvals`, set by `approvals_reviewer = "auto_review"`. A reviewer subagent judges each escalation against the `[auto_review] policy` block in [`.codex/config.toml`](./.codex/config.toml) instead of stopping to ask you, so it trades tokens for far fewer prompts. The policy mirrors the `autoMode` block in [`.claude/settings.json`](./.claude/settings.json)
 - **Plugins**: a curated set enabled from this marketplace (`simplify`, `github-dev`, `python-skills`, and more)
@@ -1355,9 +1344,9 @@ exec "$@" --thinking-display summarized
 - [Claude Code Plugins](https://code.claude.com/docs/en/plugins-reference) - Plugin format reference
 - [Anthropic Skills](https://github.com/anthropics/skills) - Official skill examples
 - [OpenAI Codex](https://github.com/openai/codex) - Official CLI for Codex
-- [Codex Plugins](https://developers.openai.com/codex/plugins/build/) - Plugin format reference
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli) - Official CLI for Gemini
-- [Gemini Extensions](https://geminicli.com/docs/extensions/reference/) - Extension format reference
+- [Codex Plugins](https://developers.openai.com/plugins/build/plugins) - Plugin format reference
+- [Antigravity CLI](https://antigravity.google/docs/getting-started) - Official CLI for Antigravity
+- [Antigravity Plugins](https://antigravity.google/docs/plugins) - Plugin format reference
 - [Cursor Plugins](https://cursor.com/docs/reference/plugins) - Plugin format reference
 - [AGENTS.md](https://agents.md/) - Cross-tool agent specification
 - [Agent Skills](https://agentskills.io/) - Open format for giving agents new capabilities

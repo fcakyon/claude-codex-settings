@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "fable-advisor",
+  "version": "1.4.3",
+  "description": "Get a second opinion from Claude Fable 5.1 before big decisions.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

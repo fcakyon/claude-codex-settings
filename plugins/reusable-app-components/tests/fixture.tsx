@@ -21,7 +21,6 @@ const identity: GoogleIdentity = {
 function Fixture() {
   const [visible, setVisible] = useState(true);
   const [sdkAvailable, setSdkAvailable] = useState(query.get("sdk") !== "missing");
-  const [account, setAccount] = useState("returning@example.test");
   const [session, setSession] = useState("");
   const [failures, setFailures] = useState(0);
   const [aborted, setAborted] = useState(false);
@@ -35,16 +34,13 @@ function Fixture() {
       theme="filled_black"
       clientId="fixture-client"
       locale={turkish ? "tr" : "en"}
-      accountHint={account}
       returnTo={query.get("returnTo") ?? "/workspace?filter=active#details"}
       redirectEndpoint="/auth/google/login"
       copy={turkish ? {
-        fallback: "Sorun mu yaşıyorsun? Bu sekmede devam et",
-        anotherAccount: "Başka bir Google hesabı kullan",
+        fallback: "Bu sekmede devam et",
         pending: "Giriş yapılıyor…",
       } : {
-        fallback: "Having trouble? Continue in this tab",
-        anotherAccount: "Use a different Google account",
+        fallback: "Continue in this tab",
         pending: "Signing in…",
       }}
       onCredential={async (credential, signal) => {
@@ -61,7 +57,6 @@ function Fixture() {
         setFailures(value => value + 1);
         return (error as { status: number }).status === 429 ? "Please wait before retrying." : "Sign-in failed. Try again.";
       }}
-      onUseAnotherAccount={() => setAccount("")}
     /></AuthPanel> : null}
     <p className="fixture-note">Component preview with a local test provider.</p>
     <details open>

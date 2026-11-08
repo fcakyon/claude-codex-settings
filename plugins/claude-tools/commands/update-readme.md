@@ -17,6 +17,7 @@ Regenerate the Plugins section of README.md based on current plugin structure an
    - Agents: use `.claude-plugin/plugin.json` `agents` paths when set, otherwise `plugins/<name>/agents/*.md`
    - Hooks: use `.claude-plugin/plugin.json` `hooks` paths when set, otherwise `plugins/<name>/hooks/hooks.json`
    - MCP: `plugins/<name>/.mcp.json`
+   - Antigravity: include its install command only when `.antigravity-plugin/plugin.json` exists; the installer packages skills and MCP servers, not Claude hooks or agents
 
 3. Update each plugin's `<details>` block in README.md. Use this format:
 
@@ -24,9 +25,9 @@ Regenerate the Plugins section of README.md based on current plugin structure an
 <details>
 <summary><strong>plugin-name</strong> - Short description</summary>
 
-| Claude Code                                         | Codex CLI                                      | Cursor                                                   | Gemini CLI                                               |
+| Claude Code                                         | Codex CLI                                      | Cursor                                                   | Antigravity CLI                                               |
 | --------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
-| `claude plugin install plugin-name@claude-settings` | `codex plugin add plugin-name@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `gemini extensions install --path ./plugins/plugin-name` |
+| `claude plugin install plugin-name@claude-settings` | `codex plugin add plugin-name@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install plugin-name` |
 
 **Skills CLI**
 
@@ -55,7 +56,7 @@ One-line description.
    - Do not add `--list`.
    - Do not add per-skill `npx skills add` commands.
    - Do not add a `Skills CLI` column to skill tables.
-   - Do not mention maintainer sync scripts.
+   - Do not mention maintainer sync scripts. The Antigravity installer is user-facing and belongs in its supported-tool column.
    - Do not link to `skills.sh`.
 
 5. For skill-only plugins (no MCP, no commands), use a table with ZIP download badges:

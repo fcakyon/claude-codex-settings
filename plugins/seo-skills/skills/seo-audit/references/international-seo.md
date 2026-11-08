@@ -10,8 +10,8 @@ What has to be true:
 
 - Every page includes a self-referencing entry. Without it, all hreflang on the page is ignored.
 - Links are reciprocal. If A points to B, B points back to A, or the pair is discarded.
-- Codes are ISO 639-1 language plus optional ISO 3166-1 alpha-2 region: `en`, `en-GB`. Never `en-UK`.
-- `x-default` is present and points at the fallback, either a language selector or the default locale.
+- Codes are ISO 639-1 language, optional ISO 15924 script, and optional ISO 3166-1 alpha-2 region: `en`, `zh-Hant`, `en-GB`. Never `en-UK` or `es-419`.
+- `x-default`, which Google recommends but does not require, points at the fallback, either a language selector or the default locale.
 - Every target returns 200, is indexable, and matches its own canonical.
 - No duplicate language-region code points at two different URLs.
 
@@ -33,11 +33,11 @@ Common causes: a CMS canonicalizing every deep page to the homepage, a template 
 
 ## Locale URLs
 
-Subdirectories (`/en/`, `/ar/`) are the recommended default. Subdomains and ccTLDs work. Query parameters (`?lang=en`) do not.
+Subdirectories (`/en/`, `/ar/`) are the recommended default. Subdomains and ccTLDs work. Google lists query parameters (`?lang=en`) as not recommended.
 
 - Prefix every locale, including the default. Hiding the default locale's prefix stops Google distinguishing the versions.
 - Handle the root either as `x-default` with a redirect, or as the default locale's content.
-- Don't negotiate content by IP or `Accept-Language`. Googlebot crawls from US IPs and sends no `Accept-Language`, so it will only ever see one version.
+- Don't negotiate content by IP or `Accept-Language`. Googlebot crawls from US IPs by default and sends no `Accept-Language`, so it may never see the other versions.
 - Keep trailing-slash and case consistent across paths, canonicals, hreflang, and sitemaps, and 301 the non-canonical form.
 
 Search Console's International Targeting report is deprecated, so geotargeting now rests on hreflang, content signals, and linking patterns.

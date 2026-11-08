@@ -23,10 +23,7 @@ const copy = translations[locale].plugins
 </section>
 
 <section class="section compatibility" id="compatibility">
-  <div class="section-intro">
-    <h2>{copy.compatibility.title}</h2>
-    <p>{copy.compatibility.description}</p>
-  </div>
+  <h2>{copy.compatibility.title}</h2>
   <div class="compatibility-rail">
     {codingTools.map(({ icon, label }, index) => (
       <div><Icon name={icon} size={26} /><strong>{label}</strong><span>{copy.compatibility.tools[index]}</span></div>

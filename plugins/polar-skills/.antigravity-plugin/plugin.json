@@ -1,0 +1,7 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "polar-skills",
+  "version": "1.0.5",
+  "description": "Official Polar skills for billing, subscriptions, and local development.",
+  "license": "Apache-2.0"
+}

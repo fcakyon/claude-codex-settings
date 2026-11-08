@@ -1,0 +1,10 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "azure-tools",
+  "version": "2.0.5",
+  "description": "Query and manage Azure resources through the Azure MCP server and Azure CLI login.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "license": "Apache-2.0"
+}

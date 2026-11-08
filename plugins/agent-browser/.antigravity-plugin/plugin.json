@@ -1,0 +1,7 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "agent-browser",
+  "version": "1.2.6",
+  "description": "Drive browsers and Electron apps, run UI QA, and turn websites into API clients.",
+  "license": "Apache-2.0"
+}
