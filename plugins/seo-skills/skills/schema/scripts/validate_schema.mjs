@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const MAX_JSON_LENGTH = 100_000;
 const DATE_PROPERTIES = new Set([
+  "dateCreated",
   "datePublished",
   "dateModified",
   "startDate",
