@@ -319,10 +319,15 @@ const inspect = async ([agent, userAgent]) => {
   });
   const types = nodes.flatMap(typesOf);
   const organization = nodes.find((node) => typesOf(node).some((type) => ORGANIZATION.test(type)));
-  // A logo can be a URL, an ImageObject, or an @id reference to an ImageObject elsewhere in the graph.
-  const logoRef = [organization?.logo].flat()[0];
-  const logoNode = nodes.find((node) => logoRef?.["@id"] && node["@id"] === logoRef["@id"]) ?? logoRef;
+  // A value can be inline or an @id reference to a node elsewhere in the graph.
+  const resolve = (value) => {
+    const ref = [value].flat()[0];
+    return nodes.find((node) => ref?.["@id"] && node["@id"] === ref["@id"]) ?? ref;
+  };
+  const logoNode = resolve(organization?.logo);
   const logo = logoNode?.contentUrl ?? logoNode?.url ?? logoNode;
+  const profile = nodes.find((node) => typesOf(node).includes("ProfilePage"));
+  const entity = resolve(profile?.mainEntity);
   const icons = tags
     .filter((tag) => tag.name === "link" && tag.keys.some((key) => /^(icon|apple-touch-icon)/.test(key)))
     .map((tag) => ({ href: tag.attributes.href, rel: tag.keys.join(" ") }));
@@ -354,6 +359,10 @@ const inspect = async ([agent, userAgent]) => {
         logo: typeof logo === "string" ? logo : null,
         sameAs: [organization.sameAs ?? []].flat(),
         url: organization.url ?? null,
+      },
+      profile: profile && {
+        missingDates: ["dateCreated", "dateModified"].filter((key) => !profile[key]),
+        named: Boolean(entity?.name ?? entity?.alternateName),
       },
       shareImageMeta: {
         alt: content("og:image:alt", "twitter:image:alt"),
@@ -567,6 +576,13 @@ const checkSite = async ({ site, url }) => {
       warnings.push("The Organization JSON-LD has no url, which Google uses to identify the organization.");
     if (!site.organization.sameAs.length)
       warnings.push("The Organization JSON-LD has no sameAs, so Google can't tie the brand to its official profiles.");
+  }
+
+  if (site.profile) {
+    if (!site.profile.named)
+      warnings.push("The ProfilePage JSON-LD has no mainEntity with a name or alternateName, which Google requires.");
+    if (site.profile.missingDates.length)
+      warnings.push(`The ProfilePage JSON-LD has no ${site.profile.missingDates.join(" or ")}, which Google recommends.`);
   }
 
   if (site.bytes.head > 300 * KB)
