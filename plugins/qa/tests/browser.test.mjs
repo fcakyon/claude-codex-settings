@@ -130,3 +130,53 @@ test('network capture exports and stops after success or journey failure', {skip
     await rm(dir, {recursive: true, force: true});
   }
 });
+
+test('touch gestures report mid-gesture state and browser scroll takeover', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
+  const {emulateTouch, gestures, touchGesture} = await import('../scripts/touch.mjs');
+  const dir = await mkdtemp(path.join(tmpdir(), 'qa-touch-contract-'));
+  // A hold engages the box and blocks scrolling, like a photo loupe. Unengaged vertical swipes scroll its container.
+  const page = frame => `<!doctype html><meta name="viewport" content="width=device-width"><body style="margin:0">${frame}<script>
+let hold;
+box.addEventListener('pointerdown', () => { hold = setTimeout(() => (box.dataset.engaged = 'yes'), 250); });
+box.addEventListener('pointermove', () => clearTimeout(hold));
+for (const type of ['pointerup', 'pointercancel']) box.addEventListener(type, () => { clearTimeout(hold); delete box.dataset.engaged; });
+box.addEventListener('touchmove', event => box.dataset.engaged && event.preventDefault(), {passive: false});
+</script>`;
+  const box = '<div id="box" style="margin-top:400px;height:300px;background:#888;touch-action:pan-y"></div>';
+  const pages = {'/': page(`<div style="height:4000px">${box}</div>`), '/inner': page(`<main style="position:fixed;inset:0;overflow:auto"><div style="height:4000px">${box}</div></main>`)};
+  const server = createServer((req, res) => res.end(pages[req.url]));
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const context = await openBrowser({root: dir, browser: {actionDelayMs: 0}}, dir, []);
+  try {
+    const tab = await context.newPage();
+    await emulateTouch(tab);
+    const observe = element => element.dataset.engaged === 'yes';
+    const run = async (steps, route = '/') => {
+      await tab.goto(`http://127.0.0.1:${server.address().port}${route}`);
+      return touchGesture(tab, '#box', steps, {observe});
+    };
+    const hold = await run(gestures.hold);
+    assert.equal(hold.during.state, true, 'A held finger is observed before release');
+    assert.equal(hold.after.state, false);
+    await tab.screenshot();
+    assert.deepEqual(await tab.evaluate(() => [innerWidth, matchMedia('(pointer: coarse)').matches]), [390, true], 'Screenshots keep the phone emulation');
+    for (const route of ['/', '/inner']) {
+      const drag = await run(gestures.holdThenDragUp, route);
+      assert.equal(drag.during.state, true);
+      assert.deepEqual(drag.after.scrolled, {x: 0, y: 0}, `An engaged drag must not scroll ${route}`);
+      assert.ok(!drag.after.events.includes('pointercancel'));
+      const swipe = await run(gestures.swipeUp, route);
+      assert.ok(swipe.after.scrolled.y > 0, `An unengaged vertical swipe scrolls ${route}`);
+      assert.ok(swipe.after.events.includes('pointercancel'), 'The browser cancels the pointer when it takes the gesture over');
+    }
+    const sideways = await run(gestures.swipeRight);
+    assert.equal(sideways.during.state, false);
+    assert.deepEqual(sideways.after.events, ['pointerdown', 'pointermove', 'pointerup']);
+    await assert.rejects(touchGesture(tab, '#box', gestures.tap, {observe: () => { throw new Error('observe failed'); }}), /observe failed/);
+    assert.deepEqual((await touchGesture(tab, '#box', gestures.tap)).after.events, ['pointerdown', 'pointerup'], 'A failed gesture does not break the next one');
+  } finally {
+    await context.close();
+    await new Promise(resolve => server.close(resolve));
+    await rm(dir, {recursive: true, force: true});
+  }
+});

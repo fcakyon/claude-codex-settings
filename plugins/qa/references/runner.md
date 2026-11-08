@@ -28,6 +28,9 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.videoState(page, selector)` | Decoded media state |
 | `qa.advancingVideo(page, options)` | Observe advancing time and frames |
 | `qa.observeSkip(page, {start, end, selector})` | Observe skip across interval in seconds |
+| `qa.emulateTouch(page, {width, height})` | Phone viewport and touch input for one page. Call before navigation and again after a full-page screenshot |
+| `qa.touchGesture(page, selector, steps, {observe, settle, timeout})` | Real touch points. `steps` are `[dx, dy, waitMs]` from the target center. `observe(element)` state, pointer events and `scrolled` `{x, y}` are sampled with the finger down and `settle` ms after release |
+| `qa.gestures` | Named step presets by finger direction |
 | `qa.evidence(name, value)` | Non-sensitive structured evidence |
 | `qa.screenshot(page, name)` | Private screenshot |
 

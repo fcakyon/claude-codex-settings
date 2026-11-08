@@ -46,7 +46,7 @@ export async function discover(root) {
   }
   const sourceFiles = files.filter(filename => /\.(go|[cm]?[jt]sx?|ya?ml)$/.test(filename) && !/[/\\](?:\.agents|tests?)[/\\]|[._](?:test|spec)\./.test(filename));
   const capabilities = {};
-  const patterns = {authentication: /auth\/(?:login|logout)|signInWith|loginWith|authenticate\(/, credits: /creditAccess|insufficient.credit|credit_ledger/i, payments: /stripe|paypal|paddle/i, netflix: /netflix\.com/, prime: /primevideo\.com/, analytics: /sendToGA|GoogleTagManager|gtag\(/};
+  const patterns = {authentication: /auth\/(?:login|logout)|signInWith|loginWith|authenticate\(/, credits: /creditAccess|insufficient.credit|credit_ledger/i, payments: /stripe|paypal|paddle/i, netflix: /netflix\.com/, prime: /primevideo\.com/, touch: /pointerType|touch(?:start|move|end|cancel)|TouchEvent|touchAction/i, analytics: /sendToGA|GoogleTagManager|gtag\(/};
   for (const filename of sourceFiles) {
     if ((await stat(filename)).size > 300000) continue;
     const source = await readFile(filename, 'utf8');

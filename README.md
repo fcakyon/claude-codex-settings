@@ -1148,6 +1148,7 @@ Pairs naturally with `frontend-design-skills` and `qa`.
 - Discover website, extension, Android, backend and database components.
 - Generate project-owned QA skills and executable journeys under .agents.
 - Reuse authorized login sessions, test real playback and keep QA analytics out of user reports.
+- Drive real touch holds, drags and swipes on an emulated phone and catch unwanted page scrolling.
 - Report passed, failed and blocked coverage with private evidence.
 
 Install this plugin from the marketplace after publication. For a local checkout, run `npm ci --prefix plugins/qa` and `npm link` from `plugins/qa`. Then use `project-qa setup --root /path/to/project`.

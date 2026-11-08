@@ -833,7 +833,7 @@
     },
     "qa/run-qa": {
       "title": "Run tracked website, extension and Android QA",
-      "description": "Verify real website, browser extension and Android workflows with QA journeys. Collect evidence for playback, provider connections and other app actions.",
+      "description": "Verify real website, extension, mobile touch and Android workflows with QA journeys. Collect evidence for playback, provider connections and other app actions.",
       "related": [
         "qa/setup",
         "agent-browser/ui-regression",
