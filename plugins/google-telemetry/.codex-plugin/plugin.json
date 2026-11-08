@@ -1,0 +1,11 @@
+{
+  "name": "google-telemetry",
+  "version": "1.0.0",
+  "description": "Read app usage and search traffic before and after releases with API-backed CLIs.",
+  "author": {
+    "name": "Fatih C. Akyon"
+  },
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}
