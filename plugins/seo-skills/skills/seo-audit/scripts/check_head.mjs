@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import { resolve as resolvePath } from "node:path";
+import { fileURLToPath } from "node:url";
+
 const CHROME = "156.0.0.0";
 const AGENTS = {
   browser: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${CHROME} Safari/537.36`,
@@ -50,13 +53,6 @@ const ORGANIZATION = /Organization$|^(Corporation|LocalBusiness|OnlineBusiness|O
 const VALUED_RULE = /^(max-snippet|max-image-preview|max-video-preview|unavailable_after)$/i;
 const WORDS = new Intl.Segmenter(undefined, { granularity: "word" });
 
-const args = process.argv.slice(2);
-const json = args.includes("--json");
-const target = args.find((arg) => arg !== "--json");
-if (args.length !== (json ? 2 : 1) || !ABSOLUTE_URL.test(target ?? "") || !URL.canParse(target)) {
-  console.error("Usage: node scripts/check_head.mjs <url> [--json]");
-  process.exit(2);
-}
 
 const decode = (text) =>
   text.replace(/&(#x[\da-f]+|#\d+|[a-z][a-z\d]*);/gi, (entity, name) => {
@@ -97,7 +93,7 @@ const pageUrl = (url) => {
   return page.href;
 };
 // Google reads every robots and googlebot meta, and X-Robots-Tag rules scoped to googlebot or to no agent.
-const googleRules = (metas, header) => {
+export const googleRules = (metas, header) => {
   let agent = "";
   const headerRules = header.split(",").flatMap((rule) => {
     const [, name, rest] = rule.match(/^\s*([\w-]+)\s*:(.*)$/) ?? [];
@@ -117,7 +113,7 @@ const readHtml = async (response) => {
   return new TextDecoder(charset).decode(bytes);
 };
 
-const fetchPage = async (userAgent) => {
+const fetchPage = async (userAgent, target) => {
   let url = new URL(target);
   const redirects = [];
   const signal = AbortSignal.timeout(TIMEOUT_MS);
@@ -143,12 +139,12 @@ const fetchPage = async (userAgent) => {
   }
 };
 
-const inspect = async ([agent, userAgent]) => {
+const inspect = async ([agent, userAgent], target) => {
   const errors = [];
   const warnings = [];
   let redirects, response, url, html;
   try {
-    ({ redirects, response, url } = await fetchPage(userAgent));
+    ({ redirects, response, url } = await fetchPage(userAgent, target));
     if (!response.ok) errors.push(`The page returned ${response.status}.`);
     else if (!/html/i.test(response.headers.get("content-type") ?? "")) {
       errors.push("The response is not HTML.");
@@ -226,7 +222,7 @@ const inspect = async ([agent, userAgent]) => {
   if (redirects.length > 5) {
     warnings.push(`The URL takes ${redirects.length} redirects. Discord previews stop after 5.`);
   }
-  if (!title) errors.push("The page has no <title> text.");
+  if (!title) warnings.push("The server HTML has no <title> text. Check rendered metadata separately.");
   if (!description) warnings.push("The page has no meta description.");
 
   const canonicalUrl = URL.canParse(canonical, url) ? new URL(canonical, url) : null;
@@ -432,14 +428,6 @@ const lightOnly = (svg) => {
   };
   return colors.length > 0 && colors.every((color) => luminance(color) > 0.85);
 };
-// Each asset URL is downloaded once per run, however many tags point at it.
-const assets = new Map();
-const fetchAsset = (href, base) => {
-  const url = href ? URL.parse(href, base) : null;
-  if (!url) return { url: href ?? null, problem: href ? "is not a valid URL" : "has no href" };
-  if (!assets.has(url.href)) assets.set(url.href, downloadAsset(url));
-  return assets.get(url.href);
-};
 const downloadAsset = async (url) => {
   try {
     const response = await fetch(url, {
@@ -483,6 +471,15 @@ const probe = async (url, redirect = "manual") => {
 
 // Site checks run once with the browser user agent, against the page the browser reached.
 const checkSite = async ({ site, url }) => {
+  // Each asset URL is downloaded once per run, however many tags point at it.
+  const assets = new Map();
+  const fetchAsset = (href, base) => {
+    const url = href ? URL.parse(href, base) : null;
+    if (!url) return { url: href ?? null, problem: href ? "is not a valid URL" : "has no href" };
+    if (!assets.has(url.href)) assets.set(url.href, downloadAsset(url));
+    return assets.get(url.href);
+  };
+
   const errors = [];
   const warnings = [];
   const page = new URL(url);
@@ -590,7 +587,7 @@ const checkSite = async ({ site, url }) => {
   if (site.bytes.html > KB * KB)
     warnings.push(`The HTML is ${(site.bytes.html / KB / KB).toFixed(1)} MB. Apple Messages previews stop reading at 1 MB.`);
   if (unknown.status >= 200 && unknown.status < 300)
-    warnings.push(`An unknown URL returns ${unknown.status}, a soft 404. Serve 404 or 410 for paths that don't exist.`);
+    warnings.push(`An unknown URL returns ${unknown.status}, a possible soft 404. Check that unknown paths return 404 or 410.`);
   const landing = URL.parse(twinHop?.location ?? "", twinUrl ?? undefined);
   if (twinHop?.unchecked)
     warnings.push(
@@ -642,50 +639,65 @@ const rows = (r) => [
   ],
 ];
 
-// The site checks start as soon as the browser fetch, which comes first in AGENTS, finishes.
-const pending = Object.entries(AGENTS).map(inspect);
-const [inspected, site] = await Promise.all([
-  Promise.all(pending),
-  pending[0].then((browser) => (browser.site ? checkSite(browser) : null)),
-]);
-const reports = inspected.map(({ site, ...report }) => report);
-const failing = [...reports, site].filter((report) => report?.errors.length).map(({ agent }) => agent);
-if (json) console.log(JSON.stringify({ agents: reports, site, url: target, valid: !failing.length }, null, 2));
-else {
-  const groups = new Map();
-  for (const report of reports) {
-    const key = JSON.stringify({ ...report, agent: undefined });
-    groups.set(key, [...(groups.get(key) ?? []), report]);
-  }
-  for (const group of groups.values()) {
-    const [report] = group;
-    const hops = report.status
-      ? [...report.redirects, report].map((hop) => `${hop.status} ${hop.url}`)
-      : ["no response"];
-    console.log(`${group.map(({ agent }) => agent).join(", ")}: ${hops.join(" -> ")}`);
-    if (report.title !== undefined) {
-      for (const [label, value] of rows(report)) console.log(`  ${label.padEnd(14)}${value}`);
-    }
-    for (const message of report.errors) console.log(`  error: ${message}`);
-    for (const message of report.warnings) console.log(`  warning: ${message}`);
-    console.log();
-  }
-  if (site) {
-    console.log(`site: ${reports[0].url}`);
-    const size = (asset) => (asset.size ? `${asset.size.width}x${asset.size.height}` : (asset.type ?? "broken"));
-    const twin = site.twin && `${site.twin.host} ${site.twin.status ?? "unreachable"}`;
-    for (const [label, value] of [
-      ...site.shareImages.map((image) => [image.label, `${size(image)}, ${Math.round(image.bytes / KB)} KB`]),
-      ["logo", site.logo ? `${size(site.logo)}, ${site.logo.url}` : "none"],
-      ["icons", site.icons.map((icon) => `${icon.rel} ${size(icon)}`).join(", ") || "none"],
-      ["unknown url", site.unknownUrlStatus ?? "no response"],
-      ["twin host", twin ? `${twin}${site.twin.location ? ` -> ${site.twin.location}` : ""}` : "n/a"],
-    ])
-      console.log(`  ${label.padEnd(14)}${value}`);
-    for (const message of site.errors) console.log(`  error: ${message}`);
-    for (const message of site.warnings) console.log(`  warning: ${message}`);
-    console.log();
-  }
-  console.log(failing.length ? `Errors for ${failing.join(", ")}.` : "No errors.");
+export async function checkHead(target) {
+  const pending = Object.entries(AGENTS).map((agent) => inspect(agent, target));
+  const [inspected, site] = await Promise.all([
+    Promise.all(pending),
+    pending[0].then((browser) => (browser.site ? checkSite(browser) : null)),
+  ]);
+  const reports = inspected.map(({ site, ...report }) => report);
+  return { agents: reports, site, url: target, valid: ![...reports, site].some((report) => report?.errors.length) };
 }
-process.exitCode = failing.length ? 1 : 0;
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === resolvePath(process.argv[1])) {
+  const args = process.argv.slice(2);
+  const json = args.includes("--json");
+  const target = args.find((arg) => arg !== "--json");
+  if (args.length !== (json ? 2 : 1) || !ABSOLUTE_URL.test(target ?? "") || !URL.canParse(target)) {
+    console.error("Usage: node scripts/check_head.mjs <url> [--json]");
+    process.exit(2);
+  }
+
+  const result = await checkHead(target);
+  const { agents: reports, site } = result;
+  const failing = [...reports, site].filter((report) => report?.errors.length).map(({ agent }) => agent);
+  if (json) console.log(JSON.stringify(result, null, 2));
+  else {
+    const groups = new Map();
+    for (const report of reports) {
+      const key = JSON.stringify({ ...report, agent: undefined });
+      groups.set(key, [...(groups.get(key) ?? []), report]);
+    }
+    for (const group of groups.values()) {
+      const [report] = group;
+      const hops = report.status
+        ? [...report.redirects, report].map((hop) => `${hop.status} ${hop.url}`)
+        : ["no response"];
+      console.log(`${group.map(({ agent }) => agent).join(", ")}: ${hops.join(" -> ")}`);
+      if (report.title !== undefined) {
+        for (const [label, value] of rows(report)) console.log(`  ${label.padEnd(14)}${value}`);
+      }
+      for (const message of report.errors) console.log(`  error: ${message}`);
+      for (const message of report.warnings) console.log(`  warning: ${message}`);
+      console.log();
+    }
+    if (site) {
+      console.log(`site: ${reports[0].url}`);
+      const size = (asset) => (asset.size ? `${asset.size.width}x${asset.size.height}` : (asset.type ?? "broken"));
+      const twin = site.twin && `${site.twin.host} ${site.twin.status ?? "unreachable"}`;
+      for (const [label, value] of [
+        ...site.shareImages.map((image) => [image.label, `${size(image)}, ${Math.round(image.bytes / KB)} KB`]),
+        ["logo", site.logo ? `${size(site.logo)}, ${site.logo.url}` : "none"],
+        ["icons", site.icons.map((icon) => `${icon.rel} ${size(icon)}`).join(", ") || "none"],
+        ["unknown url", site.unknownUrlStatus ?? "no response"],
+        ["twin host", twin ? `${twin}${site.twin.location ? ` -> ${site.twin.location}` : ""}` : "n/a"],
+      ])
+        console.log(`  ${label.padEnd(14)}${value}`);
+      for (const message of site.errors) console.log(`  error: ${message}`);
+      for (const message of site.warnings) console.log(`  warning: ${message}`);
+      console.log();
+    }
+    console.log(failing.length ? `Errors for ${failing.join(", ")}.` : "No errors.");
+  }
+  process.exitCode = failing.length ? 1 : 0;
+}

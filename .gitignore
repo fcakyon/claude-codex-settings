@@ -213,3 +213,6 @@ __marimo__/
 .DS_Store
 pyproject.toml
 *.zip
+
+# Audit script dependencies stay outside skill archives
+/plugins/seo-skills/skills/seo-audit/scripts/node_modules/

@@ -1031,7 +1031,7 @@ Use it for a strategy, audit, prompt portfolio, content brief, or performance re
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/seo-skills --skill '*'
 ```
 
-SEO workflows from [vercel-labs/marketing-team-eve-template](https://github.com/vercel-labs/marketing-team-eve-template). Audit pages in evidence order, plan programmatic page sets, add valid JSON-LD, and improve hierarchy and internal linking. The schema skill includes a dependency-free Node validator for local JSON-LD checks.
+Locally maintained SEO workflows, originally adapted from [Vercel’s SEO skills](https://github.com/vercel-labs/marketing-team-eve-template). Run a bounded, framework-independent audit of crawl access, sitemaps, canonical and locale links, metadata, and share images. Findings include evidence and separate confirmed failures from review items and unchecked work. Visual quality, search intent, real indexing, and Core Web Vitals still need their own checks. Upstream sync cannot overwrite these local skills or scripts.
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
