@@ -877,7 +877,7 @@
       "title": "Reusable app login, signup and password reset skill",
       "description": "Reuse tested email and Google sign in components with shared account contracts. Preserve selected actions through signup, recovery and same tab login.",
       "related": [
-        "reusable-app-components/tawk-support",
+        "reusable-app-components/opendesk-support",
         "reusable-app-components/email-design"
       ]
     },
@@ -889,9 +889,9 @@
         "frontend-design-skills/writing-guidelines"
       ]
     },
-    "reusable-app-components/tawk-support": {
-      "title": "Tawk support chat setup and signed visitor identity",
-      "description": "Add themed Tawk support chat with signed account identity, a product knowledge base and quiet widget defaults. Keep credentials and private app content out.",
+    "reusable-app-components/opendesk-support": {
+      "title": "OpenDesk support chat, AI bots and knowledge sync",
+      "description": "Add themed OpenDesk chat with signed identity and product AI. Sync repository knowledge and manage support conversations through workspace APIs and MCP.",
       "related": [
         "reusable-app-components/app-auth",
         "reusable-app-components/email-design"
