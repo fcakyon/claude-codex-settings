@@ -56,11 +56,11 @@ The dimension and version are examples, not defaults for other apps. For an even
 
 ```bash
 google-analytics-cli realtime 123456789 \
-  --dimensions eventName --metrics activeUsers,eventCount \
+  --dimensions eventName --metrics eventCount \
   --limit 50 --return-property-quota
 ```
 
-Realtime has a smaller dimension/metric catalog than core reports. Check its schema rather than sending every core custom dimension. The current CLI does not expose alpha funnels. For ordered journeys use Google's [runFunnelReport](https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/properties/runFunnelReport) via an authorized raw request, or state that a true funnel was not queried. Independent event counts are not an ordered funnel.
+Realtime has a smaller dimension/metric catalog than core reports, and `eventName` cannot be combined with `activeUsers`. Query `activeUsers` by `unifiedScreenName` or `minutesAgo` instead. Check its schema rather than sending every core custom dimension. The current CLI does not expose alpha funnels. For ordered journeys use Google's [runFunnelReport](https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/properties/runFunnelReport) via an authorized raw request, or state that a true funnel was not queried. Independent event counts are not an ordered funnel.
 
 ## Search totals, dates, queries and pages
 
@@ -82,7 +82,7 @@ google-search-console-cli query sc-domain:example.com \
   --dimensions page --type web --data-state final --row-limit 100
 ```
 
-The first call returns property totals without a dimension. Query rows exclude anonymized queries and need not sum to those totals. Page grouping changes aggregation too. Do not average row CTR or position values to reconstruct the property's weighted metrics. To page, add `--start-row 100` with the same row limit, dates and filters. Google's limit is 25,000 rows per request. `--all` auto-paginates but does not guarantee every Google row and drops freshness metadata in this CLI's combined result. Prefer explicit pages when freshness matters.
+The first call returns property totals without a dimension. Query rows exclude anonymized queries and need not sum to those totals. Page grouping changes aggregation too. Do not average row CTR or position values to reconstruct the property's weighted metrics. To page, add `--start-row 100` with the same row limit, dates and filters. Google's limit is 25,000 rows per request. `--all` auto-paginates in 25,000-row pages, ignores `--row-limit`, does not guarantee every Google row and drops freshness metadata in this CLI's combined result. Prefer explicit pages when freshness matters.
 
 Use `--data-state all` for fresh data only when partial results are useful and labeled. Dates use Search Console's Pacific time zone. Query by date to discover the returned interval instead of assuming the requested end date is finalized.
 

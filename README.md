@@ -1033,7 +1033,7 @@ npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugin
 
 Read Google Analytics and Search Console from your terminal to check how people use an app and find it in search.
 
-- Set up read access with existing credentials or a guided Google sign-in.
+- Set up read access with a read-only service account or a guided Google sign-in.
 - Compare version adoption, product events and search traffic around releases.
 - Distinguish reporting delays, missing tracking and failed access from zero use.
 

@@ -579,7 +579,7 @@
     },
     "google-telemetry/setup": {
       "title": "Set up read access to Google Analytics and Search Console",
-      "description": "Install the Analytics and Search Console command-line tools. Grant read access with existing credentials or a guided Google sign-in, then confirm each property.",
+      "description": "Install the Analytics and Search Console command-line tools. Grant read access with a read-only service account or Google sign-in, then confirm each property.",
       "related": [
         "google-telemetry/google-telemetry",
         "gcloud-tools/setup"
