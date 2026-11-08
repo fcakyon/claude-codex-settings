@@ -96,8 +96,8 @@ create_zip() {
   fi
 
   find "$skill_dir" -maxdepth 1 -name '*.zip' -delete
-  find "$skill_dir" -exec touch -t 198001010000 {} +
-  (cd "$skill_parent" && find "$skill_name" -not -name '*.zip' -print | LC_ALL=C sort | zip -X -q "$temp_zip" -@)
+  find "$skill_dir" -name node_modules -prune -o -exec touch -t 198001010000 {} +
+  (cd "$skill_parent" && find "$skill_name" -name node_modules -prune -o -not -name '*.zip' -print | LC_ALL=C sort | zip -X -q "$temp_zip" -@)
   mv "$temp_zip" "$skill_dir/$zip_name"
 
   echo "Created $1/$zip_name"
