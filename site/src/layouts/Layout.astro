@@ -114,8 +114,8 @@ const structuredData = pageGraph.length
       <footer>
         <span>{copy.footer.madeBy[0]}<a class="inline-link" href={author.id} rel="author">{author.name}</a>{copy.footer.madeBy[1]}</span>
         <div>
-          <a href="/llms.txt">llms.txt</a>
-          <a href="/sitemap.xml">{copy.footer.sitemap}</a>
+          <a href="/llms.txt" rel="nofollow">llms.txt</a>
+          <a href="/sitemap.xml" rel="nofollow">{copy.footer.sitemap}</a>
           {Object.entries(author.profiles).map(([name, url]) => (
             <a class="social-link" href={url} rel="me noreferrer" target="_blank" aria-label={name} title={name}>
               <Icon name={name.toLowerCase() as IconName} size={20} />

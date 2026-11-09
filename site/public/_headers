@@ -8,3 +8,12 @@
 
 /favicon-plugins.svg
   Cache-Control: public, max-age=604800
+
+/llms.txt
+  X-Robots-Tag: noindex
+
+/sitemap.xml
+  X-Robots-Tag: noindex
+
+/sitemaps/*
+  X-Robots-Tag: noindex

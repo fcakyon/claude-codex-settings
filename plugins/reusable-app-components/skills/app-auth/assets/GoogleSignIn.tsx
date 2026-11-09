@@ -85,7 +85,7 @@ export function GoogleSignIn<User>({
   return (
     <div className="app-google-sign-in" aria-busy={pending}>
       <div ref={button} inert={pending} aria-hidden={pending} className="app-google-sign-in__button" />
-      {pending ? <p role="status">{copy.pending}</p> : <a href={`${redirectEndpoint}?${params}`}>{copy.fallback}</a>}
+      {pending ? <p role="status">{copy.pending}</p> : <a href={`${redirectEndpoint}?${params}`} rel="nofollow">{copy.fallback}</a>}
       {error ? <p role="alert">{error}</p> : null}
     </div>
   );

@@ -72,13 +72,14 @@ test('bounds discovery, reports unvisited targets, and does not fetch external c
   const foreign = await serve(t, () => ({ body: '<title>External</title>' }))
   const { origin, hits } = await serve(t, (u) => {
     if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
-    if (u.pathname === '/') return { body: html(u.origin, '/', `<link rel="canonical" href="${foreign.origin}/">`, '<a href="/one">One</a><a href="/two">Two</a><a href="/three">Three</a>') }
+    if (u.pathname === '/') return { body: html(u.origin, '/', `<link rel="canonical" href="${foreign.origin}/">`, '<a href="/ignored" rel="nofollow">Ignored</a><a href="/one">One</a><a href="/two">Two</a><a href="/three">Three</a>') }
     if (['/one', '/two', '/three'].includes(u.pathname)) return { body: html(u.origin, u.pathname) }
   })
   const result = await auditSite(origin, { maxPages: 2 })
   assert.equal(result.coverage.visited, 2)
   assert.equal(result.coverage.crawlComplete, false)
   assert(result.findings.some((f) => f.rule === 'crawl.limit'))
+  assert.equal(hits.includes('/ignored'), false)
   assert.equal(hits.includes('/two'), false)
   assert.equal(hits.includes('/three'), false)
   assert.deepEqual(foreign.hits, [])

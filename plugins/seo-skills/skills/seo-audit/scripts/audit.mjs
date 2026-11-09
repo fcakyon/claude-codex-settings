@@ -48,7 +48,7 @@ function pageOf(html, url, headers) {
   const rules = googleRules([...meta('robots'), ...meta('googlebot')], headers.get('x-robots-tag') ?? '')
   const canonical = links.filter((l) => hasRel(l, 'canonical')).map((l) => ({ raw: l.href, url: l.href?.trim() ? urlOf(l.href, base) : null }))
   const alternates = links.filter((l) => hasRel(l, 'alternate') && l.hreflang).map((l) => ({ lang: l.hreflang.toLowerCase(), url: l.href?.trim() ? urlOf(l.href, base) : null }))
-  const anchors = nodes.filter((n) => n.tag === 'a' && n.attrs.href).map((n) => urlOf(n.attrs.href, base))
+  const anchors = nodes.filter((n) => n.tag === 'a' && n.attrs.href && !hasRel(n.attrs, 'nofollow')).map((n) => urlOf(n.attrs.href, base))
   const jsonLd = nodes.filter((n) => n.tag === 'script' && n.attrs.type?.toLowerCase() === 'application/ld+json').map((n) => n.text.map(textOf).join(''))
   return { url, titles: texts('title'), descriptions: meta('description'), h1: texts('h1'), canonical, alternates, anchors, rules,
     noindex: rules.some((r) => /^(noindex|none)$/i.test(r)),
