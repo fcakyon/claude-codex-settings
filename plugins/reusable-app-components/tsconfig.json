@@ -16,6 +16,6 @@
     "tests/*.tsx",
     "tests/*.d.ts",
     "demo/*.tsx",
-    "skills/*/assets/*.d.ts"
+    "skills/*/assets/*.ts"
   ]
 }

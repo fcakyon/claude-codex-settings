@@ -30,3 +30,5 @@ On 2026-11-10, the TypeScript/Vite candidate passed 22 local Chromium tests, Typ
 Bundled logo sources: [Google](https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg), [Hugging Face](https://huggingface.co/front/assets/huggingface_logo-noborder.svg), [GitHub](https://github.com/simple-icons/simple-icons/blob/develop/icons/github.svg) and [Apple](https://github.com/simple-icons/simple-icons/blob/develop/icons/apple.svg). GitHub and Apple paths come from Simple Icons. Brand marks remain subject to their owners’ usage rules. SVGs are served locally with the component.
 
 Typography uses the locally bundled [Inter variable font](https://github.com/rsms/inter/blob/master/docs/font-files/InterVariable.woff2) with its [SIL Open Font License](https://github.com/rsms/inter/blob/master/LICENSE.txt), retained in assets/fonts/OFL.txt.
+
+The optional PocketBase discovery mapper follows the official js-sdk AuthMethodsList fields. A local contract test covers enabled methods, custom provider names, email identity support and exclusion of transient OAuth fields. This is SDK-shape and UI-contract evidence, not a live PocketBase authentication or session test.

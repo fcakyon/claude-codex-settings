@@ -21,6 +21,28 @@ SocialSignIn accepts a providers array with id, localized label, endpoint and an
 
 Each endpoint owns its provider-specific OAuth details. Interpret login_hint and prompt as app-level selection intent, mapping them only to options supported by that provider. Preserve the same verified session, callback state and return destination contract for all methods. Adding a button does not implement a provider backend.
 
+## Optional PocketBase integration
+
+The UI remains backend-neutral. Import EmailAuthAdapter and OAuthProvider from assets/auth.ts for plain TypeScript integrations. The existing EmailAuth.tsx type export remains available for React callers.
+
+Use assets/pocketbase.ts with the SDK's listAuthMethods result. It maps only enabled OAuth providers into id, label and app-owned redirect endpoint. It enables the email/password form only when password auth is enabled and email is an allowed identity field. Custom provider names remain intact. Provide a custom icon for a configured OIDC provider if needed.
+
+```tsx
+const methods = await pb.collection("users").listAuthMethods()
+const auth = pocketBaseAuthMethods(methods, name => `/auth/${name}/login`)
+// Pass auth.providers to SocialSignIn and mount EmailAuth when auth.emailPassword is true.
+```
+
+Run discovery in the auth owner and expose only this mapped configuration to the view. Do not persist or log the raw discovery result, which includes OAuth state and a PKCE verifier. Each redirect-start route obtains fresh provider details, retains state/verifier in its transient transaction, validates the callback and exchanges the code through authWithOAuth2Code. Keep the original destination and remember choice in that transaction. The helper does not start OAuth or create a session.
+
+For native password login, authWithPassword returns a record and token. Return the record from the login adapter and let the app's auth owner manage the token or browser session. Native record creation needs passwordConfirm, which the adapter can populate from the same password field. Apply the app's registration and terms policy there.
+
+The current EmailAuth verification and recovery screens use a six-digit code contract. PocketBase requestVerification/confirmVerification and requestPasswordReset/confirmPasswordReset use email tokens instead. Use the app's native token-link pages, or implement the existing code adapter on the backend. Do not treat a PocketBase OTP as a password-reset ticket. OTP login requires its otpId, and enabled MFA needs the app's second-factor flow. These methods are not implemented by the discovery helper.
+
+PocketBase's native auth tokens are stateless and clearing authStore is local logout. Revocable server sessions in the proposed backend standard are an additional app layer, not a component requirement. Never share an authenticated SDK client between server requests. Keep native-token transport, cookie/CSRF policy and session invalidation in the app's auth owner.
+
+References: [PocketBase authentication](https://pocketbase.io/docs/authentication/), [record auth APIs](https://pocketbase.io/docs/api-records/), [SDK auth-method types](https://github.com/pocketbase/js-sdk/blob/master/src/services/RecordService.ts).
+
 ## Legacy popup adapter
 
 The following credential adapter remains for existing hosts with explicit `mode="popup"`. New integrations use full-page navigation above.

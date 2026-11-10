@@ -1,14 +1,12 @@
 "use client"
 
 import type { ReactNode } from "react"
+import type { OAuthProvider } from "./auth"
 import { socialLoginUrl } from "./login"
 import { ProviderLogo, providerLogos } from "./ProviderLogo"
 import "./social-sign-in.css"
 
-export type SocialProvider = {
-  id: string
-  label: string
-  endpoint: string
+export type SocialProvider = OAuthProvider & {
   icon?: ReactNode
 }
 
