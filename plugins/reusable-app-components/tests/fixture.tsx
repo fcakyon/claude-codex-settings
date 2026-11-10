@@ -29,7 +29,7 @@ function Fixture() {
     {visible ? <AuthPanel brand={<img src="/example-logo.svg" alt="Example app" width={48} height={48} />}
       title={turkish ? "Tekrar hoş geldin" : "Welcome back"}
       description={turkish ? "Hesabına devam et." : "Continue to your account."}
-    ><GoogleSignIn
+    ><GoogleSignIn mode="popup"
       identity={sdkAvailable ? identity : null}
       theme="filled_black"
       clientId="fixture-client"

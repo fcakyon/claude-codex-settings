@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useEffectEvent, useRef, useState } from "react";
+import { socialLoginUrl } from "./login"
+import { SocialSignIn } from "./SocialSignIn"
 import "./google-sign-in.css";
 
 export interface GoogleIdentity {
@@ -21,6 +23,7 @@ export interface GoogleIdentity {
 }
 
 type Props<User> = {
+  mode: "popup";
   identity: GoogleIdentity | null;
   clientId: string;
   nonce?: string;
@@ -35,7 +38,14 @@ type Props<User> = {
   onFailure: (error: unknown) => string;
 };
 
-export function GoogleSignIn<User>({
+export function GoogleSignIn<User>(props: Props<User> | {
+  redirectEndpoint: string, returnTo: string, email?: string, label: string
+}) {
+  if ("label" in props) return <SocialSignIn providers={[{ id: "google", label: props.label, endpoint: props.redirectEndpoint }]} returnTo={props.returnTo} email={props.email} />
+  return <GooglePopupSignIn {...props} />
+}
+
+function GooglePopupSignIn<User>({
   identity, clientId, nonce, locale, redirectEndpoint, returnTo,
   theme = "outline", initialError = "", copy, onCredential,
   onAuthenticated, onFailure,
@@ -43,7 +53,6 @@ export function GoogleSignIn<User>({
   const button = useRef<HTMLDivElement>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState(initialError);
-  const params = new URLSearchParams({ returnTo, prompt: "select_account" });
 
   const acceptCredential = useEffectEvent(async (credential: string, signal: AbortSignal) => {
     if (signal.aborted) return;
@@ -85,7 +94,7 @@ export function GoogleSignIn<User>({
   return (
     <div className="app-google-sign-in" aria-busy={pending}>
       <div ref={button} inert={pending} aria-hidden={pending} className="app-google-sign-in__button" />
-      {pending ? <p role="status">{copy.pending}</p> : <a href={`${redirectEndpoint}?${params}`} rel="nofollow">{copy.fallback}</a>}
+      {pending ? <p role="status">{copy.pending}</p> : <a href={socialLoginUrl(redirectEndpoint, returnTo)} rel="nofollow">{copy.fallback}</a>}
       {error ? <p role="alert">{error}</p> : null}
     </div>
   );

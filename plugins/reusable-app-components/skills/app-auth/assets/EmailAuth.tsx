@@ -66,6 +66,8 @@ export function EmailAuth<User, Recovery>({
   adapter,
   copy,
   terms,
+  social,
+  beforeSubmit,
   initialMode = "login",
   initialEmail = "",
   minPasswordLength = 8,
@@ -75,6 +77,8 @@ export function EmailAuth<User, Recovery>({
   adapter: EmailAuthAdapter<User, Recovery>;
   copy: EmailAuthCopy;
   terms?: ReactNode;
+  social?: ReactNode;
+  beforeSubmit?: ReactNode;
   initialMode?: "login" | "signup";
   initialEmail?: string;
   minPasswordLength?: number;
@@ -161,6 +165,7 @@ export function EmailAuth<User, Recovery>({
   return (
     <form className="app-email-auth" onSubmit={submit} aria-busy={pending}>
       <h3>{copy.titles[phase]}</h3>
+      {phase === "login" || phase === "signup" ? social : null}
       <fieldset disabled={pending}>
         {phase === "verify" || phase === "password" ? null : (
           <label htmlFor={id + "-email"}>
@@ -251,6 +256,7 @@ export function EmailAuth<User, Recovery>({
             {copy.sendCode}
           </button>
         ) : null}
+        {phase === "login" || phase === "signup" ? beforeSubmit : null}
         <button className="app-email-auth__primary" type="submit">
           {phase === "login"
             ? copy.login

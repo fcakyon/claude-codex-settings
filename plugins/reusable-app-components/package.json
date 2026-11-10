@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "dev": "vite demo --host 0.0.0.0",
+    "build": "vite build demo --outDir ../dist"
   },
-  "engines": {"node": ">=22"},
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
@@ -15,6 +19,7 @@
     "playwright": "1.64.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vite": "^7.3.8"
   }
 }
