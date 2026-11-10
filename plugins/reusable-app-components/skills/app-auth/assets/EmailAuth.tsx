@@ -10,7 +10,7 @@ import {
 } from "react";
 import "./email-auth.css";
 
-type Purpose = "signup" | "reset";
+import type { EmailAuthAdapter, EmailAuthPurpose as Purpose } from "./auth";
 type Phase = "login" | "signup" | "forgot" | "verify" | "password";
 type Failure = {
   message: string;
@@ -35,37 +35,14 @@ export type EmailAuthCopy = {
   code: string;
   codeSent: (email: string) => string;
 };
-export type EmailAuthAdapter<User, Recovery> = {
-  login: (
-    input: { email: string; password: string },
-    signal: AbortSignal,
-  ) => Promise<User>;
-  register: (
-    input: { email: string; password: string; acceptedTerms: boolean },
-    signal: AbortSignal,
-  ) => Promise<void>;
-  sendCode: (
-    input: { email: string; purpose: Purpose },
-    signal: AbortSignal,
-  ) => Promise<void>;
-  verifyEmail: (
-    input: { email: string; code: string },
-    signal: AbortSignal,
-  ) => Promise<User>;
-  verifyResetCode: (
-    input: { email: string; code: string },
-    signal: AbortSignal,
-  ) => Promise<Recovery>;
-  resetPassword: (
-    input: { recovery: Recovery; password: string },
-    signal: AbortSignal,
-  ) => Promise<User>;
-};
+export type { EmailAuthAdapter } from "./auth"
 
 export function EmailAuth<User, Recovery>({
   adapter,
   copy,
   terms,
+  social,
+  beforeSubmit,
   initialMode = "login",
   initialEmail = "",
   minPasswordLength = 8,
@@ -75,6 +52,8 @@ export function EmailAuth<User, Recovery>({
   adapter: EmailAuthAdapter<User, Recovery>;
   copy: EmailAuthCopy;
   terms?: ReactNode;
+  social?: ReactNode;
+  beforeSubmit?: ReactNode;
   initialMode?: "login" | "signup";
   initialEmail?: string;
   minPasswordLength?: number;
@@ -161,6 +140,7 @@ export function EmailAuth<User, Recovery>({
   return (
     <form className="app-email-auth" onSubmit={submit} aria-busy={pending}>
       <h3>{copy.titles[phase]}</h3>
+      {phase === "login" || phase === "signup" ? social : null}
       <fieldset disabled={pending}>
         {phase === "verify" || phase === "password" ? null : (
           <label htmlFor={id + "-email"}>
@@ -251,6 +231,7 @@ export function EmailAuth<User, Recovery>({
             {copy.sendCode}
           </button>
         ) : null}
+        {phase === "login" || phase === "signup" ? beforeSubmit : null}
         <button className="app-email-auth__primary" type="submit">
           {phase === "login"
             ? copy.login

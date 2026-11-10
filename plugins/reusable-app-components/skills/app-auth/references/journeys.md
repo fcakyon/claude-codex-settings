@@ -11,8 +11,9 @@ Use the project's tracked QA harness and saved test sessions. Capture analytics 
 | Invalid, expired or reused code | Verify | Visible retry path, no unauthorized session or reset |
 | Valid app session | Protected deep link | Original action without login |
 | Google button focused | Provider content height changes, desktop/mobile resize | Same focused button, no resize loop, keyboard login still works |
-| Remembered Google account | Official button | Existing account session, intended action, no duplicate user |
-| Multiple Google accounts | Official Google button or same-tab fallback | Google owns account selection without an app-level switch action |
+| Remembered profile | Continue with saved email/method | Same-tab provider path or password prefill, verified session, intended action |
+| Remembered profile | Sign in with another profile | Full form, all configured providers, no saved email hint |
+| One or several providers | Desktop and 390px layout | Configured methods only, visible labels, no overflow |
 | Popup blocked or GIS unavailable | Same-tab link | No new tab, real Google flow and app session on return |
 | Pending exchange | Close auth surface | Request cancelled, no stale navigation or orphaned rejection |
 | Rejected credential or rate limit | Retry | Safe visible error, working controls, no rejected session |
@@ -49,3 +50,5 @@ Strip query strings and omit raw browser titles from callback reports because bo
 Check DNS, TLS and HTTP before attributing failure to bot detection or OAuth. A failing Chrome Secure DNS path can break a profile while system HTTP and a clean profile work. Diagnose the actual resolver before proposing settings changes.
 
 Deployment acceptance needs deployed revision, ready status, affected routes and actual session flow. Close task-owned tabs/sessions, stop previews, restore viewport/routing changes and preserve user tabs.
+
+The Vite demo runs with `npm run dev` and builds with `npm run build`. The remembered-login browser tests exercise opt-in persistence, reload, forgetting, generic account selection, same-tab navigation and one/four provider layouts. Authentication in that demo is simulated.

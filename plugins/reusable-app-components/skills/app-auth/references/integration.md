@@ -1,8 +1,55 @@
 # Integration contract
 
+## Default full-page login and remembered profiles
+
+The plain TypeScript helpers in login.ts have no React or Vite dependency. Use socialLoginUrl with the app's existing redirect-start endpoint and selected destination. A normal anchor navigates in the same tab and works without JavaScript. Vite runs the local demo only. The supplied UI adapters use React.
+
+```tsx
+<GoogleSignIn redirectEndpoint="/auth/google/login"
+  returnTo={selectedAction.returnTo} label="Continue with Google" />
+```
+
+RememberedLogin renders a host-supplied last successful profile first. Its continueWith(profile, badge) callback renders the provider link with the supplied badge passed as SocialSignIn trailing, and its children callback renders the full form with an email prefill for saved password accounts. Choosing another profile opens the full form with no saved email. Keep current input in the auth owner so switching views does not lose it. Supply localized lastUsed, anotherProfile and savedProfile labels. Password profiles still require their password.
+
+The host owns persistence and authentication. lastLogin(storage, appSpecificKey) reads, saves or removes only email and method. Call save only after verified authentication and an explicit remember choice, and save(null) to forget. Keep this metadata across logout, but clear it when the user opts out. Supply localStorage only in the browser after hydration, and handle unavailable storage through the app's existing storage policy. Never use stored metadata for authorization or auto-linking. Do not store passwords, codes, tokens or session credentials. Only render supported providers. Social redirect flows carry the remember choice through the callback using existing transient state and save the backend-verified email after completion.
+
+An email hint is optional for a remembered profile. The generic link requests prompt=select_account without login_hint. The backend redirect adapter must explicitly support these parameters and preserve state, PKCE, nonce, allowed destinations and the selected action. A hint does not prove identity or force a provider to choose an account. The local demo exercises a simulated provider and must not be used as a session backend.
+
+## Optional social providers
+
+SocialSignIn accepts a providers array with id, localized label, endpoint and an optional ReactNode icon. Configure Google, GitHub, Apple, Hugging Face or another provider only when its backend is available. One provider fills the row with a logo and label. Several providers default to compact logo buttons with accessible names and tooltips, matching the OpenRouter reference. Set layout="labels" to keep visible labels for several providers. The component bundles local SVG logos for google, github, apple and huggingface, with no icon package or external image request. The optional icon slot supports other providers. Copy the logos directory, ProviderLogo.tsx and logos.d.ts with SocialSignIn. Frameworks other than React can use the SVG files directly. Set --auth-logo-filter: none for monochrome marks on light surfaces. An empty array renders no buttons. Only pass a remembered profile while its method is still enabled.
+
+Each endpoint owns its provider-specific OAuth details. Interpret login_hint and prompt as app-level selection intent, mapping them only to options supported by that provider. Preserve the same verified session, callback state and return destination contract for all methods. Adding a button does not implement a provider backend.
+
+## Optional PocketBase integration
+
+The UI remains backend-neutral. Import EmailAuthAdapter and OAuthProvider from assets/auth.ts for plain TypeScript integrations. The existing EmailAuth.tsx type export remains available for React callers.
+
+Use assets/pocketbase.ts with the SDK's listAuthMethods result. It maps only enabled OAuth providers into id, label and app-owned redirect endpoint. It enables the email/password form only when password auth is enabled and email is an allowed identity field. Custom provider names remain intact. Provide a custom icon for a configured OIDC provider if needed.
+
+```tsx
+const methods = await pb.collection("users").listAuthMethods()
+const auth = pocketBaseAuthMethods(methods, name => `/auth/${name}/login`)
+// Pass auth.providers to SocialSignIn and mount EmailAuth when auth.emailPassword is true.
+```
+
+Run discovery in the auth owner and expose only this mapped configuration to the view. Do not persist or log the raw discovery result, which includes OAuth state and a PKCE verifier. Each redirect-start route obtains fresh provider details, retains state/verifier in its transient transaction, validates the callback and exchanges the code through authWithOAuth2Code. Keep the original destination and remember choice in that transaction. The helper does not start OAuth or create a session.
+
+For native password login, authWithPassword returns a record and token. Return the record from the login adapter and let the app's auth owner manage the token or browser session. Native record creation needs passwordConfirm, which the adapter can populate from the same password field. Apply the app's registration and terms policy there.
+
+The current EmailAuth verification and recovery screens use a six-digit code contract. PocketBase requestVerification/confirmVerification and requestPasswordReset/confirmPasswordReset use email tokens instead. Use the app's native token-link pages, or implement the existing code adapter on the backend. Do not treat a PocketBase OTP as a password-reset ticket. OTP login requires its otpId, and enabled MFA needs the app's second-factor flow. These methods are not implemented by the discovery helper.
+
+PocketBase's native auth tokens are stateless and clearing authStore is local logout. Revocable server sessions in the proposed backend standard are an additional app layer, not a component requirement. Never share an authenticated SDK client between server requests. Keep native-token transport, cookie/CSRF policy and session invalidation in the app's auth owner.
+
+References: [PocketBase authentication](https://pocketbase.io/docs/authentication/), [record auth APIs](https://pocketbase.io/docs/api-records/), [SDK auth-method types](https://github.com/pocketbase/js-sdk/blob/master/src/services/RecordService.ts).
+
+## Legacy popup adapter
+
+The following credential adapter remains for existing hosts with explicit `mode="popup"`. New integrations use full-page navigation above.
+
 ## Dependencies and adapters
 
-The component needs React and React DOM 19.2+ for `useEffectEvent`. It has no Next.js, HeroUI, PocketBase or routing dependency. Copy the TSX and CSS together. The optional AuthPanel and its CSS provide a Muvisafe-inspired dark panel without coupling auth to a design system. The plugin package.json is for validating the extraction, not for installation in every deployed app.
+The component needs React and React DOM 19.2+ for `useEffectEvent`. It has no Next.js, HeroUI, PocketBase or routing dependency. Copy the TSX and CSS together. The optional AuthPanel and its CSS provide a minimal dark panel without coupling auth to a design system. The plugin package.json is for validating the extraction, not for installation in every deployed app.
 
 Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `google.accounts.id` as `identity` when ready, or null while unavailable. Supply the public client ID from existing public configuration or server rendering, outside credential-attempt rate limits. Mount only the active login/signup surface because GIS initialization is global to the page. Render the button once per active configuration and let Google choose its intrinsic width. Do not observe the rendered widget to clear and rebuild it: its iframe height changes can retrigger the observer indefinitely, replacing an active button. Keep the button mounted through provider layout and viewport changes; remove it only when the auth surface closes or its identity configuration changes.
 
@@ -17,10 +64,11 @@ Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `goog
 
 Never display arbitrary provider payloads or `error.message`. Bound credential requests at the transport owner. Closing the surface aborts its operation and ignores that cancelled callback. It cannot undo a session already created by the server, so the next visit must resolve the actual session.
 
-Let Google own account selection. Omit `login_hint`, leave `button_auto_select` false, and request `prompt=select_account` for the same-tab fallback. Google can still personalize its button from its own sessions. Do not cache an email to steer login or add a separate account-switch control. Store no credential, session token or code in localStorage.
+Let Google own account selection. Omit `login_hint`, leave `button_auto_select` false, and request `prompt=select_account` for the same-tab fallback. Google can still personalize its button from its own sessions. In the legacy popup adapter, leave account selection to the official Google control. Use the full-page adapter above for remembered-profile navigation. Store no credential, session token or code in localStorage.
 
 ```tsx
 <GoogleSignIn
+  mode="popup"
   identity={googleIdentity}
   clientId={publicGoogleClientId}
   locale={locale}
@@ -56,7 +104,7 @@ A recovery capability can be an opaque single-use reset ticket, or the already e
 
 Map backend failures through onFailure to safe localized text. Use reason email-exists to offer login with the entered email preserved, and verification-needed to offer a new verification code. Do not tell someone with an existing account to choose a different address. The component retains email while switching forms and clears password and code at transitions. Signup terms are supplied by the host and require a checkbox only when that host passes terms. Do not preselect consent or mix marketing permission into account terms.
 
-The adapter must use the supplied AbortSignal. Closing the component cancels its pending request and prevents stale completion. A cancellation cannot undo a server-side write that already happened. Resume from the actual session or account state on the next visit. Keep onAuthenticated in the host auth owner so email and Google paths resume the same action once. EmailAuth is a form, so do not place it inside another form. Keep the Google button as a sibling in the auth shell, rather than nesting forms.
+The adapter must use the supplied AbortSignal. Closing the component cancels its pending request and prevents stale completion. A cancellation cannot undo a server-side write that already happened. Resume from the actual session or account state on the next visit. Keep onAuthenticated in the host auth owner so email and Google paths resume the same action once. EmailAuth is a form, so do not place it inside another form. Use the social slot for same-tab provider links and beforeSubmit for the host-owned remember checkbox. EmailAuth renders its own phase heading. Omit AuthPanel title when the form owns the heading. Keep the legacy GIS widget as a sibling in the auth shell, rather than nesting forms.
 
 Complete recovery in place: email, code, new password, then the selected app action. Show the actual recipient, support pasting and one-time-code autofill, and keep resend and email correction available. The backend owns expiry, so do not invent a countdown or hide its expiry error behind client timing.
 
@@ -89,9 +137,9 @@ Request account selection in Google for both paths. Return failures to localized
 
 A valid app session bypasses login. Preserve existing email/password methods, signup verification, invitations, terms and consent. Google login must not open registration in a private app. Do not trigger One Tap automatically after logout.
 
-Center the official Google button in a flex container with `color-scheme: light`. A dark ancestor otherwise makes Chrome paint an opaque white canvas behind Google’s light iframe. Keep the fallback as a secondary 14px link labeled “Continue in this tab”. Preserve host typography, surfaces and primary color. Use a supported button theme rather than restyling the Google iframe. Keep email fields and primary buttons 44px high with visible focus, announced pending state and actionable errors. Use 16px input text to avoid mobile focus zoom, 14px submit/link text, 6px label gaps and 12px field gaps. Scope button padding to form actions so inline terms and password controls do not inherit submit-button sizing. The CSS is scoped and inherits app type and color. Authorization, upgrades and action resumption belong to the action owner after login.
+Center the official Google button in a flex container with `color-scheme: light`. A dark ancestor otherwise makes Chrome paint an opaque white canvas behind Google’s light iframe. Keep the fallback as a secondary 14px link labeled “Continue in this tab”. Preserve host typography, surfaces and primary color. Use a supported button theme rather than restyling the Google iframe. Keep email fields and primary buttons at least 44px high, with the supplied style using 50px with visible focus, announced pending state and actionable errors. Use 16px input text to avoid mobile focus zoom, 16px submit text, 8px label gaps and 22px field gaps. Scope button padding to form actions so inline terms and password controls do not inherit submit-button sizing. The CSS is scoped and inherits app type and color. Authorization, upgrades and action resumption belong to the action owner after login.
 
-Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app’s real logo or icon through its ReactNode brand slot, a title and optional description/footer. Give the logo useful alt text. The fixture mark is an example asset, not a product logo. Use a task heading such as “Create your account” or “Reset your password” rather than a vague “Get started” inside a form. Keep modal focus trapping and dismissal in the existing modal owner. Remove ornamental accent rules without stripping useful card grouping, field borders or focus outlines. The panel is a section, not a replacement dialog. It inherits typography. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
+Wrap GoogleSignIn in AuthPanel for the supplied design, passing the app’s real logo or icon through its ReactNode brand slot, a title and optional description/footer. Give the logo useful alt text. The fixture mark is an example asset, not a product logo. Use a task heading such as “Create your account” or “Reset your password” rather than a vague “Get started” inside a form. Keep modal focus trapping and dismissal in the existing modal owner. Remove ornamental accent rules without stripping useful card grouping, field borders or focus outlines. The panel is a section, not a replacement dialog. It bundles the Inter variable font locally for consistent typography. Copy its fonts directory with the CSS, including the font license. Override --auth-font-family to use the host app’s typeface. Override `--auth-surface`, `--auth-text`, `--auth-muted`, `--auth-accent`, `--auth-border`, `--auth-error` and `--auth-radius` to match the app, and choose the Google button theme separately. Never ship fixture controls or the test provider as product UI.
 
 ## Primary references
 

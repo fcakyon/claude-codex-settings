@@ -1,6 +1,6 @@
 # One product, multiple clients
 
-Status: shared contract for future backend/native implementations. The supplied runnable code is the React Google web adapter and optional panel. Android, iOS, TV pairing and additional social-provider integrations are not implemented or device-tested by this plugin.
+Status: shared contract for future backend/native implementations. The supplied code includes framework-independent TypeScript navigation/profile helpers, React email and social UI adapters, and a Vite demo. Google, GitHub, Apple and Hugging Face buttons use host-owned redirect endpoints. Their backend integrations, Android, iOS and TV pairing are not implemented or device-tested by this plugin.
 
 One product can serve web, Android, iOS and Android TV from the same PocketBase + Go backend, users, linked identities, permissions and entitlements. Separate products share a versioned auth library and deployment conventions, with separate user data and secrets by default. Cross-product SSO is a separate product decision.
 
@@ -10,7 +10,7 @@ Use the same opaque session records and revocation checks for all clients. Gener
 
 | Client | Sign-in entry | App session transport |
 | --- | --- | --- |
-| Browser | Provider button when supported, always-available same-tab server redirect | HttpOnly, Secure cookie with explicit SameSite and CSRF policy |
+| Browser | Same-tab server redirect by default, optional legacy provider popup | HttpOnly, Secure cookie with explicit SameSite and CSRF policy |
 | Android/iOS | Current provider SDK or system browser using authorization code and PKCE | Opaque bearer session over HTTPS, stored in platform secure storage |
 | Android TV | Short-lived code/QR pairing confirmed on a signed-in browser or phone | Its own revocable bearer session in platform secure storage |
 

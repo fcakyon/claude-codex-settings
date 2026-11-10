@@ -1,6 +1,6 @@
 .app-email-auth {
   display: grid;
-  gap: 16px;
+  gap: 26px;
   font: inherit;
   font-size: 0.875rem;
   line-height: 1.5;
@@ -8,12 +8,16 @@
 }
 .app-email-auth h3 {
   margin: 0;
-  font-size: 1.125rem;
-  letter-spacing: -0.025em;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -0.035em;
+  line-height: 1.25;
+  margin-block-end: 6px;
 }
 .app-email-auth fieldset {
   display: grid;
-  gap: 12px;
+  gap: 22px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -22,18 +26,18 @@
 .app-email-auth label,
 .app-email-auth__field {
   display: grid;
-  gap: 6px;
-  font-size: 0.875rem;
+  gap: 8px;
+  font-size: 1rem;
 }
 .app-email-auth input:not([type="checkbox"]) {
   box-sizing: border-box;
   inline-size: 100%;
   min-inline-size: 0;
-  min-block-size: 44px;
-  padding: 10px 12px;
-  border: 1px solid var(--auth-border, #45454f);
+  min-block-size: 50px;
+  padding: 12px 14px;
+  border: 1px solid var(--auth-border, #23282b);
   border-radius: 8px;
-  background: var(--auth-input, #23232b);
+  background: var(--auth-input, #101517);
   color: inherit;
   font: inherit;
   font-size: 1rem;
@@ -58,9 +62,10 @@
   outline-offset: 3px;
 }
 .app-email-auth .app-email-auth__primary {
-  background: var(--auth-accent, #00e2b4);
-  color: var(--auth-action-text, #071714);
-  font-weight: 650;
+  background: var(--auth-action, #146ef5);
+  color: var(--auth-action-text, #fff);
+  font-size: 1rem;
+  font-weight: 500;
 }
 .app-email-auth__password {
   position: relative;
