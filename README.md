@@ -318,6 +318,21 @@ Python coding guidelines grounded in authoritative sources: PEP 8, PEP 20 (Zen o
 </details>
 
 <details>
+<summary><strong>typescript-skills</strong> - TypeScript type safety and coding practices</summary>
+
+Use practical examples to model types and validate data at application boundaries.
+
+| Claude Code | Codex CLI | Antigravity CLI |
+| --- | --- | --- |
+| `claude plugin install typescript-skills@claude-settings` | `codex plugin add typescript-skills@claude-settings` | `uv run .github/scripts/antigravity.py install typescript-skills` |
+
+| Skill | What it does | Download |
+| --- | --- | --- |
+| [`typescript-best-practices`](./plugins/typescript-skills/skills/typescript-best-practices/SKILL.md) | Type safety, boundary validation and practical examples | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/typescript-best-practices.zip) |
+
+</details>
+
+<details>
 <summary><strong>react-skills</strong> - Official React, Next.js, and React Native best practices</summary>
 
 | Claude Code                                          | Codex CLI                                       | Antigravity CLI                                                |

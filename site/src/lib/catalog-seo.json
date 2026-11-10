@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "typescript-skills": {
+      "title": "TypeScript type safety and coding practices",
+      "description": "Write and review TypeScript with guidance on type safety, discriminated unions and boundary validation. Explore practical patterns and examples."
+    },
     "aeo": {
       "title": "Answer engine optimization for product discovery",
       "description": "Use answer engine optimization (AEO) to improve product discovery in AI search. Turn buyer questions and citation evidence into a focused content strategy."
@@ -170,6 +174,11 @@
     }
   },
   "skills": {
+    "typescript-skills/typescript-best-practices": {
+      "title": "TypeScript best practices and type safety",
+      "description": "Apply TypeScript patterns for discriminated unions, branded types and boundary validation. Review practical examples for safer application code.",
+      "related": ["react-skills/react-best-practices", "react-skills/composition-patterns", "python-skills/python-guidelines"]
+    },
     "adhd-output-style/adhd-output-style": {
       "title": "ADHD friendly response formatting skill",
       "description": "Format agent replies with short steps, visible progress and low friction starts. Use this skill to reduce reading effort and support limited working memory.",

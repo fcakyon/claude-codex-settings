@@ -9,6 +9,23 @@
   },
   "plugins": [
     {
+      "name": "typescript-skills",
+      "version": "1.0.0",
+      "description": "Write and review TypeScript with type safety and validation guidance.",
+      "license": "MIT",
+      "source": "./plugins/typescript-skills",
+      "keywords": [
+        "typescript",
+        "types",
+        "code-review"
+      ],
+      "category": "development",
+      "tags": [
+        "typescript",
+        "coding"
+      ]
+    },
+    {
       "name": "aeo",
       "version": "1.0.2",
       "description": "Turn buyer questions and AI citations into content that wins customers.",
