@@ -114,3 +114,6 @@ enabled = true
 
 [plugins."qa@claude-settings"]
 enabled = true
+
+[plugins."typescript-skills@claude-settings"]
+enabled = true
