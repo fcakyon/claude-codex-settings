@@ -1,6 +1,6 @@
 ---
 name: app-auth
-description: This skill should be used when the user asks to "standardize app authentication", "share login across web, mobile and TV", "reuse the Google login flow", "simplify signup", "fix password recovery", or "fix popup-blocked login". Use shared account/session contracts, email and Google web adapters, and an optional auth panel. Native and TV flows are integration contracts awaiting device validation.
+description: This skill should be used when the user asks to build, design, add, refactor or fix "login", "auth", "authentication", "social login", "sign in", "signup", "password recovery", "remember last login", "switch accounts", or a "reusable login component", including Google, GitHub, Apple, Hugging Face and PocketBase auth. Use the shared login design, bundled SVG logos, same-tab social sign-in, remembered profiles and email forms, with framework-neutral TypeScript contracts, React components and a Vite demo. Native and TV flows remain integration contracts.
 ---
 
 # App authentication
