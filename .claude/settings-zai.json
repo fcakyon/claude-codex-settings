@@ -160,6 +160,7 @@
   "outputStyle": "Concise",
   "model": "opus",
   "enabledPlugins": {
+    "typescript-skills@claude-settings": true,
     "reusable-app-components@claude-settings": true,
     "qa@claude-settings": true,
     "agent-browser@claude-settings": true,
