@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "promptCacheTtl": "1h",
   "env": {
     "ANTHROPIC_AUTH_TOKEN": "your_moonshot_api_key",
     "ANTHROPIC_BASE_URL": "https://api.moonshot.ai/anthropic",
