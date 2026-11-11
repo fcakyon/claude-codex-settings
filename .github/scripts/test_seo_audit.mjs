@@ -31,6 +31,20 @@ async function serve(t, route) {
 
 const failures = (result) => result.findings.filter((f) => f.status === 'fail')
 
+test('reports date-only profile timestamps on discovered pages', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') return { body: html(u.origin, '/', '', '<a href="/profile">Profile</a>') }
+    if (u.pathname === '/profile') return { body: html(u.origin, '/profile', `<script type="application/ld+json">${JSON.stringify({ '@type': 'ProfilePage', dateCreated: '2026-11-08', dateModified: '2026-11-08T21:03:10+03:00' })}</script>`) }
+  })
+  const result = await auditSite(origin)
+  const dates = result.findings.filter((f) => f.rule === 'schema.profile-date')
+  assert.equal(dates.length, 1)
+  assert.equal(dates[0].url, `${origin}/profile`)
+  assert.match(dates[0].evidence, /dateCreated/)
+  assert.doesNotMatch(dates[0].evidence, /dateModified/)
+})
+
 test('audits XML indexes, locale pairs, HTTP canonicals, and crawler policies without false failures', async (t) => {
   const { origin } = await serve(t, (u) => {
     const locales = ['en', 'fr'].map((lang) => `<link rel="alternate" hreflang="${lang}" href="${u.origin}/${lang}">`).join('')

@@ -83,6 +83,10 @@ const nodesOf = (value) => {
   return [value, ...nodesOf(value["@graph"] ?? [])];
 };
 const typesOf = (node) => [node["@type"]].flat().filter((type) => typeof type === "string");
+export const invalidProfileDates = (document) => nodesOf(document)
+  .filter((node) => typesOf(node).includes("ProfilePage"))
+  .flatMap((node) => ["dateCreated", "dateModified"].filter((key) => node[key] != null &&
+    (typeof node[key] !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?$/.test(node[key]) || Number.isNaN(Date.parse(node[key])))));
 // Edit the query as a string, since URLSearchParams re-encodes it (%20 becomes +).
 const withoutCache = (search) =>
   search.replace(CACHE_QUERY, (match, start, end) => (end ? start : ""));
@@ -357,6 +361,7 @@ const inspect = async ([agent, userAgent], target) => {
         url: organization.url ?? null,
       },
       profile: profile && {
+        invalidDates: invalidProfileDates(profile),
         missingDates: ["dateCreated", "dateModified"].filter((key) => !profile[key]),
         named: Boolean(entity?.name ?? entity?.alternateName),
       },
@@ -580,6 +585,8 @@ const checkSite = async ({ site, url }) => {
       warnings.push("The ProfilePage JSON-LD has no mainEntity with a name or alternateName, which Google requires.");
     if (site.profile.missingDates.length)
       warnings.push(`The ProfilePage JSON-LD has no ${site.profile.missingDates.join(" or ")}, which Google recommends.`);
+    if (site.profile.invalidDates.length)
+      warnings.push(`The ProfilePage JSON-LD has invalid ${site.profile.invalidDates.join(" or ")}. Google expects an ISO 8601 date and time.`);
   }
 
   if (site.bytes.head > 300 * KB)
