@@ -238,6 +238,7 @@
     "refreshInterval": 60
   },
   "enabledPlugins": {
+    "heroui-skills@claude-settings": true,
     "typescript-skills@claude-settings": true,
     "reusable-app-components@claude-settings": true,
     "qa@claude-settings": true,

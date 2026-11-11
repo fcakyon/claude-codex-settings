@@ -117,3 +117,6 @@ enabled = true
 
 [plugins."typescript-skills@claude-settings"]
 enabled = true
+
+[plugins."heroui-skills@claude-settings"]
+enabled = true
