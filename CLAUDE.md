@@ -419,6 +419,7 @@ bash .github/scripts/sync-supabase-cli-skills.sh
 bash .github/scripts/sync-stripe-skills.sh
 bash .github/scripts/sync-polar-skills.sh
 bash .github/scripts/sync-livekit-skills.sh
+bash .github/scripts/sync-heroui-skills.sh
 bash .github/scripts/sync-react-skills.sh
 bash .github/scripts/sync-typescript-skills.sh
 bash .github/scripts/sync-frontend-skills.sh

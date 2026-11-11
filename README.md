@@ -333,6 +333,29 @@ Use practical examples to model types and validate data at application boundarie
 </details>
 
 <details>
+<summary><strong>heroui-skills</strong> - HeroUI for web and mobile apps</summary>
+
+Build and theme React and React Native interfaces, or migrate an existing HeroUI app to v3.
+
+| Claude Code | Codex CLI | Antigravity CLI |
+| --- | --- | --- |
+| `claude plugin install heroui-skills@claude-settings` | `codex plugin add heroui-skills@claude-settings` | `uv run .github/scripts/antigravity.py install heroui-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/heroui-skills --skill '*'
+```
+
+| Skill | What it does | Download |
+| --- | --- | --- |
+| [heroui-react](./plugins/heroui-skills/skills/heroui-react/SKILL.md) | Build and theme React interfaces with HeroUI v3 | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/heroui-react.zip) |
+| [heroui-migration](./plugins/heroui-skills/skills/heroui-migration/SKILL.md) | Migrate React apps from HeroUI v2 to v3 | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/heroui-migration.zip) |
+| [heroui-native](./plugins/heroui-skills/skills/heroui-native/SKILL.md) | Build React Native interfaces with HeroUI Native | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/heroui-native.zip) |
+
+</details>
+
+<details>
 <summary><strong>react-skills</strong> - Official React, Next.js, and React Native best practices</summary>
 
 | Claude Code                                          | Codex CLI                                       | Antigravity CLI                                                |

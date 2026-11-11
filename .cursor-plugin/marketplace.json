@@ -3,6 +3,13 @@
   "displayName": "Claude & Cursor Settings",
   "plugins": [
     {
+      "name": "heroui-skills",
+      "source": "./plugins/heroui-skills",
+      "description": "Build and migrate polished interfaces with HeroUI for React and React Native.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "typescript-skills",
       "version": "1.0.0",
       "description": "Write and review TypeScript with type safety and validation guidance.",

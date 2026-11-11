@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "heroui-skills": {
+      "title": "HeroUI skills for React and React Native",
+      "description": "Build and theme HeroUI interfaces for web and mobile, and migrate existing React applications from HeroUI v2 to v3."
+    },
     "typescript-skills": {
       "title": "TypeScript type safety and coding practices",
       "description": "Write and review TypeScript with guidance on type safety, discriminated unions and boundary validation. Explore practical patterns and examples."
@@ -174,6 +178,21 @@
     }
   },
   "skills": {
+    "heroui-skills/heroui-react": {
+      "title": "Build React interfaces with HeroUI v3",
+      "description": "Build and theme React interfaces with HeroUI v3, using its components, Tailwind CSS and documentation tools.",
+      "related": ["heroui-skills/heroui-migration", "react-skills/react-best-practices", "frontend-design-skills/anthropic-frontend-design"]
+    },
+    "heroui-skills/heroui-migration": {
+      "title": "Migrate HeroUI React apps from v2 to v3",
+      "description": "Move HeroUI React applications from v2 to v3 with component migration guides, styling guidance and migration tools.",
+      "related": ["heroui-skills/heroui-react", "react-skills/react-best-practices"]
+    },
+    "heroui-skills/heroui-native": {
+      "title": "Build React Native interfaces with HeroUI",
+      "description": "Build and theme React Native interfaces with HeroUI Native, using component documentation and mobile UI guidance.",
+      "related": ["react-skills/react-native-skills", "heroui-skills/heroui-react"]
+    },
     "typescript-skills/typescript-best-practices": {
       "title": "TypeScript best practices and type safety",
       "description": "Apply TypeScript patterns for discriminated unions, branded types and boundary validation. Review practical examples for safer application code.",

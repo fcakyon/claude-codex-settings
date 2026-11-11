@@ -5,6 +5,18 @@
   },
   "plugins": [
     {
+      "name": "heroui-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/heroui-skills"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "development"
+    },
+    {
       "name": "typescript-skills",
       "source": {
         "source": "local",
