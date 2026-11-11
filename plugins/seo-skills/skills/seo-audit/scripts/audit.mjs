@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import { parse } from 'parse5'
 import { XMLParser, XMLValidator } from 'fast-xml-parser'
 import robotsParser from 'robots-parser'
-import { checkHead, googleRules } from './check_head.mjs'
+import { checkHead, googleRules, invalidProfileDates } from './check_head.mjs'
 
 const MAX_BYTES = 5 * 1024 * 1024
 const MAX_SITEMAPS = 10
@@ -247,7 +247,10 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
       }
       if (page.missingAlt) add('page.image-alt', 'review', requested, `${page.missingAlt} images lack an alt attribute. Decorative images may use empty alt.`)
       for (const block of page.jsonLd) {
-        try { JSON.parse(block) } catch (error) { add('schema.json', 'fail', requested, error.message) }
+        try {
+          const invalid = invalidProfileDates(JSON.parse(block))
+          if (invalid.length) add('schema.profile-date', 'review', requested, `${invalid.join(', ')} must include an ISO 8601 date and time for Google ProfilePage markup.`)
+        } catch (error) { add('schema.json', 'fail', requested, error.message) }
       }
       for (const alternate of page.alternates) enqueue(alternate.url, 'hreflang', true)
       if (!page.nofollow) for (const anchor of page.anchors) enqueue(anchor, `link from ${requested}`)
