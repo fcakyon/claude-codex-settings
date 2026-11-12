@@ -6,10 +6,10 @@ import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 
 const {values, positionals} = parseArgs({allowPositionals: true, options: {
-  root: {type: 'string', default: process.cwd()}, name: {type: 'string'}, 'base-url': {type: 'string'}, extension: {type: 'string'}, related: {type: 'string', multiple: true, default: []}, filter: {type: 'string'}, output: {type: 'string'}, help: {type: 'boolean'},
+  root: {type: 'string', default: process.cwd()}, name: {type: 'string'}, 'base-url': {type: 'string'}, extension: {type: 'string'}, related: {type: 'string', multiple: true, default: []}, filter: {type: 'string', multiple: true, default: []}, output: {type: 'string'}, help: {type: 'boolean'},
 }});
 if (values.help || !positionals.length) {
-  console.log('project-qa discover|setup|doctor|run --root PATH [--base-url URL] [--extension dist] [--filter ID] [--output PATH]\nSet QA_BROWSER_EXECUTABLE to a supported Chrome build. QA_STATE_DIR selects private persistent state. QA_SOURCE_CDP optionally imports authorized provider cookies after session failure.');
+  console.log('project-qa discover|setup|doctor|run --root PATH [--base-url URL] [--extension dist] [--filter ID ...] [--output PATH]\nSet QA_BROWSER_EXECUTABLE to a supported Chrome build. QA_STATE_DIR selects private persistent state. QA_SOURCE_CDP optionally imports authorized provider cookies after session failure.');
 } else if (positionals[0] === 'discover') console.log(JSON.stringify(await discover(values.root), null, 2));
 else if (positionals[0] === 'setup') console.log(JSON.stringify(await setup(values.root, {name: values.name, baseUrl: values['base-url'], extension: values.extension, related: values.related}), null, 2));
 else if (positionals[0] === 'run') {
