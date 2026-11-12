@@ -48,13 +48,14 @@ function pageOf(html, url, headers) {
   const rules = googleRules([...meta('robots'), ...meta('googlebot')], headers.get('x-robots-tag') ?? '')
   const canonical = links.filter((l) => hasRel(l, 'canonical')).map((l) => ({ raw: l.href, url: l.href?.trim() ? urlOf(l.href, base) : null }))
   const alternates = links.filter((l) => hasRel(l, 'alternate') && l.hreflang).map((l) => ({ lang: l.hreflang.toLowerCase(), url: l.href?.trim() ? urlOf(l.href, base) : null }))
-  const anchors = nodes.filter((n) => n.tag === 'a' && n.attrs.href && !hasRel(n.attrs, 'nofollow')).map((n) => urlOf(n.attrs.href, base))
+  const anchors = nodes.filter((n) => n.tag === 'a' && n.attrs.href && !hasRel(n.attrs, 'nofollow')).map((n) => urlOf(n.attrs.href, base)).filter((u) => !u?.includes('/cdn-cgi/l/email-protection'))
   const jsonLd = nodes.filter((n) => n.tag === 'script' && n.attrs.type?.toLowerCase() === 'application/ld+json').map((n) => n.text.map(textOf).join(''))
   return { url, titles: texts('title'), descriptions: meta('description'), h1: texts('h1'), canonical, alternates, anchors, rules,
     noindex: rules.some((r) => /^(noindex|none)$/i.test(r)),
     nofollow: rules.some((r) => /^(nofollow|none)$/i.test(r)),
     snippetLimited: rules.some((r) => /^(nosnippet|max-snippet\s*:\s*0)$/i.test(r)),
     excludedSnippets: nodes.filter((n) => ['div', 'span', 'section'].includes(n.tag) && 'data-nosnippet' in n.attrs).length,
+    emailObfuscated: html.includes('/cdn-cgi/l/email-protection'),
     missingAlt: nodes.filter((n) => n.tag === 'img' && !('alt' in n.attrs)).length, jsonLd }
 }
 
@@ -98,7 +99,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   const findings = []
   const add = (rule, status, url, evidence, source) => findings.push({ rule, status, url, evidence, ...(source ? { source: SOURCES[source] } : {}) })
   const root = await readUrl(target)
-  if (root.redirects.length) add('page.redirect', 'review', target, root.redirects, 'canonical')
+  if (root.redirects.length) add(root.redirects.length > 1 ? 'page.redirect-chain' : 'page.redirect', root.redirects.length > 1 ? 'fail' : 'review', target, root.redirects, 'canonical')
   const origin = new URL(root.url).origin
   const requests = new Map([[target, Promise.resolve(root)]])
   let robots = null
@@ -218,8 +219,10 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         continue
       }
       if (res.status >= 400) { add('page.status', 'fail', requested, `HTTP ${res.status}. Referenced by ${[...sources].join(', ')}.`, 'indexing'); continue }
-      if (res.redirects.length) add('page.redirect', sources.has('sitemap') ? 'fail' : 'review', requested, res.redirects, 'canonical')
+      if (res.redirects.length) add(res.redirects.length > 1 ? 'page.redirect-chain' : 'page.redirect', sources.has('sitemap') || res.redirects.length > 1 ? 'fail' : 'review', requested, res.redirects, 'canonical')
       if (!/html/i.test(res.headers.get('content-type') ?? '')) {
+        const rules = googleRules([], res.headers.get('x-robots-tag') ?? '')
+        if (!rules.some((r) => /^(noindex|none)$/i.test(r))) add('page.non-html-indexable', sources.has('sitemap') ? 'fail' : 'review', requested, `Non-HTML response (${res.headers.get('content-type') ?? 'no type'}) has no X-Robots-Tag: noindex.`, 'indexing')
         add('page.format', 'unchecked', requested, `Not an HTML page (${res.headers.get('content-type') ?? 'no type'}).`)
         continue
       }
@@ -246,6 +249,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         if (!page.h1.length) add('page.h1', 'review', requested, 'No H1 in server HTML. Check the rendered page before concluding it is missing.')
       }
       if (page.missingAlt) add('page.image-alt', 'review', requested, `${page.missingAlt} images lack an alt attribute. Decorative images may use empty alt.`)
+      if (page.emailObfuscated && requested !== root.url) add('page.email-obfuscation', 'review', requested, 'Cloudflare Email Obfuscation rewrote email addresses, so crawlers that skip JavaScript see "[email protected]".')
       for (const block of page.jsonLd) {
         try {
           const invalid = invalidProfileDates(JSON.parse(block))
@@ -261,6 +265,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
     for (const canonical of page.canonical) {
       const destination = pages.get(canonical.url)
       if (!page.noindex && destination?.noindex) add('canonical.noindex', 'fail', url, `Canonical target ${canonical.url} has noindex.`, 'canonical')
+      else if (destination && destination.canonical.some((c) => c.url !== destination.url)) add('canonical.chain', 'fail', url, `Canonical target ${canonical.url} is not self-canonical.`, 'canonical')
       else if (canonical.url && !destination) add('canonical.target', 'unchecked', url, `Target ${canonical.url} was not parsed in this crawl.`, 'canonical')
     }
     const alternates = page.alternates
@@ -274,6 +279,8 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         try { valid = new Intl.Locale(lang).toString().toLowerCase() === lang && !!new Intl.DisplayNames(['en'], { type: 'language', fallback: 'none' }).of(lang.slice(0, 2)) } catch { valid = false }
       }
       if (!valid || !href) add('hreflang.value', 'review', url, { lang, target: href }, 'hreflang')
+    }
+    for (const href of new Set(alternates.map((a) => a.url).filter(Boolean))) {
       const destination = pages.get(href)
       if (!destination) add('hreflang.target', 'unchecked', url, `Target ${href} was not parsed in this crawl.`, 'hreflang')
       else if (destination.noindex) add('hreflang.noindex', 'fail', url, `Target ${href} has noindex.`, 'hreflang')
@@ -302,7 +309,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
     for (const message of report.warnings) add('head.warning', 'review', root.url, { agent: report.agent, message })
   }
   findings.sort((a, b) => a.url.localeCompare(b.url) || a.rule.localeCompare(b.rule) || JSON.stringify(a.evidence).localeCompare(JSON.stringify(b.evidence)))
-  return { url: root.url, rulesCheckedOn: '2026-11-08', valid: !findings.some((f) => f.status === 'fail'), findings,
+  return { url: root.url, rulesCheckedOn: '2026-11-12', valid: !findings.some((f) => f.status === 'fail'), findings,
     coverage: { visited: visited.size, discovered: queue.size, parsedPages: pages.size, sitemaps: parsedMaps.size, maxPages, maxSitemaps: MAX_SITEMAPS,
       crawlComplete: !findings.some((f) => f.status === 'unchecked'), mode: 'server HTML, no JavaScript rendering',
       unchecked: ['Rendered content and layout', 'Core Web Vitals', 'Actual Google indexing and canonical selection', 'Content quality and search intent', 'Share-card composition', 'Rich-result eligibility and structured-data truthfulness', 'Whether lastmod matches an actual content change'] },
