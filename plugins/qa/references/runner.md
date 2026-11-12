@@ -36,7 +36,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 
 `config.auth` defines `usernameEnv`, `passwordEnv`, `identityField`, `profileUrl`, `loginEndpoint`, `loginUrl`, `usernameSelector`, `passwordSelector`, `submitSelector`, `successUrl`. OAuth, MFA, device codes and provider profile selection need project-specific scripts.
 
-Command output stays in memory unless saved. Use descriptive assertion messages instead of secret-bearing response dumps. Screenshots stay private. Use `try/finally` for project data and tabs. The runner saves sessions, closes its browser and reports failed cases.
+Command output stays in memory unless saved. A failure records `reason` with the compared values cut to 120 characters, `at` with up to three suite lines, `detail` with the browser call log and `pages` with each page's last address without its query, plus a screenshot while the page is open. Console output repeats them, so wrappers that delete the report still show the cause. Assert on statuses, ids and counts, never on tokens or secret-bearing responses. Screenshots stay private. Use `try/finally` for project data and tabs. The runner saves sessions, closes its browser and reports failed cases.
 
 Browser analytics capture does not cover `qa.http` or subprocesses. Follow telemetry guidance for their effects. Run suites sharing state sequentially.
 

@@ -6,7 +6,8 @@ import {mkdir, readFile, writeFile, realpath} from 'node:fs/promises';
 import {homedir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
-import {pathToFileURL} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import {inspect, stripVTControlCharacters} from 'node:util';
 import {chromium} from 'playwright-core';
 import {importCookies} from './session.mjs';
 import {signIn} from './auth.mjs';
@@ -25,8 +26,25 @@ export async function secret(name, stateDir) {
     throw error;
   });
   const value = JSON.parse(credentials)[name];
-  if (!value) throw new Blocked(`Missing credential ${name}. Configure it outside the repository.`);
+  if (!value) throw new Blocked(`Missing credential ${name}. Set it in the environment or in ${path.join(stateDir, 'credentials.json')}.`);
   return value;
+}
+
+// Keep what a reader needs to act: the compared values, the suite lines that threw and the tool's call log.
+export function failure(error, root) {
+  const [summary, ...rest] = stripVTControlCharacters(String(error.message)).split('\n');
+  const asserted = error.code === 'ERR_ASSERTION' && error.operator !== 'fail';
+  const options = {depth: 2, breakLength: Infinity, maxStringLength: 120, maxArrayLength: 10};
+  const reason = `${error.name}: ${summary}` + (asserted ? ` (actual ${inspect(error.actual, options)}, expected ${inspect(error.expected, options)})` : '');
+  const at = [];
+  for (const line of String(error.stack).split('\n')) {
+    const match = line.match(/^\s+at .*?((?:file:\/\/)?\/[^\s)]+):(\d+):\d+\)?$/);
+    const file = match && fileURLToPath(new URL(match[1], 'file:///'));
+    const frame = file?.startsWith(root + path.sep) && !file.includes(`${path.sep}node_modules${path.sep}`) && `${path.relative(root, file)}:${match[2]}`;
+    if (frame && !at.includes(frame) && at.length < 3) at.push(frame);
+  }
+  const detail = asserted ? [] : rest.map(line => line.trim()).filter(line => line && !line.startsWith('===')).slice(0, 10);
+  return {reason, ...(at.length && {at}), ...(detail.length && {detail})};
 }
 
 export function telemetryEvent(url, body) {
@@ -95,6 +113,9 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
   report.dirty = Boolean((await command('git', ['status', '--porcelain'], {cwd: root})).stdout.trim());
   if (config.extension) report.extensionVersion = JSON.parse(await readFile(path.resolve(root, config.extension, 'manifest.json'), 'utf8')).version;
   let browserContext;
+  // The last address of every page a case opened, so a failure names the page even after the case closed it.
+  const visited = new Map();
+  const watch = page => page.on('framenavigated', frame => frame === page.mainFrame() && visited.set(page, frame.url().split(/[?#]/)[0]));
   const qa = {
     root, config, stateDir, outputDir, Blocked, command, androidInstrumentation, sqliteQuery,
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
@@ -104,7 +125,11 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     telemetry: report.telemetry.events,
     secret: name => secret(name, stateDir),
     browser: async () => {
-      browserContext ||= await openBrowser(config, stateDir, report.telemetry.events);
+      if (!browserContext) {
+        browserContext = await openBrowser(config, stateDir, report.telemetry.events);
+        browserContext.pages().forEach(watch);
+        browserContext.on('page', watch);
+      }
       report.browser = {version: browserContext.browser().version(), headless: process.env.QA_HEADED !== '1', actionDelayMs: config.browser?.actionDelayMs ?? 500};
       return browserContext;
     },
@@ -137,6 +162,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     for (const item of selected) {
       const start = Date.now();
       qa.current = {id: item.id, surface: item.surface, status: 'running', assertions: 0, evidence: {}};
+      visited.clear();
       try {
         const missing = (item.requires || []).filter(id => !report.results.some(result => result.id === id && result.status === 'pass'));
         if (missing.length) throw new Blocked('Required journey did not pass: ' + missing.join(', '));
@@ -144,21 +170,35 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
         assert.ok(qa.current.assertions > 0, 'Case completed without an explicit outcome assertion');
         qa.current.status = 'pass';
       } catch (error) {
-        qa.current.status = error instanceof Blocked ? 'blocked' : 'fail';
-        qa.current.reason = error instanceof Blocked ? error.message : `${error.name}: ${error.message.split('\n')[0]}`;
+        if (error instanceof Blocked) Object.assign(qa.current, {status: 'blocked', reason: error.message});
+        else {
+          Object.assign(qa.current, {status: 'fail'}, failure(error, root));
+          // A screenshot must never hang or replace the error, so a page that cannot take one keeps only its address.
+          if (visited.size) qa.current.pages = await Promise.all([...visited].map(async ([page, url], index) => {
+            const file = path.join(outputDir, `${item.id}-failure-${index + 1}.png`);
+            return {url, screenshot: page.isClosed() ? undefined : await page.screenshot({path: file, timeout: 5000}).then(() => file, () => undefined)};
+          }));
+        }
       }
       qa.current.durationMs = Date.now() - start;
       report.results.push(qa.current);
-      process.stdout.write(`${qa.current.status.toUpperCase()} ${item.id}${qa.current.reason ? ': ' + qa.current.reason : ''}\n`);
+      const {status, reason, at = [], detail = [], pages = []} = qa.current;
+      const lines = [
+        `${status.toUpperCase()} ${item.id}${reason ? ': ' + reason : ''}`,
+        ...at.map(line => `  at ${line}`),
+        ...detail.map(line => `  ${line}`),
+        ...pages.map(page => `  page ${page.url}${page.screenshot ? ' ' + page.screenshot : ''}`),
+      ];
+      process.stdout.write(lines.join('\n') + '\n');
     }
   } finally {
     if (browserContext) {
       for (const page of browserContext.pages()) await page.evaluate(() => document.querySelectorAll('video').forEach(video => video.pause())).catch(() => {});
       try {
         await browserContext.qaSave();
-      } catch (error) { report.results.push({id: 'cleanup.session', status: 'fail', reason: error.message.split('\n')[0]}); }
+      } catch (error) { report.results.push({id: 'cleanup.session', status: 'fail', ...failure(error, root)}); }
       try { await browserContext.close(); }
-      catch (error) { report.results.push({id: 'cleanup.browser', status: 'fail', reason: error.message.split('\n')[0]}); }
+      catch (error) { report.results.push({id: 'cleanup.browser', status: 'fail', ...failure(error, root)}); }
     }
     report.finishedAt = new Date().toISOString();
     report.counts = Object.fromEntries(['pass', 'fail', 'blocked'].map(status => [status, report.results.filter(item => item.status === status).length]));

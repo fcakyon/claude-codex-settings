@@ -1,10 +1,10 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
-import {mkdtemp, mkdir, writeFile, rm} from 'node:fs/promises';
+import {mkdtemp, mkdir, readFile, stat, writeFile, rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import path from 'node:path';
-import {openBrowser} from '../scripts/runtime.mjs';
+import {command, openBrowser} from '../scripts/runtime.mjs';
 
 test('fresh extension runs preserve login state without delivering startup telemetry', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
   const dir = await mkdtemp(path.join(tmpdir(), 'qa-browser-contract-'));
@@ -64,7 +64,6 @@ test('fresh extension runs preserve login state without delivering startup telem
 
 test('cookie recovery scopes origins and closes only its temporary source tab', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
   const {chromium} = await import('playwright-core');
-  const {readFile} = await import('node:fs/promises');
   const {importCookies} = await import('../scripts/session.mjs');
   const dir = await mkdtemp(path.join(tmpdir(), 'qa-source-contract-'));
   const source = await chromium.launchPersistentContext(dir, {executablePath: process.env.QA_BROWSER_EXECUTABLE, headless: true, args: ['--remote-debugging-port=0']});
@@ -95,7 +94,6 @@ test('cookie recovery reports unavailable HTTP discovery', async () => {
 
 test('network capture exports and stops after success or journey failure', {skip: !process.env.QA_BROWSER_EXECUTABLE || !process.env.BROWSER_NETWORK_CLI}, async () => {
   const {chromium} = await import('playwright-core');
-  const {readFile, stat} = await import('node:fs/promises');
   const {withNetwork} = await import('../scripts/network.mjs');
   const dir = await mkdtemp(path.join(tmpdir(), 'qa-network-contract-'));
   const server = createServer((req, res) => res.end('fixture'));
@@ -178,5 +176,35 @@ box.addEventListener('touchmove', event => box.dataset.engaged && event.preventD
     await context.close();
     await new Promise(resolve => server.close(resolve));
     await rm(dir, {recursive: true, force: true});
+  }
+});
+
+test('failures name the pages a case opened and capture the open ones', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-pages-contract-'));
+  const server = createServer((req, res) => res.end('<title>fixture</title>'));
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    await mkdir(path.join(root, '.agents/qa'), {recursive: true});
+    await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'pages-contract', baseUrl: base, browser: {actionDelayMs: 0}}));
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), `export const cases = [{id: 'pages', surface: 'website', async run(qa) {
+      const context = await qa.browser();
+      const closed = await context.newPage();
+      await closed.goto(qa.config.baseUrl + '/login?code=private');
+      await closed.close();
+      const open = await context.newPage();
+      await open.goto(qa.config.baseUrl + '/dashboard#tab');
+      await open.getByText('Saved').waitFor({timeout: 100});
+    }}];`);
+    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
+    assert.equal(result.code, 1, result.stdout);
+    const {pages} = JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8')).results[0];
+    assert.deepEqual(pages.map(page => page.url), [`${base}/login`, `${base}/dashboard`], 'Pages keep their last address without the query');
+    assert.equal(pages[0].screenshot, undefined, 'A closed page has no screenshot');
+    assert.ok((await stat(pages[1].screenshot)).size > 0, 'An open page is captured at the failure');
+    assert.match(result.stdout, new RegExp(`page ${base}/dashboard ${pages[1].screenshot}`));
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+    await rm(root, {recursive: true, force: true});
   }
 });

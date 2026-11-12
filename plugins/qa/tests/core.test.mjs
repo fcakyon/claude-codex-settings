@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import {createServer} from 'node:http';
 import assert from 'node:assert/strict';
-import {mkdtemp, writeFile, readFile, rm} from 'node:fs/promises';
+import {mkdtemp, mkdir, writeFile, readFile, rm} from 'node:fs/promises';
 import path from 'node:path';
 import {tmpdir} from 'node:os';
 import {setup} from '../scripts/setup.mjs';
@@ -78,4 +78,30 @@ test('run selects the requested HTTP target without rewriting project settings',
     await Promise.all(servers.map(server => new Promise(resolve => server.close(resolve))));
     await rm(root, {recursive: true, force: true});
   }
+});
+
+test('failures report compared values, suite lines and call logs', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-failure-contract-'));
+  try {
+    await writeFile(path.join(root, 'helpers.mjs'), "export const status = (qa, actual) => qa.assert.equal(actual, 200, 'The session is accepted');\n");
+    await mkdir(path.join(root, '.agents/qa'), {recursive: true});
+    await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'failure-contract'}));
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), [
+      "import {status} from '../../helpers.mjs';",
+      'export const cases = [',
+      "  {id: 'custom', surface: 'backend', async run(qa) { status(qa, 401) }},",
+      "  {id: 'generated', surface: 'backend', async run(qa) { qa.assert.deepEqual({rows: 1}, {rows: 2}) }},",
+      "  {id: 'timeout', surface: 'website', async run() { const error = new Error('locator.waitFor: Timeout 20ms exceeded.\\nCall log:\\n\\u001b[2m  - waiting for getByText(\"Saved\")\\u001b[22m\\n'); error.name = 'TimeoutError'; throw error }},",
+      '];',
+    ].join('\n'));
+    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
+    assert.equal(result.code, 1);
+    const [custom, generated, timeout] = JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8')).results;
+    assert.equal(custom.reason, 'AssertionError: The session is accepted (actual 401, expected 200)');
+    assert.deepEqual(custom.at, ['helpers.mjs:1', '.agents/qa/suite.mjs:3'], 'Helper frames lead to the calling case');
+    assert.equal(generated.reason, 'AssertionError: Expected values to be strictly deep-equal: (actual { rows: 1 }, expected { rows: 2 })');
+    assert.equal(generated.detail, undefined, 'The compared values replace the generated diff');
+    assert.deepEqual(timeout.detail, ['Call log:', '- waiting for getByText("Saved")'], 'Call logs keep their steps without terminal colors');
+    assert.match(result.stdout, /^FAIL custom: AssertionError: The session is accepted \(actual 401, expected 200\)\n {2}at helpers\.mjs:1\n {2}at \.agents\/qa\/suite\.mjs:3$/m, 'Console output carries the cause for wrappers that delete the report');
+  } finally { await rm(root, {recursive: true, force: true}); }
 });
