@@ -58,3 +58,17 @@ for (const width of [390, 1280]) test(`one to four configured providers fit at $
     assert.ok(Math.abs(sizes[0] - sizes[1]) < 1)
   } finally { await page.close() }
 })
+
+test('a long remembered email stays on one line inside a content-sized host at 390px', async () => {
+  const page = await browser.newPage({ viewport: { width: 390, height: 900 } })
+  const email = 'first.middle.last.with.a.rather.long.address@subdomain.example.test'
+  try {
+    await page.addInitScript(email => { localStorage.setItem('auth-demo.last-login.email', email); localStorage.setItem('auth-demo.last-login.method', 'google') }, email)
+    await page.goto(origin)
+    await page.addStyleTag({ content: '.app-auth-panel { inline-size: auto } .app-remembered-login { grid-template-columns: auto }' })
+    const [row, panel] = await Promise.all([page.getByRole('link', { name: email, exact: true }).boundingBox(), page.locator('.app-remembered-login').boundingBox()])
+    assert.equal(row.height, 44)
+    assert.ok(row.x + row.width <= panel.x + panel.width + 1)
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true)
+  } finally { await page.close() }
+})
