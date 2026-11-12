@@ -39,16 +39,29 @@ export async function captureAudio(page) {
       return connect.call(this, target, ...rest);
     };
     // Media elements, including WebRTC streams in <audio>, are read from a captured copy, so their sound is untouched.
+    // Chrome refuses to capture cross-origin files served without CORS, so those stay unmetered rather than throwing in the page.
+    const capturable = media => media.srcObject instanceof MediaStream || media.crossOrigin !== null || /^(blob|data):/.test(media.currentSrc) || new URL(media.currentSrc, location.href).origin === location.origin;
     const listened = new WeakSet();
     document.addEventListener('play', event => {
       const media = event.target;
+      if (listened.has(media) || !capturable(media)) return;
       const stream = media.srcObject instanceof MediaStream ? media.srcObject : media.captureStream();
-      if (listened.has(media) || !stream.getAudioTracks().length) return;
+      if (!stream.getAudioTracks().length) return;
       listened.add(media);
       state.listener ||= new AudioContext();
       state.listener.resume();
       state.listener.createMediaStreamSource(stream).connect(meter(state.listener));
     }, true);
+    state.say = async base64 => {
+      if (!state.mic) throw new Error('The page has not opened the microphone');
+      await state.context.resume();
+      const source = state.context.createBufferSource();
+      source.buffer = await state.context.decodeAudioData(Uint8Array.from(atob(base64), c => c.charCodeAt(0)).buffer);
+      source.connect(state.mic);
+      await new Promise(resolve => { source.onended = resolve; source.start(); });
+    };
+    // Pages outside a secure context have no media devices, so there is no microphone to script.
+    if (!navigator.mediaDevices) return;
     // The microphone stays silent until a case says a clip, so silence and speech are both deterministic.
     const getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
     navigator.mediaDevices.getUserMedia = async constraints => {
@@ -62,14 +75,6 @@ export async function captureAudio(page) {
     navigator.mediaDevices.enumerateDevices = async () => {
       const devices = await enumerateDevices();
       return devices.some(device => device.kind === 'audioinput' && device.deviceId) ? devices : [...devices, {kind: 'audioinput', deviceId: 'qa-microphone', groupId: 'qa', label: 'QA microphone', toJSON() { return this; }}];
-    };
-    state.say = async base64 => {
-      if (!state.mic) throw new Error('The page has not opened the microphone');
-      await state.context.resume();
-      const source = state.context.createBufferSource();
-      source.buffer = await state.context.decodeAudioData(Uint8Array.from(atob(base64), c => c.charCodeAt(0)).buffer);
-      source.connect(state.mic);
-      await new Promise(resolve => { source.onended = resolve; source.start(); });
     };
   });
   return {

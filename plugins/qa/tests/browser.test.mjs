@@ -271,3 +271,48 @@ element.onclick = () => { const context = new AudioContext(); const stream = con
     await rm(dir, {recursive: true, force: true});
   }
 });
+
+test('uncaught page errors fail a case unless it allows them, and overflow names the wide elements', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-errors-contract-'));
+  const pages = {
+    '/error?code=private': '<title>fixture</title><script>throw new Error("boom")</script>',
+    '/fits': '<body style="margin:0"><div style="overflow-x:auto"><div style="width:3000px">strip</div></div></body>',
+    '/wide': '<body style="margin:0"><div id="wide" class="strip row" style="width:2000px">wide</div></body>',
+  };
+  const server = createServer((req, res) => res.end(pages[req.url]));
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    await mkdir(path.join(root, '.agents/qa'), {recursive: true});
+    await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'errors-contract', baseUrl: base, browser: {actionDelayMs: 0}}));
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), `const error = async qa => {
+      const page = await (await qa.browser()).newPage();
+      await Promise.all([page.waitForEvent('pageerror'), page.goto(qa.config.baseUrl + '/error?code=private')]);
+      qa.assert.equal(await page.title(), 'fixture');
+      await page.close();
+    };
+    export const cases = [
+      {id: 'error', surface: 'website', run: error},
+      {id: 'allowed', surface: 'website', allowPageErrors: true, run: error},
+      {id: 'overflow', surface: 'website', async run(qa) {
+        const page = await (await qa.browser()).newPage();
+        await page.goto(qa.config.baseUrl + '/fits');
+        qa.assert.deepEqual(await qa.overflow(page), [], 'A scrolling strip fits');
+        await page.goto(qa.config.baseUrl + '/wide');
+        qa.assert.deepEqual(await qa.overflow(page), [], 'The page fits');
+      }},
+    ];`);
+    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
+    assert.equal(result.code, 1, result.stdout);
+    const [error, allowed, overflow] = JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8')).results;
+    assert.equal(error.status, 'fail');
+    assert.equal(error.reason, 'Uncaught page error: boom');
+    assert.deepEqual(error.pageErrors, [{url: `${base}/error`, message: 'boom'}], 'Errors keep their page address without the query');
+    assert.match(result.stdout, new RegExp(`^ {2}pageerror ${base}/error boom$`, 'm'));
+    assert.equal(allowed.status, 'pass');
+    assert.equal(overflow.reason, `AssertionError: The page fits (actual [ 'div#wide.strip.row right=2000' ], expected [])`);
+  } finally {
+    await new Promise(resolve => server.close(resolve));
+    await rm(root, {recursive: true, force: true});
+  }
+});

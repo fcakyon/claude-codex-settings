@@ -5,7 +5,7 @@ description: This skill should be used when user asks to "run QA", "verify real 
 
 # Run project QA
 
-Read `.agents/skills/qa/SKILL.md` and `.agents/qa/config.json`, then run `project-qa run --root <repo>`. If absent, use setup. `--filter <id-substring>` limits a follow-up run. `--base-url <url>` selects a temporary website target without editing project settings. Check `report.json` for the effective `baseUrl` and tested revision, then confirm the browser destination; API and auth URLs remain separately configured.
+Read `.agents/skills/qa/SKILL.md` and `.agents/qa/config.json`, then run `project-qa run --root <repo>`. If absent, use setup. `--filter <id-substring>` limits a follow-up run and repeats, so run a fixed CI case list with one `--filter` per case in one invocation. `--base-url <url>` selects a temporary website target without editing project settings. Check `report.json` for the effective `baseUrl` and tested revision, then confirm the browser destination; API and auth URLs remain separately configured.
 
 Use deterministic scripts. Interactive investigation can repair a failed journey, then put repeatable steps in its tracked suite. Never replace failed live behavior with mocked success.
 
@@ -13,4 +13,4 @@ Reports distinguish pass, fail and blocked, record Git revision, and keep screen
 
 Read [sessions](../../references/sessions.md) before recovering login, [telemetry](../../references/telemetry.md) before production traffic, [voice](../../references/voice.md) before microphone or speech journeys, and [surface requirements](../../references/surfaces.md) for relevant components. [Runner API](../../references/runner.md) defines executable cases and optional browser-network-cli diagnostics, including installation when needed.
 
-Verify cleanup of created data and tabs. Keep saved sessions for the next run. Do not close personal browser tabs, log out providers after each test, or run suites sharing a `stateGroup` concurrently.
+Verify cleanup of created data and tabs. Keep saved sessions for the next run. Do not close personal browser tabs, log out providers after each test, or run suites sharing a `stateGroup` concurrently. Parallel runs each need their own server port and `QA_STATE_DIR`.
