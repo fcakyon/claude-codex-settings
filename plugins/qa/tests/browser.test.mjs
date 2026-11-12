@@ -209,6 +209,69 @@ test('failures name the pages a case opened and capture the open ones', {skip: !
   }
 });
 
+test('scripted microphone speaks clips on demand and the meter hears played audio', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
+  const {captureAudio} = await import('../scripts/audio.mjs');
+  const dir = await mkdtemp(path.join(tmpdir(), 'qa-audio-contract-'));
+  // Half a second of a 440 Hz tone as 16-bit mono WAV.
+  const rate = 16000;
+  const pcm = Buffer.alloc(rate / 2 * 2);
+  for (let i = 0; i < rate / 2; i++) pcm.writeInt16LE(Math.round(Math.sin(2 * Math.PI * 440 * i / rate) * 12000), i * 2);
+  const header = Buffer.alloc(44);
+  header.write('RIFF', 0); header.writeUInt32LE(36 + pcm.length, 4); header.write('WAVEfmt ', 8);
+  header.writeUInt32LE(16, 16); header.writeUInt16LE(1, 20); header.writeUInt16LE(1, 22); header.writeUInt32LE(rate, 24);
+  header.writeUInt32LE(rate * 2, 28); header.writeUInt16LE(2, 32); header.writeUInt16LE(16, 34); header.write('data', 36); header.writeUInt32LE(pcm.length, 40);
+  const clip = path.join(dir, 'clip.wav');
+  await writeFile(clip, Buffer.concat([header, pcm]));
+  // A tone straight to the speakers, and one through an <audio> element as WebRTC players do.
+  const html = `<!doctype html><button id=mic>mic</button><button id=speaker>speaker</button><button id=element>element</button><audio id=player></audio><script>
+window.heard = 0;
+const tone = (context, target) => { const oscillator = context.createOscillator(); oscillator.connect(target); oscillator.start(); oscillator.stop(context.currentTime + 0.4); };
+mic.onclick = async () => {
+  const context = new AudioContext();
+  const analyser = context.createAnalyser();
+  context.createMediaStreamSource(await navigator.mediaDevices.getUserMedia({audio: {echoCancellation: true}})).connect(analyser);
+  const samples = new Float32Array(analyser.fftSize);
+  setInterval(() => { analyser.getFloatTimeDomainData(samples); window.heard = Math.max(window.heard, ...samples.map(Math.abs)); }, 20);
+  window.listening = true;
+};
+speaker.onclick = () => { const context = new AudioContext(); tone(context, context.destination); };
+element.onclick = () => { const context = new AudioContext(); const stream = context.createMediaStreamDestination(); tone(context, stream); player.srcObject = stream.stream; player.play(); };
+</script>`;
+  const server = createServer((req, res) => res.end(html));
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const context = await openBrowser({root: dir, browser: {actionDelayMs: 0}}, dir, []);
+  try {
+    const page = await context.newPage();
+    const audio = await captureAudio(page);
+    await page.goto(`http://127.0.0.1:${server.address().port}/`);
+    assert.ok(await page.evaluate(async () => (await navigator.mediaDevices.enumerateDevices()).some(device => device.kind === 'audioinput')), 'The page can list a microphone');
+    await assert.rejects(audio.say(clip), /has not opened the microphone/);
+    await page.click('#mic');
+    await page.waitForFunction(() => window.listening);
+    await page.waitForTimeout(200);
+    assert.equal(await page.evaluate(() => window.heard), 0, 'The microphone is silent until a clip is said');
+    const started = Date.now();
+    await audio.say(clip);
+    assert.ok(Date.now() - started >= 450, 'Saying a clip waits for it to finish');
+    assert.ok(await page.evaluate(() => window.heard) > 0.1, 'The page hears the clip through its microphone');
+    assert.deepEqual(await audio.output(), {peak: 0, activeMs: 0}, 'A clip on the microphone is not counted as played audio');
+    for (const button of ['#speaker', '#element']) {
+      const before = (await audio.output()).activeMs;
+      await page.click(button);
+      await page.waitForFunction(before => window.__qaAudio.activeMs >= before + 200, before);
+      await page.waitForTimeout(400);
+      const quiet = (await audio.output()).activeMs;
+      await page.waitForTimeout(300);
+      assert.equal((await audio.output()).activeMs, quiet, `Audible time stops when the ${button.slice(1)} tone ends`);
+    }
+    assert.ok((await audio.output()).peak > 0.1, 'Played audio reaches the meter');
+  } finally {
+    await context.close();
+    await new Promise(resolve => server.close(resolve));
+    await rm(dir, {recursive: true, force: true});
+  }
+});
+
 test('uncaught page errors fail a case unless it allows them, and overflow names the wide elements', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async () => {
   const root = await mkdtemp(path.join(tmpdir(), 'qa-errors-contract-'));
   const pages = {

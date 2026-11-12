@@ -14,6 +14,7 @@ import {signIn} from './auth.mjs';
 import {withNetwork} from './network.mjs';
 import {advancingVideo, observeSkip, videoState} from './media.mjs';
 import {emulateTouch, gestures, touchGesture} from './touch.mjs';
+import {captureAudio} from './audio.mjs';
 
 export function privateDirectory(root, config) {
   return process.env.QA_STATE_DIR || path.join(homedir(), '.local', 'share', 'project-qa', config.stateGroup || config.name + '-' + createHash('sha256').update(root).digest('hex').slice(0, 8));
@@ -129,7 +130,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
     signIn: page => signIn(qa, page),
     network: (args, run) => withNetwork(qa, args, run),
-    advancingVideo, observeSkip, videoState, emulateTouch, touchGesture, gestures,
+    advancingVideo, observeSkip, videoState, emulateTouch, touchGesture, gestures, captureAudio,
     telemetry: report.telemetry.events,
     secret: async name => {
       const value = await secret(name, stateDir);
