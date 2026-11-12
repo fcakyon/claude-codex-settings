@@ -1,6 +1,6 @@
 .app-email-auth {
   display: grid;
-  gap: 26px;
+  gap: 16px;
   font: inherit;
   font-size: 0.875rem;
   line-height: 1.5;
@@ -8,16 +8,15 @@
 }
 .app-email-auth h3 {
   margin: 0;
-  font-size: 28px;
+  font-size: 1.25rem;
   font-weight: 600;
   text-align: center;
   letter-spacing: -0.035em;
   line-height: 1.25;
-  margin-block-end: 6px;
 }
 .app-email-auth fieldset {
   display: grid;
-  gap: 22px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -26,15 +25,14 @@
 .app-email-auth label,
 .app-email-auth__field {
   display: grid;
-  gap: 8px;
-  font-size: 1rem;
+  gap: 6px;
 }
 .app-email-auth input:not([type="checkbox"]) {
   box-sizing: border-box;
   inline-size: 100%;
   min-inline-size: 0;
-  min-block-size: 50px;
-  padding: 12px 14px;
+  min-block-size: 44px;
+  padding: 10px 12px;
   border: 1px solid var(--auth-border, #23282b);
   border-radius: 8px;
   background: var(--auth-input, #101517);

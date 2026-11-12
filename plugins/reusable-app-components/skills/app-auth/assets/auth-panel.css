@@ -33,7 +33,7 @@
 
 .app-auth-panel h2 {
   margin: 0;
-  font-size: clamp(1.5rem, 4vw, 1.75rem);
+  font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.035em;
   line-height: 1.2;
@@ -47,31 +47,22 @@
 }
 
 .app-auth-panel header p { margin: 12px 0 0; }
-.app-auth-panel header + .app-auth-panel__body { margin-block-start: 32px; }
+.app-auth-panel header + .app-auth-panel__body { margin-block-start: 20px; }
 .app-auth-panel footer { margin-block-start: 24px; text-align: center; }
 .app-auth-panel .app-google-sign-in { max-inline-size: none; }
 .app-auth-panel [role="status"] { color: var(--auth-muted, #b3b3be); }
 .app-auth-panel [role="alert"] { color: var(--auth-error, #fda4af); }
 
-.app-remembered-login { display: grid; gap: 16px; }
-.app-remembered-login__profile a,
-.app-remembered-login__profile button { display: flex; align-items: center; gap: 12px; justify-content: flex-start; }
-.app-remembered-login__profile button { width: 100%; background: transparent; border: 1px solid var(--auth-border, #24282b); border-radius: 8px; color: inherit; padding: 14px 18px; min-height: 52px; font: inherit; }
-.app-remembered-login__badge { flex-shrink: 0; margin-left: auto; color: var(--auth-accent, #4297ff); background: var(--auth-badge-surface, #112039); padding: 3px 8px; border-radius: 16px; font-size: 12px; font-weight: 500; line-height: 1.4; white-space: nowrap; }
-.app-remembered-login__profile a::after { content: "→"; color: var(--auth-muted, #a1a1a1); font-size: 20px; }
+.app-remembered-login { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.app-remembered-login .app-remembered-login__profile :is(a, button) { display: flex; align-items: center; gap: 8px; justify-content: flex-start; padding: 8px 12px; text-align: start; }
+.app-remembered-login__profile button { width: 100%; background: transparent; border: 1px solid var(--auth-border, #24282b); border-radius: var(--auth-button-radius, 8px); color: inherit; min-height: 44px; font: inherit; cursor: pointer; }
+.app-remembered-login__profile .app-social-sign-in__label { flex: 1; min-width: 0; overflow: hidden; font-size: 13px; font-weight: 500; white-space: nowrap; text-overflow: ellipsis; direction: ltr; text-align: match-parent; }
+.app-remembered-login__badge { flex-shrink: 0; color: var(--auth-accent, #4297ff); background: var(--auth-badge-surface, #112039); padding: 2px 6px; border-radius: 16px; font-size: 11px; font-weight: 500; line-height: 1.4; white-space: nowrap; }
 .app-remembered-login__switch { background: transparent; border: 0; color: inherit; font: inherit; min-height: 44px; cursor: pointer; padding: 0; font-weight: 500; }
-.app-remembered-login button:focus-visible { outline: 2px solid var(--auth-accent, #4297ff); outline-offset: 4px; }
-.app-auth-divider { display: flex; align-items: center; gap: 20px; color: var(--auth-muted, #a1a1a1); font-size: 14px; }
+.app-remembered-login__profile button:focus-visible, .app-remembered-login__switch:focus-visible { outline: 2px solid var(--auth-accent, #4297ff); outline-offset: 4px; }
+.app-auth-divider { display: flex; align-items: center; gap: 12px; color: var(--auth-muted, #a1a1a1); font-size: 14px; }
 .app-auth-divider::before,
 .app-auth-divider::after { content: ""; height: 1px; background: var(--auth-border, #24282b); flex: 1; }
-@media (max-width: 420px) {
-  .app-remembered-login__profile a { flex-wrap: wrap; gap: 8px; padding: 12px; }
-  .app-remembered-login__profile .app-social-sign-in__label { flex: 1; font-size: 14px; }
-  .app-remembered-login__badge { font-size: 11px; padding: 3px 6px; }
-}
-
-.app-remembered-login__profile .app-social-sign-in__label { font-weight: 500; letter-spacing: -0.015em; }
-
 .app-remembered-login > h2 { text-align: center; margin-block-end: 16px; }
 
 .app-remembered-login__footer { margin-block-start: 8px; text-align: center; }
