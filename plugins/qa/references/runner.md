@@ -7,10 +7,10 @@ project-qa discover --root .
 project-qa setup --root . --base-url https://example.com --related ../backend
 project-qa doctor
 project-qa run --root . --base-url http://localhost:3000
-project-qa run --root . --filter auth --output /private/path/qa-run
+project-qa run --root . --filter auth --filter pages.home --output /private/path/qa-run
 ```
 
-Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `requires` with earlier case IDs, `async run(qa)` and an explicit `qa.assert` outcome assertion. Throw `new qa.Blocked(reason)` for known missing prerequisites. Unexpected errors fail. Reports record the effective `baseUrl`, tested revision, configured gaps and selected/omitted cases. `run --base-url` overrides only the website target for that run; API and authentication endpoints are separate settings. Confirm those endpoints before using credentials or creating side effects.
+Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `requires` with earlier case IDs, `async run(qa)` and an explicit `qa.assert` outcome assertion. Throw `new qa.Blocked(reason)` for known missing prerequisites. Unexpected errors fail, and so does an uncaught error on any page of the case, recorded as `pageErrors` with up to five page addresses and messages. Set `allowPageErrors: true` on a case that triggers them on purpose. Each `--filter` selects the cases whose id contains it, and a filter that matches no case stops the run. Reports record the effective `baseUrl`, tested revision, configured gaps and selected/omitted cases. `run --base-url` overrides only the website target for that run; API and authentication endpoints are separate settings. Confirm those endpoints before using credentials or creating side effects.
 
 | API | Purpose |
 | --- | --- |
@@ -31,6 +31,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.emulateTouch(page, {width, height})` | Phone viewport and touch input for one page. Call before navigation and again after a full-page screenshot |
 | `qa.touchGesture(page, selector, steps, {observe, settle, timeout})` | Real touch points. `steps` are `[dx, dy, waitMs]` from the target center. `observe(element)` state, pointer events and `scrolled` `{x, y}` are sampled with the finger down and `settle` ms after release |
 | `qa.gestures` | Named step presets by finger direction |
+| `qa.overflow(page)` | Up to five `tag#id.class right=<px>` elements past the viewport's right edge, `[]` when the page has no horizontal scroll. Assert with `deepEqual(…, [])` |
 | `qa.evidence(name, value)` | Non-sensitive structured evidence |
 | `qa.screenshot(page, name)` | Private screenshot |
 

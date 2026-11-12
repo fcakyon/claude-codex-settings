@@ -102,7 +102,9 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
   const outputDir = output || path.join(stateDir, 'runs', new Date().toISOString().replaceAll(':', '-'));
   await mkdir(outputDir, {recursive: true, mode: 0o700});
   const {cases} = await import(pathToFileURL(path.join(root, '.agents/qa/suite.mjs')));
-  const wanted = new Set(cases.filter(item => !filter || item.id.includes(filter)).map(item => item.id));
+  const unmatched = filter.filter(text => !cases.some(item => item.id.includes(text)));
+  if (unmatched.length) throw new Error('No QA case matches --filter ' + unmatched.join(', '));
+  const wanted = new Set(cases.filter(item => !filter.length || filter.some(text => item.id.includes(text))).map(item => item.id));
   for (let count = -1; count !== wanted.size;) {
     count = wanted.size;
     for (const item of cases.filter(item => wanted.has(item.id))) for (const id of item.requires || []) wanted.add(id);
@@ -113,9 +115,10 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
   report.dirty = Boolean((await command('git', ['status', '--porcelain'], {cwd: root})).stdout.trim());
   if (config.extension) report.extensionVersion = JSON.parse(await readFile(path.resolve(root, config.extension, 'manifest.json'), 'utf8')).version;
   let browserContext;
-  // The last address of every page a case opened, so a failure names the page even after the case closed it.
+  // The last address of every page a case opened, so a failure names the page even after the case closed it, and its uncaught errors.
   const visited = new Map();
-  const watch = page => page.on('framenavigated', frame => frame === page.mainFrame() && visited.set(page, frame.url().split(/[?#]/)[0]));
+  const watch = page => page.on('framenavigated', frame => frame === page.mainFrame() && visited.set(page, frame.url().split(/[?#]/)[0]))
+    .on('pageerror', error => (qa.current.pageErrors ??= []).length < 5 && qa.current.pageErrors.push({url: page.url().split(/[?#]/)[0], message: error.message}));
   const qa = {
     root, config, stateDir, outputDir, Blocked, command, androidInstrumentation, sqliteQuery,
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
@@ -148,6 +151,9 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
       return cookies.length;
     },
     evidence: (name, value) => { qa.current.evidence[name] = value; },
+    overflow: page => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1 ? [] : [...document.querySelectorAll('body *')]
+      .filter(el => el.getBoundingClientRect().right > innerWidth + 1).slice(0, 5)
+      .map(el => `${el.tagName.toLowerCase()}${el.id ? '#' + el.id : ''}${[...el.classList].map(name => '.' + name).join('')} right=${Math.round(el.getBoundingClientRect().right)}`)),
     screenshot: async (page, name) => {
       const filename = path.join(outputDir, `${qa.current.id}-${name}.png`);
       await page.screenshot({path: filename});
@@ -167,6 +173,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
         const missing = (item.requires || []).filter(id => !report.results.some(result => result.id === id && result.status === 'pass'));
         if (missing.length) throw new Blocked('Required journey did not pass: ' + missing.join(', '));
         await item.run(qa);
+        if (qa.current.pageErrors && !item.allowPageErrors) throw Object.assign(new Error(qa.current.pageErrors[0].message), {name: 'Uncaught page error'});
         assert.ok(qa.current.assertions > 0, 'Case completed without an explicit outcome assertion');
         qa.current.status = 'pass';
       } catch (error) {
@@ -182,12 +189,13 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
       }
       qa.current.durationMs = Date.now() - start;
       report.results.push(qa.current);
-      const {status, reason, at = [], detail = [], pages = []} = qa.current;
+      const {status, reason, at = [], detail = [], pages = [], pageErrors = []} = qa.current;
       const lines = [
         `${status.toUpperCase()} ${item.id}${reason ? ': ' + reason : ''}`,
         ...at.map(line => `  at ${line}`),
         ...detail.map(line => `  ${line}`),
         ...pages.map(page => `  page ${page.url}${page.screenshot ? ' ' + page.screenshot : ''}`),
+        ...pageErrors.map(error => `  pageerror ${error.url} ${error.message}`),
       ];
       process.stdout.write(lines.join('\n') + '\n');
     }

@@ -105,3 +105,18 @@ test('failures report compared values, suite lines and call logs', async () => {
     assert.match(result.stdout, /^FAIL custom: AssertionError: The session is accepted \(actual 401, expected 200\)\n {2}at helpers\.mjs:1\n {2}at \.agents\/qa\/suite\.mjs:3$/m, 'Console output carries the cause for wrappers that delete the report');
   } finally { await rm(root, {recursive: true, force: true}); }
 });
+
+test('repeated filters select their cases and a filter that matches none stops the run', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-filter-contract-'));
+  try {
+    await mkdir(path.join(root, '.agents/qa'), {recursive: true});
+    await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'filter-contract'}));
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), `export const cases = ['auth.login', 'auth.logout', 'pages.home', 'pages.about'].map(id => ({id, surface: 'backend', async run(qa) { qa.assert.ok(id) }}));`);
+    const run = (...filters) => command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results'), ...filters.flatMap(filter => ['--filter', filter])], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
+    assert.equal((await run('auth', 'pages.home')).code, 0);
+    assert.deepEqual(JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8')).selected, ['auth.login', 'auth.logout', 'pages.home']);
+    const missing = await run('auth', 'page.home', 'checkout');
+    assert.equal(missing.code, 1);
+    assert.match(missing.stderr, /No QA case matches --filter page\.home, checkout/);
+  } finally { await rm(root, {recursive: true, force: true}); }
+});
