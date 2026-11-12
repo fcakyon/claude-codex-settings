@@ -13,14 +13,22 @@ test('setup detects components, keeps project edits and reports blocked coverage
   const backend = await mkdtemp(path.join(tmpdir(), 'qa-related-backend-'));
   try {
     await writeFile(path.join(root, 'package.json'), JSON.stringify({dependencies: {next: '1'}, scripts: {build: 'next build'}}));
-    await writeFile(path.join(root, 'manifest.json'), JSON.stringify({manifest_version: 3, version: '1', content_scripts: [{matches: ['https://example.test/*']}]}));
+    // The extension sits in a nested repository, which Git lists as one entry yet still counts as project evidence.
+    await mkdir(path.join(root, 'extension'));
+    await command('git', ['init', '-q'], {cwd: path.join(root, 'extension')});
+    await writeFile(path.join(root, 'extension/manifest.json'), JSON.stringify({manifest_version: 3, version: '1', content_scripts: [{matches: ['https://example.test/*']}]}));
     await writeFile(path.join(root, 'photo.js'), "box.addEventListener('touchmove', event => event.preventDefault(), {passive: false});\n");
     await writeFile(path.join(root, 'call.js'), "await navigator.mediaDevices.getUserMedia({audio: true});\n");
+    await command('git', ['init', '-q'], {cwd: root});
+    await writeFile(path.join(root, '.gitignore'), 'analysis/\n');
+    await mkdir(path.join(root, 'analysis'));
+    await writeFile(path.join(root, 'analysis/checkout.js'), "import Stripe from 'stripe';\n");
     await writeFile(path.join(backend, 'go.mod'), 'module example\nrequire github.com/pocketbase/pocketbase v0.1.0\n');
     const first = await setup(root, {baseUrl: 'https://example.test', related: [path.relative(root, backend)]});
     assert.deepEqual(new Set(first.inventory.components.map(item => item.kind)), new Set(['website', 'extension']));
     assert.equal(first.inventory.capabilities.touch, 'photo.js', 'Touch handlers need a gesture journey');
     assert.equal(first.inventory.capabilities.voice, 'call.js', 'Microphone use needs a voice journey');
+    assert.equal(first.inventory.capabilities.payments, undefined, 'Gitignored folders are not project evidence');
     const suite = path.join(root, '.agents/qa/suite.mjs');
     assert.equal((await command(process.execPath, ['--check', suite])).code, 0, 'Generated suite is not executable JavaScript');
     const relatedRun = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--filter', 'backend', '--output', path.join(root, 'related-results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});

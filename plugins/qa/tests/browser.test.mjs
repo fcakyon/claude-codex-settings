@@ -141,16 +141,18 @@ for (const type of ['pointerup', 'pointercancel']) box.addEventListener(type, ()
 box.addEventListener('touchmove', event => box.dataset.engaged && event.preventDefault(), {passive: false});
 </script>`;
   const box = '<div id="box" style="margin-top:400px;height:300px;background:#888;touch-action:pan-y"></div>';
-  const pages = {'/': page(`<div style="height:4000px">${box}</div>`), '/inner': page(`<main style="position:fixed;inset:0;overflow:auto"><div style="height:4000px">${box}</div></main>`)};
-  const server = createServer((req, res) => res.end(pages[req.url]));
+  const pages = {'/': page(`<div style="height:4000px">${box}</div>`), '/inner': page(`<main style="position:fixed;inset:0;overflow:auto"><div style="height:4000px">${box}</div></main>`), '/leave': '<button id="go" onclick="location.href=\'/slow\'">Go</button><button id="gone" onclick="this.remove()">Gone</button>'};
+  // The next page answers after the gesture settles, so the after sample runs while the tap's navigation is pending.
+  const server = createServer((req, res) => setTimeout(() => res.end(pages[req.url]), req.url === '/slow' ? 500 : 0));
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const base = `http://127.0.0.1:${server.address().port}`;
   const context = await openBrowser({root: dir, browser: {actionDelayMs: 0}}, dir, []);
   try {
     const tab = await context.newPage();
     await emulateTouch(tab);
     const observe = element => element.dataset.engaged === 'yes';
     const run = async (steps, route = '/') => {
-      await tab.goto(`http://127.0.0.1:${server.address().port}${route}`);
+      await tab.goto(`${base}${route}`);
       return touchGesture(tab, '#box', steps, {observe});
     };
     const hold = await run(gestures.hold);
@@ -172,6 +174,9 @@ box.addEventListener('touchmove', event => box.dataset.engaged && event.preventD
     assert.deepEqual(sideways.after.events, ['pointerdown', 'pointermove', 'pointerup']);
     await assert.rejects(touchGesture(tab, '#box', gestures.tap, {observe: () => { throw new Error('observe failed'); }}), /observe failed/);
     assert.deepEqual((await touchGesture(tab, '#box', gestures.tap)).after.events, ['pointerdown', 'pointerup'], 'A failed gesture does not break the next one');
+    await tab.goto(`${base}/leave`);
+    assert.equal((await touchGesture(tab, '#gone', gestures.tap, {observe: () => true})).after.state, null, 'A tap that removes its control still reports');
+    assert.deepEqual((await touchGesture(tab, '#go', gestures.tap)).after, {navigated: `${base}/slow`}, 'A tap that leaves the page reports where it went');
   } finally {
     await context.close();
     await new Promise(resolve => server.close(resolve));
