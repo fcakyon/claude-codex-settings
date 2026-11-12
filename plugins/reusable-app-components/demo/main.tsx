@@ -43,14 +43,14 @@ function Demo() {
   const [remember, setRemember] = useState(() => Boolean(saved.read()))
   const [signedIn, setSignedIn] = useState(completed ?? "")
   const provider = location.pathname.startsWith("/auth/")
-  const copy = { lastUsed: "Last used", anotherProfile: "Sign in with another profile", savedProfile: "View saved profile" }
+  const copy = { lastUsed: "Last used", anotherProfile: "Sign in with another profile", savedProfile: "View saved profile", or: "or" }
   return <main>
 
     <AuthPanel title={provider ? "Choose an account" : signedIn ? "You’re signed in" : undefined}>
       {provider ? <div className="chooser"><p>This local provider fixture demonstrates full-page navigation. No Google connection is made.</p>{[query.get("login_hint") || "jamie@example.test", "alex@example.test"].map(address => <a key={address} href={`/?${new URLSearchParams({ complete: address, returnTo, method: providerId })}`}>{address}<span>Continue →</span></a>)}<a href="/">Back to sign in</a></div> : signedIn ? <div className="success"><p>{signedIn}</p><p>Selected destination: <code>{returnTo}</code></p><button onClick={() => { history.replaceState(null, "", "/"); setSignedIn(""); setInitialMode("login"); setProfile(saved.read()) }}>Sign out</button></div> : <RememberedLogin title="Sign in" footer={<button className="signup-link" onClick={() => setInitialMode("signup")}>Don’t have an account? <span>Sign up</span></button>} profile={initialMode === "login" && (profile?.method === "email" || enabled.includes(profile?.method ?? "")) ? profile : null} copy={copy} continueWith={(last, badge) => <SocialSignIn providers={choices.filter(provider => provider.id === last.method).map(provider => ({ ...provider, label: last.email }))} returnTo={returnTo} email={last.email} trailing={badge} layout="labels" />}>
         {initialEmail => <EmailAuth<{ email: string }, { email: string }>
           key={initialEmail} initialMode={initialMode} initialEmail={initialEmail} copy={emailCopy}
-          social={<><SocialSignIn providers={choices.filter(provider => enabled.includes(provider.id))} returnTo={returnTo} /><div className="app-auth-divider">or</div></>}
+          social={<><SocialSignIn providers={choices.filter(provider => enabled.includes(provider.id))} returnTo={returnTo} /><div className="app-auth-divider">{copy.or}</div></>}
           beforeSubmit={<label className="remember"><input type="checkbox" checked={remember} onChange={event => { setRemember(event.target.checked); sessionStorage.setItem("auth-demo.remember", event.target.checked ? "yes" : "no"); if(!event.target.checked) { saved.save(null); setProfile(null) } }} />Save email and login method on this device</label>}
           adapter={{
             login: async input => ({ email: input.email }),

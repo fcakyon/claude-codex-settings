@@ -9,23 +9,23 @@ export function RememberedLogin({ profile, continueWith, copy, children, title, 
   footer?: ReactNode
   profile: LoginProfile | null
   continueWith: (profile: LoginProfile, badge: ReactNode) => ReactNode
-  copy: { lastUsed: string, anotherProfile: string, savedProfile: string }
+  copy: { lastUsed: string, anotherProfile: string, savedProfile: string, or: string }
   children: (email: string) => ReactNode
 }) {
-  const [view, setView] = useState<"saved" | "full" | "email">("saved")
+  const [email, setEmail] = useState<string | null>(null)
   const badge = <span className="app-remembered-login__badge">{copy.lastUsed}</span>
   return <div className="app-remembered-login">
-    {profile && view === "saved" ? <>
+    {profile && email === null ? <>
       {title ? <h2>{title}</h2> : null}
       <div className="app-remembered-login__profile">
-        {profile.method === "email" ? <button type="button" onClick={() => setView("email")}>{profile.email}{badge}</button> : continueWith(profile, badge)}
+        {profile.method === "email" ? <button type="button" title={profile.email} onClick={() => setEmail(profile.email)}><span className="app-social-sign-in__label">{profile.email}</span>{badge}</button> : continueWith(profile, badge)}
       </div>
-      <div className="app-auth-divider" aria-hidden="true">or</div>
-      <button type="button" className="app-remembered-login__switch" onClick={() => setView("full")}>{copy.anotherProfile}</button>
+      <div className="app-auth-divider" aria-hidden="true">{copy.or}</div>
+      <button type="button" className="app-remembered-login__switch" onClick={() => setEmail("")}>{copy.anotherProfile}</button>
       {footer ? <div className="app-remembered-login__footer">{footer}</div> : null}
     </> : <>
-      {children(view === "email" ? profile!.email : "")}
-      {profile ? <button type="button" className="app-remembered-login__switch" onClick={() => setView("saved")}>{copy.savedProfile}</button> : null}
+      {children(email ?? "")}
+      {profile ? <button type="button" className="app-remembered-login__switch" onClick={() => setEmail(null)}>{copy.savedProfile}</button> : null}
     </>}
   </div>
 }

@@ -8,20 +8,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  min-block-size: 52px;
+  gap: 10px;
+  padding: 8px 16px;
+  min-block-size: 44px;
+  min-width: 0;
   border: 1px solid var(--auth-border, #24282b);
   border-radius: var(--auth-button-radius, 8px);
   color: var(--auth-text, #f4f4f5);
   font: inherit;
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: 500;
   text-decoration: none;
 }
 .app-social-sign-in--icons a { padding-inline: 12px; }
 .app-social-sign-in a:hover { background: var(--auth-hover, #ffffff08); border-color: var(--auth-border-hover, #484c50); }
 .app-social-sign-in a:focus-visible { outline: 2px solid var(--auth-accent, #4297ff); outline-offset: 4px; }
 .app-social-sign-in__label { min-width: 0; overflow-wrap: anywhere; }
-.app-provider-logo { display: block; width: 24px; height: 24px; flex: 0 0 24px; object-fit: contain; }
+.app-provider-logo { display: block; width: 18px; height: 18px; flex: 0 0 18px; object-fit: contain; }
 .app-provider-logo--mono { filter: var(--auth-logo-filter, brightness(0) invert(1)); }
 .app-social-sign-in__sr-label { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
