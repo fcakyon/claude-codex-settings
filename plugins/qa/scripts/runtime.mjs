@@ -119,7 +119,6 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
   if (!selected.length) throw new Error('No QA cases selected. Setup must include executable cases.');
   const report = {project: config.name, baseUrl: config.baseUrl, coverageGaps: config.coverageGaps || [], selected: selected.map(item => item.id), omitted: cases.filter(item => !selected.includes(item)).map(item => item.id), startedAt: new Date().toISOString(), root, revision: (await command('git', ['rev-parse', 'HEAD'], {cwd: root})).stdout.trim(), telemetry: {mode: 'capture', deliveryVerified: false, events: []}, results: []};
   report.dirty = Boolean((await command('git', ['status', '--porcelain'], {cwd: root})).stdout.trim());
-  if (config.extension) report.extensionVersion = JSON.parse(await readFile(path.resolve(root, config.extension, 'manifest.json'), 'utf8')).version;
   let browserContext;
   // The last address of every page a case opened, so a failure names the page even after the case closed it, and its uncaught errors.
   const visited = new Map();
@@ -140,6 +139,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     browser: async () => {
       if (!browserContext) {
         browserContext = await openBrowser(config, stateDir, report.telemetry.events);
+        if (config.extension) report.extensionVersion = JSON.parse(await readFile(path.resolve(root, config.extension, 'manifest.json'), 'utf8')).version;
         browserContext.pages().forEach(watch);
         browserContext.on('page', watch);
       }

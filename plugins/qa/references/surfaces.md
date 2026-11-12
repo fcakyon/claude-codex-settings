@@ -13,16 +13,20 @@
 | Database | Read-after-write and cleanup | Disposable DB, read-only assertions |
 | Auth/credits | Login/logout, protected denial, first debit, repeat-free, insufficient/unlimited | Normal account and disposable ledger |
 | Android | UI/action outcome on explicit device and assertion count | ADB and project Espresso/UI Automator |
+| macOS | Positive test count, then actual permission and Keychain trust after a separate install | `swift test` in a sandboxed scratch copy |
+| AI output | Non-empty result for input that has one, and empty, refused and failed answers each in their own state, never complete with zero items | Real model call on fixed input |
 
 For localized text regressions, extend the existing affected journey with representative supported-language inputs and explicit expected outcomes for display, search, input, copy or formatting as applicable. Select a stable content identity rather than the first search result. Exercise the actual page/content language and direction, not only browser preferences. Assert the expected rendered or copied value without applying the same transformation as the implementation. Include visual inspection when glyphs, clipping or bidirectional layout matter.
 
-Build the exact extension candidate and record its version. Do not modify it to bypass auth or replace provider responses. Popup state and provider-site UI are separate observations. Fullscreen, subtitles, title changes and reconnect need explicit journeys when supported. A toolbar is not playback proof.
+Build the exact extension candidate and record its version. Do not modify it to bypass auth or replace provider responses. Have the build record its source commit and block extension cases when it differs from the tested revision, since the version does not change with every commit. When content scripts hook page APIs at `document_start`, pin the built bundle hashes in a test and update them only after a live acceptance, because a build change can make the hooks run after the page created its objects. Popup state and provider-site UI are separate observations. Fullscreen, subtitles, title changes and reconnect need explicit journeys when supported. A toolbar is not playback proof.
 
 Media helpers observe dimensions, frames, time and a discontinuous jump. Seek before the interval, then observe the extension acting. A test-issued seek cannot count as a skip. Unavailable titles, DRM, subscriptions and provider login failures must retain evidence and explain the precise limitation.
 
-Invoke existing backend tests with `qa.command`. Require tests to execute because a no-match filter may exit 0. SQLite helpers open read-only. Mutate through application routes and restore test records in `finally`. Never treat production databases as disposable or send test purchases/webhooks to live billing.
+Invoke existing backend tests with `qa.command`. Require tests to execute because a no-match filter may exit 0, and report skipped tests as blocked. `qa.command` children find `node` on `PATH`, not the runner's Node, so pass `process.execPath` when the version matters. SQLite helpers open read-only. Mutate through application routes and restore test records in `finally`. Never treat production databases as disposable or send test purchases/webhooks to live billing.
 
 Android requires explicit serial, installed app and test runner. `qa.androidInstrumentation` runs `adb -s <serial> shell am instrument -w -r <runner>` and requires positive `OK (N tests)` output. Project instrumentation owns UI assertions. Physical DRM/hardware playback needs a compatible physical device. Appium can run through `qa.command` when the project already uses it.
+
+Run macOS app tests as `swift test` through `qa.command` in a scratch copy, under `sandbox-exec` that denies network except fixture ports and denies the app's data, Keychain and TCC paths. Tests never install, sign or launch the app. Require exit 0 and a positive count in the XCTest `Executed N tests` or Swift Testing `Test run with N tests` summary, and report skips as blocked. Every ad hoc signed rebuild resets macOS permissions and saved Keychain access, so installing is its own explicit step, and trust is checked through the running app, not the Settings toggle.
 
 Mouse events and Playwright `tap()` never hold, drag or let the browser take a gesture over for scrolling, so touch interactions need `qa.touchGesture` on a page set up with `qa.emulateTouch`.
 
@@ -31,6 +35,10 @@ Assert the `during` sample as well as `after`, since a hold that only acts on re
 Onboarding journeys start from a new account, following [sessions](sessions.md), and clear the app origin's cookies and storage first. Walk every step through the UI and assert what each step saved, not only the next screen. Reload in the middle and assert the flow resumes at the same step with the entered values, step back once, and cross sign-in to confirm it returns to the same step. Finish with the first real outcome, such as a created item or a first result, and check the funnel events in order with `qa.telemetry`. Then repeat the visit with the same account and assert what the app promises for returning users.
 
 Keep missing integrations blocked until scripts exist. Do not create fake Android, payment, OAuth or provider cases to fill a coverage table.
+
+A provider can accept a connection and refuse the session a moment later, for example on quota, so a connection proves nothing until real output arrives. Cover refusal, a close in the middle of a stream and quota after accept with fault fixtures, and assert the bound: one outage gives one user-facing error and a fixed number of retries, not a log or file per attempt.
+
+Live acceptance gates name the platform behavior they rely on, such as which browser API a provider page calls, and check it first. When it breaks, fail with that assumption named, so a platform change is not read as a product regression.
 
 For a provider regression, compare the same browser and cookies with and without restored origin databases before assuming bot detection or changing browser identity. Verify actual media frames after the repair. A successful DRM capability call alone does not prove playback.
 

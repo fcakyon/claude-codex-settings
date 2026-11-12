@@ -4,6 +4,8 @@ Set `QA_BROWSER_EXECUTABLE` to a supported Chrome executable. The runner pins Pl
 
 Runs are headless by default and pause 500 ms between browser actions. Only set `QA_HEADED=1` when the user has chosen a time for visible browser work. A visible run may take focus. `browser.actionDelayMs` changes pacing. Each run uses a temporary isolated profile. Cookies and local storage are saved privately and restored next time. IndexedDB is deliberately excluded: replaying Netflix’s player database into a fresh browser caused M7063-1913-109000 even when DRM APIs succeeded. The same headless browser played normally with cookies and local storage retained but IndexedDB omitted. The extension loads after telemetry interception. Extension preferences are tested across reload within a run. Device-bound credentials, browser profile files and DRM licenses are not portable storage state.
 
+Cookies ignore the port, so a disposable local server on a new port receives every saved cookie for its host, and saved local storage grows by one origin per port. Clear that host's cookies and storage when a case opens and closes its page.
+
 `QA_STATE_DIR` selects private state. Otherwise it lives under `~/.local/share/project-qa/<project>-<root-hash>`. Related projects can share `stateGroup` if run sequentially. Directories use mode 700 and session/credential/report files mode 600. This is filesystem protection, not encryption. Keep state out of Git, archives and sync folders.
 
 `qa.secret('ENV_NAME')` reads an environment variable, then `credentials.json` in private state. Track credential names only. A secret manager can supply environment variables. Do not put values in shell arguments, logs, screenshots or reports.

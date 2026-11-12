@@ -5,7 +5,7 @@ description: This skill should be used when user asks to "run QA", "verify real 
 
 # Run project QA
 
-Read `.agents/skills/qa/SKILL.md` and `.agents/qa/config.json`, then run `project-qa run --root <repo>`. If absent, use setup. `--filter <id-substring>` limits a follow-up run and repeats, so run a fixed CI case list with one `--filter` per case in one invocation. `--base-url <url>` selects a temporary website target without editing project settings. Check `report.json` for the effective `baseUrl` and tested revision, then confirm the browser destination; API and auth URLs remain separately configured.
+Read `.agents/skills/qa/SKILL.md` and `.agents/qa/config.json`, then run `project-qa run --root <repo>`. If absent, use setup. `--filter <id-substring>` limits a follow-up run and repeats, so run a fixed CI case list with one `--filter` per case in one invocation. `--base-url <url>` selects a temporary website target without editing project settings. Check `report.json` for the effective `baseUrl`, tested revision and `selected` cases, then confirm the browser destination; API and auth URLs remain separately configured.
 
 Use deterministic scripts. Interactive investigation can repair a failed journey, then put repeatable steps in its tracked suite. Never replace failed live behavior with mocked success.
 

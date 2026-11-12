@@ -120,10 +120,10 @@ test('repeated filters select their cases and a filter that matches none stops t
   const root = await mkdtemp(path.join(tmpdir(), 'qa-filter-contract-'));
   try {
     await mkdir(path.join(root, '.agents/qa'), {recursive: true});
-    await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'filter-contract'}));
+    await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'filter-contract', extension: 'dist'}));
     await writeFile(path.join(root, '.agents/qa/suite.mjs'), `export const cases = ['auth.login', 'auth.logout', 'pages.home', 'pages.about'].map(id => ({id, surface: 'backend', async run(qa) { qa.assert.ok(id) }}));`);
     const run = (...filters) => command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results'), ...filters.flatMap(filter => ['--filter', filter])], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
-    assert.equal((await run('auth', 'pages.home')).code, 0);
+    assert.equal((await run('auth', 'pages.home')).code, 0, 'Cases that never open the browser run without an extension build');
     assert.deepEqual(JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8')).selected, ['auth.login', 'auth.logout', 'pages.home']);
     const missing = await run('auth', 'page.home', 'checkout');
     assert.equal(missing.code, 1);

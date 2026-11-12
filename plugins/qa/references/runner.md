@@ -10,13 +10,14 @@ project-qa run --root . --base-url http://localhost:3000
 project-qa run --root . --filter auth --filter pages.home --output /private/path/qa-run
 ```
 
-Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `requires` with earlier case IDs, `async run(qa)` and an explicit `qa.assert` outcome assertion. Throw `new qa.Blocked(reason)` for known missing prerequisites. Unexpected errors fail, and so does an uncaught error on any page of the case, recorded as `pageErrors` with up to five page addresses and messages. Set `allowPageErrors: true` on a case that triggers them on purpose. A case that signs out, revokes tokens or deletes shared data uses an account or fixture of its own, so later cases never inherit its state. Each `--filter` selects the cases whose id contains it, and a filter that matches no case stops the run. Reports record the effective `baseUrl`, tested revision, configured gaps and selected/omitted cases. `run --base-url` overrides only the website target for that run; API and authentication endpoints are separate settings. Confirm those endpoints before using credentials or creating side effects.
+Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `requires` with earlier case IDs, `async run(qa)` and an explicit `qa.assert` outcome assertion. The runner counts calls, so `assert.ok(true)` passes its check. Assert observed values. Throw `new qa.Blocked(reason)` for known missing prerequisites. Unexpected errors fail, and so does an uncaught error on any page of the case, recorded as `pageErrors` with up to five page addresses and messages. Set `allowPageErrors: true` on a case that triggers them on purpose. A case that signs out, revokes tokens or deletes shared data uses an account or fixture of its own, so later cases never inherit its state. Each `--filter` selects the cases whose id contains it, and a filter that matches no case stops the run. A CI job compares `report.selected` with its case list, since a later case whose id contains a filter joins the run. Reports record the effective `baseUrl`, tested revision, configured gaps and selected/omitted cases. `run --base-url` overrides only the website target for that run; API and authentication endpoints are separate settings. Confirm those endpoints before using credentials or creating side effects.
 
 | API | Purpose |
 | --- | --- |
 | `qa.config`, `qa.root` | Project settings and resolved repository |
 | `qa.browser()` | Isolated browser with saved sessions and analytics capture |
 | `qa.assert` | Counted Node strict assertions |
+| `qa.telemetry` | Analytics requests captured this run, each `{transport, events}` with event and parameter names only |
 | `qa.signIn(page)` | Configured password login and expected identity check |
 | `qa.secret(name)` | Environment/private credential lookup |
 | `qa.reuseCookies(origins)` | Approved provider cookies from local browser |
