@@ -92,16 +92,24 @@ test('failures report compared values, suite lines and call logs', async () => {
       "  {id: 'custom', surface: 'backend', async run(qa) { status(qa, 401) }},",
       "  {id: 'generated', surface: 'backend', async run(qa) { qa.assert.deepEqual({rows: 1}, {rows: 2}) }},",
       "  {id: 'timeout', surface: 'website', async run() { const error = new Error('locator.waitFor: Timeout 20ms exceeded.\\nCall log:\\n\\u001b[2m  - waiting for getByText(\"Saved\")\\u001b[22m\\n'); error.name = 'TimeoutError'; throw error }},",
+      "  {id: 'request', surface: 'backend', async run() { throw new Error('apiRequestContext.delete: Timeout 500ms exceeded at https://example.test/api/auth?code=private-code\\nCall log:\\n  - → DELETE https://example.test/api/auth?code=private-code\\n    - cookie: pb_auth=private-token\\n    - x-api-key: private-token\\n  - ← 401 Unauthorized\\n') }},",
+      "  {id: 'fill', surface: 'website', async run(qa) { const password = await qa.secret('QA_FIXTURE_PASSWORD'); throw new Error('locator.fill: Timeout 20ms exceeded.\\nCall log:\\n  - fill(\"' + password + '\")\\n') }},",
+      "  {id: 'long', surface: 'backend', async run(qa) { qa.assert.equal('ab' + await qa.secret('QA_FIXTURE_PASSWORD'), 'zz') }},",
       '];',
     ].join('\n'));
-    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
+    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private'), QA_FIXTURE_PASSWORD: 'private-password' + 'x'.repeat(120)}});
     assert.equal(result.code, 1);
-    const [custom, generated, timeout] = JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8')).results;
+    const report = await readFile(path.join(root, 'results/report.json'), 'utf8');
+    const [custom, generated, timeout, request, fill] = JSON.parse(report).results;
     assert.equal(custom.reason, 'AssertionError: The session is accepted (actual 401, expected 200)');
     assert.deepEqual(custom.at, ['helpers.mjs:1', '.agents/qa/suite.mjs:3'], 'Helper frames lead to the calling case');
     assert.equal(generated.reason, 'AssertionError: Expected values to be strictly deep-equal: (actual { rows: 1 }, expected { rows: 2 })');
     assert.equal(generated.detail, undefined, 'The compared values replace the generated diff');
     assert.deepEqual(timeout.detail, ['Call log:', '- waiting for getByText("Saved")'], 'Call logs keep their steps without terminal colors');
+    assert.equal(request.reason, 'Error: apiRequestContext.delete: Timeout 500ms exceeded at https://example.test/api/auth');
+    assert.deepEqual(request.detail, ['Call log:', '- → DELETE https://example.test/api/auth', '- ← 401 Unauthorized'], 'Request call logs keep the steps without headers or queries');
+    assert.deepEqual(fill.detail, ['Call log:', '- fill("[hidden]")'], 'Typed credentials are hidden');
+    assert.ok(!/private-(token|code|password)/.test(result.stdout + report), 'Credentials never reach the console or the report');
     assert.match(result.stdout, /^FAIL custom: AssertionError: The session is accepted \(actual 401, expected 200\)\n {2}at helpers\.mjs:1\n {2}at \.agents\/qa\/suite\.mjs:3$/m, 'Console output carries the cause for wrappers that delete the report');
   } finally { await rm(root, {recursive: true, force: true}); }
 });
