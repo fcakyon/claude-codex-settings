@@ -4,6 +4,8 @@
 | --- | --- | --- |
 | Website | Visible result, route, persistence, mobile and localized flows | Real Chrome and HTTP |
 | Touch | Gesture outcome while the finger is down, after release, and page scroll | Real touch points on an emulated phone |
+| Voice | Provider transcript of a spoken clip, audible reply, quiet silence, closed session | Scripted microphone, output meter and provider API, see [voice](voice.md) |
+| Onboarding | Each step's saved state, resume after reload, return after sign-in, first real outcome | Fresh account and empty browser storage |
 | Extension | Built package, background auth, content-script UI and effect on host page | Chrome for Testing and real backend |
 | Provider | Expected session and successful authorized action | Saved session, scoped cookie recovery, ordinary login |
 | Video | Decoded frames, advancing time, selected skip and same interval without filter | Real provider subscription/player |
@@ -25,6 +27,8 @@ Android requires explicit serial, installed app and test runner. `qa.androidInst
 Mouse events and Playwright `tap()` never hold, drag or let the browser take a gesture over for scrolling, so touch interactions need `qa.touchGesture` on a page set up with `qa.emulateTouch`.
 
 Assert the `during` sample as well as `after`, since a hold that only acts on release passes an after-only check. `pointercancel` in `events` means the browser took the gesture over for scrolling, which ends drags that `touch-action` lets through. Cover both outcomes: gestures that drive the control must not scroll, and vertical swipes over it must still scroll. Use the `qa.gestures` hold, hold-then-drag on each axis, sideways swipe, jittery sideways start, and fast and slow vertical swipes. A page at the top cannot scroll for a downward finger, so assert `scrolled` with upward finger moves. Navigate again before each gesture so earlier state does not carry over. Emulated touch never opens the long-press menu, so check it on a real device.
+
+Onboarding journeys start from a new account, following [sessions](sessions.md), and clear the app origin's cookies and storage first. Walk every step through the UI and assert what each step saved, not only the next screen. Reload in the middle and assert the flow resumes at the same step with the entered values, step back once, and cross sign-in to confirm it returns to the same step. Finish with the first real outcome, such as a created item or a first result, and check the funnel events in order with `qa.telemetry`. Then repeat the visit with the same account and assert what the app promises for returning users.
 
 Keep missing integrations blocked until scripts exist. Do not create fake Android, payment, OAuth or provider cases to fill a coverage table.
 

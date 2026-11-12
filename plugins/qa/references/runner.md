@@ -31,6 +31,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.emulateTouch(page, {width, height})` | Phone viewport and touch input for one page. Call before navigation and again after a full-page screenshot |
 | `qa.touchGesture(page, selector, steps, {observe, settle, timeout})` | Real touch points. `steps` are `[dx, dy, waitMs]` from the target center. `observe(element)` state, pointer events and `scrolled` `{x, y}` are sampled with the finger down and `settle` ms after release |
 | `qa.gestures` | Named step presets by finger direction |
+| `qa.captureAudio(page)` | Scripted microphone and played-audio meter for voice pages, see [voice](voice.md). Call before navigation |
 | `qa.evidence(name, value)` | Non-sensitive structured evidence |
 | `qa.screenshot(page, name)` | Private screenshot |
 
