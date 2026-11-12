@@ -225,6 +225,8 @@ const inspect = async ([agent, userAgent], target) => {
 
   if (redirects.length > 5) {
     warnings.push(`The URL takes ${redirects.length} redirects. Discord previews stop after 5.`);
+  } else if (redirects.length > 1) {
+    warnings.push(`The URL takes ${redirects.length} redirects. Collapse redirect chains to a single hop.`);
   }
   if (!title) warnings.push("The server HTML has no <title> text. Check rendered metadata separately.");
   if (!description) warnings.push("The page has no meta description.");
@@ -604,8 +606,8 @@ const checkSite = async ({ site, url }) => {
     );
   else if (twinHop && ![301, 308].includes(twinHop.status))
     warnings.push(`${twin} returns ${twinHop.status} instead of a permanent redirect to ${host}.`);
-  else if (twinHop && (landing?.origin !== page.origin || landing.pathname !== page.pathname))
-    warnings.push(`${twinUrl.href} redirects to ${twinHop.location}, not to ${page.origin}${page.pathname}.`);
+  else if (twinHop && (landing?.origin !== page.origin || landing.pathname !== page.pathname || landing.search !== page.search))
+    warnings.push(`${twinUrl.href} redirects to ${twinHop.location}, not to ${page.origin}${page.pathname}${page.search}.`);
   if (site.emailObfuscated)
     warnings.push('Cloudflare Email Obfuscation rewrote email addresses, so crawlers that skip JavaScript see "[email protected]".');
 

@@ -247,3 +247,26 @@ test('keeps entry redirects separate from the canonical sitemap destination', as
   assert(result.findings.some((f) => f.rule === 'page.redirect' && f.url === `${origin}/` && f.status === 'review'))
   assert(!result.findings.some((f) => f.rule === 'page.redirect' && f.url === `${origin}/en`))
 })
+
+test('flags redirect chains, canonical chains, subpage email obfuscation, and unindexed non-HTML links while deduplicating shared hreflang targets', async (t) => {
+  const { origin, hits } = await serve(t, (u) => {
+    const locales = `<link rel="alternate" hreflang="en" href="${u.origin}/en"><link rel="alternate" hreflang="x-default" href="${u.origin}/en">`
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/sitemap.xml') return { type: 'application/xml', body: `<urlset><url><loc>${u.origin}/</loc></url></urlset>` }
+    if (u.pathname === '/') return { body: html(u.origin, '/', locales, '<a href="/legacy">Legacy</a><a href="/sub">Sub</a><a href="/chain-a">Chain A</a><a href="/llms.txt">LLMs</a>') }
+    if (u.pathname === '/legacy') return { status: 308, headers: { location: '/mid' } }
+    if (u.pathname === '/mid') return { status: 307, headers: { location: '/sub' } }
+    if (u.pathname === '/sub') return { body: html(u.origin, '/sub', '', '<a href="/cdn-cgi/l/email-protection#deadbeef">[email&#160;protected]</a>') }
+    if (u.pathname === '/chain-a') return { body: html(u.origin, '/chain-b').replace(`<h1>/chain-b</h1>`, '<h1>/chain-a</h1><a href="/chain-b">B</a>') }
+    if (u.pathname === '/chain-b') return { body: html(u.origin, '/').replace('<h1>/</h1>', '<h1>/chain-b</h1>') }
+    if (u.pathname === '/en') return { status: 429, body: 'Rate limited' }
+    if (u.pathname === '/llms.txt') return { type: 'text/plain', body: '# Site\n> Summary\n## Docs\n- [Home](' + u.origin + '/): Home' }
+  })
+  const result = await auditSite(origin, { maxPages: 10 })
+  assert(result.findings.some((f) => f.rule === 'page.redirect-chain' && f.url === `${origin}/legacy` && f.status === 'fail'))
+  assert(result.findings.some((f) => f.rule === 'canonical.chain' && f.url === `${origin}/chain-a` && f.status === 'fail'))
+  assert(result.findings.some((f) => f.rule === 'page.email-obfuscation' && f.url === `${origin}/sub` && f.status === 'review'))
+  assert(result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/llms.txt` && f.status === 'review'))
+  assert.equal(hits.includes('/cdn-cgi/l/email-protection'), false)
+  assert.equal(result.findings.filter((f) => f.rule === 'hreflang.target' && f.url === `${origin}/`).length, 1)
+})

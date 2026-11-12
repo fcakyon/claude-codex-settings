@@ -80,7 +80,10 @@ Off-page work needs a backlink tool, so treat this as scoping rather than measur
 - When metadata appears only in the body, inspect the framework’s streaming behavior. For Next.js, review [streamed metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#streaming-metadata) and [htmlLimitedBots](https://nextjs.org/docs/app/api-reference/config/next-config-js/htmlLimitedBots). Prerender metadata when possible. Blocking metadata for every crawler also delays responses until that work finishes.
 - For missing or stale Next.js share images, inspect [metadata merging](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging). A child Open Graph object can replace inherited image metadata. Preserve the page URL, image URL, dimensions, type, and alt text together.
 - Test an unknown content slug on generated image routes. It should return 404 rather than 500. Use the route controls supported by the deployed framework and bundler version.
-- Use Search Console for sitemap submission and recrawling. Do not use retired sitemap ping endpoints or repeatedly request indexing. Start validation only for an issue the change actually fixed.
+- Collapse redirect chains across `http` to `https`, `www` to apex, locale prefixes, and legacy path rewrites into a single permanent hop (`301` or `308`).
+- Put `noindex` and a clean path canonical on auth or login routes that accept redirect query parameters (such as `/login?returnTo=/`), and add `X-Robots-Tag: noindex` (plus `rel="nofollow"` on internal links) to linked non-HTML utility files like `/llms.txt` and `/sitemap.xml`.
+- Disable Cloudflare Email Obfuscation when crawlers hit `/cdn-cgi/l/email-protection` 404s or index `[email protected]`.
+- Use Search Console for sitemap submission and recrawling, and confirm declared sitemaps are registered in Search Console rather than only referenced in `robots.txt`. Do not use retired sitemap ping endpoints or repeatedly request indexing. Start validation only for an issue the change actually fixed.
 - A source date in a sitemap is not evidence of a content change. Google ignores priority and changefreq, and lastmod needs to reflect a real update.
 
 ## Sources
