@@ -19,23 +19,27 @@ export function privateDirectory(root, config) {
   return process.env.QA_STATE_DIR || path.join(homedir(), '.local', 'share', 'project-qa', config.stateGroup || config.name + '-' + createHash('sha256').update(root).digest('hex').slice(0, 8));
 }
 
+// Every credential handed to a case through qa.secret, so failure output can hide it wherever a tool echoes it.
+const secrets = new Set();
+// Tools echo URLs, typed values and request headers, so queries and known credentials never leave the runner.
+const scrub = text => [...secrets].reduce((out, value) => out.replaceAll(value, '[hidden]'), text.replace(/([a-z][\w+.-]*:\/\/[^\s"'?#]+)[?#][^\s"']*/g, '$1'));
+
 export async function secret(name, stateDir) {
-  if (process.env[name]) return process.env[name];
-  const credentials = await readFile(path.join(stateDir, 'credentials.json'), 'utf8').catch(error => {
+  const value = process.env[name] || JSON.parse(await readFile(path.join(stateDir, 'credentials.json'), 'utf8').catch(error => {
     if (error.code === 'ENOENT') return '{}';
     throw error;
-  });
-  const value = JSON.parse(credentials)[name];
+  }))[name];
   if (!value) throw new Blocked(`Missing credential ${name}. Set it in the environment or in ${path.join(stateDir, 'credentials.json')}.`);
   return value;
 }
 
 // Keep what a reader needs to act: the compared values, the suite lines that threw and the tool's call log.
 export function failure(error, root) {
-  const [summary, ...rest] = stripVTControlCharacters(String(error.message)).split('\n');
+  const [summary, ...rest] = scrub(stripVTControlCharacters(String(error.message))).split('\n');
   const asserted = error.code === 'ERR_ASSERTION' && error.operator !== 'fail';
-  const options = {depth: 2, breakLength: Infinity, maxStringLength: 120, maxArrayLength: 10};
-  const reason = `${error.name}: ${summary}` + (asserted ? ` (actual ${inspect(error.actual, options)}, expected ${inspect(error.expected, options)})` : '');
+  // Values are cut after scrubbing, so a cut can never split a credential out of reach of the scrub.
+  const show = value => scrub(inspect(value, {depth: 2, breakLength: Infinity, maxArrayLength: 10})).slice(0, 120);
+  const reason = `${error.name}: ${summary}` + (asserted ? ` (actual ${show(error.actual)}, expected ${show(error.expected)})` : '');
   const at = [];
   for (const line of String(error.stack).split('\n')) {
     const match = line.match(/^\s+at .*?((?:file:\/\/)?\/[^\s)]+):(\d+):\d+\)?$/);
@@ -43,7 +47,8 @@ export function failure(error, root) {
     const frame = file?.startsWith(root + path.sep) && !file.includes(`${path.sep}node_modules${path.sep}`) && `${path.relative(root, file)}:${match[2]}`;
     if (frame && !at.includes(frame) && at.length < 3) at.push(frame);
   }
-  const detail = asserted ? [] : rest.map(line => line.trim()).filter(line => line && !line.startsWith('===')).slice(0, 10);
+  // Request call logs list every header, cookies included, and no header explains a failure.
+  const detail = asserted ? [] : rest.map(line => line.trim()).filter(line => line && !line.startsWith('===') && !/^- [\w-]+: /.test(line)).slice(0, 10);
   return {reason, ...(at.length && {at}), ...(detail.length && {detail})};
 }
 
@@ -117,8 +122,8 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
   let browserContext;
   // The last address of every page a case opened, so a failure names the page even after the case closed it, and its uncaught errors.
   const visited = new Map();
-  const watch = page => page.on('framenavigated', frame => frame === page.mainFrame() && visited.set(page, frame.url().split(/[?#]/)[0]))
-    .on('pageerror', error => (qa.current.pageErrors ??= []).length < 5 && qa.current.pageErrors.push({url: page.url().split(/[?#]/)[0], message: error.message}));
+  const watch = page => page.on('framenavigated', frame => frame === page.mainFrame() && visited.set(page, scrub(frame.url())))
+    .on('pageerror', error => (qa.current.pageErrors ??= []).length < 5 && qa.current.pageErrors.push({url: scrub(page.url()), message: scrub(error.message)}));
   const qa = {
     root, config, stateDir, outputDir, Blocked, command, androidInstrumentation, sqliteQuery,
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
@@ -126,7 +131,11 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     network: (args, run) => withNetwork(qa, args, run),
     advancingVideo, observeSkip, videoState, emulateTouch, touchGesture, gestures,
     telemetry: report.telemetry.events,
-    secret: name => secret(name, stateDir),
+    secret: async name => {
+      const value = await secret(name, stateDir);
+      secrets.add(value);
+      return value;
+    },
     browser: async () => {
       if (!browserContext) {
         browserContext = await openBrowser(config, stateDir, report.telemetry.events);
@@ -177,7 +186,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
         assert.ok(qa.current.assertions > 0, 'Case completed without an explicit outcome assertion');
         qa.current.status = 'pass';
       } catch (error) {
-        if (error instanceof Blocked) Object.assign(qa.current, {status: 'blocked', reason: error.message});
+        if (error instanceof Blocked) Object.assign(qa.current, {status: 'blocked', reason: scrub(error.message)});
         else {
           Object.assign(qa.current, {status: 'fail'}, failure(error, root));
           // A screenshot must never hang or replace the error, so a page that cannot take one keeps only its address.
