@@ -29,15 +29,18 @@ export async function touchGesture(page, selector, steps, {observe = () => null,
   });
   const box = await target.boundingBox();
   const [x, y] = [box.x + box.width / 2, box.y + box.height / 2];
-  const sample = async () => ({
-    ...await page.evaluate(() => {
-      if (!window.__qaTouch) throw new Error(`Page navigated to ${location.href} during the touch gesture`);
-      const {events, start} = __qaTouch;
-      const delta = (key, index) => Math.round(start.reduce((sum, entry) => sum + entry[0][key] - entry[index], 0));
-      return {events: [...events], scrolled: {x: delta('scrollLeft', 1), y: delta('scrollTop', 2)}};
-    }),
-    state: await target.evaluate(observe),
-  });
+  // A tap that loads a new document drops the marker set above, so the sample then names the new address.
+  const read = () => {
+    if (!window.__qaTouch) return {navigated: location.href};
+    const {events, start} = __qaTouch;
+    const delta = (key, index) => Math.round(start.reduce((sum, entry) => sum + entry[0][key] - entry[index], 0));
+    return {events: [...events], scrolled: {x: delta('scrollLeft', 1), y: delta('scrollTop', 2)}};
+  };
+  const sample = async () => {
+    // A document that commits mid-read destroys its context, so one retry reads the new one.
+    const touched = await page.evaluate(read).catch(() => page.evaluate(read));
+    return touched.navigated ? touched : {...touched, state: await target.count() ? await target.evaluate(observe) : null};
+  };
   const cdp = await page.context().newCDPSession(page);
   const send = (type, points) => {
     let timer;

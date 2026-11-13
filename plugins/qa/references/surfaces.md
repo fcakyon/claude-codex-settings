@@ -10,6 +10,9 @@
 | Provider | Expected session and successful authorized action | Saved session, scoped cookie recovery, ordinary login |
 | Video | Decoded frames, advancing time, selected skip and same interval without filter | Real provider subscription/player |
 | Backend | HTTP contract, committed state, retries and rejection | Existing integration process or sandbox API |
+| MCP server | Metadata, a 401 whose `WWW-Authenticate` names `resource_metadata`, consent through the real sign-in UI, and one successful tool call | Real HTTP and browser |
+| MCP App view | The `ui://` resource renders and acts under its declared CSP. Behavior only a real host provides stays blocked coverage | A small host page that loads the resource in a sandboxed iframe |
+| Realtime | Every device shows the same record after each action and after one device reconnects | One browser context per device on one shared record, expecting the stored record rather than the pushed event |
 | Database | Read-after-write and cleanup | Disposable DB, read-only assertions |
 | Auth/credits | Login/logout, protected denial, first debit, repeat-free, insufficient/unlimited | Normal account and disposable ledger |
 | Android | UI/action outcome on explicit device and assertion count | ADB and project Espresso/UI Automator |

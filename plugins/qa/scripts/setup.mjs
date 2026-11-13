@@ -1,13 +1,14 @@
 import {readdir, readFile, mkdir, writeFile, stat} from 'node:fs/promises';
 import path from 'node:path';
+import {command} from './process.mjs';
 
 const ignored = new Set(['.git', 'node_modules', '.next', 'dist', 'build', 'out', '.venv', 'venv', 'inspection', '.local', '.agents']);
-async function filesUnder(root, depth = 0) {
+async function filesUnder(root, gitignored, depth = 0) {
   const result = [];
   for (const entry of await readdir(root, {withFileTypes: true})) {
-    if (ignored.has(entry.name) || entry.name.startsWith('.env')) continue;
     const filename = path.join(root, entry.name);
-    if (entry.isDirectory() && depth < 5) result.push(...await filesUnder(filename, depth + 1));
+    if (ignored.has(entry.name) || entry.name.startsWith('.env') || gitignored.has(entry.isDirectory() ? filename + path.sep : filename)) continue;
+    if (entry.isDirectory() && depth < 5) result.push(...await filesUnder(filename, gitignored, depth + 1));
     else if (entry.isFile()) result.push(filename);
   }
   return result;
@@ -15,7 +16,10 @@ async function filesUnder(root, depth = 0) {
 
 export async function discover(root) {
   root = path.resolve(root);
-  const files = await filesUnder(root);
+  // Gitignored paths such as local analysis output are not project evidence, while submodules and nested repositories still count.
+  // Git lists a wholly ignored folder as one entry ending in a separator, so the walk never opens it.
+  const git = await command('git', ['ls-files', '-z', '--others', '--ignored', '--exclude-standard', '--directory'], {cwd: root});
+  const files = await filesUnder(root, new Set(git.code === 0 ? git.stdout.split('\0').filter(Boolean).map(file => path.join(root, file)) : []));
   const components = [];
   for (const filename of files) {
     const relative = path.relative(root, filename);

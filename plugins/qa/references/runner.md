@@ -15,7 +15,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | API | Purpose |
 | --- | --- |
 | `qa.config`, `qa.root` | Project settings and resolved repository |
-| `qa.browser()` | Isolated browser with saved sessions and analytics capture |
+| `qa.browser()` | Isolated browser with saved sessions and analytics capture. Another device is `(await qa.browser()).browser().newContext()`, which has no saved session, analytics capture or page-error check |
 | `qa.assert` | Counted Node strict assertions |
 | `qa.telemetry` | Analytics requests captured this run, each `{transport, events}` with event and parameter names only |
 | `qa.signIn(page)` | Configured password login and expected identity check |
@@ -30,7 +30,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.advancingVideo(page, options)` | Observe advancing time and frames |
 | `qa.observeSkip(page, {start, end, selector})` | Observe skip across interval in seconds |
 | `qa.emulateTouch(page, {width, height})` | Phone viewport and touch input for one page. Call before navigation and again after a full-page screenshot |
-| `qa.touchGesture(page, selector, steps, {observe, settle, timeout})` | Real touch points. `steps` are `[dx, dy, waitMs]` from the target center. `observe(element)` state, pointer events and `scrolled` `{x, y}` are sampled with the finger down and `settle` ms after release |
+| `qa.touchGesture(page, selector, steps, {observe, settle, timeout})` | Real touch points. `steps` are `[dx, dy, waitMs]` from the target center. `observe(element)` state, pointer events and `scrolled` `{x, y}` are sampled with the finger down and `settle` ms after release. A tap that loads a new document returns `after.navigated` with its address, and a target that is gone reports `state` as `null` |
 | `qa.gestures` | Named step presets by finger direction |
 | `qa.captureAudio(page)` | Scripted microphone and played-audio meter for voice pages, see [voice](voice.md). Call before navigation |
 | `qa.overflow(page)` | Up to five `tag#id.class right=<px>` elements past the viewport's right edge, `[]` when the page has no horizontal scroll. Assert with `deepEqual(…, [])` |
