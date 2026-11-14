@@ -860,8 +860,8 @@
       ]
     },
     "qa/run-qa": {
-      "title": "Run tracked website, extension and Android QA",
-      "description": "Verify real website, extension, mobile touch and Android workflows with QA journeys. Collect evidence for playback, provider connections and other app actions.",
+      "title": "Run tracked web, extension and native app QA",
+      "description": "Verify web, extension, Android and native macOS workflows with tracked QA journeys. Keep real permission grants separate from unattended CI checks.",
       "related": [
         "qa/setup",
         "agent-browser/ui-regression",

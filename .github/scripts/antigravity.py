@@ -63,7 +63,7 @@ def package_plugin(plugin: Path, target: Path) -> None:
     """
     target.mkdir()
     shutil.copyfile(plugin / MANIFEST, target / "plugin.json")
-    for name in ("skills", "scripts", "assets", "package.json", "package-lock.json", "tsconfig.json", "LICENSE"):
+    for name in ("skills", "scripts", "assets", "references", "package.json", "package-lock.json", "tsconfig.json", "LICENSE"):
         source = plugin / name
         if source.is_dir():
             shutil.copytree(source, target / name, ignore=shutil.ignore_patterns("*.zip", "__pycache__", "node_modules"))

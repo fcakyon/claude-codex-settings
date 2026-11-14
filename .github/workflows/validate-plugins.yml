@@ -71,6 +71,19 @@ jobs:
           npm ci --prefix plugins/seo-skills/skills/seo-audit/scripts --ignore-scripts
           node --test .github/scripts/test_seo_audit.mjs
 
+      - name: Install SQLite for QA contracts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3
+
+      - name: Test QA runner and native protocol
+        run: |
+          npm ci --prefix plugins/qa --ignore-scripts
+          npm test --prefix plugins/qa
+
+      - name: Test Antigravity reference packaging
+        run: python .github/scripts/test_antigravity.py
+
       - name: Test simplify guard
         run: python .github/scripts/test_simplify_guard.py
 
@@ -85,3 +98,13 @@ jobs:
 
       - name: Test format hook
         run: python .github/scripts/test_post_write.py
+
+  qa-macos-contract:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Compile native driver and check disposable signed bundle
+        run: node --test plugins/qa/tests/macos-native.test.mjs

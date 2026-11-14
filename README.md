@@ -1187,7 +1187,7 @@ Pairs naturally with `frontend-design-skills` and `qa`.
 - Generate project-owned QA skills and executable journeys under .agents.
 - Reuse authorized login sessions, test real playback and keep QA analytics out of user reports.
 - Drive real touch gestures on an emulated phone, speak scripted phrases into voice apps and confirm the replies play.
-- Report passed, failed and blocked coverage with private evidence.
+- Drive native macOS permission journeys with exact windows and file drags, keeping real grants separate from CI and reporting blocked coverage honestly.
 
 Install this plugin from the marketplace after publication. For a local checkout, run `npm ci --prefix plugins/qa` and `npm link` from `plugins/qa`. Then use `project-qa setup --root /path/to/project`.
 
