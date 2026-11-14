@@ -24,7 +24,7 @@ A request to inspect chats authorizes reads. Send customer replies, change ticke
 
 ## Track and verify
 
-Keep curated facts in `support/knowledge.txt`, behavior in `support/instructions.txt`, and questions with expected outcomes in `support/questions.json`. Describe these paths, ownership and the sync command in the app's existing `AGENTS.md`.
+Keep curated facts in `support/knowledge.txt`, product-specific behavior in `support/instructions.txt`, optional `handoffMessage` in `support/opendesk.json`, and single- or multi-turn checks in `support/questions.json`. Let OpenDesk's base prompt handle shared safety, naturalness, anti-refusal, and handoff behavior; never instruct robotic `"I can't..."` replies or repeat links a visitor already dismissed as limited or unhelpful. Keep `show_team: false` on widgets that should present human replies under the brand logo and title instead of individual agent names. Describe these paths, ownership and the sync command in the app's existing `AGENTS.md`.
 
 Copy [sync-support.mjs](scripts/sync-support.mjs) to `scripts/sync-support.mjs` and add [support-openship.yml](assets/support-openship.yml) as `.openship/workflows/support.yml` (or [support-github.yml](assets/support-github.yml) as `.github/workflows/support.yml`) with `OPENDESK_API_KEY` in protected workflow/repository secrets so `main` updates publish automatically without running on `pull_request`.
 
@@ -35,6 +35,6 @@ node scripts/sync-support.mjs .
 node scripts/sync-support.mjs . --test
 ```
 
-Verify guest, signed-in, account-switch and logout behavior, mobile placement, keyboard access, language changes and private-route hiding. Test wrong-product questions, unsupported claims, prompt injection, secret requests and human handoff. Check built assets and browser responses for secrets. A local SDK fixture proves adapter behavior only. Verify the deployed widget and real identity endpoint before declaring a migration complete.
+Verify guest, signed-in, account-switch and logout behavior, mobile placement, keyboard access, language changes and private-route hiding. Test wrong-product questions, unsupported claims, prompt injection, secret requests, UX/limit feedback, and multi-turn human handoff without repeated links. Check built assets and browser responses for secrets. A local SDK fixture proves adapter behavior only. Verify the deployed widget and real identity endpoint before declaring a migration complete.
 
 Before removing a previous provider or canceling its subscription, search all relevant apps, deployment configuration and live client requests. Historical docs and unused server secrets alone are not runtime dependencies. Preserve old conversations unless deletion is requested.

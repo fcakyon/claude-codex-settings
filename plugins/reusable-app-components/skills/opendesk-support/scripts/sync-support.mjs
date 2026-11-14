@@ -37,18 +37,29 @@ for (let attempt = 0; source.status !== 'ready' && attempt < 60; attempt++) {
   source = await api(`/ai/knowledge/${source.id}`)
 }
 if (source.status !== 'ready') throw Error('Knowledge indexing did not complete within 60 seconds')
-await api(`/bots/${config.botId}`, 'PATCH', { personality: { instructions } })
+const personality = { instructions }
+if (typeof config.handoffMessage === 'string') personality.handoff_message = config.handoffMessage
+await api(`/bots/${config.botId}`, 'PATCH', { personality })
 for (const previous of sources.filter(item => item.name.startsWith('Repository knowledge ') && item.id !== source.id)) {
-  await api(`/ai/knowledge/${previous.id}`, 'DELETE')
+  try {
+    await api(`/ai/knowledge/${previous.id}`, 'DELETE')
+  } catch (err) {
+    if (!String(err.message).includes('(404)')) throw err
+  }
 }
 console.log(`Published ${name} and bot instructions for ${config.workspaceId}`)
 
 if (process.argv.includes('--test')) {
   const questions = JSON.parse(await readFile(resolve(root, 'support/questions.json'), 'utf8'))
   for (let start = 0; start < questions.length; start += 3) {
-    const results = await Promise.all(questions.slice(start, start + 3).map(async ({ id, question, expected }) => ({
-      id, question, expected,
-      answer: await api('/ai/agent/playground', 'POST', { settings: { bot_id: config.botId }, messages: [{ role: 'visitor', text: question }] })
+    const results = await Promise.all(questions.slice(start, start + 3).map(async ({ id, question, messages, expected }) => ({
+      id,
+      question: question ?? messages?.[messages.length - 1]?.text ?? '',
+      expected,
+      answer: await api('/ai/agent/playground', 'POST', {
+        settings: { bot_id: config.botId },
+        messages: Array.isArray(messages) && messages.length ? messages : [{ role: 'visitor', text: question }]
+      })
     })))
     for (const result of results) console.log(JSON.stringify(result))
   }

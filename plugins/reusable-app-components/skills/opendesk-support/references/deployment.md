@@ -16,7 +16,7 @@ For OpenShip, follow the instance's existing deployment and DNS conventions. Ver
 
 ## Branding
 
-As verified on the Akyon Labs fork on 2026-11-08, the embedded widget's "Powered by opendesk" footer was hardcoded, with no built-in white-label toggle. The fork removes its footer markup, styles and locale strings. Inspect the current SDK for a supported option before carrying that patch through an upgrade. Preserve license notices. Widget footer removal is distinct from dashboard branding.
+As verified on the Akyon Labs fork on 2026-11-08, the embedded widget's "Powered by opendesk" footer was hardcoded, with no built-in white-label toggle. The fork removes its footer markup, styles and locale strings. Inspect the current SDK for a supported option before carrying that patch through an upgrade. Preserve license notices. Widget footer removal is distinct from dashboard branding. On `fcakyon/opendesk` (`fatih/openship`), setting widget `show_team: false` also withholds personal teammate names and avatars from visitor messages, teasers and chat follow-up emails so human replies continue under the brand logo and title.
 
 ## Release checks
 
