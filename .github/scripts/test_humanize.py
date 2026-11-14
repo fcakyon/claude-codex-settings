@@ -45,10 +45,14 @@ class HumanizeTest(unittest.TestCase):
         )
 
     def test_comments_are_quote_aware(self):
-        """Ignore comment markers inside quoted values and strings."""
+        """Ignore comment markers inside quoted values, strings, and shell words."""
         cases = (
             ("config.yml", f'motd: "welcome # to prod{SEMICOLON} be careful"\n'),
             ("app.ts", f'const note = "see {"/" * 2} ref{SEMICOLON} here"{SEMICOLON}\n'),
+            ("a.sh", f"[ $# -gt 0 ] || {{ echo no{SEMICOLON} exit 1{SEMICOLON} }}\n"),
+            ("a.sh", f"n=${{#items[@]}}{SEMICOLON} echo $n\n"),
+            ("a.sh", f"case $# in 0) exit 1 {SEMICOLON}{SEMICOLON} esac\n"),
+            ("a.sh", f"x=${{var#prefix}}{SEMICOLON} echo $x\n"),
         )
         for path, content in cases:
             self.assertEqual(run_hook("Write", {"file_path": path, "content": content}), "")
@@ -60,6 +64,7 @@ class HumanizeTest(unittest.TestCase):
             ("config.yml", f"# This comment has a semicolon{SEMICOLON} replace it."),
             ("app.py", f'"""This docstring has a semicolon{SEMICOLON} replace it."""'),
             ("app.ts", f"{'/' * 2} This comment has a semicolon{SEMICOLON} replace it."),
+            ("script.sh", f"echo $# # real comment{SEMICOLON} here\n"),
         )
         for path, content in cases:
             self.assertTrue(run_hook("Write", {"file_path": path, "content": content}))

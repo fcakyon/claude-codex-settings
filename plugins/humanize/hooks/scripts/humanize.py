@@ -91,7 +91,8 @@ MESSAGE_KEYS = {"body", "text", "markdown_text", "content", "comment", "message"
 TEXT_KEYS = MESSAGE_KEYS | {"description", "title", "subject", "note", "summary", "richtext", "rich_text"}
 
 MD_EXT = {".md", ".markdown", ".mdx"}
-HASH_EXT = {".py", ".sh", ".bash", ".zsh", ".rb", ".yaml", ".yml", ".toml"}
+SHELL_EXT = {".sh", ".bash", ".zsh"}
+HASH_EXT = {".py", ".rb", ".yaml", ".yml", ".toml"} | SHELL_EXT
 C_EXT = {".js", ".ts", ".jsx", ".tsx", ".c", ".cc", ".cpp", ".h", ".hpp", ".java", ".go", ".rs", ".css", ".scss", ".swift", ".kt", ".php"}
 # fmt: on
 
@@ -152,7 +153,7 @@ def code_refs(text, ext):
     return text
 
 
-def hash_comments(text):
+def hash_comments(text, ext=""):
     """Mask everything except docstrings and quote-aware hash comments."""
     keep = [False] * len(text)
     for pattern in (r'^[ \t]*[rbuRBU]*""".*?"""', r"^[ \t]*[rbuRBU]*'''.*?'''"):
@@ -172,7 +173,7 @@ def hash_comments(text):
                     quote = None
             elif char in "\"'":
                 quote = char
-            elif char == "#":
+            elif char == "#" and (ext not in SHELL_EXT or i == 0 or line[i - 1] in " \t|&;()<>"):
                 keep[offset + i : offset + len(line)] = [True] * (len(line) - i)
                 break
         offset += len(line)
@@ -215,7 +216,7 @@ def checked(path, text, selected=None):
     if ext in MD_EXT:
         text = md_text(text)
     elif ext in HASH_EXT:
-        text = code_refs(md_text(hash_comments(text)), ext)
+        text = code_refs(md_text(hash_comments(text, ext)), ext)
     elif ext in C_EXT:
         text = code_refs(md_text(c_comments(text)), ext)
     else:
