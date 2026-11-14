@@ -13,6 +13,7 @@ test('setup detects components, keeps project edits and reports blocked coverage
   const backend = await mkdtemp(path.join(tmpdir(), 'qa-related-backend-'));
   try {
     await writeFile(path.join(root, 'package.json'), JSON.stringify({dependencies: {next: '1'}, scripts: {build: 'next build'}}));
+    await writeFile(path.join(root, 'Package.swift'), 'import PackageDescription\nlet package = Package(name: "Example", platforms: [.macOS(.v14)])\n');
     // The extension sits in a nested repository, which Git lists as one entry yet still counts as project evidence.
     await mkdir(path.join(root, 'extension'));
     await command('git', ['init', '-q'], {cwd: path.join(root, 'extension')});
@@ -25,7 +26,7 @@ test('setup detects components, keeps project edits and reports blocked coverage
     await writeFile(path.join(root, 'analysis/checkout.js'), "import Stripe from 'stripe';\n");
     await writeFile(path.join(backend, 'go.mod'), 'module example\nrequire github.com/pocketbase/pocketbase v0.1.0\n');
     const first = await setup(root, {baseUrl: 'https://example.test', related: [path.relative(root, backend)]});
-    assert.deepEqual(new Set(first.inventory.components.map(item => item.kind)), new Set(['website', 'extension']));
+    assert.deepEqual(new Set(first.inventory.components.map(item => item.kind)), new Set(['website', 'extension', 'macos']));
     assert.equal(first.inventory.capabilities.touch, 'photo.js', 'Touch handlers need a gesture journey');
     assert.equal(first.inventory.capabilities.voice, 'call.js', 'Microphone use needs a voice journey');
     assert.equal(first.inventory.capabilities.payments, undefined, 'Gitignored folders are not project evidence');

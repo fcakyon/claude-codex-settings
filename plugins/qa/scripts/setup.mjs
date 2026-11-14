@@ -38,6 +38,7 @@ export async function discover(root) {
       if (/fastapi|django|flask/.test(source)) components.push({kind: 'backend', evidence: relative, runtime: 'python'});
     }
     if (path.basename(filename) === 'schema.prisma') components.push({kind: 'database', evidence: relative, engine: 'prisma'});
+    if ((path.basename(filename) === 'Package.swift' && /\.macOS\b/.test(await readFile(filename, 'utf8'))) || (path.basename(filename) === 'project.pbxproj' && /MACOSX_DEPLOYMENT_TARGET/.test(await readFile(filename, 'utf8')))) components.push({kind: 'macos', evidence: relative, runtime: 'swift'});
     if (path.basename(filename) === 'AndroidManifest.xml') components.push({kind: 'android', evidence: relative});
     if (path.basename(filename) === 'go.mod') {
       const source = await readFile(filename, 'utf8');

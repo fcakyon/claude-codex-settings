@@ -25,6 +25,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.network(startArgs, run)` | Scoped CLI capture with private export and cleanup |
 | `qa.command(file, args, options)` | Spawn argv without a shell, return code/stdout/stderr |
 | `qa.sqliteQuery(db, sql)` | Read-only SQLite JSON rows |
+| `qa.macos({driver, contract, mode, timeout})` | Native macOS client with `call(operation, params)` and `freeze(projectSourceSHA256)`, see [native workflow](macos.md) |
 | `qa.androidInstrumentation(serial, runner)` | Actual ADB tests with positive assertion count |
 | `qa.videoState(page, selector)` | Decoded media state |
 | `qa.advancingVideo(page, options)` | Observe advancing time and frames |

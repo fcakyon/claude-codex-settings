@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {command, Blocked} from './process.mjs';
 import {androidInstrumentation, sqliteQuery} from './native.mjs';
+import {macos} from './macos.mjs';
 export {command, Blocked} from './process.mjs';
 import {mkdir, readFile, writeFile, realpath} from 'node:fs/promises';
 import {homedir} from 'node:os';
@@ -125,7 +126,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
   const watch = page => page.on('framenavigated', frame => frame === page.mainFrame() && visited.set(page, scrub(frame.url())))
     .on('pageerror', error => (qa.current.pageErrors ??= []).length < 5 && qa.current.pageErrors.push({url: scrub(page.url()), message: scrub(error.message)}));
   const qa = {
-    root, config, stateDir, outputDir, Blocked, command, androidInstrumentation, sqliteQuery,
+    root, config, stateDir, outputDir, Blocked, command, androidInstrumentation, sqliteQuery, macos,
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
     signIn: page => signIn(qa, page),
     network: (args, run) => withNetwork(qa, args, run),

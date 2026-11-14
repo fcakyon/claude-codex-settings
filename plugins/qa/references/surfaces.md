@@ -16,7 +16,7 @@
 | Database | Read-after-write and cleanup | Disposable DB, read-only assertions |
 | Auth/credits | Login/logout, protected denial, first debit, repeat-free, insufficient/unlimited | Normal account and disposable ledger |
 | Android | UI/action outcome on explicit device and assertion count | ADB and project Espresso/UI Automator |
-| macOS | Positive test count, then actual permission and Keychain trust after a separate install | `swift test` in a sandboxed scratch copy |
+| macOS | Positive scratch test count, then real native actions and app-owned permission checks on one frozen installed build | Sandboxed `swift test`, nonmutating CI contract checks, separate [manual native acceptance](macos.md) |
 | AI output | Non-empty result for input that has one, and empty, refused and failed answers each in their own state, never complete with zero items | Real model call on fixed input |
 
 For a repaired bug, reproduce its trigger against the old behavior before changing the expectation. Extend the existing owner at the boundary that failed, then prove the repaired outcome and a nearby case that must remain distinct. A runner change belongs in the shared plugin only when the mechanism is reusable. Project selectors, provider tab selection and extraction rules stay in the project suite. Add the case or its owner command to the project CI selection and confirm it appears in `report.selected`.
@@ -37,7 +37,7 @@ Invoke existing backend tests with `qa.command`. Require tests to execute becaus
 
 Android requires explicit serial, installed app and test runner. `qa.androidInstrumentation` runs `adb -s <serial> shell am instrument -w -r <runner>` and requires positive `OK (N tests)` output. Project instrumentation owns UI assertions. Physical DRM/hardware playback needs a compatible physical device. Appium can run through `qa.command` when the project already uses it.
 
-Run macOS app tests as `swift test` through `qa.command` in a scratch copy, under `sandbox-exec` that denies network except fixture ports and denies the app's data, Keychain and TCC paths. Tests never install, sign or launch the app. Require exit 0 and a positive count in the XCTest `Executed N tests` or Swift Testing `Test run with N tests` summary, and report skips as blocked. Every ad hoc signed rebuild resets macOS permissions and saved Keychain access, so installing is its own explicit step, and trust is checked through the running app, not the Settings toggle.
+Run macOS app tests as `swift test` through `qa.command` in a scratch copy, under `sandbox-exec` that denies network except fixture ports and denies the app's data, Keychain and TCC paths. Tests never install, sign or launch the app. Require exit 0 and a positive count in the XCTest `Executed N tests` or Swift Testing `Test run with N tests` summary, and report skips as blocked. An ad hoc signed rebuild can invalidate macOS permissions and saved Keychain access. Installing is its own explicitly authorized step. Check trust through the running app as well as the Settings row, with the exact binary and signature frozen through consent and restart.
 
 Mouse events and Playwright `tap()` never hold, drag or let the browser take a gesture over for scrolling, so touch interactions need `qa.touchGesture` on a page set up with `qa.emulateTouch`.
 

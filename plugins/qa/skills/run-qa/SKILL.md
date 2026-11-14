@@ -1,6 +1,6 @@
 ---
 name: run-qa
-description: This skill should be used when user asks to "run QA", "verify real playback", "test provider connections", "test mobile touch gestures", or "check website, extension or Android flows" with tracked journeys.
+description: This skill should be used when user asks to "run QA", "verify real playback", "test provider connections", "test mobile touch gestures", or "check website, extension, Android or native macOS flows" with tracked journeys.
 ---
 
 # Run project QA
@@ -14,3 +14,5 @@ Reports distinguish pass, fail and blocked, record Git revision, and keep screen
 Read [sessions](../../references/sessions.md) before recovering login, [telemetry](../../references/telemetry.md) before production traffic, [voice](../../references/voice.md) before microphone or speech journeys, and [surface requirements](../../references/surfaces.md) for relevant components. [Runner API](../../references/runner.md) defines executable cases and optional browser-network-cli diagnostics, including installation when needed.
 
 Verify cleanup of created data and tabs. Keep saved sessions for the next run. Do not close personal browser tabs, log out providers after each test, or run suites sharing a `stateGroup` concurrently. Parallel runs each need their own server port and `QA_STATE_DIR`.
+
+For native macOS permission onboarding, read [the native workflow](../../references/macos.md). The shared driver supplies exact AX window selection, native mouse input and scoped captures. Projects own selectors and app outcomes. Run nonmutating protocol and signed-fixture checks in CI, with installed grants only in a separately authorized manual-live run.
