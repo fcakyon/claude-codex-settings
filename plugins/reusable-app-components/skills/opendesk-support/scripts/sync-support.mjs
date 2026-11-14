@@ -9,7 +9,7 @@ const config = JSON.parse(await readFile(resolve(root, 'support/opendesk.json'),
 const env = process.env.OPENDESK_API_KEY ? process.env : parseEnv(await readFile(resolve(root, '.env'), 'utf8'))
 const instructions = await readFile(resolve(root, 'support/instructions.txt'), 'utf8')
 const knowledge = await readFile(resolve(root, 'support/knowledge.txt'), 'utf8')
-if (!env.OPENDESK_API_KEY) throw Error('OPENDESK_API_KEY is required in the repository .env')
+if (!env.OPENDESK_API_KEY) throw Error('OPENDESK_API_KEY is required in the environment or repository .env')
 if (instructions.length > 4000) throw Error('Bot instructions exceed OpenDesk’s 4000-character limit')
 
 async function api(path, method = 'GET', body) {

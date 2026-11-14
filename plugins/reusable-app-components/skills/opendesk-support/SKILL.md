@@ -26,11 +26,13 @@ A request to inspect chats authorizes reads. Send customer replies, change ticke
 
 Keep curated facts in `support/knowledge.txt`, behavior in `support/instructions.txt`, and questions with expected outcomes in `support/questions.json`. Describe these paths, ownership and the sync command in the app's existing `AGENTS.md`.
 
-Use [sync-support.mjs](scripts/sync-support.mjs) with Node 22+ to publish the repository knowledge and bot instructions. It requires `OPENDESK_API_KEY` in the app's ignored `.env` or the job environment. `--test` also spends provider usage on the saved playground questions and prints answers beside their review rubric. It does not automatically grade answer quality.
+Copy [sync-support.mjs](scripts/sync-support.mjs) to `scripts/sync-support.mjs` and add [support-openship.yml](assets/support-openship.yml) as `.openship/workflows/support.yml` (or [support-github.yml](assets/support-github.yml) as `.github/workflows/support.yml`) with `OPENDESK_API_KEY` in protected workflow/repository secrets so `main` updates publish automatically without running on `pull_request`.
+
+Run the script locally with Node 22+ when editing support files (`OPENDESK_API_KEY` in the environment or the app's ignored `.env`). `--test` also spends provider usage on the saved playground questions and prints answers beside their review rubric. It does not automatically grade answer quality.
 
 ```sh
-node <skill-dir>/scripts/sync-support.mjs <app-dir>
-node <skill-dir>/scripts/sync-support.mjs <app-dir> --test
+node scripts/sync-support.mjs .
+node scripts/sync-support.mjs . --test
 ```
 
 Verify guest, signed-in, account-switch and logout behavior, mobile placement, keyboard access, language changes and private-route hiding. Test wrong-product questions, unsupported claims, prompt injection, secret requests and human handoff. Check built assets and browser responses for secrets. A local SDK fixture proves adapter behavior only. Verify the deployed widget and real identity endpoint before declaring a migration complete.

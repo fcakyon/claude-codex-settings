@@ -1,0 +1,29 @@
+name: Sync OpenDesk support
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "support/**"
+      - "scripts/sync-support.mjs"
+  workflow_dispatch:
+
+concurrency:
+  group: opendesk-support-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Publish support knowledge and instructions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/sync-support.mjs .
+        env:
+          OPENDESK_API_KEY: ${{ secrets.OPENDESK_API_KEY }}

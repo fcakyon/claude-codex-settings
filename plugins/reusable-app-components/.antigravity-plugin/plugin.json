@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "reusable-app-components",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Reuse tested app journeys with code, design and integration checks.",
   "author": {
     "name": "Fatih C. Akyon"

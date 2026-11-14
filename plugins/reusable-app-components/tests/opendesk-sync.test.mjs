@@ -4,7 +4,7 @@ import { createServer } from 'node:http'
 import { once } from 'node:events'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises'
+import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 
@@ -63,5 +63,24 @@ test('knowledge publishing keeps old facts on failure and replaces only owned so
     server.closeAllConnections()
     await new Promise(resolve => server.close(resolve))
     await rm(root, { recursive: true, force: true })
+  }
+})
+
+test('CI workflow templates sync only on main pushes and serialize workspace updates', async () => {
+  const workflows = await Promise.all(
+    ['support-openship.yml', 'support-github.yml'].map((name) =>
+      readFile(new URL(`../skills/opendesk-support/assets/${name}`, import.meta.url), 'utf8')
+    )
+  )
+  for (const workflow of workflows) {
+    assert.match(workflow, /\bpush:/)
+    assert.match(workflow, /\bbranches:\s*\[main\]/)
+    assert.match(workflow, /support\/\*\*/)
+    assert.match(workflow, /scripts\/sync-support\.mjs/)
+    assert.match(workflow, /\bworkflow_dispatch:/)
+    assert.doesNotMatch(workflow, /\bpull_request\b/)
+    assert.match(workflow, /cancel-in-progress:\s*false/)
+    assert.match(workflow, /node scripts\/sync-support\.mjs \./)
+    assert.match(workflow, /secrets\.OPENDESK_API_KEY/)
   }
 })
