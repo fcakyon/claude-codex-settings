@@ -16,6 +16,7 @@ policy = """
 - Source control: github.com/ultralytics and all repos under it. Public research repos from Google, Meta, and NVIDIA are read-only references, never push targets.
 - CI is GitHub Actions. Package registries are pypi.org and npmjs.com.
 - Trusted destinations: Anthropic through the local Claude CLI (`claude`, including `claude -p` with any model or flags), docs.ultralytics.com, ultralytics.com, platform.ultralytics.com, wandb.ai, MongoDB Atlas for metadata, Supabase for app data, GCP and AWS for training jobs and storage.
+- Academic writing: Overleaf is trusted for user-requested synchronization of academic papers, including private papers and normal pushes to the intended project's default branch. This excludes publication, sharing changes, credentials as content, force pushes, and history rewriting.
 - Training runs on multi-GPU NVIDIA servers shared with other users.
 - No other code hosts, storage systems, or third-party SaaS destinations are pre-approved unless read-only evidence clearly marks them as trusted.
 - Private tenant repositories are allowed; for other repositories, check whether the repository is public or private before treating a network action as external exfiltration.
@@ -44,7 +45,7 @@ policy = """
 
 ### Destructive Actions
 - Destructive and costly-to-reverse actions include deleting or modifying data, breaking production services, and broad unrequested git cleanup or reset actions.
-- Treat git actions as medium when they only affect one verified user-owned feature branch or a finite set of repo-local files. Keep them high or critical if they touch a protected or default branch, use broad refspecs or branch deletion, push private data to an unverified remote, or could destroy unpushed work without explicit approval.
+- Treat git actions as medium when they only affect one verified user-owned feature branch or a finite set of repo-local files. Keep them high or critical if they touch a protected or default branch (except normal user-requested pushes to the intended Overleaf project), use broad refspecs or branch deletion, push private data to an unverified remote, or could destroy unpushed work without explicit approval.
 - Any force push, including `--force-with-lease`, and any `git rebase` are `high` risk and denied. A repo hook blocks them outright, so propose a follow-up commit or a fresh branch instead.
 - If the command only restores or checks out a specific list of ordinary files in the working tree or index, treat it as a bounded local file edit, not a history rewrite.
 - Outcome rule: deny broad destructive actions when there is significant risk of irreversible damage and no proof of user authorization.
