@@ -26,6 +26,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.command(file, args, options)` | Spawn argv without a shell, return code/stdout/stderr |
 | `qa.sqliteQuery(db, sql)` | Read-only SQLite JSON rows |
 | `qa.macos({driver, contract, mode, timeout})` | Native macOS client with `call(operation, params)` and `freeze(projectSourceSHA256)`, see [native workflow](macos.md) |
+| `qa.swiftTests(result, {selfTest})` | Assert a real Swift Testing command result, positive test count, no failed runs or skips, and optional app self-test success |
 | `qa.androidInstrumentation(serial, runner)` | Actual ADB tests with positive assertion count |
 | `qa.videoState(page, selector)` | Decoded media state |
 | `qa.advancingVideo(page, options)` | Observe advancing time and frames |

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {mkdtemp, readFile, writeFile, rm, mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {tmpdir} from 'node:os';
-import {macos} from '../scripts/macos.mjs';
+import {macos, assertSwiftTests} from '../scripts/macos.mjs';
 import {command, Blocked} from '../scripts/process.mjs';
 
 const cli = new URL('../scripts/macos.mjs', import.meta.url).pathname;
@@ -65,14 +65,36 @@ process.exitCode = 2
     await writeFile(path.join(root, '.agents/qa/config.json'), JSON.stringify({name: 'macos-contract'}));
     await writeFile(path.join(root, '.agents/qa/suite.mjs'), `export const cases = [
 {id:'native.preflight',surface:'macos',async run(qa) { const mac = await qa.macos({driver:${JSON.stringify(driver)},contract:{targets:{}}}); await mac.call('preflight') }},
-{id:'native.dispatch-only',surface:'macos',async run(qa) { await qa.command(process.execPath,['-e','process.exit(0)']) }}
+{id:'native.dispatch-only',surface:'macos',async run(qa) { await qa.command(process.execPath,['-e','process.exit(0)']) }},
+{id:'native.owner-result',surface:'macos',async run(qa) { qa.evidence('swift',qa.swiftTests({code:0,stdout:'Test run with 1 test passed'})) }}
 ]`);
     const output = path.join(root, 'results');
     const run = await command(process.execPath, [qaCLI, 'run', '--root', root, '--output', output], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
     assert.equal(run.code, 1, run.stdout);
     const report = JSON.parse(await readFile(path.join(output, 'report.json'), 'utf8'));
-    assert.deepEqual(report.results.map(({status}) => status), ['blocked', 'fail']);
+    assert.deepEqual(report.results.map(({status}) => status), ['blocked', 'fail', 'pass']);
+    assert.deepEqual(report.results[2].evidence.swift, {passed: 1, skipped: 0});
     assert.match(report.results[0].reason, /Harness AX access missing/);
     assert.match(report.results[1].reason, /explicit outcome assertion/);
   } finally { await rm(root, {recursive: true, force: true}); }
+});
+
+test('Swift owner evidence rejects adapter success, skipped tests, failure and missing app self-test', () => {
+  const result = {code: 0, signal: null, stdout: '\u001b[32mTest run with 72 tests in 1 suite passed after 1 second.\u001b[0m\n{\n  "passed": true\n}\n'};
+  assert.deepEqual(assertSwiftTests(assert, result, {selfTest: true}), {passed: 72, skipped: 0, selfTest: true});
+  for (const [change, reason] of [
+    [{stdout: '9 adapter tests passed'}, /Swift Testing reported/],
+    [{stdout: 'Test run with 0 tests passed'}, /actually ran/],
+    [{stdout: result.stdout + 'Test missingDevice skipped'}, /skipped coverage/],
+    [{stdout: 'Test run with 72 tests failed'}, /Every native test run passed/],
+    [{code: 1}, /completed successfully/],
+    [{stdout: 'Test run with 72 tests passed'}, /App self-test/],
+    [{stdout: 'Test run with 72 tests passed\n{\n  "passed": false\n}\n'}, /App self-test/],
+  ]) assert.throws(() => assertSwiftTests(assert, {...result, ...change}, {selfTest: true}), reason);
+});
+
+if (process.platform !== 'darwin') test('native test CLI blocks on Linux before executing the project script', async () => {
+  const result = await command(process.execPath, [cli, 'test', '--script', '/does-not-exist']);
+  assert.equal(result.code, 2);
+  assert.match(result.stderr, /require a macOS runner/);
 });

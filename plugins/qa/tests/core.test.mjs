@@ -27,6 +27,8 @@ test('setup detects components, keeps project edits and reports blocked coverage
     await writeFile(path.join(backend, 'go.mod'), 'module example\nrequire github.com/pocketbase/pocketbase v0.1.0\n');
     const first = await setup(root, {baseUrl: 'https://example.test', related: [path.relative(root, backend)]});
     assert.deepEqual(new Set(first.inventory.components.map(item => item.kind)), new Set(['website', 'extension', 'macos']));
+    const nativeGap = JSON.parse(await readFile(path.join(root, '.agents/qa/config.json'), 'utf8')).coverageGaps;
+    assert.ok(nativeGap.some(gap => gap.includes('native owner tests on macOS CI')), 'Native setup keeps the owner-test CI gap explicit');
     assert.equal(first.inventory.capabilities.touch, 'photo.js', 'Touch handlers need a gesture journey');
     assert.equal(first.inventory.capabilities.voice, 'call.js', 'Microphone use needs a voice journey');
     assert.equal(first.inventory.capabilities.payments, undefined, 'Gitignored folders are not project evidence');

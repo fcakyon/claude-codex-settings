@@ -3,13 +3,29 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFile, writeFile} from 'node:fs/promises';
 import {fileURLToPath, pathToFileURL} from 'node:url';
-import {parseArgs} from 'node:util';
+import {parseArgs, stripVTControlCharacters} from 'node:util';
 import {command, Blocked} from './process.mjs';
 
 const source = fileURLToPath(new URL('./macos-driver.swift', import.meta.url));
 const hash = async file => createHash('sha256').update(await readFile(file)).digest('hex');
 const observations = new Set(['identity', 'preflight', 'snapshot', 'inspect', 'capture']);
 const operations = new Set([...observations, 'click', 'press', 'drag', 'move', 'resize', 'hide', 'close']);
+
+export function assertSwiftTests(check, result, {selfTest = false} = {}) {
+  check.equal(result.code, 0, 'Native test command completed successfully');
+  const output = stripVTControlCharacters(result.stdout);
+  const summaries = [...output.matchAll(/Test run with (\d+) tests?(?: in \d+ suites?)? (passed|failed)/g)];
+  check.ok(summaries.length > 0, 'Swift Testing reported a test run');
+  for (const match of summaries) check.equal(match[2], 'passed', 'Every native test run passed');
+  const passed = summaries.reduce((total, match) => total + Number(match[1]), 0);
+  check.ok(passed > 0, 'Native owner tests actually ran');
+  check.doesNotMatch(output, /\bskipped\b/i, 'Native owner tests have no skipped coverage');
+  if (selfTest) {
+    const reports = [...output.matchAll(/^\{[\s\S]*?^\}/gm)].map(match => JSON.parse(match[0]));
+    check.ok(reports.some(report => report.passed === true), 'App self-test reported success');
+  }
+  return {passed, skipped: 0, ...(selfTest && {selfTest: true})};
+}
 
 export async function macos({driver, contract, mode = 'observe', timeout = 10000}) {
   assert.ok(['observe', 'fixture', 'manual-live'].includes(mode), 'Unknown macOS execution mode');
@@ -51,9 +67,17 @@ async function main() {
   const {values, positionals} = parseArgs({allowPositionals: true, options: {
     driver: {type: 'string'}, contract: {type: 'string'}, mode: {type: 'string', default: 'observe'},
     params: {type: 'string'}, output: {type: 'string'}, 'source-sha256': {type: 'string'}, help: {type: 'boolean'},
+    script: {type: 'string'}, 'self-test': {type: 'boolean'},
   }});
   if (values.help || !positionals.length) {
-    console.log('macos.mjs build --output DRIVER | freeze --driver DRIVER --contract FILE --source-sha256 SHA | call OP --driver DRIVER --contract FILE [--mode observe|fixture|manual-live] [--params JSON]');
+    console.log('macos.mjs test --script FILE [--self-test] -- SCRIPT_ARGS | build --output DRIVER | freeze --driver DRIVER --contract FILE --source-sha256 SHA | call OP --driver DRIVER --contract FILE [--mode observe|fixture|manual-live] [--params JSON]');
+    return;
+  }
+  if (positionals[0] === 'test') {
+    if (process.platform !== 'darwin') throw new Blocked('Native Swift owner tests require a macOS runner');
+    assert.ok(values.script, 'Select the project sandboxed native test script');
+    const result = await command('/bin/bash', [values.script, ...positionals.slice(1)], {timeout: 1200000});
+    console.log(JSON.stringify(assertSwiftTests(assert, result, {selfTest: values['self-test']})));
     return;
   }
   if (positionals[0] === 'build') {

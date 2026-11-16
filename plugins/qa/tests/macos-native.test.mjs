@@ -42,3 +42,23 @@ test('native driver freezes a scratch signed app and rejects expired requests an
     await assert.rejects(client.call('identity'), /Strict code signature verification failed/);
   } finally { await rm(root, {recursive: true, force: true}); }
 });
+
+test('native test CLI executes an AppKit Swift owner and rejects its regression', {skip: process.platform !== 'darwin'}, async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-native-owner-'));
+  try {
+    await mkdir(path.join(root, 'Tests'));
+    await writeFile(path.join(root, 'Package.swift'), '// swift-tools-version: 6.0\nimport PackageDescription\nlet package = Package(name: "NativeOwner", platforms: [.macOS(.v14)], targets: [.testTarget(name: "NativeOwnerTests", path: "Tests")])\n');
+    const testFile = path.join(root, 'Tests/NativeOwnerTests.swift');
+    await writeFile(testFile, 'import AppKit\nimport Testing\n@Test func nativeRuntime() { #expect(NSClassFromString("NSApplication") != nil) }\n');
+    const script = path.join(root, 'owner.sh');
+    await writeFile(script, 'set -eu\nxcrun swift test --disable-sandbox --package-path "$1" 2>&1\n');
+    const cli = new URL('../scripts/macos.mjs', import.meta.url).pathname;
+    const passed = await command(process.execPath, [cli, 'test', '--script', script, '--', root]);
+    assert.equal(passed.code, 0, passed.stderr);
+    assert.deepEqual(JSON.parse(passed.stdout), {passed: 1, skipped: 0});
+    await writeFile(testFile, 'import Testing\n@Test func nativeRuntime() { #expect(Bool(false)) }\n');
+    const failed = await command(process.execPath, [cli, 'test', '--script', script, '--', root]);
+    assert.equal(failed.code, 1);
+    assert.match(failed.stderr, /Native test command completed successfully/);
+  } finally { await rm(root, {recursive: true, force: true}); }
+});
