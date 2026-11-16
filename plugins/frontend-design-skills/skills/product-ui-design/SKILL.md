@@ -25,6 +25,8 @@ Different products should retain different identities. A media catalog can prior
 
 Use familiar behavior and a clear hierarchy. Choose rows, lists, tables, panels or open space according to the content. Avoid surrounding every item with a card. Spend visual emphasis where it helps the task, rather than adding decorative gradients, stripes, badges or motion.
 
+For sequential setup or onboarding flows, group the steps into one cohesive divided list rather than separate bordered boxes or a wrapping pile of pills. Give every row button/link explicit left-aligned text (`justify-start text-left`) so `<button>` never inherits center alignment, never truncate primary action labels (`...`), and reserve the single accent fill for step 1 or the primary action. Keep unordered secondary tools as natural-width buttons (`flex-wrap`, never stretched 2+1 rows), and pair empty-state onboarding with a real theme-aware product preview screenshot when one exists.
+
 Set typography on controls deliberately. Align labels, icons and action columns, balance visual weight and use a consistent spacing scale. Choose comfortable density for the task instead of inflating controls to fill space. Check real long values, empty content, loading, failure and selected states.
 
 Text and fields must be readable in every supported theme. Check text contrast, field boundaries, placeholders, focus and disabled states against their actual backgrounds. Target WCAG AA contrast, including 4.5:1 for ordinary text and 3:1 for large text and essential control boundaries. Do not use color as the only signal. Keep visible labels, keyboard access and touch targets usable. Use at least 16px editable input text on phones to avoid automatic zoom where applicable.
