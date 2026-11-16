@@ -49,7 +49,7 @@ test('native test CLI executes an AppKit Swift owner and rejects its regression'
     await mkdir(path.join(root, 'Tests'));
     await writeFile(path.join(root, 'Package.swift'), '// swift-tools-version: 6.0\nimport PackageDescription\nlet package = Package(name: "NativeOwner", platforms: [.macOS(.v14)], targets: [.testTarget(name: "NativeOwnerTests", path: "Tests")])\n');
     const testFile = path.join(root, 'Tests/NativeOwnerTests.swift');
-    await writeFile(testFile, 'import AppKit\nimport Testing\n@Test func nativeRuntime() { #expect(NSClassFromString("NSApplication") != nil) }\n');
+    await writeFile(testFile, 'import AppKit\nimport Testing\n@Test func nativeRuntime() { #expect(NSColor.clear.alphaComponent == 0) }\n');
     const script = path.join(root, 'owner.sh');
     await writeFile(script, 'set -eu\nxcrun swift test --disable-sandbox --package-path "$1" 2>&1\n');
     const cli = new URL('../scripts/macos.mjs', import.meta.url).pathname;
