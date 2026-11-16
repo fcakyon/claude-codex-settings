@@ -29,10 +29,12 @@ t = t.replace(
 p.write_text(t)
 PYEOF
 
+node "$REPO_ROOT/.github/scripts/frontend-design-skills/route-product-ui.mjs" "$REPO_ROOT/$skill_dir/SKILL.md"
 create_zip "$skill_dir"
 
 # Keep the repository-owned testing workflow and package it without upstream replacement.
 create_zip "plugins/frontend-design-skills/skills/frontend-testing-debugging"
+create_zip "plugins/frontend-design-skills/skills/product-ui-design"
 
 # --- Anthropic frontend skill ---
 clone_or_update https://github.com/anthropics/claude-plugins-official anthropic-claude-plugins-official
@@ -55,6 +57,7 @@ sed -i '' '/^# Frontend Design$/a\
 For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.
 ' "$REPO_ROOT/plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md"
 
+node "$REPO_ROOT/.github/scripts/frontend-design-skills/route-product-ui.mjs" "$REPO_ROOT/plugins/frontend-design-skills/skills/anthropic-frontend-design/SKILL.md"
 create_zip "plugins/frontend-design-skills/skills/anthropic-frontend-design"
 
 # --- Vercel writing guidelines ---
