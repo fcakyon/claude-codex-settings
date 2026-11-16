@@ -82,6 +82,8 @@ process.exitCode = 2
 test('Swift owner evidence rejects adapter success, skipped tests, failure and missing app self-test', () => {
   const result = {code: 0, signal: null, stdout: '\u001b[32mTest run with 72 tests in 1 suite passed after 1 second.\u001b[0m\n{\n  "passed": true\n}\n'};
   assert.deepEqual(assertSwiftTests(assert, result, {selfTest: true}), {passed: 72, skipped: 0, selfTest: true});
+  const noisy = {code: 0, signal: null, stdout: 'Test test_skipped_frame_recovery() passed\n{\n  not valid json\n}\n' + result.stdout};
+  assert.deepEqual(assertSwiftTests(assert, noisy, {selfTest: true}), {passed: 72, skipped: 0, selfTest: true});
   for (const [change, reason] of [
     [{stdout: '9 adapter tests passed'}, /Swift Testing reported/],
     [{stdout: 'Test run with 0 tests passed'}, /actually ran/],

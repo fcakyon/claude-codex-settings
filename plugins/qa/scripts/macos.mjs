@@ -20,9 +20,11 @@ export function assertSwiftTests(check, result, {selfTest = false} = {}) {
   for (const match of summaries) check.equal(match[2], 'passed', 'Every native test run passed');
   const passed = summaries.reduce((total, match) => total + Number(match[1]), 0);
   check.ok(passed > 0, 'Native owner tests actually ran');
-  check.doesNotMatch(output, /\bskipped\b/i, 'Native owner tests have no skipped coverage');
+  check.doesNotMatch(output, /(?:^|\n)\s*(?:[^\n]*\bTest(?:\s+Case)?\b[^\n]*\bskipped\b(?=\s*(?::|$|\())|Test run[^\n]*\bskipped\b)/i, 'Native owner tests have no skipped coverage');
   if (selfTest) {
-    const reports = [...output.matchAll(/^\{[\s\S]*?^\}/gm)].map(match => JSON.parse(match[0]));
+    const reports = [...output.matchAll(/^\{[\s\S]*?^\}/gm)].map(match => {
+      try { return JSON.parse(match[0]); } catch { return null; }
+    }).filter(Boolean);
     check.ok(reports.some(report => report.passed === true), 'App self-test reported success');
   }
   return {passed, skipped: 0, ...(selfTest && {selfTest: true})};
