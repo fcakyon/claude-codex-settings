@@ -1,9 +1,13 @@
 ---
 name: openai-frontend-design
-description: Use for new frontend applications, dashboards, games, creative websites, hero sections, and visually driven UI from scratch, or when the user explicitly asks for a redesign/restyle/modernization. Builds from clean, airy, high-taste, readable image-generated concept design with section-specific references, faithful implementation, and browser testing.
+description: This skill should be used when the user asks for "visual concepts", "image-led website design", or "concept fidelity". Create visual concepts and implement accepted art direction. Use product-ui-design for everyday product screens and controls.
 ---
 
 # Frontend App Builder
+
+For product screens, controls and UX flows, use the installed `product-ui-design` skill first. It covers existing design systems and creating product-specific design rules. Use this skill for new visual concepts or substantial art direction. Image concepts are optional for routine product UI changes.
+
+
 
 For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.
 For rendered UI testing and debugging, use the installed `frontend-testing-debugging` skill.

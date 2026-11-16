@@ -1,10 +1,14 @@
 ---
 name: anthropic-frontend-design
-description: Guidance for distinctive, intentional visual design when building new UI or reshaping an existing one. Helps with aesthetic direction, typography, and making choices that don't read as templated defaults.
+description: This skill should be used when the user asks for "art direction", "a distinctive visual identity", or "a visual redesign". Develop typography and composition for a new direction. Use product-ui-design for everyday product screens and controls.
 license: Apache-2.0
 ---
 
 # Frontend Design
+
+For product screens, controls and UX flows, use the installed `product-ui-design` skill first. It covers existing design systems and creating product-specific design rules. Use this skill for new visual concepts or substantial art direction. Image concepts are optional for routine product UI changes.
+
+
 
 For interface copy and supporting text, read and apply the installed `writing-guidelines` skill.
 

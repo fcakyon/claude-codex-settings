@@ -487,6 +487,15 @@
         "simplify/simplify"
       ]
     },
+    "frontend-design-skills/product-ui-design": {
+      "title": "Product UI design and UX polish skill",
+      "description": "Design clear product flows and polished controls, create app design rules, and inspect desktop, mobile and theme views with accurate assets.",
+      "related": [
+        "frontend-design-skills/frontend-testing-debugging",
+        "heroui-skills/heroui-react",
+        "frontend-design-skills/writing-guidelines"
+      ]
+    },
     "frontend-design-skills/anthropic-frontend-design": {
       "title": "Download the Anthropic frontend design skill",
       "description": "Pick a distinct visual direction, typography and layout for a new or reshaped interface, and avoid choices that read as templated defaults.",
