@@ -12,8 +12,9 @@ const observations = new Set(['identity', 'preflight', 'snapshot', 'inspect', 'c
 const operations = new Set([...observations, 'click', 'press', 'drag', 'move', 'resize', 'hide', 'close']);
 
 export function assertSwiftTests(check, result, {selfTest = false} = {}) {
-  check.equal(result.code, 0, 'Native test command completed successfully');
-  const output = stripVTControlCharacters(result.stdout);
+  const output = stripVTControlCharacters(result.stdout || '');
+  const details = [result.stderr, output].filter(Boolean).join('\n').trim().slice(-2000);
+  check.equal(result.code, 0, details ? `Native test command completed successfully\n${details}` : 'Native test command completed successfully');
   const summaries = [...output.matchAll(/Test run with (\d+) tests?(?: in \d+ suites?)? (passed|failed)/g)];
   check.ok(summaries.length > 0, 'Swift Testing reported a test run');
   for (const match of summaries) check.equal(match[2], 'passed', 'Every native test run passed');
