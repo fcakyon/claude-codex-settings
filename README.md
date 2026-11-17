@@ -109,7 +109,7 @@ ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/code-review --skill '*'
 ```
 
-Review your current changes or specify a branch, commit range, path, GitHub PR, or GitLab MR. Select the installed `code-review` skill in your client.
+Review your current changes before a direct push, or specify a branch, commit range, path, GitHub PR, or GitLab MR. Select the installed `code-review` skill in your client.
 
 - Review only by default. Choose `low` for a diff scan or `medium` through `max` for deeper passes. Use `--max-findings` to set the report limit.
 - Add `--fix` to apply verified fixes to the local checkout.
@@ -833,7 +833,7 @@ Git and GitHub automation. Run the `setup` skill after install.
 
 **Skills:**
 
-- [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes and write the message
+- [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes with a `verification:` trailer for completed checks
 - [`create-issue`](./plugins/github-dev/skills/create-issue/SKILL.md) - Create or revise a concise problem report
 - [`create-pr`](./plugins/github-dev/skills/create-pr/SKILL.md) - Create a pull request from the full branch diff
 - [`review-pr`](./plugins/github-dev/skills/review-pr/SKILL.md) - Review a pull request for bugs and regressions

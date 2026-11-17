@@ -34,6 +34,7 @@ points in the commit message body instead of relying on the diff alone.
    - Focus on 'why' not 'what'
    - 1 sentence conventional style + 1-2 short motivation/findings sentences if possible
    - For complex changes, add bullet points after blank line
+   - After a blank line, end each commit message with one lowercase `verification:` trailer. Name the relevant checks actually completed for the staged changes and their results. If none ran, use `verification: none (<reason>)`. Include a material failure or blocker without claiming it passed. Keep future checks out of the trailer.
 
 4. **Message examples**
    - `feat: add sign-in flow`
@@ -50,7 +51,6 @@ points in the commit message body instead of relying on the diff alone.
 6. **Execution**
    - Commit uses HEREDOC syntax for proper formatting
    - Verify commit message has correct format
-   - Don't add test plans to commit messages
 
 ## Best Practices
 
