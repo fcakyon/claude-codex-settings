@@ -5,7 +5,7 @@ description: This skill should be used when the user asks to "review this diff",
 
 # Code review
 
-`code-review [low|medium|high|xhigh|max|ultra] [--fix] [--comment] [--max-findings <n>|all|default] [target]`
+`code-review [low|medium|high|xhigh|max] [--fix] [--comment] [--max-findings <n>|all|default] [target]`
 
 Review only by default. Treat explicit plain-language requests to fix or post as the corresponding flag. Respect the client's permission mode and the repository's instructions throughout.
 
@@ -17,8 +17,6 @@ Review only by default. Treat explicit plain-language requests to fix or post as
 | `xhigh` or `max` | Run all ten angles, then sweep for missed defects after verification. | 15 |
 
 If omitted, reuse the last explicit local effort in this conversation, otherwise use the client's session effort if it maps to a listed level, or `medium`. Reuse an explicit findings limit in the same conversation until `--max-findings default`. Accept a positive integer or `all`. Say when an invalid limit was ignored.
-
-For Claude's hosted review, use the built-in `/review ultra`, optionally with `--post` to preselect PR posting. If `ultra` was requested and the built-in command is unavailable, disclose the fallback and run a local `max` review.
 
 ## 0. Pin the scope
 
