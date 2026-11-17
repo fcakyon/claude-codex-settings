@@ -2,6 +2,33 @@
 
 These examples use HeroUI v3 compound components and Tailwind semantic tokens. Adapt them to the installed design system. The host provides verified logo assets and callbacks. Do not install HeroUI just to copy these examples.
 
+## Compact preferences and collection entry points
+
+Group related settings with shared alignment. A label and contextual hint take the available space, while the control keeps its natural width. This excerpt uses the host's existing time-format control rather than defining another picker.
+
+```tsx
+<section aria-label="Preferences" className="divide-y divide-separator">
+  <div className="flex flex-wrap items-center justify-between gap-3 py-4">
+    <div>
+      <h3 className="text-sm font-medium">Time format</h3>
+      <p className="text-sm text-muted">{timeExample}</p>
+    </div>
+    <TimeFormatControl value={timeFormat} onChange={setTimeFormat} />
+  </div>
+  <div className="flex items-center justify-between gap-3 py-4">
+    <div>
+      <h3 className="text-sm font-medium">Hidden events</h3>
+      <p className="text-sm text-muted">{hiddenCount} hidden</p>
+    </div>
+    <Button variant="secondary" onPress={openHiddenEvents}>Manage</Button>
+  </div>
+</section>
+```
+
+The count summarizes the collection without growing the Settings page. In the manager, keep its heading, search and close action outside a bounded scrolling list. Reuse the installed dialog or sheet for focus, Escape and dismissal. A row identifies the item, scope and account before its restore action. A restore should keep the query and scroll position, disable only the pending action and retain the item with an inline error on failure. Test a realistic larger list and long account names, not only this one-row excerpt.
+
+Use the product's own button ranking. Here `secondary` means a restrained surface and readable label, not a prescribed fill, accent color or pill shape. Confirm font, size, weight, borders and all interaction states in the rendered product.
+
 ## Account identity and action
 
 A real integration logo aids recognition. Give the identity the flexible space and keep the action reachable. The email's full value remains available through its text and title.
