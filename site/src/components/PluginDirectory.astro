@@ -9,8 +9,9 @@ interface Props {
 
 const { locale } = Astro.props
 const copy = translations[locale].plugins.directory
-const defaultTool = codingTools[0]
-const initialCommand = plugins[0].claudeCommand
+const initialPlugin = plugins[0]
+const defaultTool = codingTools.find((tool) => initialPlugin[`${tool.id}Command`])!
+const initialCommand = initialPlugin[`${defaultTool.id}Command`]
 ---
 
 <div class="plugin-browser" id="browse" data-plugin-browser data-unavailable={copy.unavailable} data-shown={copy.shown}>
@@ -54,11 +55,11 @@ const initialCommand = plugins[0].claudeCommand
         <span aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
       <div class="install-tabs" role="group" aria-label={copy.chooseTool}>
-        {codingTools.map((tool, index) => (
+        {codingTools.map((tool) => (
           <button
-            class:list={["install-tab", { "is-active": index === 0 }]}
+            class:list={["install-tab", { "is-active": tool.id === defaultTool.id }]}
             type="button"
-            aria-pressed={index === 0}
+            aria-pressed={tool.id === defaultTool.id}
             data-install-tab={tool.id}
             data-marketplace={tool.marketplace}
           >{tool.label}</button>
@@ -106,7 +107,7 @@ const initialCommand = plugins[0].claudeCommand
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)")
     const installContent = browser.querySelector<HTMLElement>(".install-content")!
     let activeRow = rows[0]
-    let activeTab = tabs[0]
+    let activeTab = tabs.find((tab) => tab.getAttribute("aria-pressed") === "true")!
 
     const render = (animate = true) => {
       const label = activeTab.textContent || ""

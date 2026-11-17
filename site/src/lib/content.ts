@@ -164,8 +164,11 @@ export const plugins = marketplace.plugins
     const hasCodex = codexPlugins.has(plugin.name);
     const hasCursor = cursorPlugins.has(plugin.name);
     const hasAntigravity = Boolean(directory && existsSync(resolve(directory, ".antigravity-plugin/plugin.json")));
+    const claudeCommand = "claudeCode" in seo && !seo.claudeCode
+      ? undefined
+      : `claude plugin install ${plugin.name}@${marketplaceName}`;
     const tools = [
-      "Claude Code",
+      ...(claudeCommand ? ["Claude Code"] : []),
       ...(hasCodex ? ["Codex"] : []),
       ...(hasCursor ? ["Cursor"] : []),
       ...(hasAntigravity ? ["Antigravity"] : []),
@@ -174,7 +177,6 @@ export const plugins = marketplace.plugins
       typeof plugin.source === "object"
         ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
         : undefined;
-    const claudeCommand = `claude plugin install ${plugin.name}@${marketplaceName}`;
     const codexCommand = hasCodex ? `codex plugin add ${plugin.name}@${marketplaceName}` : undefined;
     const cursorCommand = hasCursor ? `cursor-agent # enter /plugin, then install ${plugin.name}` : undefined;
     const antigravityCommand = hasAntigravity ? `uv run .github/scripts/antigravity.py install ${plugin.name}` : undefined;
@@ -226,12 +228,9 @@ export const plugins = marketplace.plugins
       cursorCommand,
       antigravityCommand,
       installCommands: [
-        {
-          id: "claude",
-          icon: "claude",
-          tool: "Claude Code",
-          command: claudeCommand,
-        },
+        ...(claudeCommand
+          ? [{ id: "claude", icon: "claude", tool: "Claude Code", command: claudeCommand }]
+          : []),
         ...(codexCommand
           ? [
               {

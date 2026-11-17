@@ -62,7 +62,7 @@ Optionally install IDE extension:
 claude plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-claude plugin install simplify@claude-settings
+claude plugin install humanize@claude-settings
 ```
 
 In Claude Code desktop, select **+** beside the prompt, then **Plugins** and **Add plugin**.

@@ -54,7 +54,14 @@ const checkPage = (path, name, group) => {
   assert.equal(panels.filter((node) => attr(node, "hidden") === undefined).length, 1, `${path}: one visible installation panel`);
   for (const tab of tabs) assert.ok(panels.some((panel) => attr(panel, "id") === attr(tab, "aria-controls")), `${path}: installation panel exists`);
   const claudePanel = panels.find((node) => attr(node, "id") === "claude-code");
-  assert.ok(text(claudePanel).includes(`claude plugin install ${path.split("/")[2]}@claude-settings`), `${path}: installer targets the parent plugin`);
+  const pluginName = path.split("/")[2];
+  if (catalog.plugins[pluginName].claudeCode === false) {
+    assert.equal(claudePanel, undefined, `${path}: Claude Code install panel is omitted`);
+    const codexPanel = panels.find((node) => attr(node, "id") === "codex");
+    assert.ok(codexPanel && text(codexPanel).includes(`codex plugin add ${pluginName}@claude-settings`), `${path}: Codex installer targets the parent plugin`);
+  } else {
+    assert.ok(claudePanel && text(claudePanel).includes(`claude plugin install ${pluginName}@claude-settings`), `${path}: Claude Code installer targets the parent plugin`);
+  }
   const badge = page.find((node) => attr(node, "class") === "download-count");
   assert.match(text(badge), /[\d,]+\s*downloads/, `${path}: GitHub download count`);
   return links(page);

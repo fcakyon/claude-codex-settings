@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 
-const systemPrompt = readFileSync(new URL("../../../claude-agents/fable-advisor.md", import.meta.url), "utf8")
+const systemPrompt = readFileSync(new URL("../references/fable-advisor.md", import.meta.url), "utf8")
   .replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "")
   .trim();
 const result = spawnSync(

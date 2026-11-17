@@ -9,7 +9,7 @@ interface Props {
 
 const { plugin, skill } = Astro.props
 const compact = Boolean(plugin || skill)
-const target = plugin || pluginByName.get(skill?.plugin || "simplify")!
+const target = plugin || pluginByName.get(skill?.plugin || "humanize")!
 
 const marketplaceCommands = Object.fromEntries(codingTools.map((tool) => [tool.id, tool.marketplace]))
 const guideTabs = [
@@ -156,8 +156,7 @@ const supportedTabs = guideTabs.filter((tab) => {
   <div>
     <h2>Use a plugin in a new session</h2>
     <p>Start a new session so the agent loads the plugin, then name the skill or describe the task.</p>
-    <pre class="code-sample"><code>{`Use the simplify skill to review my staged diff.
-Use the humanize skill to revise this README.`}</code></pre>
+    <pre class="code-sample"><code>Use the humanize skill to revise this README.</code></pre>
   </div>
   <div>
     <h2>Keep the folder inside the ZIP</h2>

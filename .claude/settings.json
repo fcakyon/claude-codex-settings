@@ -245,7 +245,6 @@
     "reusable-app-components@claude-settings": true,
     "qa@claude-settings": true,
     "intelligent-compact@claude-settings": true,
-    "simplify@claude-settings": true,
     "humanize@claude-settings": true,
     "openai-office-skills@claude-settings": true,
     "python-skills@claude-settings": true,
