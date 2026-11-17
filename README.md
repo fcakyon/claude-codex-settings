@@ -97,6 +97,33 @@ ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 ## Plugins
 
 <details>
+<summary><strong>code-review</strong> - Verify bugs in code changes, with optional local fixes and GitHub PR comments</summary>
+
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
+| ----------- | --------- | ------ | --------------- |
+| `claude plugin install code-review@claude-settings` | `codex plugin add code-review@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install code-review` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/code-review --skill '*'
+```
+
+Review your current changes or specify a branch, commit range, path, or GitHub PR. Select the installed `code-review` skill in your client. In Claude Code, use `/code-review:code-review` to choose this plugin.
+
+- Review only by default. Findings appear in the session with the affected line and failure scenario.
+- Add `--fix` to apply verified fixes to the local checkout.
+- Add `--comment` with a GitHub PR target to post findings through the repository's review workflow.
+
+**Skills** (ZIP for ChatGPT, Claude, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| ----- | ----------- | --- |
+| [`code-review`](./plugins/code-review/skills/code-review/SKILL.md) | Verify regressions in a diff and report them by impact | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/code-review.zip) |
+
+</details>
+
+<details>
 <summary><strong>simplify</strong> - Review changed code for reuse, redundancy, and over-engineering, then apply fixes</summary>
 
 | Claude Code                                      | Codex CLI                                   | Antigravity CLI                                            |

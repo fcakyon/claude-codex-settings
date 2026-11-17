@@ -29,6 +29,13 @@
       "source": "./plugins/aeo"
     },
     {
+      "name": "code-review",
+      "source": "./plugins/code-review",
+      "description": "Verify bugs in code changes, with optional local fixes and GitHub PR comments.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "simplify",
       "source": "./plugins/simplify",
       "description": "Review changed code for reuse, redundancy, and over-engineering, then apply fixes.",
