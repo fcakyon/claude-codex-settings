@@ -12,7 +12,13 @@
       "title": "Answer engine optimization for product discovery",
       "description": "Use answer engine optimization (AEO) to improve product discovery in AI search. Turn buyer questions and citation evidence into a focused content strategy."
     },
+    "code-review": {
+      "claudeCode": false,
+      "title": "Code review for diffs, branches and pull requests",
+      "description": "Review code changes across coding assistants with adjustable depth. Get findings in the session, apply fixes, or post to GitHub and GitLab."
+    },
     "simplify": {
+      "claudeCode": false,
       "title": "Simplify code changes before committing",
       "description": "Review code changes for reuse, unnecessary complexity, wasted work and misplaced logic. Apply focused cleanup findings before committing the diff."
     },
@@ -21,6 +27,7 @@
       "description": "Write clearer documents, interface copy and messages with natural language guidance. Catch generic AI phrasing in edited files and commit messages."
     },
     "fable-advisor": {
+      "claudeCode": false,
       "title": "Get a Fable second opinion on code and plans",
       "description": "Ask Claude Fable for an independent view of a plan, implementation or difficult failure. Check its findings before making decisions in the primary session."
     },
@@ -985,6 +992,15 @@
       "related": [
         "seo-skills/programmatic-seo",
         "seo-skills/seo-audit"
+      ]
+    },
+    "code-review/code-review": {
+      "title": "Find and verify bugs in changed code",
+      "description": "Trace changed code through its callers and check what behavior the diff removed. Verify each candidate before ranking the findings by severity.",
+      "related": [
+        "github-dev/review-pr",
+        "simplify/simplify",
+        "test-audit/test-audit"
       ]
     },
     "simplify/simplify": {

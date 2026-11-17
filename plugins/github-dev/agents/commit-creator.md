@@ -47,18 +47,7 @@ When activated, follow this precise workflow:
    - Plan the sequence if multiple commits are needed
 
 3. **Commit Message Generation**:
-   - Create concise, descriptive commit messages following this format:
-     - First line: `{type}: brief description` (max 50 chars)
-     - Types: feat, fix, refactor, docs, style, test, build
-     - Use plain language. Avoid jargon, buzzwords, and repo shorthand unless an exact command or tool name is needed.
-     - Use findings and motivation from session history when available.
-     - 1 sentence conventional style + 1-2 short motivation/findings sentences if possible
-     - Focus on 'why' not 'what'
-     - For complex commits, add bullet points after a blank line explaining key changes
-   - Examples of good messages:
-     - `feat: add sign-in flow`
-     - `fix: stop duplicate jobs on save`
-     - `docs: add skills install snippets`
+   - Follow the `commit-staged` skill's message format for each commit, including its lowercase `verification:` trailer. Load that skill if its instructions are not already available.
 
 4. **Execution**:
    - Execute commits in the planned sequence using git commands

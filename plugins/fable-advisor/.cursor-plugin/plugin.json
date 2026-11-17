@@ -1,6 +1,6 @@
 {
   "name": "fable-advisor",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Get a second opinion from Claude Fable 5.1 before big decisions.",
   "author": {
     "name": "Fatih C. Akyon"

@@ -1,11 +1,11 @@
 {
   "name": "fable-advisor",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Get a second opinion from Claude Fable 5.1 before big decisions.",
   "author": {
     "name": "Fatih C. Akyon"
   },
-  "agents": "./claude-agents/fable-advisor.md",
+  "agents": "./skills/fable-advisor/references/fable-advisor.md",
   "hooks": "./claude-hooks/hooks.json",
   "license": "Apache-2.0"
 }

@@ -38,7 +38,7 @@ Plugins add skills, commands, and automations to your AI coding tool. Install on
 claude plugin marketplace add fcakyon/claude-codex-settings
 
 # Install any plugin by name
-claude plugin install fable-advisor@claude-settings
+claude plugin install humanize@claude-settings
 ```
 
 In Claude Code desktop, select **+** beside the prompt, then **Plugins** and **Add plugin**.
@@ -97,13 +97,40 @@ ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 ## Plugins
 
 <details>
+<summary><strong>code-review</strong> - Find bugs in code changes, with optional local fixes and review comments</summary>
+
+| Codex CLI | Cursor | Antigravity CLI |
+| --------- | ------ | --------------- |
+| `codex plugin add code-review@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install code-review` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/code-review --skill '*'
+```
+
+Review your current changes before a direct push, or specify a branch, commit range, path, GitHub PR, or GitLab MR. Select the installed `code-review` skill in your client.
+
+- Review only by default. Choose `low` for a diff scan or `medium` through `max` for deeper passes. Use `--max-findings` to set the report limit.
+- Add `--fix` to apply verified fixes to the local checkout.
+- Add `--comment` with a GitHub PR or GitLab MR target to post findings.
+
+**Skills** (ZIP for ChatGPT, Claude.ai, Cursor, Codex, VS Code):
+
+| Skill | Description | ZIP |
+| ----- | ----------- | --- |
+| [`code-review`](./plugins/code-review/skills/code-review/SKILL.md) | Verify regressions in a diff and report them by impact | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/code-review.zip) |
+
+</details>
+
+<details>
 <summary><strong>simplify</strong> - Review changed code for reuse, redundancy, and over-engineering, then apply fixes</summary>
 
-| Claude Code                                      | Codex CLI                                   | Antigravity CLI                                            |
-| ------------------------------------------------ | ------------------------------------------- | ----------------------------------------------------- |
-| `claude plugin install simplify@claude-settings` | `codex plugin add simplify@claude-settings` | `uv run .github/scripts/antigravity.py install simplify` |
+| Codex CLI | Cursor | Antigravity CLI |
+| --------- | ------ | --------------- |
+| `codex plugin add simplify@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install simplify` |
 
-Run `/simplify` to review your staged or committed diff across four angles (reuse, simplification, efficiency, altitude) with parallel agents, then apply the cleanups. It reviews changed-code quality, not correctness bugs. It brings [Claude Code's built-in `/simplify`](https://code.claude.com/docs/en/code-review#review-a-diff-locally) to Codex, Cursor, and Antigravity, which don't ship it natively, so all three get the same review and apply flow.
+Use `simplify` in Codex, Cursor, or Antigravity to review your staged or committed diff for reuse, simplification, efficiency, and fix placement. The skill reviews all four angles in parallel and applies the cleanups.
 
 **Skills:**
 
@@ -111,7 +138,7 @@ Run `/simplify` to review your staged or committed diff across four angles (reus
 
 **Hooks:**
 
-- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a completed /simplify run before each Claude Code or Codex commit, unless you explicitly ask to skip it for one commit
+- [`guard.py`](./plugins/simplify/hooks/scripts/guard.py) - Require a completed /simplify run before each Codex commit, unless you explicitly ask to skip it for one commit
 
 </details>
 
@@ -146,19 +173,15 @@ The hook runs on Claude Code and Codex; Antigravity receives the writing skill. 
 <details>
 <summary><strong>fable-advisor</strong> - Get a second opinion from Claude Fable 5.1 before big decisions</summary>
 
-| Claude Code                                           | Codex CLI                                        | Antigravity CLI                                                 |
-| ----------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
-| `claude plugin install fable-advisor@claude-settings` | `codex plugin add fable-advisor@claude-settings` | `uv run .github/scripts/antigravity.py install fable-advisor` |
+| Codex CLI | Cursor | Antigravity CLI |
+| --------- | ------ | --------------- |
+| `codex plugin add fable-advisor@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install fable-advisor` |
 
-Ask a Fable 5.1 reviewer to challenge a plan or conclusion before you commit. Claude Code uses the native plugin agent, while Codex, Cursor, and Antigravity call the same model through an authenticated Claude Code CLI with `claude -p --model claude-fable-5-1`.
-
-**Agents:**
-
-- [`fable-advisor`](./plugins/fable-advisor/claude-agents/fable-advisor.md) - Native Claude Code reviewer with recent conversation context
+Ask a Fable 5.1 reviewer to challenge a plan or conclusion from Codex, Cursor, or Antigravity. The skill calls Fable through an authenticated Claude CLI.
 
 **Skills:**
 
-- [`fable-advisor`](./plugins/fable-advisor/skills/fable-advisor/SKILL.md) - Routes Claude Code to its native agent and other tools to `claude -p`
+- [`fable-advisor`](./plugins/fable-advisor/skills/fable-advisor/SKILL.md) - Request a focused second opinion from Fable
 
 </details>
 
@@ -810,7 +833,7 @@ Git and GitHub automation. Run the `setup` skill after install.
 
 **Skills:**
 
-- [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes and write the message
+- [`commit-staged`](./plugins/github-dev/skills/commit-staged/SKILL.md) - Commit staged changes with a `verification:` trailer for completed checks
 - [`create-issue`](./plugins/github-dev/skills/create-issue/SKILL.md) - Create or revise a concise problem report
 - [`create-pr`](./plugins/github-dev/skills/create-pr/SKILL.md) - Create a pull request from the full branch diff
 - [`review-pr`](./plugins/github-dev/skills/review-pr/SKILL.md) - Review a pull request for bugs and regressions
