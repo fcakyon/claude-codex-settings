@@ -43,4 +43,5 @@ If `gh` commands fail:
 2. **Re-login if needed** - `gh auth login`
 3. **Check scopes** - Ensure the token has repo access
 4. **Refresh auth** - `gh auth refresh`
-5. **Update gh** - `brew upgrade gh` or equivalent
+5. **Update gh** - `brew upgrade gh` or equivalent (`gh >= 2.99.0` is required for `--attach`
+   to upload images, charts, and videos to issues and PRs)
