@@ -51,6 +51,12 @@ Inspect repository guidance and templates, search for an existing issue, and ver
 claims before publishing. When revising, read the current issue and preserve useful
 attachments, links, and user edits. Do not expand an issue's scope without user direction.
 
-Use `gh issue create` or `gh issue edit` with `--title` and `--body-file`. Read back the
-published title and body. Link related PRs, but use a closing reference only when the PR
-addresses the issue's complete desired outcome.
+Use `gh issue create` or `gh issue edit` with `--title` and `--body-file`. To attach
+figures, charts, or screenshots directly without a Gist, pass `--attach <path>` (requires
+**`gh` >= 2.99.0** and write/push access; up to 50 files per command). Reference local
+paths inline in `--body-file` (for example `![Results](./chart.png)`) so `gh` uploads
+them to `user-attachments` and rewrites the links in place, or pass `--attach './chart.png#Alt text'`
+to append with alt text. Check `gh --version` and upgrade if `--attach` is unavailable.
+
+Read back the published title and body. Link related PRs, but use a closing reference
+only when the PR addresses the issue's complete desired outcome.
