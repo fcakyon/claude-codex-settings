@@ -97,7 +97,7 @@ ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 ## Plugins
 
 <details>
-<summary><strong>code-review</strong> - Verify bugs in code changes, with optional local fixes and GitHub PR comments</summary>
+<summary><strong>code-review</strong> - Find bugs in code changes, with optional local fixes and review comments</summary>
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | ----------- | --------- | ------ | --------------- |
@@ -109,11 +109,11 @@ ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/code-review --skill '*'
 ```
 
-Review your current changes or specify a branch, commit range, path, or GitHub PR. Select the installed `code-review` skill in your client. In Claude Code, use `/code-review:code-review` to choose this plugin.
+Review your current changes or specify a branch, commit range, path, GitHub PR, or GitLab MR. Select the installed `code-review` skill in your client. In Claude Code, use `/code-review:code-review` to choose this plugin.
 
-- Review only by default. Findings appear in the session with the affected line and failure scenario.
+- Review only by default. Choose `low` for a diff scan or `medium` through `max` for deeper passes. Use `--max-findings` to set the report limit.
 - Add `--fix` to apply verified fixes to the local checkout.
-- Add `--comment` with a GitHub PR target to post findings through the repository's review workflow.
+- Add `--comment` with a GitHub PR or GitLab MR target to post findings.
 
 **Skills** (ZIP for ChatGPT, Claude, Cursor, Codex, VS Code):
 

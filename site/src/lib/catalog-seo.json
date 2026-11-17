@@ -14,7 +14,7 @@
     },
     "code-review": {
       "title": "Code review for diffs, branches and pull requests",
-      "description": "Check code changes for concrete regressions across coding assistants. Get a report in your session or opt into local fixes and GitHub PR comments."
+      "description": "Review code changes across coding assistants with adjustable depth. Get findings in the session, apply fixes, or post to GitHub and GitLab."
     },
     "simplify": {
       "title": "Simplify code changes before committing",
@@ -993,7 +993,7 @@
     },
     "code-review/code-review": {
       "title": "Find and verify bugs in changed code",
-      "description": "Trace changed code through its callers and tests to find reproducible regressions. Report them by impact, apply fixes locally or post to a GitHub PR.",
+      "description": "Trace changed code through its callers and check what behavior the diff removed. Verify each candidate before ranking the findings by severity.",
       "related": [
         "github-dev/review-pr",
         "simplify/simplify",

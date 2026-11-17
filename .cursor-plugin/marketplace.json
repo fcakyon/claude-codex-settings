@@ -31,7 +31,7 @@
     {
       "name": "code-review",
       "source": "./plugins/code-review",
-      "description": "Verify bugs in code changes, with optional local fixes and GitHub PR comments.",
+      "description": "Find bugs in code changes, with optional local fixes and review comments.",
       "version": "1.0.0",
       "license": "Apache-2.0"
     },
