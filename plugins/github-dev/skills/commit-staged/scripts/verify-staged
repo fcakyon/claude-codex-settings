@@ -5,17 +5,21 @@ if [ "$#" -eq 0 ]; then
   echo "Usage: verify-staged COMMAND [ARG...]" >&2
   exit 2
 fi
-root=$(git rev-parse --show-toplevel)
+git_dir=$(git rev-parse --absolute-git-dir)
 tree=$(git write-tree)
-if git ls-tree -r "$tree" | grep '^160000 ' >/dev/null; then
+if git ls-tree --full-tree -r "$tree" | grep '^160000 ' >/dev/null; then
   echo "Staged snapshot contains submodules. Verify their pinned checkouts separately." >&2
   exit 2
 fi
 stage=$(mktemp -d)
 trap 'rm -rf "$stage"' EXIT
 mkdir "$stage/source"
-GIT_INDEX_FILE="$stage/index" git -C "$root" read-tree "$tree"
-GIT_INDEX_FILE="$stage/index" git -C "$root" checkout-index --all --ignore-skip-worktree-bits --prefix="$stage/source/"
+(
+  cd "$stage/source"
+  export GIT_DIR="$git_dir" GIT_INDEX_FILE="$stage/index" GIT_WORK_TREE="$PWD"
+  git read-tree "$tree"
+  git checkout-index --all --ignore-skip-worktree-bits
+)
 (
   while IFS= read -r name; do unset "$name"; done < <(git rev-parse --local-env-vars)
   cd "$stage/source"

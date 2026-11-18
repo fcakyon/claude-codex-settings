@@ -336,6 +336,9 @@ test('keyboard activation survives an added tab stop and flags an unreachable co
     await page.keyboard.press('Enter');
     assert.equal(await page.getByRole('button', {name: 'Saved'}).count(), 1);
   }
+  await page.setContent('<input aria-label="Email"><script>document.querySelector("input").onfocus = () => document.body.insertAdjacentHTML("beforeend", "<button>Save</button>")</script>');
+  await tabTo(save, {timeout: 1000});
+  assert.ok(await save.evaluate(el => el.matches(':focus')));
   await page.setContent('<button disabled>Save</button>');
   await assert.rejects(tabTo(save, {timeout: 300}), /Tab did not reach/);
 });

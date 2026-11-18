@@ -15,7 +15,7 @@ Run the bundled launcher by its path inside this skill. Keep the working directo
 "$skill_dir/scripts/guidance" retrieve accessible-error-announcement
 ```
 
-Set `skill_dir` to this SKILL.md's parent directory. Retrieve the closest applicable guide. Stop once it answers the question. Check the project's supported browsers, existing components and the fallback guidance. Honor the upstream retrieval gates for volatile and origin-trial features. Run `legacy-scan <path> --json` for a requested legacy-pattern audit. Its findings cover a subset of the guides.
+Set `skill_dir` to this SKILL.md's parent directory. Retrieve the closest applicable guide. Stop once it answers the question. Check the project's supported browsers, existing components and the fallback guidance. Use `retrieve` to read guide content so the project’s policy for volatile and origin-trial features is applied. The tracked `guides/` files let maintainers inspect upstream release changes. Run `legacy-scan <path> --json` for a requested legacy-pattern audit. Its findings cover a subset of the guides.
 
 Turn the relevant behavior into an observable outcome in the project's existing journey. For a keyboard form error, exercise submission, focus recovery, correction and successful saving.
 
