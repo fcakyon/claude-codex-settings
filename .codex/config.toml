@@ -101,6 +101,9 @@ enabled = true
 [plugins."frontend-design-skills@claude-settings"]
 enabled = true
 
+[plugins."modern-web-guidance@claude-settings"]
+enabled = true
+
 [plugins."seo-skills@claude-settings"]
 enabled = true
 
