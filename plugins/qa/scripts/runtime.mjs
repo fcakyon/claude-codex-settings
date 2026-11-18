@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {tabTo} from './keyboard.mjs';
 import {command, Blocked} from './process.mjs';
 import {androidInstrumentation, sqliteQuery} from './native.mjs';
 import {macos, assertSwiftTests} from './macos.mjs';
@@ -131,7 +132,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     swiftTests: (result, options) => assertSwiftTests(qa.assert, result, options),
     signIn: page => signIn(qa, page),
     network: (args, run) => withNetwork(qa, args, run),
-    advancingVideo, observeSkip, videoState, emulateTouch, touchGesture, gestures, captureAudio,
+    advancingVideo, observeSkip, videoState, emulateTouch, touchGesture, gestures, captureAudio, tabTo,
     telemetry: report.telemetry.events,
     secret: async name => {
       const value = await secret(name, stateDir);

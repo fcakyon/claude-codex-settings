@@ -1,0 +1,8 @@
+{
+  "name": "modern-web-guidance",
+  "version": "1.0.0",
+  "description": "Browser compatibility, platform guidance and Chrome extension development.",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "homepage": "https://github.com/GoogleChrome/modern-web-guidance",
+  "license": "Apache-2.0"
+}

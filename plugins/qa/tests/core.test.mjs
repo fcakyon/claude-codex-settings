@@ -42,8 +42,9 @@ test('setup detects components, keeps project edits and reports blocked coverage
     await writeFile(suite, specialized);
     assert.deepEqual((await setup(root)).created, []);
     assert.equal(await readFile(suite, 'utf8'), specialized);
-    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
+    const result = await command(process.execPath, [new URL('../scripts/qa.mjs', import.meta.url).pathname, 'run', '--verification', '--root', root, '--output', path.join(root, 'results')], {env: {...process.env, QA_STATE_DIR: path.join(root, 'private')}});
     assert.equal(result.code, 1);
+    assert.match(result.stdout, /^verification: missing-session blocked, empty-test fail$/m);
     const report = JSON.parse(await readFile(path.join(root, 'results/report.json'), 'utf8'));
     assert.equal(report.counts.pass, 0);
     assert.equal(report.counts.blocked, 1);

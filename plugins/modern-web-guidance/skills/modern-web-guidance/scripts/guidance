@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eu
+dir=$(cd "$(dirname "$0")" && pwd)
+version=$(node -p 'require(process.argv[1]).dependencies["modern-web-guidance"]' "$dir/package.json")
+export DISABLE_TELEMETRY=1
+exec npx --yes "modern-web-guidance@$version" "$@"

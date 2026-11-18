@@ -1,0 +1,9 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "modern-web-guidance",
+  "version": "1.0.0",
+  "description": "Browser compatibility, platform guidance and Chrome extension development.",
+  "homepage": "https://github.com/GoogleChrome/modern-web-guidance",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}

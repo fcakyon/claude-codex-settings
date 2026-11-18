@@ -95,6 +95,10 @@
       "title": "Cloudflare Workers, storage and deployment skills",
       "description": "Choose Cloudflare products and build with Workers, Durable Objects and storage. Use official skills for deployment, networking, email and performance work."
     },
+    "modern-web-guidance": {
+      "title": "Browser platform and Chrome extension skills",
+      "description": "Find browser compatibility and accessibility guidance or build Manifest V3 extensions with the GoogleChrome guides and pinned lookup CLI."
+    },
     "web-performance-skills": {
       "title": "Audit Core Web Vitals and website performance",
       "description": "Investigate website loading and interaction performance with Core Web Vitals and Chrome DevTools. Measure bottlenecks and verify the effect of changes."
@@ -1162,6 +1166,16 @@
       "related": [
         "ultralytics-dev/ultralytics-platform"
       ]
+    },
+    "modern-web-guidance/modern-web-guidance": {
+      "title": "Modern web platform guidance and compatibility lookup",
+      "description": "Search for browser behavior, accessibility and CSS fallback guidance when making an implementation decision.",
+      "related": ["react-skills/web-design-guidelines", "frontend-design-skills/frontend-testing-debugging"]
+    },
+    "modern-web-guidance/chrome-extensions": {
+      "title": "Manifest V3 Chrome extension development",
+      "description": "Build and publish browser extensions with guidance on content scripts, service workers, permissions and Chrome Web Store submissions.",
+      "related": ["agent-browser/ui-regression"]
     },
     "web-performance-skills/web-performance-optimization": {
       "title": "Core Web Vitals and website performance audit skill",

@@ -281,6 +281,18 @@
       "category": "deployment"
     },
     {
+      "name": "modern-web-guidance",
+      "source": {
+        "source": "local",
+        "path": "./plugins/modern-web-guidance"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "web-testing"
+    },
+    {
       "name": "web-performance-skills",
       "source": {
         "source": "local",

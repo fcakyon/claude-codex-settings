@@ -321,3 +321,24 @@ test('uncaught page errors fail a case unless it allows them, and overflow names
     await rm(root, {recursive: true, force: true});
   }
 });
+
+test('keyboard activation survives an added tab stop and flags an unreachable control', {skip: !process.env.QA_BROWSER_EXECUTABLE}, async t => {
+  const {tabTo} = await import('../scripts/keyboard.mjs');
+  const dir = await mkdtemp(path.join(tmpdir(), 'qa-keyboard-'));
+  t.after(() => rm(dir, {recursive: true, force: true}));
+  const context = await openBrowser({root: dir, browser: {actionDelayMs: 0}}, dir, []);
+  t.after(() => context.close());
+  const page = await context.newPage();
+  const save = page.getByRole('button', {name: 'Save'});
+  for (const before of ['', '<a href="#help">Help</a>']) {
+    await page.setContent(before + '<input aria-label="Email"><button onclick="this.textContent=\'Saved\'">Save</button>');
+    await tabTo(save);
+    await page.keyboard.press('Enter');
+    assert.equal(await page.getByRole('button', {name: 'Saved'}).count(), 1);
+  }
+  await page.setContent('<input aria-label="Email"><script>document.querySelector("input").onfocus = () => document.body.insertAdjacentHTML("beforeend", "<button>Save</button>")</script>');
+  await tabTo(save, {timeout: 1000});
+  assert.ok(await save.evaluate(el => el.matches(':focus')));
+  await page.setContent('<button disabled>Save</button>');
+  await assert.rejects(tabTo(save, {timeout: 300}), /Tab did not reach/);
+});

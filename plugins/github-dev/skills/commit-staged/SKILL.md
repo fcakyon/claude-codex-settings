@@ -24,6 +24,7 @@ points in the commit message body instead of relying on the diff alone.
 2. **Analyze staged files only**
    - Check all staged files: `git diff --cached --name-only`
    - Read diffs: `git diff --cached`
+   - When a relevant check could pick up unstaged or untracked code, use the bundled `scripts/verify-staged COMMAND [ARG...]` from the repository. It runs the command in a temporary export of the staged tree and prints its Git tree ID on success. Supply a command that builds or starts its own candidate there. Dependencies, ignored files, submodule checkouts and Git history are outside the export. Confirm a previously tested tree still matches `git write-tree` before reusing its result.
    - Completely ignore unstaged changes
 
 3. **Commit message format**
@@ -34,7 +35,7 @@ points in the commit message body instead of relying on the diff alone.
    - Focus on 'why' not 'what'
    - 1 sentence conventional style + 1-2 short motivation/findings sentences if possible
    - For complex changes, add bullet points after blank line
-   - After a blank line, end each commit message with one lowercase `verification:` trailer. Name the relevant checks actually completed for the staged changes and their results. If none ran, use `verification: none (<reason>)`. Include a material failure or blocker without claiming it passed. Keep future checks out of the trailer.
+   - After a blank line, end each commit message with one lowercase `verification:` trailer. Name the relevant checks actually completed for the staged changes and their results. If none ran, use `verification: none (<reason>)`. Include a material failure or blocker without claiming it passed. Keep future checks out of the trailer. If the project uses `project-qa`, its `run --verification` output supplies case IDs and observed statuses for the trailer. For a journey, include the environment and observed behavior, for example `verification: local Chrome mailbox refresh kept one sync request and manual sync started a second`. [Source](https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification)
 
 4. **Message examples**
    - `feat: add sign-in flow`

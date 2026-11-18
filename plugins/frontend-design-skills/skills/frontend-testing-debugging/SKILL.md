@@ -38,6 +38,6 @@ Close only task-created tabs and sessions, stop task-owned preview servers, and 
 
 ## Related skills
 
-Use `product-ui-design` for product UX, design rules and the desktop, mobile and supported-theme visual handoff. This skill owns browser execution and verification.
+Use `product-ui-design` for product UX, design rules and the desktop, mobile and supported-theme visual handoff. Use the project's tracked runner for repeatable checks and `ui-regression` for visual evidence. Consult the installed `modern-web-guidance` skill when a specific browser behavior or fallback affects the diagnosis.
 
 Use `openai-frontend-design` for design creation or fidelity to an accepted concept. Use the installed React best-practices skill for relevant React/Next.js changes. Image generation is only needed when the task calls for new or revised visual assets.
