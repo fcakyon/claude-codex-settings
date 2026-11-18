@@ -421,6 +421,7 @@ bash .github/scripts/sync-polar-skills.sh
 bash .github/scripts/sync-livekit-skills.sh
 bash .github/scripts/sync-heroui-skills.sh
 bash .github/scripts/sync-react-skills.sh
+bash .github/scripts/sync-modern-web-guidance.sh
 bash .github/scripts/sync-typescript-skills.sh
 bash .github/scripts/sync-frontend-skills.sh
 bash .github/scripts/sync-seo-skills.sh
@@ -437,6 +438,8 @@ bash .github/scripts/sync-openclaw-skills.sh
 ```
 
 Adding a new vendor: create `sync-<name>-skills.sh`, source `_helpers.sh`, list repos + skill paths.
+
+Modern Web Guidance syncs both GoogleChrome skills from the npm release pinned in the web skill’s scripts/package-lock.json. Update its exact dependency and lock together, then run the sync. It preserves the local web entry point and launcher.
 
 `frontend-testing-debugging` is maintained locally. The frontend sync packages it without replacing it from upstream.
 OpenClaw test-audit keeps its detailed checklist in `references/audit.md`. Sync it alongside `SKILL.md` and `CAMPAIGN.md`, and adapt repository-specific workflow links in both the skill and checklist.

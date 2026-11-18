@@ -66,6 +66,12 @@ jobs:
       - name: Validate Antigravity bundles
         run: python .github/scripts/antigravity.py validate
 
+      - name: Verify Chrome skill sync and staged checks
+        run: |
+          bash .github/scripts/sync-modern-web-guidance.sh
+          test -z "$(git status --porcelain -- plugins/modern-web-guidance)"
+          node --test plugins/modern-web-guidance/tests/guidance.test.mjs plugins/github-dev/tests/verify-staged.test.mjs
+
       - name: Test SEO audit and local packaging
         run: |
           npm ci --prefix plugins/seo-skills/skills/seo-audit/scripts --ignore-scripts
@@ -79,7 +85,8 @@ jobs:
       - name: Test QA runner and native protocol
         run: |
           npm ci --prefix plugins/qa --ignore-scripts
-          npm test --prefix plugins/qa
+          chrome=$(command -v google-chrome)
+          QA_BROWSER_EXECUTABLE="$chrome" npm test --prefix plugins/qa
 
       - name: Test Antigravity reference packaging
         run: python .github/scripts/test_antigravity.py

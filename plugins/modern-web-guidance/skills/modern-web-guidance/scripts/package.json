@@ -1,0 +1,7 @@
+{
+  "name": "marketplace-web-guidance",
+  "private": true,
+  "dependencies": {
+    "modern-web-guidance": "1.0.1"
+  }
+}

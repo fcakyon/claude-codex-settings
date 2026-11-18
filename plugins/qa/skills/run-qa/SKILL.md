@@ -7,6 +7,8 @@ description: This skill should be used when user asks to "run QA", "verify real 
 
 Read `.agents/skills/qa/SKILL.md` and `.agents/qa/config.json`, then run `project-qa run --root <repo>`. If absent, use setup. `--filter <id-substring>` limits a follow-up run and repeats, so run a fixed CI case list with one `--filter` per case in one invocation. `--base-url <url>` selects a temporary website target without editing project settings. Check `report.json` for the effective `baseUrl`, tested revision and `selected` cases, then confirm the browser destination; API and auth URLs remain separately configured.
 
+Select existing journeys from the changed behavior, including shared controls and their backend effects. For a commit, `run --verification` emits one lowercase trailer with each executed case and its status. Use the report to summarize the selected journey, its environment and its observed outcome from the final candidate. For a release, run any checks that depend on the actual deployed or installed version there. [Claude Code team's verification practices](https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification)
+
 Use deterministic scripts. Interactive investigation can repair a failed journey, then put repeatable steps in its tracked suite. Never replace failed live behavior with mocked success.
 
 Before claiming native coverage, verify the macOS job executed the actual Swift owner suite and app self-test on this commit. Linux adapter and browser pairing results do not exercise the native coordinator. Use `qa.swiftTests(result, {selfTest: true})` for a project command result or the shared macOS test CLI, and reject zero tests, failed runs and skips.

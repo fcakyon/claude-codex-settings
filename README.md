@@ -648,6 +648,25 @@ Choose the Cloudflare services your project needs, then load the relevant specia
 </details>
 
 <details>
+<summary><strong>modern-web-guidance</strong> - Browser APIs, accessibility and Chrome extensions</summary>
+
+| Claude Code | Codex CLI | Antigravity CLI |
+| --- | --- | --- |
+| `claude plugin install modern-web-guidance@claude-settings` | `codex plugin add modern-web-guidance@claude-settings` | `uv run .github/scripts/antigravity.py install modern-web-guidance` |
+
+- Look up a platform decision such as accessible error announcements, browser support or CSS fallbacks. The pinned CLI requires Node 22+ and npm.
+- Build and publish Manifest V3 extensions with guidance for popup, background and content scripts.
+
+| Skill | Download |
+| --- | --- |
+| [Modern Web Guidance](./plugins/modern-web-guidance/skills/modern-web-guidance/SKILL.md) | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/modern-web-guidance.zip) |
+| [Chrome Extensions](./plugins/modern-web-guidance/skills/chrome-extensions/SKILL.md) | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/chrome-extensions.zip) |
+
+[GoogleChrome upstream](https://github.com/GoogleChrome/modern-web-guidance)
+
+</details>
+
+<details>
 <summary><strong>web-performance-skills</strong> - Web performance audits with Core Web Vitals and Chrome DevTools</summary>
 
 | Claude Code                                                    | Codex CLI                                                 | Antigravity CLI                                                          |
