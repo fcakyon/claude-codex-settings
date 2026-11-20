@@ -2,6 +2,7 @@
   "Article": ["headline", "image", "datePublished", "author"],
   "BlogPosting": ["headline", "image", "datePublished", "author"],
   "BreadcrumbList": ["itemListElement"],
+  "Dataset": ["name", "description"],
   "Event": ["name", "startDate", "location"],
   "FAQPage": ["mainEntity"],
   "HowTo": ["name", "step"],

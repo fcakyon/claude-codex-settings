@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+import { setDefaultResultOrder } from "node:dns";
+import { hasNoindexHeader } from "./check_head.mjs";
+
+setDefaultResultOrder("ipv4first");
+
 const FETCH_TIMEOUT_MS = 10_000;
 const MAX_LINKS = 50;
 const LINK_CONCURRENCY = 4;
@@ -48,6 +53,9 @@ if (!response.ok) {
 }
 if (!/^text\/(plain|markdown)/i.test(result.contentType ?? "")) {
   result.warnings.push(`Served as ${result.contentType ?? "no Content-Type"}. Use text/plain or text/markdown.`);
+}
+if (!hasNoindexHeader(response.headers.get("x-robots-tag"))) {
+  result.warnings.push("No X-Robots-Tag: noindex header.");
 }
 
 // Blank code so its lines can't pass as headings, list items or links.

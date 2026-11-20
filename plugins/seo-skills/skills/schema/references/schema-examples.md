@@ -129,6 +129,26 @@ For a SaaS or app page. A free tier is `price: "0"`, not an omitted `offers`.
 }
 ```
 
+## Dataset
+
+Include `creator` and a verified `license` URL when available so Search Console Dataset reports do not raise enhancement warnings. Omit `license` if the upstream source declares none.
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Hard hats and people",
+  "description": "Labeled site images for helmet and person detection.",
+  "url": "https://example.com/datasets/hard-hat-detection",
+  "creator": {
+    "@type": "Person",
+    "name": "Author Name",
+    "url": "https://example.com/authors/author-name"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+```
+
 ## FAQPage
 
 Only for questions and answers actually visible on the page. An FAQPage describing hidden or invented questions is the classic penalized case.

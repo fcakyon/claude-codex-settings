@@ -9,10 +9,20 @@ import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
 import { gzipSync } from 'node:zlib'
 import { auditSite } from '../../plugins/seo-skills/skills/seo-audit/scripts/audit.mjs'
+import { checkHead } from '../../plugins/seo-skills/skills/seo-audit/scripts/check_head.mjs'
+import { validateDocument } from '../../plugins/seo-skills/skills/schema/scripts/validate_schema.mjs'
 
 const exec = promisify(execFile)
 const scripts = resolve('plugins/seo-skills/skills/seo-audit/scripts')
+const schemaScripts = resolve('plugins/seo-skills/skills/schema/scripts')
 const html = (origin, path, extra = '', body = '', title = path) => `<!doctype html><html><head><title>${title}</title><meta name="description" content="About ${path}"><link rel="canonical" href="${origin}${path}">${extra}</head><body><h1>${title}</h1>${body}</body></html>`
+const fakePng = (width, height) => {
+  const buf = Buffer.alloc(24)
+  buf.write('\x89PNG\r\n\x1a\n', 0, 'latin1')
+  buf.writeUInt32BE(width, 16)
+  buf.writeUInt32BE(height, 20)
+  return buf
+}
 
 async function serve(t, route) {
   const hits = []
@@ -269,4 +279,166 @@ test('flags redirect chains, canonical chains, subpage email obfuscation, and un
   assert(result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/llms.txt` && f.status === 'review'))
   assert.equal(hits.includes('/cdn-cgi/l/email-protection'), false)
   assert.equal(result.findings.filter((f) => f.rule === 'hreflang.target' && f.url === `${origin}/`).length, 1)
+})
+
+test('surfaces missing noindex on sitemaps, unlinked llms.txt, and generated social image routes', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: `User-agent: *\nAllow: /\nSitemap: ${u.origin}/sitemap.xml` }
+    if (u.pathname === '/sitemap.xml') return { type: 'application/xml', body: `<urlset><url><loc>${u.origin}/</loc></url></urlset>` }
+    if (u.pathname === '/llms.txt') return { type: 'text/plain', body: `# Site\n> Summary\n## Docs\n- [Home](${u.origin}/): Home` }
+    if (u.pathname === '/en/opengraph-image') return { type: 'image/png', body: fakePng(1200, 630) }
+    if (u.pathname === '/favicon.png') return { type: 'image/png', body: fakePng(96, 96) }
+    if (u.pathname === '/') {
+      return {
+        body: html(
+          u.origin,
+          '/',
+          `<meta property="og:image" content="${u.origin}/en/opengraph-image"><link rel="icon" type="image/png" sizes="96x96" href="${u.origin}/favicon.png">`
+        ),
+      }
+    }
+  })
+  const result = await auditSite(origin)
+  assert.deepEqual(failures(result), [])
+  assert(result.findings.some((f) => f.rule === 'sitemap.indexable' && f.url === `${origin}/sitemap.xml`))
+  assert(result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/llms.txt`))
+  assert(result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/en/opengraph-image`))
+  assert(!result.findings.some((f) => f.url === `${origin}/favicon.png`))
+})
+
+test('checks nested ItemList Dataset schemas, Dataset warnings, and --url schema validation', async (t) => {
+  const listSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: [
+      { '@type': 'Dataset', name: 'Sample Set', description: 'Rows.', url: 'https://example.com/d', sameAs: ['http://localhost:3033/x'] },
+    ],
+  }
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') return { body: html(u.origin, '/', `<script type="application/ld+json">${JSON.stringify(listSchema)}</script>`) }
+  })
+  const result = await auditSite(origin)
+  const rec = result.findings.find((f) => f.rule === 'schema.recommended' && f.url === `${origin}/`)
+  assert(rec && /Dataset\.creator/.test(rec.evidence) && /Dataset\.license/.test(rec.evidence))
+  assert(failures(result).some((f) => f.rule === 'metadata.localhost-url' && /sameAs/.test(f.evidence)))
+
+  const { stdout } = await exec(process.execPath, [join(schemaScripts, 'validate_schema.mjs'), '--url', `${origin}/`]).catch((e) => e)
+  const cliReport = JSON.parse(stdout)
+  assert.equal(cliReport.valid, false)
+  assert(cliReport.types.includes('Dataset'))
+  assert(cliReport.warnings.some((w) => w.includes('recommended property "creator"')))
+  assert(cliReport.errors.some((e) => e.includes('local host')))
+
+  const validDataset = validateDocument({
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: 'Valid Set',
+    description: 'Clean.',
+    url: 'https://example.com/d',
+    license: 'https://creativecommons.org/licenses/by/4.0/',
+    creator: { '@type': 'Person', name: 'Author' },
+  }, { required: { Dataset: ['name', 'description'] }, recommended: { Dataset: ['creator', 'license'] } })
+  assert.equal(validDataset.valid, true)
+  assert.deepEqual(validDataset.warnings, [])
+
+  const wrappedList = validateDocument({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, item: { '@type': 'Dataset', name: 'Wrapped', creator: [] } },
+    ],
+  }, { required: { Dataset: ['name', 'description'] }, recommended: { Dataset: ['creator', 'license'] } })
+  assert.equal(wrappedList.valid, false)
+  assert(wrappedList.errors.some((e) => e.includes('missing the required property "description"')))
+  assert(wrappedList.warnings.some((w) => w.includes('recommended property "creator"')))
+
+  await assert.rejects(exec(process.execPath, [join(schemaScripts, 'validate_schema.mjs'), '--url', 'not-a-url']), (e) => e.code === 2)
+})
+
+test('fails on localhost leaks and surfaces noindex canonical conflicts, subpage previews, and full-sitemap slug hygiene', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: `User-agent: *\nAllow: /\nSitemap: ${u.origin}/sitemap.xml` }
+    if (u.pathname === '/sitemap.xml') {
+      return {
+        headers: { 'X-Robots-Tag': 'noindex' },
+        type: 'application/xml',
+        body: `<urlset><url><loc>${u.origin}/</loc></url><url><loc>${u.origin}/sub</loc></url><url><loc>${u.origin}/</loc></url><url><loc>${u.origin}/en/titles/-tt22695402</loc></url><url><loc>${u.origin}/en//bad</loc></url></urlset>`,
+      }
+    }
+    if (u.pathname === '/') {
+      return {
+        body: html(
+          u.origin,
+          '/',
+          '<meta name="robots" content="max-image-preview:large"><meta property="og:image" content="http://localhost:3033/og.png">',
+          '<a href="/sub">Sub</a><a href="/configure">Configure</a>'
+        ),
+      }
+    }
+    if (['/sub', '/en/titles/-tt22695402', '/en//bad'].includes(u.pathname)) return { body: html(u.origin, u.pathname) }
+    if (u.pathname === '/configure') return { headers: { 'X-Robots-Tag': 'noindex' }, body: html(u.origin, '/') }
+  })
+  const full = await auditSite(origin, { maxPages: 10 })
+  const fails = failures(full)
+  assert(fails.some((f) => f.rule === 'metadata.localhost-url' && f.url === `${origin}/`))
+  assert(full.findings.some((f) => f.rule === 'canonical.noindex-conflict' && f.url === `${origin}/configure`))
+  assert(full.findings.some((f) => f.rule === 'page.max-image-preview' && f.url === `${origin}/sub`))
+  const bounded = await auditSite(origin, { maxPages: 2 })
+  assert(bounded.findings.some((f) => f.rule === 'sitemap.duplicate-loc'))
+  assert(bounded.findings.some((f) => f.rule === 'sitemap.malformed-slug' && f.evidence.examples.some((u) => u.endsWith('/-tt22695402'))))
+  assert(bounded.findings.some((f) => f.rule === 'sitemap.malformed-url' && f.evidence.examples.some((u) => u.includes('/en//bad'))))
+})
+
+test('checkHead catches meta property mismatches, small favicons masked by apple-touch-icon, unknown canonical leaks, and redirect chains', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/old') return { status: 301, headers: { location: '/mid' } }
+    if (u.pathname === '/mid') return { status: 302, headers: { location: '/' } }
+    if (u.pathname === '/icon-48.png') return { type: 'image/png', body: fakePng(48, 48) }
+    if (u.pathname === '/apple-touch-icon.png') return { type: 'image/png', body: fakePng(180, 180) }
+    if (u.pathname === '/share.png') return { type: 'image/png', body: fakePng(1200, 630) }
+    if (u.pathname === '/') {
+      return {
+        body: html(
+          u.origin,
+          '/',
+          `<meta property="twitter:card" content="summary_large_image"><meta property="og:title" content="Home"><meta property="og:description" content="Desc"><meta property="og:url" content="${u.origin}/"><meta property="og:image" content="${u.origin}/share.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Home"><link rel="icon" type="image/png" sizes="48x48" href="${u.origin}/icon-48.png"><link rel="apple-touch-icon" href="${u.origin}/apple-touch-icon.png">`
+        ),
+      }
+    }
+    return { status: 404, body: html(u.origin, '/') }
+  })
+  const report = await checkHead(`${origin}/old`)
+  const agentWarnings = report.agents[0].warnings
+  const siteWarnings = report.site.warnings
+  assert(agentWarnings.some((w) => /Use name="twitter:card"/.test(w)))
+  assert(agentWarnings.some((w) => /2 redirects/.test(w)))
+  assert(siteWarnings.some((w) => /largest raster favicon is 48px/.test(w)))
+  assert(siteWarnings.some((w) => /unknown URL declares canonical/.test(w)))
+})
+
+test('ignores non-sitemap HTML fallback for sitemap.indexable and catches subpage root-canonical leaks on 404', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/sitemap.xml') return { status: 200, type: 'text/html', body: '<html><body>Not a sitemap</body></html>' }
+    if (u.pathname === '/pricing') return { body: html(u.origin, '/pricing') }
+    return { status: 404, body: html(u.origin, '/') }
+  })
+  const audit = await auditSite(`${origin}/pricing`)
+  assert(!audit.findings.some((f) => f.rule === 'sitemap.indexable'))
+  assert(audit.findings.some((f) => f.rule === 'sitemap.format' && f.status === 'unchecked'))
+  const head = await checkHead(`${origin}/pricing`)
+  assert(head.site.warnings.some((w) => /unknown URL declares canonical/.test(w)))
+})
+
+test('packaged seo-audit.zip runs standalone without cross-skill imports', async (t) => {
+  const { origin } = await serve(t, (u) => u.pathname === '/' ? { body: html(u.origin, '/') } : undefined)
+  const tmp = await mkdtemp(join(tmpdir(), 'seo-zip-run-'))
+  t.after(() => rm(tmp, { recursive: true, force: true }))
+  await exec('bash', [resolve('.github/scripts/sync-seo-skills.sh')])
+  await exec('unzip', ['-q', resolve('plugins/seo-skills/skills/seo-audit/seo-audit.zip'), '-d', tmp])
+  const zipScripts = join(tmp, 'seo-audit/scripts')
+  await exec('ln', ['-s', join(scripts, 'node_modules'), join(zipScripts, 'node_modules')])
+  const { stdout } = await exec(process.execPath, [join(zipScripts, 'audit.mjs'), origin, '--json'])
+  assert.equal(JSON.parse(stdout).valid, true)
 })
