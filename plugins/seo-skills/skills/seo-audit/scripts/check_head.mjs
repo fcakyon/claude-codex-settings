@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
+import { setDefaultResultOrder } from "node:dns";
 import { resolve as resolvePath } from "node:path";
 import { fileURLToPath } from "node:url";
+
+setDefaultResultOrder("ipv4first");
 
 const CHROME = "156.0.0.0";
 const AGENTS = {
@@ -47,6 +50,13 @@ const RAW_TEXT = /<!--[\s\S]*?-->|<(script|style|svg|noscript)\b([^>]*)>([\s\S]*
 const TAG = /<([a-z][\w:-]*)((?:\s+[^\s=/>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*\/?>/gi;
 const ATTRIBUTE = /([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
 const ABSOLUTE_URL = /^https?:\/\//i;
+const LOOPBACK_HOST = /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[?::1\]?)$/i;
+export const isLoopbackHost = (hostname) =>
+  LOOPBACK_HOST.test(hostname) || /\.local$/i.test(hostname);
+export const isGeneratedImageRoute = (value) => {
+  const pathname = typeof value === "string" ? URL.parse(value)?.pathname : value?.pathname;
+  return /\/(?:opengraph|twitter)-image(?:-[a-f0-9]{6,})?$/i.test(pathname ?? "");
+};
 const CACHE_QUERY = new RegExp(`([?&])${CACHE_PARAM}=[^&]*(&|$)`);
 const CHARSET = /charset\s*=\s*["']?([\w:.-]+)/i;
 const ORGANIZATION = /Organization$|^(Corporation|LocalBusiness|OnlineBusiness|OnlineStore)$/;
@@ -77,16 +87,128 @@ const mainWords = (text) =>
       )
       .map(({ segment }) => (segment.length > 3 ? segment.replace(/['\u2019]?s$/, "") : segment))
   );
-const nodesOf = (value) => {
-  if (Array.isArray(value)) return value.flatMap(nodesOf);
-  if (typeof value !== "object" || value === null) return [];
-  return [value, ...nodesOf(value["@graph"] ?? [])];
+const SCHEMA_URL_KEYS = new Set(["url", "logo", "image", "item", "target", "sameAs", "license"]);
+const SCHEMA_REQUIRED = {
+  BreadcrumbList: ["itemListElement"],
+  Dataset: ["name", "description"],
+  Event: ["name", "startDate", "location"],
+  FAQPage: ["mainEntity"],
+  HowTo: ["name", "step"],
+  LocalBusiness: ["name", "address"],
+  Product: ["name", "image", "offers"],
+  SoftwareApplication: ["name", "offers"],
 };
-const typesOf = (node) => [node["@type"]].flat().filter((type) => typeof type === "string");
-export const invalidProfileDates = (document) => nodesOf(document)
-  .filter((node) => typesOf(node).includes("ProfilePage"))
-  .flatMap((node) => ["dateCreated", "dateModified"].filter((key) => node[key] != null &&
-    (typeof node[key] !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?$/.test(node[key]) || Number.isNaN(Date.parse(node[key])))));
+const SCHEMA_RECOMMENDED = {
+  Article: ["headline", "image", "datePublished", "author"],
+  BlogPosting: ["headline", "image", "datePublished", "author"],
+  Dataset: ["creator", "license"],
+  ProfilePage: ["dateCreated", "dateModified"],
+};
+const stringItems = (value) =>
+  typeof value === "string" ? [value] : Array.isArray(value) ? value.filter((item) => typeof item === "string") : [];
+const isMissingSchemaValue = (value) =>
+  value === undefined || value === null || value === "" || (Array.isArray(value) && value.length === 0);
+const typesOf = (node) => stringItems(node["@type"]);
+const isInvalidProfileDate = (value) =>
+  value != null &&
+  (typeof value !== "string" ||
+    !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})?$/.test(value) ||
+    Number.isNaN(Date.parse(value)));
+
+export const inspectJsonLd = (document, { origin } = {}) => {
+  const seen = new WeakSet();
+  const nodes = [];
+  const profileDates = new Set();
+  const missingRequired = new Set();
+  const missingRecommended = new Set();
+  const relativeUrls = new Set();
+  const localhostUrls = new Set();
+
+  const walk = (value, checkShape) => {
+    if (Array.isArray(value)) {
+      for (const item of value) walk(item, checkShape);
+      return;
+    }
+    if (typeof value !== "object" || value === null || seen.has(value)) return;
+    seen.add(value);
+    nodes.push(value);
+    if (Array.isArray(value["@graph"])) walk(value["@graph"], checkShape);
+    const nodeTypes = typesOf(value);
+    const label = nodeTypes[0] ?? "node";
+    if (nodeTypes.includes("ProfilePage")) {
+      for (const key of ["dateCreated", "dateModified"]) {
+        if (isInvalidProfileDate(value[key])) profileDates.add(key);
+      }
+    }
+    if (checkShape) {
+      for (const type of nodeTypes) {
+        for (const [table, out] of [[SCHEMA_REQUIRED, missingRequired], [SCHEMA_RECOMMENDED, missingRecommended]]) {
+          for (const prop of table[type] ?? []) {
+            if (isMissingSchemaValue(value[prop])) out.add(`${type}.${prop}`);
+          }
+        }
+      }
+    }
+    const isListItem = nodeTypes.includes("ListItem");
+    for (const [key, fieldValue] of Object.entries(value)) {
+      if (key === "@graph") continue;
+      if (SCHEMA_URL_KEYS.has(key)) {
+        for (const candidate of stringItems(fieldValue)) {
+          if (!ABSOLUTE_URL.test(candidate)) {
+            relativeUrls.add(`${label}.${key}: ${candidate}`);
+            continue;
+          }
+          const parsed = URL.parse(candidate);
+          if (parsed && isLoopbackHost(parsed.hostname) && (!origin || parsed.origin !== origin)) {
+            localhostUrls.add(`${label}.${key}: ${candidate}`);
+          }
+        }
+      }
+      const nextCheckShape =
+        key === "itemListElement" ||
+        ((key === "item" || key === "mainEntity") &&
+          typeof fieldValue === "object" &&
+          fieldValue !== null &&
+          !Array.isArray(fieldValue) &&
+          typesOf(fieldValue).length > 0 &&
+          (key === "mainEntity" || isListItem));
+      walk(fieldValue, nextCheckShape);
+    }
+  };
+  walk(document, true);
+  return {
+    nodes,
+    profileDates: [...profileDates],
+    missingRequired: [...missingRequired],
+    missingRecommended: [...missingRecommended],
+    relativeUrls: [...relativeUrls],
+    localhostUrls: [...localhostUrls],
+  };
+};
+
+export const invalidProfileDates = (document) => inspectJsonLd(document).profileDates;
+
+export const hasNoindexRules = (rules) => rules.some((rule) => /^(noindex|none)$/i.test(rule));
+export const hasNoindexHeader = (header) => hasNoindexRules(googleRules([], header ?? ""));
+export const allowsLargeImagePreview = (rules) =>
+  rules.some((rule) => /^max-image-preview\s*:\s*large$/i.test(rule)) &&
+  !rules.some((rule) => /^(noimageindex|max-image-preview\s*:\s*(none|standard))$/i.test(rule));
+
+export const findMetaAttributeMismatches = (tags) => {
+  const messages = new Set();
+  for (const tag of tags) {
+    if (tag.name !== "meta") continue;
+    const prop = tag.attributes?.property?.toLowerCase();
+    const attrName = tag.attributes?.name?.toLowerCase();
+    if (prop && (/^(robots|googlebot|description)$/.test(prop) || prop.startsWith("twitter:"))) {
+      messages.add(`Use name="${tag.attributes.property}" instead of property="${tag.attributes.property}" on <meta>.`);
+    }
+    if (attrName && attrName.startsWith("og:")) {
+      messages.add(`Use property="${tag.attributes.name}" instead of name="${tag.attributes.name}" on <meta>.`);
+    }
+  }
+  return [...messages];
+};
 // Edit the query as a string, since URLSearchParams re-encodes it (%20 becomes +).
 const withoutCache = (search) =>
   search.replace(CACHE_QUERY, (match, start, end) => (end ? start : ""));
@@ -222,6 +344,15 @@ const inspect = async ([agent, userAgent], target) => {
     const message = `Found ${label} only in <body>, where parsers that read just the head miss it.`;
     (RUNS_JAVASCRIPT.has(agent) ? warnings : errors).push(message);
   }
+  for (const mismatch of findMetaAttributeMismatches(tags)) warnings.push(mismatch);
+
+  const pageOrigin = url.origin;
+  const flagLocalhost = (label, raw) => {
+    const resolved = raw ? URL.parse(raw, url) : null;
+    if (resolved && isLoopbackHost(resolved.hostname) && resolved.origin !== pageOrigin) {
+      errors.push(`${label} points to a local host (${resolved.href}).`);
+    }
+  };
 
   if (redirects.length > 5) {
     warnings.push(`The URL takes ${redirects.length} redirects. Discord previews stop after 5.`);
@@ -236,6 +367,7 @@ const inspect = async ([agent, userAgent], target) => {
   if (!canonicalTag) warnings.push("The page has no canonical link.");
   else if (!canonicalUrl) errors.push(`The canonical is not a valid URL: "${canonical}".`);
   else {
+    flagLocalhost("canonical", canonical);
     if (!ABSOLUTE_URL.test(canonical)) {
       warnings.push(`The canonical is relative: "${canonical}". Google recommends absolute URLs.`);
     }
@@ -251,28 +383,31 @@ const inspect = async ([agent, userAgent], target) => {
   );
   // The more restrictive of conflicting rules applies.
   const robots = {
-    maxImagePreviewLarge:
-      rules.some((rule) => /^max-image-preview\s*:\s*large$/i.test(rule)) &&
-      !rules.some((rule) => /^(noimageindex|max-image-preview\s*:\s*(none|standard))$/i.test(rule)),
+    maxImagePreviewLarge: allowsLargeImagePreview(rules),
     rules,
   };
-  if (!robots.maxImagePreviewLarge) {
+  const isNoindex = hasNoindexRules(rules);
+  if (!isNoindex && !robots.maxImagePreviewLarge) {
     warnings.push(
       "No robots rule sets max-image-preview:large, which Google recommends for Discover."
     );
   }
-  if (rules.some((rule) => /^noindex$/i.test(rule))) warnings.push("A robots rule says noindex.");
+  if (isNoindex) warnings.push("A robots rule says noindex.");
 
   const openGraph = { image: content("og:image", "og:image:url"), url: content("og:url") };
   for (const [label, value] of Object.entries(openGraph)) {
     if (!value) warnings.push(`The page has no og:${label}.`);
-    else if (!ABSOLUTE_URL.test(value))
-      errors.push(`og:${label} must be an absolute URL: "${value}".`);
+    else {
+      flagLocalhost(`og:${label}`, value);
+      if (!ABSOLUTE_URL.test(value))
+        errors.push(`og:${label} must be an absolute URL: "${value}".`);
+    }
   }
   const twitter = {
     card: content("twitter:card"),
     image: content("twitter:image", "twitter:image:src"),
   };
+  if (twitter.image) flagLocalhost("twitter:image", twitter.image);
   const shareImages = [
     ["og:image", openGraph.image],
     ["twitter:image", twitter.image !== openGraph.image && twitter.image],
@@ -311,14 +446,23 @@ const inspect = async ([agent, userAgent], target) => {
     warnings.push("The title and the first <h1> share no main words.");
   }
 
-  const nodes = jsonLd.flatMap((block, index) => {
+  const nodes = [];
+  for (let index = 0; index < jsonLd.length; index++) {
+    let parsed;
     try {
-      return nodesOf(JSON.parse(block));
+      parsed = JSON.parse(jsonLd[index]);
     } catch (error) {
       errors.push(`JSON-LD block ${index + 1} is not valid JSON: ${error.message}.`);
-      return [];
+      continue;
     }
-  });
+    const schemaReport = inspectJsonLd(parsed, { origin: pageOrigin });
+    nodes.push(...schemaReport.nodes);
+    for (const issue of schemaReport.localhostUrls) errors.push(`JSON-LD ${issue} points to a local host.`);
+    for (const missing of [...schemaReport.missingRequired, ...schemaReport.missingRecommended]) {
+      warnings.push(`JSON-LD ${missing} is missing.`);
+    }
+    for (const rel of schemaReport.relativeUrls) warnings.push(`JSON-LD ${rel} is not an absolute URL.`);
+  }
   const types = nodes.flatMap(typesOf);
   const organization = nodes.find((node) => typesOf(node).some((type) => ORGANIZATION.test(type)));
   // A value can be inline or an @id reference to a node elsewhere in the graph.
@@ -442,6 +586,7 @@ const downloadAsset = async (url) => {
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     const type = response.headers.get("content-type")?.split(";")[0].trim() ?? "";
+    const xRobotsTag = response.headers.get("x-robots-tag") ?? "";
     const length = Number(response.headers.get("content-length"));
     // Browsers sniff favicons, so a generic binary type still counts when the header is an image.
     const problem = !response.ok
@@ -451,13 +596,13 @@ const downloadAsset = async (url) => {
         : null;
     if (problem || length >= 5 * KB * KB) {
       await response.body?.cancel();
-      return problem ? { problem, url: url.href } : { bytes: length, size: null, type, url: url.href };
+      return problem ? { problem, url: url.href } : { bytes: length, size: null, type, url: url.href, xRobotsTag };
     }
     const bytes = new Uint8Array(await response.arrayBuffer());
     const svg = type === "image/svg+xml" ? new TextDecoder().decode(bytes) : null;
     const size = svg ? null : imageSize(bytes);
     if (type === "application/octet-stream" && !size) return { problem: "is not an image", url: url.href };
-    return { bytes: bytes.length, size, svg, type, url: url.href };
+    return { bytes: bytes.length, size, svg, type, url: url.href, xRobotsTag };
   } catch (error) {
     return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message, url: url.href };
   }
@@ -473,6 +618,86 @@ const probe = async (url, redirect = "manual") => {
     return { location: response.headers.get("location"), status: response.status };
   } catch (error) {
     return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
+  }
+};
+const probeChain = async (startUrl, probeMemo, maxHops = 5) => {
+  const hops = [];
+  let current = new URL(startUrl);
+  while (true) {
+    const res = await probeMemo(current);
+    if (res.unchecked) return { hops, unchecked: res.unchecked, finalUrl: current.href };
+    if (res.status < 300 || res.status > 399 || !res.location) {
+      return { hops, status: res.status, finalUrl: current.href, location: hops.at(-1)?.location ?? null };
+    }
+    const nextUrl = URL.parse(res.location, current);
+    hops.push({ url: current.href, status: res.status, location: nextUrl?.href ?? res.location });
+    if (!nextUrl) return { hops, status: res.status, location: res.location, finalUrl: current.href };
+    current = nextUrl;
+    if (hops.length > maxHops) {
+      return { hops, status: res.status, location: nextUrl.href, finalUrl: nextUrl.href, tooMany: true };
+    }
+  }
+};
+const probeUnknown = async (url) => {
+  try {
+    const response = await fetch(url, {
+      headers: { "user-agent": AGENTS.browser },
+      redirect: "follow",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    const ct = response.headers.get("content-type") ?? "";
+    let canonical = null;
+    if (/html/i.test(ct) && response.body) {
+      const reader = response.body.getReader();
+      const chunks = [];
+      let total = 0;
+      while (total < 64 * KB) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        total += value.byteLength;
+      }
+      await reader.cancel().catch(() => {});
+      const text = Buffer.concat(chunks).toString("utf8").slice(0, 64 * KB);
+      for (const match of text.matchAll(/<link\b([^>]*)>/gi)) {
+        const attrs = attributesOf(match[1]);
+        if ((attrs.rel ?? "").toLowerCase().split(/\s+/).includes("canonical") && attrs.href) {
+          canonical = attrs.href;
+          break;
+        }
+      }
+    } else {
+      await response.body?.cancel();
+    }
+    return { status: response.status, url: response.url, canonical };
+  } catch (error) {
+    return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
+  }
+};
+const checkRedirectChain = (label, chain, expectedPage, warnings) => {
+  if (!chain) return;
+  if (chain.unchecked) {
+    warnings.push(
+      UNREACHABLE.test(chain.unchecked)
+        ? `${label} doesn't answer (${chain.unchecked}), so visitors who type it get an error. Redirect it to ${expectedPage.origin} with a 301.`
+        : `${label} could not be checked (${chain.unchecked}).`
+    );
+    return;
+  }
+  if (!chain.hops.length) {
+    warnings.push(`${label} returns ${chain.status} instead of a permanent redirect to ${expectedPage.origin}.`);
+    return;
+  }
+  if (chain.tooMany || chain.hops.length > 1) {
+    warnings.push(`${label} takes ${chain.hops.length} redirects before reaching ${chain.finalUrl}. Collapse to a single 301 or 308 redirect.`);
+    return;
+  }
+  if (![301, 308].includes(chain.hops[0].status)) {
+    warnings.push(`${label} uses ${chain.hops[0].status} instead of a permanent 301 or 308 redirect.`);
+  }
+  const landing = URL.parse(chain.finalUrl);
+  if (!landing || landing.origin !== expectedPage.origin || landing.pathname !== expectedPage.pathname || landing.search !== expectedPage.search) {
+    warnings.push(`${label} redirects to ${chain.finalUrl}, not to ${expectedPage.origin}${expectedPage.pathname}${expectedPage.search}.`);
   }
 };
 
@@ -497,14 +722,22 @@ const checkSite = async ({ site, url }) => {
       ? `www.${host}`
       : null;
   const twinUrl = twin && Object.assign(new URL(page), { hostname: twin });
+  const httpUrl = page.protocol === "https:" ? Object.assign(new URL(page), { protocol: "http:" }) : null;
+  const probes = new Map();
+  const probeMemo = (targetUrl) => {
+    const key = targetUrl.href;
+    if (!probes.has(key)) probes.set(key, probe(targetUrl, "manual"));
+    return probes.get(key);
+  };
   const touchLinked = site.icons.some((icon) => icon.rel.includes("apple-touch-icon"));
-  const [shares, logo, icons, rootTouchIcon, unknown, twinHop] = await Promise.all([
+  const [shares, logo, icons, rootTouchIcon, unknown, twinHop, httpHop] = await Promise.all([
     Promise.all(site.shareImages.map(async ([label, href]) => ({ ...(await fetchAsset(href, page)), label }))),
     site.organization?.logo ? fetchAsset(site.organization.logo, page) : null,
     Promise.all(site.icons.map(async (icon) => ({ ...(await fetchAsset(icon.href, page)), rel: icon.rel }))),
     touchLinked ? null : fetchAsset("/apple-touch-icon.png", page),
-    probe(new URL(`/check-head-${crypto.randomUUID().slice(0, 8)}`, page), "follow"),
-    twinUrl ? probe(twinUrl) : null,
+    probeUnknown(new URL(`/check-head-${crypto.randomUUID().slice(0, 8)}`, page)),
+    twinUrl ? probeChain(twinUrl, probeMemo) : null,
+    httpUrl ? probeChain(httpUrl, probeMemo) : null,
   ]);
   const side = ({ size }) => Math.min(size.width, size.height);
   // A declared asset that answers with an error is broken metadata. A failed connection is only unchecked.
@@ -517,6 +750,16 @@ const checkSite = async ({ site, url }) => {
   for (const image of shares) {
     const { label } = image;
     if (broken(label, image)) continue;
+    const imageUrl = URL.parse(image.url);
+    if (
+      imageUrl?.origin === page.origin &&
+      isGeneratedImageRoute(imageUrl) &&
+      !hasNoindexHeader(image.xRobotsTag)
+    ) {
+      warnings.push(
+        `${label} ${image.url} is a generated route with no X-Robots-Tag: noindex, so Search Console may report it as crawled but not indexed.`
+      );
+    }
     if (image.svg) {
       errors.push(`${label} is SVG, which X, Meta and Discord don't render. Use PNG or JPEG.`);
       continue;
@@ -546,17 +789,20 @@ const checkSite = async ({ site, url }) => {
   if (site.shareImages.length && !meta.alt)
     warnings.push("og:image has no og:image:alt, which the Open Graph protocol asks for.");
 
-  const raster = icons.filter((icon) => !broken(`The ${icon.rel} link`, icon) && icon.size);
-  const largest = Math.max(0, ...raster.map(side));
-  if (!site.icons.length) warnings.push("The page links no icon, so Google has no favicon to show beside the result.");
-  else if (!raster.length && icons.some((icon) => icon.svg))
+  const validIcons = icons.filter((icon) => !broken(`The ${icon.rel} link`, icon));
+  const faviconLinks = validIcons.filter((icon) => !icon.rel.includes("apple-touch-icon"));
+  const faviconRaster = faviconLinks.filter((icon) => icon.size);
+  const largestFavicon = Math.max(0, ...faviconRaster.map(side));
+  if (!site.icons.some((icon) => !icon.rel.includes("apple-touch-icon")))
+    warnings.push("The page links no favicon icon, so Google has no favicon to show beside the result.");
+  else if (!faviconRaster.length && faviconLinks.some((icon) => icon.svg))
     warnings.push("Every linked icon is SVG, which Google Search doesn't list as a favicon format. Add a PNG or ICO.");
-  else if (raster.length && largest <= 48)
-    warnings.push(`The largest raster icon is ${largest}px. Google recommends a favicon larger than 48x48.`);
+  else if (faviconRaster.length && largestFavicon <= 48)
+    warnings.push(`The largest raster favicon is ${largestFavicon}px. Google recommends a favicon larger than 48x48.`);
 
   // iOS picks the largest apple-touch-icon it is offered, and looks for /apple-touch-icon.png when none is linked.
   const touch = touchLinked
-    ? icons.filter((icon) => icon.rel.includes("apple-touch-icon") && icon.size).sort((a, b) => side(b) - side(a))[0]
+    ? validIcons.filter((icon) => icon.rel.includes("apple-touch-icon") && icon.size).sort((a, b) => side(b) - side(a))[0]
     : rootTouchIcon;
   if (!touchLinked && (rootTouchIcon.problem || rootTouchIcon.unchecked))
     warnings.push(`No apple-touch-icon link, and ${rootTouchIcon.url}, which iOS looks for instead, ${rootTouchIcon.problem ?? "could not be checked"}.`);
@@ -597,17 +843,14 @@ const checkSite = async ({ site, url }) => {
     warnings.push(`The HTML is ${(site.bytes.html / KB / KB).toFixed(1)} MB. Apple Messages previews stop reading at 1 MB.`);
   if (unknown.status >= 200 && unknown.status < 300)
     warnings.push(`An unknown URL returns ${unknown.status}, a possible soft 404. Check that unknown paths return 404 or 410.`);
-  const landing = URL.parse(twinHop?.location ?? "", twinUrl ?? undefined);
-  if (twinHop?.unchecked)
-    warnings.push(
-      UNREACHABLE.test(twinHop.unchecked)
-        ? `${twin} doesn't answer (${twinHop.unchecked}), so visitors who type it get an error. Redirect it to ${host} with a 301.`
-        : `${twin} could not be checked (${twinHop.unchecked}).`
-    );
-  else if (twinHop && ![301, 308].includes(twinHop.status))
-    warnings.push(`${twin} returns ${twinHop.status} instead of a permanent redirect to ${host}.`);
-  else if (twinHop && (landing?.origin !== page.origin || landing.pathname !== page.pathname || landing.search !== page.search))
-    warnings.push(`${twinUrl.href} redirects to ${twinHop.location}, not to ${page.origin}${page.pathname}${page.search}.`);
+  if (unknown.canonical) {
+    const unknownCanonical = URL.parse(unknown.canonical, unknown.url);
+    if (unknownCanonical && unknownCanonical.origin === page.origin && (unknownCanonical.pathname === page.pathname || unknownCanonical.pathname === "/")) {
+      warnings.push(`An unknown URL declares canonical ${unknownCanonical.href}, which can confuse crawlers on error pages.`);
+    }
+  }
+  checkRedirectChain(twin, twinHop, page, warnings);
+  checkRedirectChain(httpUrl?.href, httpHop, page, warnings);
   if (site.emailObfuscated)
     warnings.push('Cloudflare Email Obfuscation rewrote email addresses, so crawlers that skip JavaScript see "[email protected]".');
 
@@ -616,13 +859,13 @@ const checkSite = async ({ site, url }) => {
     agent: "site",
     errors,
     warnings,
-    shareImages: shares.map((image) => ({ bytes: image.bytes ?? null, label: image.label, ...summary(image) })),
+    shareImages: shares.map((image) => ({ bytes: image.bytes ?? null, label: image.label, xRobotsTag: image.xRobotsTag ?? "", ...summary(image) })),
     logo: logo && summary(logo),
     icons: [...icons, ...(rootTouchIcon ? [{ ...rootTouchIcon, rel: "apple-touch-icon (root)" }] : [])].map(
       (icon) => ({ rel: icon.rel, ...summary(icon) })
     ),
     unknownUrlStatus: unknown.status ?? null,
-    twin: twin && { host: twin, location: twinHop.location ?? null, status: twinHop.status ?? null },
+    twin: twin && { host: twin, location: twinHop.hops[0]?.location ?? null, status: twinHop.hops[0]?.status ?? twinHop.status ?? null },
   };
 };
 

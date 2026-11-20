@@ -47,7 +47,9 @@ npm ci --prefix scripts --ignore-scripts
 node scripts/audit.mjs https://example.com --json
 ```
 
-The audit reuses `check_head.mjs` for the entry page’s metadata, crawler responses, share images, icons, and unknown-path probe. It also checks robots.txt, XML sitemap indexes, XML, gzip-compressed XML, or text sitemaps, internal links, canonical targets, locale return links, duplicate titles/descriptions, missing alt attributes, and JSON-LD syntax across discovered pages. HTML and HTTP Link headers both supply canonical and locale annotations. XML sitemap locale annotations are checked too.
+The audit reuses `check_head.mjs` for the entry page’s metadata, crawler responses, share images, favicons separate from `apple-touch-icon`, multi-hop redirect chains on `www` and `http`, unknown-path canonical leaks, and generated OG image `X-Robots-Tag: noindex` headers. Across discovered pages, it checks `robots.txt`, XML sitemap indexes, XML, gzip-compressed XML, or text sitemaps (`X-Robots-Tag: noindex` headers plus duplicate, malformed-slug, or double-slash URLs across all `<loc>` entries), unlinked `/llms.txt` `noindex` headers, internal links, canonical and `noindex` conflicts, local-host URL leaks, subpage `max-image-preview:large` and meta attribute spelling, locale return links, duplicate titles/descriptions, missing alt attributes, and nested JSON-LD syntax and `Dataset` / `BreadcrumbList` / `ProfilePage` rules. HTML and HTTP Link headers both supply canonical and locale annotations. XML sitemap locale annotations are checked too.
+
+Both `audit.mjs` and `check_head.mjs` prefer IPv4 DNS first so dual-stack hosts do not stall on broken IPv6 routes.
 
 The crawl stays on the final entry origin, respects Googlebot’s robots rules for discovered pages, and checks at most 20 page URLs and 10 sitemaps. Use `--max-pages 100` to expand it, up to 500. Each crawl response has a 5 MiB budget and a 10-second timeout. The existing entry-page probes have their own request budgets. Cross-origin targets, unsupported feeds, request challenges, and crawl limits are reported as unchecked. A bounded crawl cannot prove that the whole site is free of errors or has no orphan pages.
 
@@ -62,7 +64,7 @@ Read `findings`, `coverage`, and `pages` together. `coverage.crawlComplete` refe
 
 Exit 1 means confirmed failures, exit 2 means invalid invocation or a run error, and exit 0 means no confirmed failures. Exit 0 does not mean all checks ran. `rulesCheckedOn` records when the cited guidance was reviewed, not a live certification against every Google update.
 
-For a single URL without installing the crawl parsers, use `node scripts/check_head.mjs <url> --json`. For optional llms.txt work, use `node scripts/check_llms_txt.mjs <site-url>`. A missing llms.txt is not a Google SEO failure. For local JSON-LD checks, the schema skill supplies `scripts/validate_schema.mjs`. Its field map is a checklist, not proof of rich-result eligibility.
+For a single URL without installing the crawl parsers, use `node scripts/check_head.mjs <url> --json`. For optional llms.txt work, use `node scripts/check_llms_txt.mjs <site-url>`. A missing llms.txt is not a Google SEO failure, though an existing `/llms.txt` should return `X-Robots-Tag: noindex`. For full schema validation, use the schema skill’s `node scripts/validate_schema.mjs <jsonld-file|-|--url https://...>`. Its field map is a checklist, not proof of rich-result eligibility.
 
 ## Interpret evidence the scripts cannot settle
 
@@ -72,7 +74,14 @@ Google’s [generative AI guidance](https://developers.google.com/search/docs/fu
 
 Open the actual share images at feed and phone preview sizes. Flag redundant printed web addresses, subtitles that repeat the headline, and unreadable text. Suggest deleting redundant copy before enlarging the main message or product visual and rebalancing spacing. When creating or revising a card, omit redundant URLs and small subtitles by default. Keep useful context, standalone-sharing needs, explicit user choices, and recognizable branding. This is visual clarity advice, not a crawler requirement or ranking fix. Mark it unverified when you cannot inspect the image.
 
-After a change, rerun the affected checks. Submit sitemaps or start Search Console validation only when the task authorizes that action and evidence supports it. A redirect or an alternate page with a valid canonical is not automatically an error. Never claim freshness of a sitemap’s lastmod dates without evidence of actual content changes.
+After a change, rerun the affected checks. Submit sitemaps or start Search Console validation only when the task authorizes that action and evidence supports it. When working in Search Console:
+
+- Run `google-search-console-cli` first to compare registered sitemaps against live `robots.txt` and `/sitemap.xml` declarations and to inspect representative unindexed URLs.
+- Verify live production responses for Search Console's listed `Examples` and `FAILED` URLs before clicking Validate Fix.
+- Skip validation on intentional redirects, intentional `noindex` pages, intentional `robots.txt` blocks, bot-probe 404s, or non-critical enhancement warnings when any listed example intentionally omits an optional property (for example a dataset without an upstream license).
+- Stop cleanly if Request Indexing hits Google's daily quota, and report externally hosted domains behind anti-bot challenges (such as Cloudflare Managed Challenge) without bypassing them.
+
+Never claim freshness of a sitemap’s lastmod dates without evidence of actual content changes.
 
 ## References
 

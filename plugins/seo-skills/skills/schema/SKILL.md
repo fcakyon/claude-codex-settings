@@ -24,13 +24,14 @@ Four rules govern everything below:
 | Article, BlogPosting | Posts and news | `headline`, `image`, `datePublished`, `author` |
 | Product | Product pages | `name`, `image`, `offers` |
 | SoftwareApplication | App and SaaS pages | `name`, `offers` |
+| Dataset | Dataset and benchmark pages | `name`, `description` |
 | FAQPage | A page with real questions and answers | `mainEntity` |
 | HowTo | Step-by-step instructions | `name`, `step` |
 | BreadcrumbList | Any page with breadcrumbs | `itemListElement` |
 | LocalBusiness | A location page | `name`, `address` |
 | Event | Events and webinars | `name`, `startDate`, `location` |
 
-`references/schema-examples.md` has a complete, valid block for each of these plus a combined `@graph` and a Next.js pattern. `references/required-properties.json` is the same table in the form the bundled validator reads, so adding a type means editing both.
+`references/schema-examples.md` has a complete, valid block for each of these plus a combined `@graph` and a Next.js pattern. `references/required-properties.json` holds required properties and `references/recommended-properties.json` holds recommended properties that surface as non-critical Search Console warnings when absent (such as `Dataset` `creator` and `license`). Keep both property maps in sync when adding a type, and never invent a `Dataset` license URL when the upstream source declares none.
 
 When a page needs several types, prefer one `@graph` array over several separate script tags: entities can then reference each other by `@id` instead of repeating themselves.
 
@@ -40,7 +41,7 @@ A fetch of the page shows only server-rendered JSON-LD. CMS SEO plugins commonly
 
 When markup exists but earns nothing, check in this order: a required property missing, a value in the wrong shape (dates must be ISO 8601, URLs absolute, enumerations exact), the type having no rich result to earn, or the markup describing something the page doesn't show.
 
-From this skill directory, run `node scripts/validate_schema.mjs <jsonld-file>` on any block before you hand it over. It parses the JSON, checks each type against the required properties in `references/required-properties.json`, and catches the two value shapes that fail most often: a date that isn't ISO 8601 and a relative URL. It's mechanical, so a clean result means the syntax is right and nothing more.
+From this skill directory, run `node scripts/validate_schema.mjs <jsonld-file>` (or pass `-` on stdin or `--url https://example.com` to fetch every server-rendered JSON-LD script from a page). It parses the JSON, walks `@graph` and nested entities such as `ItemList.itemListElement`, checks required properties in `references/required-properties.json` and recommended properties in `references/recommended-properties.json`, flags local-host URL leaks (`localhost`, `127.0.0.1`), and catches dates that aren't ISO 8601 or relative URLs (including `sameAs` and `license`). It's mechanical, so a clean result means the syntax is right and nothing more.
 
 Then point the user at the Rich Results Test at https://search.google.com/test/rich-results for eligibility, and the schema.org validator at https://validator.schema.org/ for correctness against the vocabulary. Those answer different questions from each other and from the tool, so a block can pass one and fail another. None of the three can tell you whether the markup describes what the page actually shows, which is the accuracy rule above and still yours to check.
 

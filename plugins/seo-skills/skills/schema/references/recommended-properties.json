@@ -1,0 +1,5 @@
+{
+  "Dataset": ["creator", "license"],
+  "Organization": ["logo", "sameAs"],
+  "ProfilePage": ["dateCreated", "dateModified"]
+}
