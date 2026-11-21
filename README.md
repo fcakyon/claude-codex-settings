@@ -66,10 +66,16 @@ In the Codex desktop app, open **Plugins**, find the plugin, and select **Instal
 ```bash
 git clone https://github.com/fcakyon/claude-codex-settings.git
 cd claude-codex-settings
+uv run .github/scripts/antigravity.py sync
+```
+
+Install one plugin instead:
+
+```bash
 uv run .github/scripts/antigravity.py install simplify
 ```
 
-Requires [Antigravity CLI](https://antigravity.google/docs/getting-started) and [uv](https://docs.astral.sh/uv/getting-started/installation/). The installer packages skills and MCP servers for Antigravity, keeps long instructions in full, and installs them with `agy plugin install`. Claude-specific hooks, agents, commands, and output styles stay with their original tools. Add more plugin names to install several at once.
+Requires [Antigravity CLI](https://antigravity.google/docs/getting-started) and [uv](https://docs.astral.sh/uv/getting-started/installation/). `sync` installs the curated Antigravity plugins and merges [`.gemini/config/config.json`](./.gemini/config/config.json) and [`.gemini/antigravity-cli/settings.json`](./.gemini/antigravity-cli/settings.json) into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. Claude-specific hooks, agents, commands, and output styles stay with their original tools. Add more plugin names to `install` to install several at once.
 
 </details>
 
@@ -1363,6 +1369,18 @@ Configuration in [`~/.codex/config.toml`](./.codex/config.toml):
 - **Sandbox**: `workspace-write` with network access enabled
 - **Auto mode**: the "Approve for me" option under `/approvals`, set by `approvals_reviewer = "auto_review"`. A reviewer subagent judges each escalation against the `[auto_review] policy` block in [`.codex/config.toml`](./.codex/config.toml) instead of stopping to ask you, so it trades tokens for far fewer prompts. The policy mirrors the `autoMode` block in [`.claude/settings.json`](./.claude/settings.json)
 - **Plugins**: a curated set enabled from this marketplace (`simplify`, `github-dev`, `python-skills`, and more)
+
+</details>
+
+<details>
+<summary><strong>Antigravity CLI</strong></summary>
+
+Configuration in [`.gemini/config/config.json`](./.gemini/config/config.json) and [`.gemini/antigravity-cli/settings.json`](./.gemini/antigravity-cli/settings.json):
+
+- **Mode & Sandbox**: `auto` mode with `proceed-in-sandbox`, terminal sandbox enabled, always-on alt-screen rendering, and desktop notifications
+- **Permissions**: allow rules for selected Git, GitHub CLI, search and developer commands and trusted URLs, plus `deny` rules blocking force pushes and `git rebase`
+- **Plugins**: curated Antigravity-compatible plugin set enabled in `.gemini/config/config.json` (`agent-browser`, `code-review`, `codex-advisor`, `fable-advisor`, `frontend-design-skills`, `github-dev`, `google-telemetry`, `heroui-skills`, `humanize`, `modern-web-guidance`, `openai-office-skills`, `python-skills`, `qa`, `reusable-app-components`, `seo-skills`, `simplify`, `typescript-skills`, `ultralytics-dev`)
+- **Sync**: run `uv run .github/scripts/antigravity.py sync` to install the enabled plugins and merge settings into `~/.gemini` without removing existing local plugins or `trustedWorkspaces`
 
 </details>
 

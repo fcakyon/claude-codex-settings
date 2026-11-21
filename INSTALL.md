@@ -105,7 +105,19 @@ Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then use 
 ```bash
 git clone https://github.com/fcakyon/claude-codex-settings.git
 cd claude-codex-settings
+uv run .github/scripts/antigravity.py sync
+```
+
+To install a single plugin instead:
+
+```bash
 uv run .github/scripts/antigravity.py install simplify
+```
+
+`sync` installs the curated plugins and merges [`.gemini/config/config.json`](.gemini/config/config.json) and [`.gemini/antigravity-cli/settings.json`](.gemini/antigravity-cli/settings.json) into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. Point `~/.gemini/config/AGENTS.md` at `~/.claude/CLAUDE.md` so Antigravity loads the shared user guidance:
+
+```bash
+ln -sfn ~/.claude/CLAUDE.md ~/.gemini/config/AGENTS.md
 ```
 
 The installer builds native Antigravity bundles from the shared skills and MCP servers, then calls `agy plugin install`. It keeps full instructions when a skill exceeds Antigravity's 24 KB loading limit. Claude-only hooks, agents, commands, and output styles are not part of these bundles. Plugins without skills or MCP servers are unavailable in Antigravity. Start a new session and use `/simplify`, `/seo-audit`, or another installed skill.

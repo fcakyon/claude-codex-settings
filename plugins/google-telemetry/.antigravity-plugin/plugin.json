@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "google-telemetry",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Read app usage and search traffic before and after releases with API-backed CLIs.",
   "author": {
     "name": "Fatih C. Akyon"

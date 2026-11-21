@@ -16,6 +16,9 @@ claude-settings/
   .agents/plugins/marketplace.json       # Codex CLI marketplace
   .cursor-plugin/marketplace.json        # Cursor marketplace
   .codex/config.toml                     # Codex CLI config
+  .gemini/
+    config/config.json                   # Antigravity enabled plugins
+    antigravity-cli/settings.json        # Antigravity CLI defaults and permissions
   .github/scripts/                       # repo maintenance scripts
     _helpers.sh                          # shared sync/zip functions
     sync-<vendor>-skills.sh              # per-vendor skill sync
@@ -281,7 +284,7 @@ Commands are Claude Code only. Other tools use skills for similar functionality.
 
 ### Antigravity packaging
 
-Use `uv run .github/scripts/antigravity.py install <plugin...>` after cloning this repo. The installer copies shared skills and their scripts/assets into a temporary native bundle, normalizes skill folder names, keeps bodies over 24,000 bytes in `INSTRUCTIONS.md`, converts `.mcp.json` to native `mcp_config.json`, and calls `agy plugin install`. It excludes Claude-specific hooks, agents, commands, and output styles. Plugins with none of the supported components have no Antigravity manifest and no install option.
+Use `uv run .github/scripts/antigravity.py install <plugin...>` after cloning this repo, or `uv run .github/scripts/antigravity.py sync` to install the curated plugin set and merge `.gemini/config/config.json` and `.gemini/antigravity-cli/settings.json` into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. The installer copies shared skills and their scripts/assets into a temporary native bundle, normalizes skill folder names, keeps bodies over 24,000 bytes in `INSTRUCTIONS.md`, converts `.mcp.json` to native `mcp_config.json`, and calls `agy plugin install`. It excludes Claude-specific hooks, agents, commands, and output styles. Plugins with none of the supported components have no Antigravity manifest and no install option.
 
 Run `uv run .github/scripts/antigravity.py validate` with `agy` on PATH to validate every bundle with `agy plugin validate --strict`. CI runs this alongside the shared plugin checks. Native validation was checked with Antigravity CLI 1.4.12; its native bundles read MCP servers from `mcp_config.json`, while portable Agent Plugins use a different schema and `mcp.json`.
 

@@ -1,0 +1,58 @@
+{
+  "plugins": {
+    "agent-browser": {
+      "enabled": true
+    },
+    "code-review": {
+      "enabled": true
+    },
+    "codex-advisor": {
+      "enabled": true
+    },
+    "fable-advisor": {
+      "enabled": true
+    },
+    "frontend-design-skills": {
+      "enabled": true
+    },
+    "github-dev": {
+      "enabled": true
+    },
+    "google-telemetry": {
+      "enabled": true
+    },
+    "heroui-skills": {
+      "enabled": true
+    },
+    "humanize": {
+      "enabled": true
+    },
+    "modern-web-guidance": {
+      "enabled": true
+    },
+    "openai-office-skills": {
+      "enabled": true
+    },
+    "python-skills": {
+      "enabled": true
+    },
+    "qa": {
+      "enabled": true
+    },
+    "reusable-app-components": {
+      "enabled": true
+    },
+    "seo-skills": {
+      "enabled": true
+    },
+    "simplify": {
+      "enabled": true
+    },
+    "typescript-skills": {
+      "enabled": true
+    },
+    "ultralytics-dev": {
+      "enabled": true
+    }
+  }
+}
