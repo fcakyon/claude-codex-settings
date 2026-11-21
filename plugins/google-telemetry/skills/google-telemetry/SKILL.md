@@ -20,7 +20,7 @@ Discover the exact property for the requested app and service. Use both services
 
 Run the requested service's CLI with `--version` and `--help`. Use the [setup skill](../setup/SKILL.md) for installation, authentication errors or missing property access. Reuse authorized credentials. Report authentication failures separately from empty reports. Do not print credential files, access tokens or refresh tokens.
 
-Use aggregate read commands. The CLIs also expose write commands, but this skill does not authorize them. Do not add or remove properties, submit or delete sitemaps, create audience exports, grant access or change tracking configuration as part of reading telemetry.
+Use aggregate read commands by default. When the user asks to configure GA4 tracking, audiences, key events, attribution models, lookback windows, or events, update them via the GA4 Admin API (`https://www.googleapis.com/auth/analytics.edit` scope) with the authorized credential instead of browser UI clicks. Do not perform unrequested mutations, delete properties, submit or delete sitemaps, or grant/revoke user access without explicit approval.
 
 ## Answer the product question
 
@@ -44,7 +44,7 @@ Keep any requested raw exports in the app's ignored/private output directory. St
 
 ## API coverage
 
-GA's Data API exposes standard, realtime, pivot, batch and alpha funnel reports. These CLIs cover the first four, plus property, stream and custom-dimension reads. Use the official `runFunnelReport` API for a true funnel. Do not substitute event-count ratios for it.
+GA's Data API exposes standard, realtime, pivot, batch and alpha funnel reports. These CLIs cover the first four, plus property, stream and custom-dimension reads. The GA4 Admin API (`analyticsadmin.googleapis.com`) also handles key events, audiences, attribution settings, and event rules (Marketer role) plus custom dimensions/metrics and data streams (Editor role). Use the official `runFunnelReport` API for a true funnel. Do not substitute event-count ratios for it.
 
 Search Console exposes Search Analytics, Sites, Sitemaps and individual URL Inspection. It does not expose the whole UI, including the Links report and bulk Page Indexing report. Individual URL inspection is read-only and does not request indexing. Neither a custom wrapper nor browser sign-in creates missing API endpoints or API credentials.
 

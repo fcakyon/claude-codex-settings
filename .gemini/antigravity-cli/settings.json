@@ -1,0 +1,50 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/settings.json",
+  "agentMode": "auto",
+  "toolPermission": "proceed-in-sandbox",
+  "enableTerminalSandbox": true,
+  "altScreenMode": "always",
+  "showTips": false,
+  "showFeedbackSurvey": false,
+  "notifications": true,
+  "permissions": {
+    "allow": [
+      "command(git status)",
+      "command(git diff)",
+      "command(git log)",
+      "command(git branch)",
+      "command(git rev-parse)",
+      "command(git show)",
+      "command(git fetch)",
+      "command(git worktree list)",
+      "command(gh pr list)",
+      "command(gh pr view)",
+      "command(gh pr diff)",
+      "command(gh issue view)",
+      "command(gh repo view)",
+      "command(gh search)",
+      "command(rg)",
+      "command(find)",
+      "command(ls)",
+      "command(wc)",
+      "command(tree)",
+      "command(ruff)",
+      "command(nvidia-smi)",
+      "read_url(github.com)",
+      "read_url(openai.com)",
+      "read_url(anthropic.com)",
+      "read_url(docs.anthropic.com)",
+      "read_url(ai.google.dev)",
+      "read_url(antigravity.google)",
+      "read_url(arxiv.org)",
+      "read_url(pypi.org)",
+      "read_url(docs.ultralytics.com)"
+    ],
+    "deny": [
+      "command(git push --force)",
+      "command(git push --force-with-lease)",
+      "command(git push -f)",
+      "command(git rebase)"
+    ]
+  }
+}

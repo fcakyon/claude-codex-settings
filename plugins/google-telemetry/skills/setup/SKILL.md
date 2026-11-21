@@ -46,13 +46,13 @@ A `gcloud auth login` session, a browser session, an API key, a GTM container ID
 
 ## Service account setup
 
-Prefer a dedicated read-only service account. Its key does not expire and sees only what is shared with it. Creating the account, its key and each property grant requires the user's approval.
+Prefer a dedicated service account whose JSON key does not expire and sees only what is shared with it. Creating the account, its key and each property grant requires the user's approval.
 
 1. In the Google Cloud project that will own the identity, enable the APIs the request needs: Google Analytics Admin API and Google Analytics Data API for Analytics, Google Search Console API for Search Console.
 2. Create a service account such as `google-telemetry-reader` with no project roles. Reporting access comes from GA and Search Console, not Cloud IAM.
 3. Create a JSON key. If the organization policy `iam.disableServiceAccountKeyCreation` blocks it, use the user OAuth setup below instead of weakening the policy.
 4. Move the key to a private path such as `~/.config/<org>/google-telemetry-sa.json` with mode 600, and point the CLIs at it with `GOOGLE_APPLICATION_CREDENTIALS`.
-5. In GA Admin, open Account access management for each account, add the service account email as Viewer, tick No Cost Metrics and No Revenue Metrics, and untick Notify. An account-level grant covers its current and future properties. Granting requires the Administrator role. Google-managed accounts such as Chrome Web Store developer properties cannot be shared this way, so use user OAuth for them.
+5. In GA Admin, open Account access management for each account, add the service account email as **Marketer** with **No Cost Metrics** and **No Revenue Metrics** left unchecked so CLI and API calls can read cost/revenue metrics and manage audiences, key events, attribution models, lookback windows, and events (choose **Editor** if custom dimensions or data streams must also be edited via API, or **Viewer** with both restrictions ticked for strict read-only accounts), and untick Notify. An account-level grant covers its current and future properties. Granting requires the Administrator role. Google-managed accounts such as Chrome Web Store developer properties cannot be shared this way, so use user OAuth for them.
 6. In Search Console, open Settings, then Users and permissions, for each property and add the service account email as Restricted. Restricted is enough for Search Analytics, sitemaps and URL inspection.
 
 ## User OAuth setup
@@ -69,7 +69,7 @@ Without an approved desktop client, the user selects a Cloud project, enables th
 
 ## Verify the requested access
 
-Rerun discovery without logging in again and confirm every intended property is listed. Then run one small report per service on a listed property using the [reporting recipes](../google-telemetry/references/commands.md), with the discovered numeric GA property ID or exact Search Console site URL. Test aggregate usage or search metrics only, never revenue or other personal financial data.
+Rerun discovery without logging in again and confirm every intended property is listed. Then run one small report per service on a listed property using the [reporting recipes](../google-telemetry/references/commands.md), with the discovered numeric GA property ID or exact Search Console site URL. Test aggregate usage, key events, revenue/cost metrics (when enabled), or search metrics only, never personal user records.
 
 Report which service and property passed, or the exact remaining access gap. Do not call setup complete after only a login or an empty discovery result. Never print credential JSON, tokens or private keys, commit key files, or extract browser cookies as API credentials.
 
