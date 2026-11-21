@@ -10,10 +10,14 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import shlex
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
+
+from antigravity_hook import TOOLS as HOOK_TOOLS
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = Path(".antigravity-plugin/plugin.json")
@@ -21,6 +25,8 @@ SCHEMA = "https://antigravity.google/schemas/v1/plugin.json"
 CONFIG_TEMPLATE = ROOT / ".gemini/config/config.json"
 SETTINGS_TEMPLATE = ROOT / ".gemini/antigravity-cli/settings.json"
 LOCAL_SETTINGS_KEYS = ("trustedWorkspaces", "model", "modelProvider", "gcp", "customModelsConfig")
+HOOK_ADAPTER = ROOT / ".github/scripts/antigravity_hook.py"
+COPY_IGNORE = shutil.ignore_patterns("*.zip", "__pycache__", "node_modules")
 
 
 def agy_env(home: Path | None = None) -> dict[str, str]:
@@ -65,8 +71,33 @@ def parse_frontmatter(content: str) -> tuple[dict | None, str]:
         return None, content
 
 
+def convert_hooks(plugin: Path) -> dict:
+    """Convert Claude Code shell and file hooks to one Antigravity hook group that runs them via the adapter.
+
+    Args:
+        plugin (Path): Source plugin directory.
+
+    Returns:
+        (dict): Native hooks.json contents, empty when no hook targets a converted tool.
+    """
+    events, source = {}, _read_json(plugin / "hooks/hooks.json").get("hooks", {})
+    for event in ("PreToolUse", "PostToolUse"):
+        for entry in source.get(event, []):
+            matcher = "|".join(native for native, tool in HOOK_TOOLS.items() if re.fullmatch(entry["matcher"], tool))
+            hooks = [hook for hook in entry["hooks"] if hook["type"] == "command"]
+            if matcher and hooks:
+                commands = (shlex.quote(hook["command"].replace("${CLAUDE_PLUGIN_ROOT}", ".")) for hook in hooks)
+                adapter = {
+                    "type": "command",
+                    "command": "python3 ./hooks/antigravity_hook.py " + " ".join(commands),
+                    "timeout": sum(hook.get("timeout", 60) for hook in hooks),
+                }
+                events.setdefault(event, []).append({"matcher": matcher, "hooks": [adapter]})
+    return {plugin.name: events} if events else {}
+
+
 def package_plugin(plugin: Path, target: Path) -> None:
-    """Copy skills and MCP servers into a native Antigravity plugin.
+    """Copy skills, MCP servers and converted hooks into a native Antigravity plugin.
 
     Args:
         plugin (Path): Source plugin directory.
@@ -77,7 +108,7 @@ def package_plugin(plugin: Path, target: Path) -> None:
     for name in ("skills", "scripts", "assets", "references", "package.json", "package-lock.json", "tsconfig.json", "LICENSE"):
         source = plugin / name
         if source.is_dir():
-            shutil.copytree(source, target / name, ignore=shutil.ignore_patterns("*.zip", "__pycache__", "node_modules"))
+            shutil.copytree(source, target / name, ignore=COPY_IGNORE)
         elif source.is_file():
             shutil.copyfile(source, target / name)
     for skill in sorted((target / "skills").glob("*/SKILL.md")):
@@ -97,6 +128,10 @@ def package_plugin(plugin: Path, target: Path) -> None:
     if (plugin / ".mcp.json").exists():
         servers = _read_json(plugin / ".mcp.json")
         _write_json(target / "mcp_config.json", {"mcpServers": servers})
+    if hooks := convert_hooks(plugin):
+        shutil.copytree(plugin / "hooks/scripts", target / "hooks/scripts", ignore=COPY_IGNORE)
+        shutil.copy2(HOOK_ADAPTER, target / "hooks/antigravity_hook.py")
+        _write_json(target / "hooks.json", hooks)
 
 
 def _read_json(path: Path) -> dict:

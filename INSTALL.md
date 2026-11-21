@@ -120,7 +120,7 @@ uv run .github/scripts/antigravity.py install simplify
 ln -sfn ~/.claude/CLAUDE.md ~/.gemini/config/AGENTS.md
 ```
 
-The installer builds native Antigravity bundles from the shared skills and MCP servers, then calls `agy plugin install`. It keeps full instructions when a skill exceeds Antigravity's 24 KB loading limit. Claude-only hooks, agents, commands, and output styles are not part of these bundles. Plugins without skills or MCP servers are unavailable in Antigravity. Start a new session and use `/simplify`, `/seo-audit`, or another installed skill.
+The installer builds native Antigravity bundles from the shared skills and MCP servers, then calls `agy plugin install`. It keeps full instructions when a skill exceeds Antigravity's 24 KB loading limit. Shell and file-edit hooks, such as the commit message checks and the humanize word check, come along and block the same commands and writes. Agents, commands, output styles, and Claude-only hooks are not part of these bundles. Plugins without skills or MCP servers are unavailable in Antigravity. Start a new session and use `/simplify`, `/seo-audit`, or another installed skill.
 
 Codex and Cursor also accept the portable [Agent Plugins format](https://agent-plugins.org/). Their marketplace files and existing hook and agent settings differ, so this repo shares source content and generates tool-specific metadata instead of treating the APIs as identical.
 

@@ -285,7 +285,7 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
                     cmd = hook.get("command", "")
                     # Check for ${CLAUDE_PLUGIN_ROOT} usage (only for script paths, not inline commands)
                     is_inline_cmd = any(op in cmd for op in [" ", "|", ";", "&&", "||", "$("])
-                    if cmd and not cmd.startswith("${CLAUDE_PLUGIN_ROOT}") and not is_inline_cmd:
+                    if cmd and not cmd.lstrip('"').startswith("${CLAUDE_PLUGIN_ROOT}") and not is_inline_cmd:
                         if "/" in cmd and not cmd.startswith("$"):
                             errors.append(
                                 f"{plugin_dir.name}/hooks/hooks.json: "
@@ -297,7 +297,7 @@ def validate_hooks(plugin_dir: Path) -> list[str]:
                     for ref in refs:
                         if not isinstance(ref, str):
                             continue
-                        for relative_path in re.findall(r'\$\{CLAUDE_PLUGIN_ROOT\}(/[^"\'\s;|&]+)', ref):
+                        for relative_path in re.findall(r'\$\{CLAUDE_PLUGIN_ROOT\}"?(/[^"\'\s;|&]+)', ref):
                             script_path = plugin_dir / relative_path.lstrip("/")
                             if not script_path.exists():
                                 errors.append(

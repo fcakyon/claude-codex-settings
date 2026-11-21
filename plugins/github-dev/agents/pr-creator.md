@@ -5,7 +5,6 @@ description: |-
 tools:
   [
     "Bash",
-    "BashOutput",
     "Glob",
     "Grep",
     "Read",

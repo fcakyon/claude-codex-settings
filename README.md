@@ -75,7 +75,7 @@ Install one plugin instead:
 uv run .github/scripts/antigravity.py install simplify
 ```
 
-Requires [Antigravity CLI](https://antigravity.google/docs/getting-started) and [uv](https://docs.astral.sh/uv/getting-started/installation/). `sync` installs the curated Antigravity plugins and merges [`.gemini/config/config.json`](./.gemini/config/config.json) and [`.gemini/antigravity-cli/settings.json`](./.gemini/antigravity-cli/settings.json) into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. Claude-specific hooks, agents, commands, and output styles stay with their original tools. Add more plugin names to `install` to install several at once.
+Requires [Antigravity CLI](https://antigravity.google/docs/getting-started) and [uv](https://docs.astral.sh/uv/getting-started/installation/). `sync` installs the curated Antigravity plugins and merges [`.gemini/config/config.json`](./.gemini/config/config.json) and [`.gemini/antigravity-cli/settings.json`](./.gemini/antigravity-cli/settings.json) into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. Shell and file-edit hooks come along, while agents, commands, output styles, and Claude-only hooks stay with their original tools. Add more plugin names to `install` to install several at once.
 
 </details>
 
@@ -162,7 +162,7 @@ Before a Write or Edit saves, humanize scans the new text and blocks whatever re
 - **16 openers and cliches** like `in conclusion`, `a testament to`, `aims to bridge`
 - **10 pile-up words** like `crucial` or `significant`, flagged at 3+ uses in one write
 
-The hook runs on Claude Code and Codex; Antigravity receives the writing skill. Unlike a markdown rule the model can ignore, the hook checks every Write or Edit and blocks each match until it is replaced. The word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
+The hook runs on Claude Code and Codex, and on Antigravity CLI for file writes and shell commands. Unlike a markdown rule the model can ignore, the hook checks every Write or Edit and blocks each match until it is replaced. The word list draws on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing).
 
 **Skills** (ZIP for claude.ai, ChatGPT, Claude Code, Cursor, Codex, VS Code):
 
