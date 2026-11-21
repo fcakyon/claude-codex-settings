@@ -255,7 +255,8 @@
     "github-dev@claude-settings": true,
     "google-telemetry@claude-settings": true,
     "ultralytics-dev@claude-settings": true,
-    "codex-advisor@claude-settings": true
+    "codex-advisor@claude-settings": true,
+    "code-review@claude-settings": true
   },
   "extraKnownMarketplaces": {
     "claude-settings": {
