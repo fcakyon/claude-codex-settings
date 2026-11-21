@@ -6,10 +6,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import selectors
+import queue
 import subprocess
 import sys
 import tempfile
+import threading
 from pathlib import Path
 
 from antigravity import ROOT, parse_frontmatter
@@ -60,18 +61,24 @@ def codex_lists(cwd: Path) -> tuple[dict, dict]:
         text=True,
         cwd=cwd,
     )
-    selector = selectors.DefaultSelector()
-    selector.register(proc.stdout, selectors.EVENT_READ)
+    # a reader thread, since select() misses lines readline() already pulled into the pipe buffer
+    lines = queue.Queue()
+
+    def pump() -> None:
+        """Move each app-server stdout line onto the queue until the pipe closes."""
+        for line in proc.stdout:
+            lines.put(line)
+
+    threading.Thread(target=pump, daemon=True).start()
 
     def call(request: int, method: str, params: dict) -> dict:
         """Send one JSON-RPC request and wait up to 60 seconds for its result."""
         proc.stdin.write(json.dumps({"id": request, "method": method, "params": params}) + "\n")
         proc.stdin.flush()
-        while selector.select(timeout=60):
-            message = json.loads(proc.stdout.readline())
+        while True:
+            message = json.loads(lines.get(timeout=60))
             if message.get("id") == request:
                 return message["result"]
-        raise TimeoutError(method)
 
     call(0, "initialize", {"clientInfo": {"name": "ci", "version": "0"}})
     proc.stdin.write(json.dumps({"method": "initialized"}) + "\n")

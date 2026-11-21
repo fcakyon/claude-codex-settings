@@ -17,7 +17,7 @@ Regenerate the Plugins section of README.md based on current plugin structure an
    - Agents: use `.claude-plugin/plugin.json` `agents` paths when set, otherwise `plugins/<name>/agents/*.md`
    - Hooks: use `.claude-plugin/plugin.json` `hooks` paths when set, otherwise `plugins/<name>/hooks/hooks.json`
    - MCP: `plugins/<name>/.mcp.json`
-   - Antigravity: include its install command only when `.antigravity-plugin/plugin.json` exists; the installer packages skills, MCP servers, and shell and file-edit hooks, not agents
+   - Antigravity: include its install command only when `.antigravity-plugin/plugin.json` exists. The installer packages skills, MCP servers, and shell and file-edit hooks, not agents
 
 3. Update each plugin's `<details>` block in README.md. Use this format:
 
