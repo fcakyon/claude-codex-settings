@@ -70,6 +70,11 @@ const editorDirectories = [
       .filter((name) => /^config(?:-[^.]+)?\.toml$/.test(name))
       .sort((a, b) => Number(a !== "config.toml") - Number(b !== "config.toml") || a.localeCompare(b)),
   },
+  {
+    name: ".gemini",
+    tool: "Antigravity CLI",
+    files: ["config/config.json", "antigravity-cli/settings.json"],
+  },
 ] as const;
 
 export const editorGroups = editorDirectories.map((directory) => ({
