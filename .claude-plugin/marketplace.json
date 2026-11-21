@@ -154,7 +154,7 @@
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Keep file paths, root causes, and open questions through auto-summaries.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -169,7 +169,7 @@
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Track Claude Code usage, rejections, and session stats in one dashboard.",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -318,7 +318,7 @@
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance audits with Core Web Vitals and Chrome DevTools.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "license": "Apache-2.0",
       "keywords": ["web-performance", "core-web-vitals", "lighthouse", "chrome-devtools", "accessibility"],
       "category": "web-testing",
@@ -439,7 +439,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "Write clear issues, commits, and PRs, review code, and resolve feedback.",
-      "version": "2.9.0",
+      "version": "2.10.0",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -454,7 +454,7 @@
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
-      "version": "2.5.1",
+      "version": "2.5.2",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -484,7 +484,7 @@
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
       "description": "Query and manage Azure resources through the Azure MCP server and Azure CLI login.",
-      "version": "2.0.5",
+      "version": "2.0.6",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -499,7 +499,7 @@
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Sync CLAUDE.md and the permissions allowlist, and refresh context on demand.",
-      "version": "2.1.6",
+      "version": "2.1.7",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -514,7 +514,7 @@
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
       "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP.",
-      "version": "2.0.6",
+      "version": "2.0.7",
       "author": {
         "name": "Fatih C. Akyon"
       },
@@ -544,7 +544,7 @@
       "name": "tavily-tools",
       "source": "./plugins/tavily-tools",
       "description": "Search the web and extract pages with Tavily, and route built-in web tools to it.",
-      "version": "2.0.6",
+      "version": "2.0.7",
       "author": {
         "name": "Fatih C. Akyon"
       },

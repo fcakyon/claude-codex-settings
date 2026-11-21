@@ -74,7 +74,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
 - Simple terms, no jargon
 - ONLY analyze staged files (`git diff --cached`), ignore unstaged
-- NO test plans in commit messages
+- End with `verification: <checks run and results>` or `verification: none (<reason>)`, never future test plans
 
 ### Pull Requests
 

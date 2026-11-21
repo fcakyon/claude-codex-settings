@@ -183,7 +183,7 @@ export const plugins = marketplace.plugins
         ? `${plugin.source.url.replace(/\.git$/, "")}${plugin.source.path ? `/tree/main/${plugin.source.path}` : ""}`
         : undefined;
     const codexCommand = hasCodex ? `codex plugin add ${plugin.name}@${marketplaceName}` : undefined;
-    const cursorCommand = hasCursor ? `cursor-agent # enter /plugin, then install ${plugin.name}` : undefined;
+    const cursorCommand = hasCursor ? `agent # enter /plugin, then install ${plugin.name}` : undefined;
     const antigravityCommand = hasAntigravity ? `uv run .github/scripts/antigravity.py install ${plugin.name}` : undefined;
     const components = directory
       ? {
@@ -385,7 +385,7 @@ export const codingTools = [
     id: "cursor",
     icon: "cursor",
     label: "Cursor",
-    marketplace: `cursor-agent plugin marketplace add ${repositoryUrl}`,
+    marketplace: `agent plugin marketplace add ${repositoryUrl}`,
   },
   { id: "antigravity", icon: "antigravity", label: "Antigravity CLI", marketplace: undefined },
 ] as const;

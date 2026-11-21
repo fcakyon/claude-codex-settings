@@ -1,7 +1,7 @@
 {
   "$schema": "https://antigravity.google/schemas/v1/plugin.json",
   "name": "ultralytics-dev",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
   "author": {
     "name": "Fatih C. Akyon"

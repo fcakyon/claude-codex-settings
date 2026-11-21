@@ -17,7 +17,7 @@ Regenerate the Plugins section of README.md based on current plugin structure an
    - Agents: use `.claude-plugin/plugin.json` `agents` paths when set, otherwise `plugins/<name>/agents/*.md`
    - Hooks: use `.claude-plugin/plugin.json` `hooks` paths when set, otherwise `plugins/<name>/hooks/hooks.json`
    - MCP: `plugins/<name>/.mcp.json`
-   - Antigravity: include its install command only when `.antigravity-plugin/plugin.json` exists; the installer packages skills and MCP servers, not Claude hooks or agents
+   - Antigravity: include its install command only when `.antigravity-plugin/plugin.json` exists. The installer packages skills, MCP servers, and shell and file-edit hooks, not agents
 
 3. Update each plugin's `<details>` block in README.md. Use this format:
 
@@ -25,9 +25,9 @@ Regenerate the Plugins section of README.md based on current plugin structure an
 <details>
 <summary><strong>plugin-name</strong> - Short description</summary>
 
-| Claude Code                                         | Codex CLI                                      | Cursor                                                   | Antigravity CLI                                               |
-| --------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------- |
-| `claude plugin install plugin-name@claude-settings` | `codex plugin add plugin-name@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install plugin-name` |
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
+| --- | --- | --- | --- |
+| `claude plugin install plugin-name@claude-settings` | `codex plugin add plugin-name@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install plugin-name` |
 
 **Skills CLI**
 
@@ -64,13 +64,13 @@ One-line description.
 ```markdown
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):
 
-| Skill                                                            | Description | ZIP                                                                                                                                                                |
-| ---------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Skill | Description | ZIP |
+| --- | --- | --- |
 | [`skill-name`](./plugins/plugin-name/skills/skill-name/SKILL.md) | Description | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/skill-name.zip) |
 ```
 
 6. Also update the Installation section if plugin names have changed.
    - Cursor installation is interactive. Do not invent a direct Cursor install command.
-   - Add the marketplace with `cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings`, then tell the reader to run `cursor-agent` and enter `/plugin`.
+   - Add the marketplace with `agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings`, then tell the reader to run `agent` and enter `/plugin`.
 
 7. Do NOT modify non-plugin sections (header, Configuration, Statusline, TODO, References, Star History).

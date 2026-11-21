@@ -21,9 +21,9 @@ description: |-
   No PR number given, agent should auto-detect from current branch.
   </commentary>
   </example>
-tools: ["Bash", "BashOutput", "Glob", "Grep", "Read", "Edit", "Write", "TodoWrite"]
+tools: ["Bash", "Glob", "Grep", "Read", "Edit", "Write", "TodoWrite"]
 color: yellow
-skills: resolve-pr-comments
+skills: [resolve-pr-comments]
 model: inherit
 ---
 

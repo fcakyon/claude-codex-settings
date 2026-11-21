@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
-"""Check Antigravity bundle packaging and settings sync."""
+"""Check Antigravity bundle packaging, hook conversion, and settings sync."""
+
+from __future__ import annotations
 
 import json
+import os
+import re
+import shlex
+import shutil
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 
 from antigravity import (
     CONFIG_TEMPLATE,
+    HOOK_ADAPTER,
     MANIFEST,
     ROOT,
     SETTINGS_TEMPLATE,
@@ -100,6 +108,113 @@ class PackagingTests(unittest.TestCase):
             written = json.loads(settings_path.read_text())
             self.assertEqual(written["trustedWorkspaces"], ["/tmp/project"])
             self.assertEqual(written["agentMode"], "auto")
+
+
+class HookTests(unittest.TestCase):
+    """Verify converted hooks block the same tool calls under Antigravity as under Claude Code."""
+
+    @classmethod
+    def setUpClass(cls):
+        """Package the hook plugins once into a shared bundle directory."""
+        cls.base = Path(tempfile.mkdtemp())
+        cls.addClassCleanup(shutil.rmtree, cls.base)
+        for name in ("github-dev", "humanize", "tavily-tools"):
+            package_plugin(ROOT / "plugins" / name, cls.base / name)
+
+    @staticmethod
+    def run_hook(
+        command: str, cwd: Path, tool: str, args: dict, event: str = "PreToolUse", env: dict | None = None
+    ) -> dict:
+        """Run a native hook command with an Antigravity tool call on stdin.
+
+        Args:
+            command (str): Native hook shell command.
+            cwd (Path): Directory the hook runs in, the bundle root for converted hooks.
+            tool (str): Antigravity tool name.
+            args (dict): Antigravity tool arguments.
+            event (str, optional): Antigravity hook event name.
+            env (dict, optional): Extra environment variables for the hook process.
+
+        Returns:
+            (dict): Parsed hook answer.
+        """
+        payload = {"hookEventName": event, "cwd": str(cwd), "toolCall": {"name": tool, "args": args}}
+        result = subprocess.run(
+            command,
+            shell=True,
+            cwd=cwd,
+            input=json.dumps(payload),
+            capture_output=True,
+            text=True,
+            check=True,
+            env={**os.environ, **(env or {})},
+        )
+        return json.loads(result.stdout)
+
+    def decisions(self, plugin: str, tool: str, args: dict, env: dict | None = None) -> list[dict]:
+        """Return the answer of each converted PreToolUse hook group of a bundle that matches a tool call."""
+        entries = json.loads((self.base / plugin / "hooks.json").read_text())[plugin]["PreToolUse"]
+        return [
+            self.run_hook(entry["hooks"][0]["command"], self.base / plugin, tool, args, env=env)
+            for entry in entries
+            if re.fullmatch(entry["matcher"], tool)
+        ]
+
+    def test_bundles_hold_native_hooks(self):
+        """Write hooks.json at the bundle root with Antigravity tool names and runnable scripts."""
+        hooks = json.loads((self.base / "humanize/hooks.json").read_text())
+        self.assertEqual(
+            [entry["matcher"] for entry in hooks["humanize"]["PreToolUse"]],
+            ["write_file|write_to_file|edit_file|replace_file_content|multi_replace_file_content", "run_command"],
+        )
+        self.assertNotIn("CLAUDE_PLUGIN_ROOT", (self.base / "github-dev/hooks.json").read_text())
+        self.assertEqual((self.base / "humanize/hooks/antigravity_hook.py").read_bytes(), HOOK_ADAPTER.read_bytes())
+        self.assertTrue((self.base / "github-dev/hooks/scripts/commit_message.py").is_file())
+        self.assertFalse((self.base / "tavily-tools/hooks.json").exists())
+
+    def test_commit_hooks_decide_like_claude(self):
+        """Deny a commit without a verification trailer, allow one with it, and skip Claude-only prompts."""
+        (answer,) = self.decisions("github-dev", "run_command", {"CommandLine": 'git commit -m "fix: tidy"'})
+        self.assertEqual(answer["decision"], "deny")
+        self.assertIn("verification:", answer["reason"])
+        for command in ('git commit -m "fix: tidy" -m "verification: none (docs)"', "gh pr create --title t --body b"):
+            answers = self.decisions("github-dev", "run_command", {"CommandLine": command}, {"CLAUDECODE": "1"})
+            self.assertEqual([a["decision"] for a in answers], ["allow"], command)
+
+    def test_humanize_checks_writes_edits_and_commands(self):
+        """Deny buzzwords in written files, single and multi-chunk edits, and commit messages."""
+        (self.base / "notes.md").write_text("hello world\n")
+        path = str(self.base / "notes.md")
+        for tool, args in (
+            ("write_file", {"Path": path, "Content": "We delve into it.\n"}),
+            ("write_to_file", {"TargetFile": path, "CodeContent": "We delve into it.\n"}),
+            ("edit_file", {"Path": path, "Target": "hello", "Replacement": "we delve into"}),
+            (
+                "replace_file_content",
+                {"TargetFile": path, "TargetContent": "hello", "ReplacementContent": "we delve into"},
+            ),
+            (
+                "multi_replace_file_content",
+                {"TargetFile": path, "ReplacementChunks": [{"TargetContent": "world", "ReplacementContent": "delve"}]},
+            ),
+            ("run_command", {"CommandLine": 'git commit -m "fix: delve into it"'}),
+        ):
+            with self.subTest(tool=tool):
+                self.assertEqual([a["decision"] for a in self.decisions("humanize", tool, args)], ["deny"])
+        (answer,) = self.decisions("humanize", "write_file", {"Path": path, "Content": "Plain words.\n"})
+        self.assertEqual(answer["decision"], "allow")
+
+    def test_adapter_maps_exit_codes_and_events(self):
+        """Let a deny win, turn exit 2 into a deny and other failures into an allow, and answer PostToolUse with {}."""
+        for commands, event, expected in (
+            (["exit 0", "echo nope >&2; exit 2"], "PreToolUse", {"decision": "deny", "reason": "nope"}),
+            (["exit 1"], "PreToolUse", {"decision": "allow", "reason": ""}),
+            (["exit 2"], "PostToolUse", {}),
+        ):
+            command = shlex.join(["python3", str(HOOK_ADAPTER), *commands])
+            self.assertEqual(
+                self.run_hook(command, self.base, "run_command", {"CommandLine": "ls"}, event), expected, commands
+            )
 
 
 if __name__ == "__main__":

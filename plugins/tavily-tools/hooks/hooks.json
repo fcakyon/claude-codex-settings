@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/webfetch_to_tavily_extract.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/webfetch_to_tavily_extract.py"
           }
         ]
       },
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/websearch_to_tavily_search.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/websearch_to_tavily_search.py"
           }
         ]
       },
@@ -25,7 +25,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tavily_extract_to_advanced.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/tavily_extract_to_advanced.py"
           }
         ]
       }

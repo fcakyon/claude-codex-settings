@@ -1,5 +1,5 @@
 {
-  "description": "Git workflow hooks: block AI attribution and unsupported commit types, then confirm commits and PRs",
+  "description": "Git workflow hooks: block AI attribution, unsupported commit types and missing verification trailers, then confirm commits and PRs",
   "hooks": {
     "PreToolUse": [
       {
@@ -7,23 +7,23 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/block_ai_attribution.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/block_ai_attribution.py"
           },
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/block_commit_type.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/block_commit_format.py"
           },
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/git_commit_confirm.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/git_commit_confirm.py"
           },
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/require_visual_proof.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/require_visual_proof.py"
           },
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/gh_pr_create_confirm.py"
+            "command": "\"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/gh_pr_create_confirm.py"
           }
         ]
       }

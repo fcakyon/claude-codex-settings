@@ -5,7 +5,6 @@ description: |-
 tools:
   [
     "Bash",
-    "BashOutput",
     "Glob",
     "Grep",
     "Read",
@@ -16,7 +15,7 @@ tools:
     "mcp__tavily__tavily_extract",
   ]
 color: blue
-skills: commit-staged
+skills: [commit-staged]
 model: inherit
 ---
 
