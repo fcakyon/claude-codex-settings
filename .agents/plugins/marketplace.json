@@ -17,6 +17,12 @@
       "category": "development"
     },
     {
+      "name": "swift-skills",
+      "source": { "source": "local", "path": "./plugins/swift-skills" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "development"
+    },
+    {
       "name": "typescript-skills",
       "source": {
         "source": "local",
