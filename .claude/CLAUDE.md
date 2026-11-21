@@ -23,7 +23,7 @@ Ask yourself: "What can I delete instead of add, and does this trace to what was
 - Prefer editing existing files, and check related code for consistency. Never create docs (*.md, README) unless asked. Keep verified findings in tracked AGENTS.md, CLAUDE.md or skill files, not tool memory.
 - Prefer `rg` over `grep`.
 - Use the `writing-guidelines` skill to review documentation or interface copy, and the `humanize` skill to remove generic or machine-written phrasing.
-- For SEO, Google Analytics, and Search Console, use the `seo-skills` (`seo-audit`, `site-architecture`, `programmatic-seo`, `schema`) or `google-telemetry` (`google-telemetry`, `setup`) skills.
+- For SEO, use the `seo-audit`, `site-architecture`, `programmatic-seo`, or `schema` skill based on the task.
 - Use the `anthropic-frontend-design` or `openai-frontend-design` skill when creating or reshaping a UI.
 - **Keep users out of the machinery.** In apps you build and in your own work, connect, repair, sync and resume automatically, and keep the user's selection across every step. Show a prompt, popup, permission request or input only when the user must act, label it as that action (Connect) rather than a warning or permission, and never ask for something you can find out: inspect state, source and logs and test it yourself, then ask only for the smallest distinguishing step.
 
@@ -68,7 +68,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ### Commit Messages
 
-- Run the `/simplify` skill on the staged diff before every commit, docs-only commits included, as four parallel review agents, never inline.
+- Run the `/simplify` skill on the staged diff before every commit, docs-only commits included, as four parallel review agents, never inline. Before pushing to or merging into `main`, also run `/code-review --fix` on all commits not yet on `main` (`git diff origin/main...HEAD`). Local and branch commits don't need it.
 - Format: `{type}: brief description` (max 50 chars first line)
 - Optional second line: 1 sentence with findings/motivation
 - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
