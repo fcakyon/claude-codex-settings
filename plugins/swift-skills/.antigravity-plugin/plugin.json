@@ -3,5 +3,7 @@
   "name": "swift-skills",
   "version": "1.0.0",
   "description": "Write and review SwiftUI apps with practical coding guidance.",
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
   "license": "MIT"
 }
