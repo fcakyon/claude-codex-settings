@@ -19,6 +19,8 @@ Use the available image-viewing tool to inspect current captures and record the 
 
 ## Build and freeze
 
+For scratch screenshot renders, use the exact build configuration and artifacts the suite just verified. Resolve Swift binary paths with the suite’s configuration, scratch path and build flags, never a bare `swift build --show-bin-path` after a configured test run. Installed acceptance instead inspects the exact frozen signed candidate, with source and build provenance verified against the tested revision. For copy changes, confirm a recently changed string appears in the rendered candidate before accepting visual evidence.
+
 Build once into a private scratch directory. Keep this exact helper binary after granting the automation harness access. Recompiling it can change its permission identity.
 
 ```sh

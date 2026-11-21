@@ -133,7 +133,7 @@
       "name": "frontend-design-skills",
       "source": "./plugins/frontend-design-skills",
       "description": "Design frontends, test interactions, and write clear interface copy.",
-      "version": "1.3.3",
+      "version": "1.3.4",
       "license": "Apache-2.0"
     },
     {
@@ -308,7 +308,7 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.9.0",
+      "version": "1.9.1",
       "license": "Apache-2.0"
     },
     {
