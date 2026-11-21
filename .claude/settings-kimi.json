@@ -167,7 +167,7 @@
     "reusable-app-components@claude-settings": true,
     "qa@claude-settings": true,
     "agent-browser@claude-settings": true,
-    "intelligent-compact@claude-settings": true,
+    "intelligent-compact@claude-settings": false,
     "github-dev@claude-settings": true,
     "humanize@claude-settings": true
   },

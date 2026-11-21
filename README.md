@@ -1289,7 +1289,7 @@ Configuration in [`.claude/settings.json`](./.claude/settings.json):
 - **Permissions**: bash commands, git operations, MCP tools
 - **Auto mode**: `auto` permission mode with a custom `autoMode` classifier block in [`.claude/settings.json`](./.claude/settings.json) - see the [auto mode config reference](https://code.claude.com/docs/en/auto-mode-config) for what each rule section does, and run `claude auto-mode defaults` to print the current built-in block and allow rules
 - **Advisor**: the built-in [advisor tool](https://code.claude.com/docs/en/advisor) uses Fable 5.1. For a review outside the Claude family, use [`codex-advisor`](./plugins/codex-advisor)
-- **Plugins**: `codex-advisor` is enabled in both Claude Code and Codex. Claude Code also enables `intelligent-compact`. Standalone `fable-advisor` stays enabled only in Codex
+- **Plugins**: `codex-advisor` is enabled in both Claude Code and Codex. Both leave `intelligent-compact` turned off. Standalone `fable-advisor` stays enabled only in Codex
 
 </details>
 
