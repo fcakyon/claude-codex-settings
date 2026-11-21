@@ -83,7 +83,9 @@ def convert_hooks(plugin: Path) -> dict:
     events, source = {}, _read_json(plugin / "hooks/hooks.json").get("hooks", {})
     for event in ("PreToolUse", "PostToolUse"):
         for entry in source.get(event, []):
-            matcher = "|".join(native for native, tool in HOOK_TOOLS.items() if re.fullmatch(entry["matcher"], tool))
+            # Claude Code treats a missing, empty or "*" matcher as every tool
+            pattern = entry.get("matcher") or "*"
+            matcher = "|".join(native for native, tool in HOOK_TOOLS.items() if pattern == "*" or re.fullmatch(pattern, tool))
             hooks = [hook for hook in entry["hooks"] if hook["type"] == "command"]
             if matcher and hooks:
                 commands = (shlex.quote(hook["command"].replace("${CLAUDE_PLUGIN_ROOT}", ".")) for hook in hooks)
@@ -126,8 +128,7 @@ def package_plugin(plugin: Path, target: Path) -> None:
                 "Continue reading if a tool truncates it. Resolve its relative paths from this directory.\n"
             )
     if (plugin / ".mcp.json").exists():
-        servers = _read_json(plugin / ".mcp.json")
-        _write_json(target / "mcp_config.json", {"mcpServers": servers})
+        shutil.copyfile(plugin / ".mcp.json", target / "mcp_config.json")
     if hooks := convert_hooks(plugin):
         shutil.copytree(plugin / "hooks/scripts", target / "hooks/scripts", ignore=COPY_IGNORE)
         shutil.copy2(HOOK_ADAPTER, target / "hooks/antigravity_hook.py")

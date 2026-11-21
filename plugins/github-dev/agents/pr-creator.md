@@ -15,7 +15,7 @@ tools:
     "mcp__tavily__tavily_extract",
   ]
 color: cyan
-skills: create-pr, commit-staged
+skills: [create-pr, commit-staged]
 model: inherit
 ---
 

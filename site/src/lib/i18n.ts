@@ -44,7 +44,7 @@ export const translations = {
         tools: [
           "Then run <code>claude plugin install plugin_name@claude-settings</code>.",
           "Then run <code>codex plugin add plugin_name@claude-settings</code> and start a new session.",
-          "Then run <code>cursor-agent</code> and enter <code>/plugin</code> to pick a plugin.",
+          "Then run <code>agent</code> and enter <code>/plugin</code> to pick a plugin.",
           "Run it inside a clone of this repository.",
         ],
       },
@@ -136,7 +136,7 @@ export const translations = {
         tools: [
           "然后运行 <code>claude plugin install plugin_name@claude-settings</code>。",
           "然后运行 <code>codex plugin add plugin_name@claude-settings</code>，并开启新会话。",
-          "然后运行 <code>cursor-agent</code>，输入 <code>/plugin</code> 选择插件。",
+          "然后运行 <code>agent</code>，输入 <code>/plugin</code> 选择插件。",
           "请在本仓库的克隆目录中运行。",
         ],
       },

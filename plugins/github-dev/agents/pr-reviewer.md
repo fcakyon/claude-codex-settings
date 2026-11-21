@@ -5,7 +5,7 @@ description: |-
 model: inherit
 color: blue
 tools: ["Read", "Grep", "Glob", "Bash"]
-skills: review-pr
+skills: [review-pr]
 ---
 
 You are a code reviewer. Find issues that **require fixes**.

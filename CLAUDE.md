@@ -160,7 +160,7 @@ name: agent-name
 description: |-
   Use this agent when... Examples: <example>...</example>
 tools: [Bash, Glob, Grep, Read, Edit, Write]
-skills: related-skill-name
+skills: [related-skill-name]
 model: inherit
 color: blue
 ---
@@ -170,8 +170,8 @@ color: blue
 - `name`: kebab-case, 3-50 chars
 - `model`: inherit, sonnet, opus, haiku, fable (or a full model ID like `claude-opus-5`)
 - `color`: red, blue, green, yellow, purple, orange, pink, cyan
-- `tools`: array of allowed tool names
-- `skills`: optional, skill name(s) to load
+- `tools`: YAML list of allowed tool names, without removed tools such as `BashOutput` or `MultiEdit`
+- `skills`: optional YAML list of skill names to load. Antigravity skips an agent whose `tools` or `skills` is a string
 
 If an agent selects a Claude-only model, keep it outside the shared `agents/`
 directory and point to it with the Claude manifest's `agents` field. Cursor only
@@ -292,9 +292,9 @@ Commands work in Claude Code and Cursor, which reads only `name` and `descriptio
 
 ### Antigravity packaging
 
-Use `uv run .github/scripts/antigravity.py install <plugin...>` after cloning this repo, or `uv run .github/scripts/antigravity.py sync` to install the curated plugin set and merge `.gemini/config/config.json` and `.gemini/antigravity-cli/settings.json` into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. The installer copies shared skills and their scripts/assets into a temporary native bundle, normalizes skill folder names, keeps bodies over 24,000 bytes in `INSTRUCTIONS.md`, converts `.mcp.json` to native `mcp_config.json`, and calls `agy plugin install`. It converts PreToolUse and PostToolUse command hooks on Bash, Write, Edit, and MultiEdit (see Antigravity hooks) and excludes agents, commands, output styles, and every other hook. Plugins with none of the supported components have no Antigravity manifest and no install option.
+Use `uv run .github/scripts/antigravity.py install <plugin...>` after cloning this repo, or `uv run .github/scripts/antigravity.py sync` to install the curated plugin set and merge `.gemini/config/config.json` and `.gemini/antigravity-cli/settings.json` into `~/.gemini` while keeping local plugins and `trustedWorkspaces`. The installer copies shared skills and their scripts/assets into a temporary native bundle, normalizes skill folder names, keeps bodies over 24,000 bytes in `INSTRUCTIONS.md`, copies `.mcp.json` to native `mcp_config.json`, and calls `agy plugin install`. It converts PreToolUse and PostToolUse command hooks on Bash, Write, Edit, and MultiEdit (see Antigravity hooks) and excludes agents, commands, output styles, and every other hook. Plugins with none of the supported components have no Antigravity manifest and no install option.
 
-Run `uv run .github/scripts/antigravity.py validate` with `agy` on PATH to validate every bundle with `agy plugin validate --strict`. CI runs this alongside the shared plugin checks. Native validation and hook behavior were checked with Antigravity CLI 1.5.14. Its native bundles read MCP servers from `mcp_config.json`, while portable Agent Plugins use a different schema and `mcp.json`.
+Native validation and hook behavior were checked with Antigravity CLI 1.5.14. Its native bundles read MCP servers from `mcp_config.json`, while portable Agent Plugins use a different schema and `mcp.json`.
 
 #### Antigravity hooks
 
@@ -305,7 +305,7 @@ Run `uv run .github/scripts/antigravity.py validate` with `agy` on PATH to valid
 - `.github/scripts/antigravity_hook.py` runs every command of a converted group. It rewrites the input to Claude's `tool_name`, `tool_input`, and `cwd`, drops the `CLAUDECODE` that agy inherits when started inside Claude Code, and returns the strictest Claude deny, ask, or exit 2 as `decision`, so each hook script keeps one source for all tools. Hooks gated on `CLAUDECODE` (the commit and PR confirmations, the simplify guard) stay inert under Antigravity.
 - For a live check without a global install, put the converted groups in a scratch workspace's `.agents/hooks.json` with absolute `cd <bundle> &&` prefixes and run `agy -p`.
 
-Codex and Cursor both support portable Agent Plugins (`plugin.json` and `mcp.json`) as well as their compatibility layouts. Cursor reads MCP servers from `mcp.json` at the plugin root or the `mcpServers` path in `.cursor-plugin/plugin.json`, not from `.mcp.json`. Keep the current compatibility manifests for existing hooks and agents. Share source metadata and skills, but retain separate marketplace adapters: Codex uses `.agents/plugins/marketplace.json` with structured `source` and `policy`; Cursor uses `.cursor-plugin/marketplace.json` with its own entry fields. `agy plugin install` takes a local folder, a GitHub repo URL, or `<name>@antigravity-plugins-official`, and accepts no other marketplace name. On a raw Claude Code plugin it maps hook matchers but leaves hook inputs and outputs unconverted, so keep the bundler.
+Codex and Cursor both support portable Agent Plugins (`plugin.json` and `mcp.json`) as well as their compatibility layouts. Keep `.mcp.json` in the `{"mcpServers": {...}}` form that all four tools read, and set `"mcpServers": "./.mcp.json"` in `.cursor-plugin/plugin.json`, because Cursor otherwise only looks for `mcp.json`. Keep the current compatibility manifests for existing hooks and agents. Share source metadata and skills, but retain separate marketplace adapters: Codex uses `.agents/plugins/marketplace.json` with structured `source` and `policy`. Cursor uses `.cursor-plugin/marketplace.json` with its own entry fields. `agy plugin install` takes a local folder, a GitHub repo URL, or `<name>@antigravity-plugins-official`, and accepts no other marketplace name. On a raw Claude Code plugin it maps hook matchers but leaves hook inputs and outputs unconverted, so keep the bundler.
 
 ### Updating
 
@@ -348,7 +348,7 @@ All plugins use local sources: `"source": "./plugins/<plugin-name>"`. For extern
 
 ### plugin.json fields
 
-Local plugins use: `name`, `version`, `description`, `homepage`, `repository`, `license`. Author is optional (skip for third-party plugins). Give new plugins names that do not start with `claude-`, `anthropic-`, `anthropics-`, or `cc-plugin-`. `claude plugin validate` rejects those prefixes, so the existing `claude-*` and `anthropic-*` plugins fail marketplace validation while Claude Code still installs them.
+Local plugins use: `name`, `version`, `description`, `homepage`, `repository`, `license`. Author is optional (skip for third-party plugins). Give new plugins names that do not start with `claude-`, `anthropic-`, `anthropics-`, or `cc-plugin-`. `claude plugin validate` rejects those prefixes. The existing `claude-*` and `anthropic-*` plugins keep their names so installs keep updating, and CI ignores only that error.
 
 ### SKILL.md frontmatter
 
@@ -412,6 +412,16 @@ This repo contains config files (JSON settings, allowlist rules, hooks) rather t
 - Keep PR bodies short: lead with why, short scannable bullets (one point each), a diff or snippet, numbers over adjectives
 - PR titles and bodies must read standalone months later: never reference session shorthand ("PR-cf", "the last orphan content PR"), only real PR numbers (`#176`)
 - Site design changes need before/after visuals in the PR body, never a text description of the change. Never commit visuals into the repo: upload with `gh release upload <tag> shot.png` and link the `releases/download/<tag>/shot.png` URL
+
+## Validation
+
+CI runs three checks on every PR. Run them locally before pushing plugin changes.
+
+- `python .github/scripts/validate_plugins.py`: static rules no CLI enforces, including the agent, MCP, and Cursor marketplace rules above.
+- `uv run .github/scripts/antigravity.py validate`: `agy plugin validate --strict` on every native bundle.
+- `python .github/scripts/validate_providers.py`: `claude plugin validate` on the marketplace and every plugin, failing on any finding except reserved names and missing authors. It also installs every plugin into an empty `CODEX_HOME` and fails when Codex rejects a plugin, warns about a hook or skill, or loads fewer skills and commands than the repo declares. Codex silently drops a command file over about 3.8 KB.
+
+Cursor has no validator, and its CLI needs a login, so its rules live in `validate_plugins.py`.
 
 ## Maintenance Scripts
 

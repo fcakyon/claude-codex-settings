@@ -7,6 +7,7 @@ import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -116,6 +117,7 @@ class HookTests(unittest.TestCase):
     def setUpClass(cls):
         """Package the hook plugins once into a shared bundle directory."""
         cls.base = Path(tempfile.mkdtemp())
+        cls.addClassCleanup(shutil.rmtree, cls.base)
         for name in ("github-dev", "humanize", "tavily-tools"):
             package_plugin(ROOT / "plugins" / name, cls.base / name)
 

@@ -16,6 +16,8 @@ from antigravity import MANIFEST, manifest_for, parse_frontmatter
 
 VALID_MODEL_ALIASES = {"inherit", "sonnet", "opus", "haiku", "fable"}
 VALID_AGENT_COLORS = {"red", "blue", "green", "yellow", "purple", "orange", "pink", "cyan"}
+# Claude Code tools that no longer exist, so an agent listing them gets nothing
+REMOVED_TOOLS = {"BashOutput", "KillBash", "KillShell", "MultiEdit", "TaskOutput"}
 
 
 def is_valid_model(value: object) -> bool:
@@ -169,11 +171,12 @@ def validate_agents(plugin_dir: Path) -> list[str]:
         elif frontmatter["color"] not in VALID_AGENT_COLORS:
             errors.append(f"{prefix}: 'color' must be one of {sorted(VALID_AGENT_COLORS)}: '{frontmatter['color']}'")
 
-        # Validate tools field if present
-        if "tools" in frontmatter:
-            tools = frontmatter["tools"]
-            if not isinstance(tools, list):
-                errors.append(f"{prefix}: 'tools' must be array")
+        # Antigravity skips an agent whose tools or skills are not YAML lists, Claude Code reads both forms
+        for key in ("tools", "skills"):
+            if key in frontmatter and not isinstance(frontmatter[key], list):
+                errors.append(f"{prefix}: '{key}' must be a YAML list")
+        if removed := REMOVED_TOOLS.intersection(frontmatter.get("tools") or []):
+            errors.append(f"{prefix}: 'tools' lists removed Claude Code tools: {', '.join(sorted(removed))}")
 
         # Check body exists
         if not body or len(body.strip()) < 20:
@@ -332,9 +335,14 @@ def validate_mcp(plugin_dir: Path) -> list[str]:
 
     try:
         with open(mcp_json) as f:
-            json.load(f)
+            config = json.load(f)
     except json.JSONDecodeError as e:
-        errors.append(f"{plugin_dir.name}/.mcp.json: Invalid JSON - {e}")
+        return [f"{plugin_dir.name}/.mcp.json: Invalid JSON - {e}"]
+    # Cursor and Codex read the {"mcpServers": {...}} form, and Cursor only finds mcp.json unless pointed here
+    if not isinstance(config.get("mcpServers"), dict):
+        errors.append(f"{plugin_dir.name}/.mcp.json: wrap the servers in an 'mcpServers' object")
+    if (load_json(plugin_dir / ".cursor-plugin" / "plugin.json") or {}).get("mcpServers") != "./.mcp.json":
+        errors.append(f'{plugin_dir.name}/.cursor-plugin/plugin.json: set "mcpServers": "./.mcp.json"')
 
     return errors
 
@@ -423,6 +431,8 @@ def validate_marketplace_alignment() -> list[str]:
         if not data:
             errors.append(f"{label} marketplace: missing {path.relative_to(REPO_ROOT)}")
             continue
+        if label == "cursor" and not data.get("owner", {}).get("name"):
+            errors.append("cursor marketplace: Cursor requires a top-level owner with a name")
         other_names = {e["name"] for e in data.get("plugins", []) if e.get("name")}
         missing = local_names - other_names
         extra = other_names - local_names

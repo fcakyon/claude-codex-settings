@@ -83,10 +83,10 @@ In the Codex desktop app, open **Plugins**, find the plugin, and select **Instal
 
 ```bash
 # Add marketplace (one time)
-cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
+agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
 
 # Start the interactive CLI
-cursor-agent
+agent
 ```
 
 Enter `/plugin`, open the marketplace, and install the plugin at user or project scope. In the Cursor app, open **Customize** and select **Install**.

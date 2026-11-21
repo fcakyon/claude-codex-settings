@@ -68,6 +68,12 @@ jobs:
       - name: Validate Antigravity bundles
         run: python .github/scripts/antigravity.py validate
 
+      - name: Install Claude Code and Codex CLIs
+        run: npm install -g @anthropic-ai/claude-code@2.1.330 @openai/codex@0.171.0
+
+      - name: Validate plugins with the Claude Code and Codex CLIs
+        run: python .github/scripts/validate_providers.py
+
       - name: Verify Chrome skill sync and staged checks
         run: |
           bash .github/scripts/sync-modern-web-guidance.sh

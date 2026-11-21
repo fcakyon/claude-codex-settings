@@ -1,9 +1,10 @@
 {
   "name": "tavily-tools",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "Search the web and extract pages with Tavily, and route built-in web tools to it.",
   "author": {
     "name": "Fatih C. Akyon"
   },
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "mcpServers": "./.mcp.json"
 }

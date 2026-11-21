@@ -1,6 +1,9 @@
 {
   "name": "claude-settings",
   "displayName": "Claude & Cursor Settings",
+  "owner": {
+    "name": "Fatih C. Akyon"
+  },
   "plugins": [
     {
       "name": "heroui-skills",
@@ -74,14 +77,14 @@
       "name": "intelligent-compact",
       "source": "./plugins/intelligent-compact",
       "description": "Keep file paths, root causes, and open questions through auto-summaries.",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-telemetry-hooks",
       "source": "./plugins/claude-telemetry-hooks",
       "description": "Track Claude Code usage, rejections, and session stats in one dashboard.",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "license": "Apache-2.0"
     },
     {
@@ -179,7 +182,7 @@
       "name": "web-performance-skills",
       "source": "./plugins/web-performance-skills",
       "description": "Web performance audits with Core Web Vitals and Chrome DevTools.",
-      "version": "1.0.5",
+      "version": "1.0.6",
       "license": "Apache-2.0"
     },
     {
@@ -214,7 +217,7 @@
       "name": "ultralytics-dev",
       "source": "./plugins/ultralytics-dev",
       "description": "YOLO training and Ultralytics Platform skills, with format and force-push hooks.",
-      "version": "2.5.1",
+      "version": "2.5.2",
       "license": "Apache-2.0"
     },
     {
@@ -228,21 +231,21 @@
       "name": "azure-tools",
       "source": "./plugins/azure-tools",
       "description": "Query and manage Azure resources through the Azure MCP server and Azure CLI login.",
-      "version": "2.0.5",
+      "version": "2.0.6",
       "license": "Apache-2.0"
     },
     {
       "name": "claude-tools",
       "source": "./plugins/claude-tools",
       "description": "Sync CLAUDE.md and the permissions allowlist, and refresh context on demand.",
-      "version": "2.1.6",
+      "version": "2.1.7",
       "license": "Apache-2.0"
     },
     {
       "name": "gcloud-tools",
       "source": "./plugins/gcloud-tools",
       "description": "Query Google Cloud logs, metrics, and traces through the Cloud Observability MCP.",
-      "version": "2.0.6",
+      "version": "2.0.7",
       "license": "Apache-2.0"
     },
     {
@@ -256,7 +259,7 @@
       "name": "tavily-tools",
       "source": "./plugins/tavily-tools",
       "description": "Search the web and extract pages with Tavily, and route built-in web tools to it.",
-      "version": "2.0.6",
+      "version": "2.0.7",
       "license": "Apache-2.0"
     },
     {

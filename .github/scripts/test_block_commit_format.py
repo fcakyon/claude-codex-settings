@@ -79,6 +79,8 @@ class BlockCommitFormatTest(unittest.TestCase):
             "git commit -F - <<'MSG'\nfix: tidy\n\nVerification: tests passed\nMSG",
             'git commit -m "fix: tidy" -m "verification:"',
             'git commit -m "fix: tidy" -m "verification: none (docs)" && git commit -m "docs: add notes"',
+            'git commit -m "fix: tidy" -m "verification: lint passed" -m "more body"',
+            'git commit -m "fix: tidy\nverification: lint passed"',
         ):
             with self.subTest(command=command):
                 output = self.run_hook(command)
@@ -96,6 +98,9 @@ class BlockCommitFormatTest(unittest.TestCase):
             "cat > ./msg.txt <<'EOF'\nfix: tidy\n\nverification: lint passed\nEOF\ngit commit -F msg.txt",
             "# don't forget to stage\ngit add . && git commit -m \"fix: close #12\" -m \"verification: none (typo)\"",
             "git commit --amend --no-edit",
+            'git commit -m "fix: tidy" --trailer "verification=lint passed"',
+            'git commit -m "fix: tidy" --trailer="verification: lint passed"',
+            'git commit -m "fix: tidy" -m "verification: lint passed\nRef: #12"',
         ):
             with self.subTest(command=command):
                 self.assertIsNone(self.run_hook(command))

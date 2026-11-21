@@ -84,10 +84,10 @@ Requires [Antigravity CLI](https://antigravity.google/docs/getting-started) and 
 
 ```bash
 # Add marketplace (one time)
-cursor-agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
+agent plugin marketplace add https://github.com/fcakyon/claude-codex-settings
 
 # Start the interactive CLI
-cursor-agent
+agent
 ```
 
 Enter `/plugin`, open the marketplace, and install the plugin at user or project scope. In the Cursor app, open **Customize** and select **Install**.
@@ -107,7 +107,7 @@ ln -sfn CLAUDE.md AGENTS.md # Codex, Cursor, Antigravity, Copilot
 
 | Codex CLI | Cursor | Antigravity CLI |
 | --------- | ------ | --------------- |
-| `codex plugin add code-review@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install code-review` |
+| `codex plugin add code-review@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install code-review` |
 
 **Skills CLI**
 
@@ -134,7 +134,7 @@ Review your current changes before a direct push, or specify a branch, commit ra
 
 | Codex CLI | Cursor | Antigravity CLI |
 | --------- | ------ | --------------- |
-| `codex plugin add simplify@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install simplify` |
+| `codex plugin add simplify@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install simplify` |
 
 Use `simplify` in Codex, Cursor, or Antigravity to review your staged or committed diff for reuse, simplification, efficiency, and fix placement. The skill reviews all four angles in parallel and applies the cleanups.
 
@@ -181,7 +181,7 @@ The hook runs on Claude Code and Codex, and on Antigravity CLI for file writes a
 
 | Codex CLI | Cursor | Antigravity CLI |
 | --------- | ------ | --------------- |
-| `codex plugin add fable-advisor@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install fable-advisor` |
+| `codex plugin add fable-advisor@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install fable-advisor` |
 
 Ask a Fable 5.1 reviewer to challenge a plan or conclusion from Codex, Cursor, or Antigravity. The skill calls Fable through an authenticated Claude CLI.
 
@@ -1080,7 +1080,7 @@ Pull reviewer comments from an Overleaf project, locate each in your local git-t
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install aeo@claude-settings` | `codex plugin add aeo@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install aeo` |
+| `claude plugin install aeo@claude-settings` | `codex plugin add aeo@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install aeo` |
 
 **Skills CLI**
 
@@ -1110,7 +1110,7 @@ Use it for a strategy, audit, prompt portfolio, content brief, or performance re
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install google-telemetry@claude-settings` | `codex plugin add google-telemetry@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install google-telemetry` |
+| `claude plugin install google-telemetry@claude-settings` | `codex plugin add google-telemetry@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install google-telemetry` |
 
 **Skills CLI**
 
@@ -1168,7 +1168,7 @@ Locally maintained SEO workflows, originally adapted from [Vercel’s SEO skills
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install openship-skills@claude-settings` | `codex plugin add openship-skills@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install openship-skills` |
+| `claude plugin install openship-skills@claude-settings` | `codex plugin add openship-skills@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install openship-skills` |
 
 **Skills CLI**
 
@@ -1199,7 +1199,7 @@ References are tied to one upstream release. The two skills work together and ca
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install reusable-app-components@claude-settings` | `codex plugin add reusable-app-components@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install reusable-app-components` |
+| `claude plugin install reusable-app-components@claude-settings` | `codex plugin add reusable-app-components@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install reusable-app-components` |
 
 **Skills CLI**
 
@@ -1254,7 +1254,7 @@ Pairs naturally with `reusable-app-components`.
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
 | --- | --- | --- | --- |
-| `claude plugin install test-audit@claude-settings` | `codex plugin add test-audit@claude-settings` | Run `cursor-agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install test-audit` |
+| `claude plugin install test-audit@claude-settings` | `codex plugin add test-audit@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install test-audit` |
 
 **Skills CLI**
 
