@@ -454,6 +454,7 @@ bash .github/scripts/sync-livekit-skills.sh
 bash .github/scripts/sync-heroui-skills.sh
 bash .github/scripts/sync-react-skills.sh
 bash .github/scripts/sync-modern-web-guidance.sh
+bash .github/scripts/sync-swift-skills.sh
 bash .github/scripts/sync-typescript-skills.sh
 bash .github/scripts/sync-frontend-skills.sh
 bash .github/scripts/sync-seo-skills.sh

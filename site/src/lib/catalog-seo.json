@@ -4,6 +4,10 @@
       "title": "HeroUI skills for React and React Native",
       "description": "Build and theme HeroUI interfaces for web and mobile, and migrate existing React applications from HeroUI v2 to v3."
     },
+    "swift-skills": {
+      "title": "SwiftUI practices for iOS and macOS apps",
+      "description": "Write, review and refactor SwiftUI apps with guidance on data flow, accessibility, navigation, performance and modern APIs."
+    },
     "typescript-skills": {
       "title": "TypeScript type safety and coding practices",
       "description": "Write and review TypeScript with guidance on type safety, discriminated unions and boundary validation. Explore practical patterns and examples."
@@ -203,6 +207,11 @@
       "title": "Build React Native interfaces with HeroUI",
       "description": "Build and theme React Native interfaces with HeroUI Native, using component documentation and mobile UI guidance.",
       "related": ["react-skills/react-native-skills", "heroui-skills/heroui-react"]
+    },
+    "swift-skills/swiftui-best-practices": {
+      "title": "SwiftUI code review and development practices",
+      "description": "Review SwiftUI views, state, navigation and accessibility for iOS and macOS. Find guidance for modern APIs and performance.",
+      "related": ["react-skills/react-native-skills", "react-skills/react-best-practices"]
     },
     "typescript-skills/typescript-best-practices": {
       "title": "TypeScript best practices and type safety",

@@ -347,6 +347,21 @@ Python coding guidelines grounded in authoritative sources: PEP 8, PEP 20 (Zen o
 </details>
 
 <details>
+<summary><strong>swift-skills</strong> - SwiftUI practices for iOS and macOS</summary>
+
+Write and review SwiftUI apps with guidance on accessibility, data flow, navigation and performance.
+
+| Claude Code | Codex CLI | Antigravity CLI |
+| --- | --- | --- |
+| `claude plugin install swift-skills@claude-settings` | `codex plugin add swift-skills@claude-settings` | `uv run .github/scripts/antigravity.py install swift-skills` |
+
+| Skill | What it does | Download |
+| --- | --- | --- |
+| [`swiftui-best-practices`](./plugins/swift-skills/skills/swiftui-best-practices/SKILL.md) | SwiftUI development and review guidance | [ZIP](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/swiftui-best-practices.zip) |
+
+</details>
+
+<details>
 <summary><strong>typescript-skills</strong> - TypeScript type safety and coding practices</summary>
 
 Use practical examples to model types and validate data at application boundaries.

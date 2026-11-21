@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Claude Code plugins featuring skills, slash commands, autonomous subagents, hooks, and MCP server integrations for Git workflow, code review, and plugin development.",
-    "version": "2.11.0"
+    "version": "2.12.0"
   },
   "plugins": [
     {
@@ -25,6 +25,16 @@
         "react",
         "design"
       ]
+    },
+    {
+      "name": "swift-skills",
+      "version": "1.0.0",
+      "description": "Write and review SwiftUI apps with practical coding guidance.",
+      "license": "MIT",
+      "source": "./plugins/swift-skills",
+      "keywords": ["swift", "swiftui", "code-review"],
+      "category": "development",
+      "tags": ["mobile", "coding"]
     },
     {
       "name": "typescript-skills",
