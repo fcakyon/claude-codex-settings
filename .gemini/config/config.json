@@ -48,6 +48,9 @@
     "simplify": {
       "enabled": true
     },
+    "swift-skills": {
+      "enabled": true
+    },
     "typescript-skills": {
       "enabled": true
     },
