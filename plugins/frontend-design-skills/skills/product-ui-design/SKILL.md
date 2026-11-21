@@ -31,7 +31,19 @@ A preference that manages a growing collection can show a count and a Manage act
 
 Keep infrequent creation forms from occupying the main reading or browsing surface. A visible Create action can open a focused dialog, popover or dedicated page according to the form's length and complexity. An icon-only launcher needs an accessible name. Keep the chosen account and draft through failure, and make the effect of submission clear, including whether it changes an external service or sends invitations.
 
-For sequential setup, use one cohesive ordered list. Keep row actions explicitly left aligned (`justify-start text-left`) and primary labels untruncated. Keep unordered secondary tools at a natural width, not a stretched 2+1 arrangement. Pair empty-state onboarding with a real theme-aware product preview when one exists. Spend visual emphasis on the next meaningful action instead of adding decoration to every section.
+Put independent setup actions side by side as natural-width buttons with real integration marks, wrapping on phones. Use an ordered list only when each step depends on the preceding one. Do not add a web sign-in step when the desktop app already guides its own sign-in. Keep row actions explicitly left aligned (`justify-start text-left`) and primary labels untruncated. Avoid a stretched 2+1 arrangement for independent actions. Pair empty-state onboarding with a real theme-aware product preview when one exists. Spend visual emphasis on the next meaningful action instead of adding decoration to every section.
+
+## Keep copy useful
+
+Remove hints, captions and tooltips that restate a visible label, title or action. Beside Generate report, keep No reports yet and drop Generate your first report. In an empty pane, Select an item is enough without explaining the editor it opens. Remove operating instructions such as Click to edit when the control already makes the action clear. Use browser-neutral wording when several browsers are supported.
+
+Keep text that adds a decision: real status, a failure reason with a recovery action, a non-obvious destructive or external consequence, or a disclosure about data access, retention or sharing. Keep each fact once at the relevant decision. Delete feature explainers and internal mechanics the user cannot act on. Check the actual state and neighboring controls before cutting text. A missing snapshot must not become No changes, and a hidden placeholder cannot replace necessary recovery guidance.
+
+## Let native setup and updates do the work
+
+For OS permissions, prefer the native prompt when it already lists the app and only a switch is needed. When the user must add the app to a System Settings list, dock a guide beside that window with an animated pointer and a draggable app row. Never put System Settings steps into page text.
+
+Download app updates silently. Relaunch automatically only while idle and in the background. Offer one quiet Restart to Update action in the menu bar, app menu and About, disabled during active work such as a call or recording. Never show the updater's own dialog.
 
 ## Make controls belong to the product
 

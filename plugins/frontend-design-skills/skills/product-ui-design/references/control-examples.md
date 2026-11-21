@@ -76,7 +76,7 @@ Verify the label remains horizontal in the actual library build. Component defau
 
 ## One clear next action
 
-A short label and visible busy state communicate the action without another explanation. Keep a draft's content while saving and after failure.
+A short label and visible busy state communicate the action without another explanation. Do not add a Save changes tooltip to a visible Save changes button. Keep a unique failure reason or external consequence beside the action. Keep a draft's content while saving and after failure.
 
 ```tsx
 import { Button, Spinner } from "@heroui/react"
