@@ -131,5 +131,8 @@ enabled = true
 [plugins."heroui-skills@claude-settings"]
 enabled = true
 
+[plugins."swift-skills@claude-settings"]
+enabled = true
+
 [plugins."google-telemetry@claude-settings"]
 enabled = true
