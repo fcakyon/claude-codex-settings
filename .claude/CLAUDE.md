@@ -68,7 +68,7 @@ For full Python guidelines, install and enable the `python-skills` plugin (`pyth
 
 ### Commit Messages
 
-- Run the `/simplify` skill on the staged diff before every commit, docs-only commits included, as four parallel review agents, never inline.
+- Run the `/simplify` skill on the staged diff before every commit, docs-only commits included, as four parallel review agents, never inline. Before pushing to or merging into `main`, also run `/code-review --fix` on all commits not yet on `main` (`git diff origin/main...HEAD`). Local and branch commits don't need it.
 - Format: `{type}: brief description` (max 50 chars first line)
 - Optional second line: 1 sentence with findings/motivation
 - Types: `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `build`
