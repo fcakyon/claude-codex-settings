@@ -80,6 +80,9 @@ max_concurrent_threads_per_session = 8
 [plugins."reusable-app-components@claude-settings"]
 enabled = true
 
+[plugins."intelligent-compact@claude-settings"]
+enabled = false
+
 [plugins."code-review@claude-settings"]
 enabled = true
 
