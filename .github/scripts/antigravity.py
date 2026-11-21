@@ -157,7 +157,7 @@ def _run_agy_batch(names: list[str], action: str, *extra_args: str, env: dict[st
     """Package each plugin into a shared temporary directory and run an agy plugin command."""
     with tempfile.TemporaryDirectory(prefix="antigravity-") as directory:
         base = Path(directory)
-        for name in names:
+        for name in dict.fromkeys(names):
             target = base / name
             package_plugin(ROOT / "plugins" / name, target)
             subprocess.run(["agy", "plugin", action, str(target), *extra_args], env=env, check=True)
@@ -187,22 +187,22 @@ def sync_antigravity(
     merged_settings: dict = {}
 
     if not skip_plugins:
-        config_template = _read_json(CONFIG_TEMPLATE)
+        config_template = json.loads(CONFIG_TEMPLATE.read_text())
         enabled = [name for name, entry in config_template.get("plugins", {}).items() if entry.get("enabled")]
         if not dry_run:
             _run_agy_batch(enabled, "install", env=agy_env(home))
         merged_config = merge_plugin_config(_read_json(config_path), config_template)
-        if not dry_run:
+        if dry_run:
+            print(f"Would install {len(enabled)} plugins and update {config_path}")
+        else:
             _write_json(config_path, merged_config)
 
     if not skip_settings:
-        merged_settings = merge_settings(_read_json(settings_path), _read_json(SETTINGS_TEMPLATE))
-        if not dry_run:
+        merged_settings = merge_settings(_read_json(settings_path), json.loads(SETTINGS_TEMPLATE.read_text()))
+        if dry_run:
+            print(f"Would update {settings_path}")
+        else:
             _write_json(settings_path, merged_settings)
-
-    if dry_run:
-        print(f"Would sync {len(enabled)} plugins: {', '.join(enabled)}")
-        print(f"Would update {config_path} and {settings_path}")
 
     return enabled, merged_config, merged_settings
 
