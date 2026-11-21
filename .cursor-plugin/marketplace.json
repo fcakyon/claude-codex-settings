@@ -207,7 +207,7 @@
       "name": "github-dev",
       "source": "./plugins/github-dev",
       "description": "Write clear issues, commits, and PRs, review code, and resolve feedback.",
-      "version": "2.9.0",
+      "version": "2.10.0",
       "license": "Apache-2.0"
     },
     {

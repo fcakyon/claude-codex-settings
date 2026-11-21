@@ -35,21 +35,38 @@ points in the commit message body instead of relying on the diff alone.
    - Focus on 'why' not 'what'
    - 1 sentence conventional style + 1-2 short motivation/findings sentences if possible
    - For complex changes, add bullet points after blank line
-   - After a blank line, end each commit message with one lowercase `verification:` trailer. Name the relevant checks actually completed for the staged changes and their results. If none ran, use `verification: none (<reason>)`. Include a material failure or blocker without claiming it passed. Keep future checks out of the trailer. If the project uses `project-qa`, its `run --verification` output supplies case IDs and observed statuses for the trailer. For a journey, include the environment and observed behavior, for example `verification: local Chrome mailbox refresh kept one sync request and manual sync started a second`. [Source](https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification)
+   - End with the required verification trailer from step 4
 
-4. **Message examples**
-   - `feat: add sign-in flow`
-   - `fix: stop duplicate jobs on save`
-   - `docs: add skills install snippets`
+4. **Verification trailer (required in every commit)**
+   - After a blank line, end the message with one lowercase `verification:` line. The github-dev commit hook blocks any commit message without it.
+   - Name the relevant checks actually completed for the staged changes and their results.
+   - If none ran, write `verification: none (<reason>)` so unverified commits stay searchable.
+   - Include a material failure or blocker without claiming it passed. Keep future checks out of the trailer.
+   - If the project uses `project-qa`, its `run --verification` output supplies case IDs and observed statuses. For a journey, include the environment and observed behavior, for example `verification: local Chrome mailbox refresh kept one sync request and manual sync started a second`.
+   - [Source](https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification)
 
-5. **Documentation update**
+5. **Message examples**
+
+   ```text
+   fix: stop duplicate jobs on save
+
+   verification: save regression test passed 20 consecutive runs
+   ```
+
+   ```text
+   docs: add skills install snippets
+
+   verification: none (docs only, no runnable checks)
+   ```
+
+6. **Documentation update**
    - Check README.md for:
      - New features that should be documented
      - Outdated descriptions no longer matching implementation
      - Missing setup instructions for new dependencies
    - Update as needed based on staged changes
 
-6. **Execution**
+7. **Execution**
    - Commit uses HEREDOC syntax for proper formatting
    - Verify commit message has correct format
 

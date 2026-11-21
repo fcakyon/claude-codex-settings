@@ -110,7 +110,7 @@ command = tool_input.get("command", "")
 if os.environ.get("CLAUDECODE") != "1" or tool_name != "Bash" or not command.strip().startswith("git commit"):
     sys.exit(0)
 
-# Imported past the gate, where every other Bash call already exited, and shared with the commit type hook
+# Imported past the gate, where every other Bash call already exited, and shared with the commit format hook
 from commit_message import git_commits
 
 commits = git_commits(command, input_data.get("cwd") or ".")

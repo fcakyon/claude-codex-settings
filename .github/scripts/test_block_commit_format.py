@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavioral tests for the GitHub commit-type hook."""
+"""Behavioral tests for the GitHub commit-format hook."""
 
 from __future__ import annotations
 
@@ -10,11 +10,11 @@ import unittest
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-HOOK = REPO_ROOT / "plugins" / "github-dev" / "hooks" / "scripts" / "block_commit_type.py"
+HOOK = REPO_ROOT / "plugins" / "github-dev" / "hooks" / "scripts" / "block_commit_format.py"
 
 
-class BlockCommitTypeTest(unittest.TestCase):
-    """Test commit-type behavior."""
+class BlockCommitFormatTest(unittest.TestCase):
+    """Test commit-format behavior."""
 
     def setUp(self) -> None:
         """Create a session directory holding message files with a disallowed type."""
@@ -71,17 +71,31 @@ class BlockCommitTypeTest(unittest.TestCase):
                 output = self.run_hook(command)
                 self.assertEqual(output["hookSpecificOutput"]["permissionDecision"], "deny")
 
-    def test_allowed_types_pass(self) -> None:
-        """Allow an allowed type, including a heredoc message or one that rewrites the -F file."""
+    def test_missing_verification_is_denied(self) -> None:
+        """Deny an allowed type whose message has no lowercase verification trailer."""
         for command in (
             'git commit -m "fix: guard"',
             "git commit -m \"$(cat <<'EOF'\nfeat: add hook\n\nbody\nEOF\n)\"",
-            "cat > msg.txt <<'EOF'\nfix: tidy\nEOF\ngit commit -F msg.txt",
-            "cat > \"my msg.txt\" <<'EOF'\nfix: tidy\nEOF\ngit commit -F \"my msg.txt\"",
-            "bash <<'EOF'\ngit commit -m 'fix: tidy'\nEOF",
-            "cat <<'EOF' | git commit -F -\nfix: tidy\nEOF",
-            "cat > ./msg.txt <<'EOF'\nfix: tidy\nEOF\ngit commit -F msg.txt",
-            "# don't forget to stage\ngit add . && git commit -m \"fix: close #12\"",
+            "git commit -F - <<'MSG'\nfix: tidy\n\nVerification: tests passed\nMSG",
+            'git commit -m "fix: tidy" -m "verification:"',
+            'git commit -m "fix: tidy" -m "verification: none (docs)" && git commit -m "docs: add notes"',
+        ):
+            with self.subTest(command=command):
+                output = self.run_hook(command)
+                self.assertIn("verification:", output["hookSpecificOutput"]["permissionDecisionReason"])
+
+    def test_allowed_types_with_verification_pass(self) -> None:
+        """Allow an allowed type with a verification trailer, including a heredoc or a rewritten -F file."""
+        for command in (
+            'git commit -m "fix: guard" -m "verification: none (docs only)"',
+            "git commit -m \"$(cat <<'EOF'\nfeat: add hook\n\nbody\n\nverification: 3 tests passed\nEOF\n)\"",
+            "cat > msg.txt <<'EOF'\nfix: tidy\n\nverification: lint passed\nEOF\ngit commit -F msg.txt",
+            "cat > \"my msg.txt\" <<'EOF'\nfix: tidy\n\nverification: lint passed\nEOF\ngit commit -F \"my msg.txt\"",
+            "bash <<'EOF'\ngit commit -m 'fix: tidy' -m 'verification: lint passed'\nEOF",
+            "cat <<'EOF' | git commit -F -\nfix: tidy\n\nverification: lint passed\nEOF",
+            "cat > ./msg.txt <<'EOF'\nfix: tidy\n\nverification: lint passed\nEOF\ngit commit -F msg.txt",
+            "# don't forget to stage\ngit add . && git commit -m \"fix: close #12\" -m \"verification: none (typo)\"",
+            "git commit --amend --no-edit",
         ):
             with self.subTest(command=command):
                 self.assertIsNone(self.run_hook(command))
@@ -89,10 +103,10 @@ class BlockCommitTypeTest(unittest.TestCase):
     def test_other_heredocs_and_messages_are_not_the_commit_message(self) -> None:
         """Read only the message given to git commit, never file contents or other commands."""
         for command in (
-            "cat > notes.md <<'EOF'\n# Notes\nEOF\ngit add notes.md && git commit -m \"docs: add notes\"",
-            "cat > notes.md <<'EOF'\nrun it with -m \"wip\"\nEOF\ngit commit -m \"docs: add notes\"",
-            "cat > notes.md <<'EOF' && git commit -m \"docs: add notes\"\n# Notes\nEOF",
-            'git stash push -m "wip" && git commit -m "fix: tidy"',
+            "cat > notes.md <<'EOF'\n# Notes\nEOF\ngit add notes.md && git commit -m \"docs: add notes\" -m \"verification: none (docs)\"",
+            "cat > notes.md <<'EOF'\nrun it with -m \"wip\"\nEOF\ngit commit -m \"docs: add notes\" -m \"verification: none (docs)\"",
+            "cat > notes.md <<'EOF' && git commit -m \"docs: add notes\" -m \"verification: none (docs)\"\n# Notes\nEOF",
+            'git stash push -m "wip" && git commit -m "fix: tidy" -m "verification: none (typo)"',
             "python3 - <<'EOF'\ncases = ['a && git commit -m x']\nEOF",
             "cat > run.sh <<'EOF'\ngit commit -m 'chore: bump'\nEOF",
         ):
