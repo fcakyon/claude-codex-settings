@@ -1,5 +1,6 @@
 import {test} from 'node:test';
 import {createServer} from 'node:http';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {mkdtemp, mkdir, readFile, rm, writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -11,6 +12,7 @@ import {command} from '../scripts/process.mjs';
 const qa = createMcpChecks();
 const prm = '/.well-known/oauth-protected-resource';
 const ui = 'ui://example/report-a1b2.html';
+const appHTML = '<!doctype html><title>Report</title>';
 const info = {
   name: 'example', title: 'Example', version: '1.0.0', description: 'Find your reports.',
   websiteUrl: 'https://example.test', icons: [{src: 'https://example.test/icon.png'}],
@@ -108,7 +110,8 @@ async function fixture(t, fault) {
         return result({content: [{type: 'text', text: fault === 'result size' ? 'x'.repeat(100_001) : params.arguments.id}]});
       case 'resources/read':
         return result({contents: [{
-          uri: params.uri, mimeType: 'text/html;profile=mcp-app', text: '<!doctype html><title>Report</title>',
+          uri: params.uri, mimeType: 'text/html;profile=mcp-app',
+          text: fault === 'fallback app' ? '<!doctype html><title>Fallback</title>' : appHTML,
           _meta: {ui: fault === 'csp' ? {} : {csp: {}}},
         }]});
       default: return rpcError('Unexpected method');
@@ -181,6 +184,24 @@ for (const [fault, message] of [
     await assert.rejects(qa.assertServerContract(endpoint, options), message);
   });
 }
+
+test('checks the app returned for a tool against the built HTML hash', async t => {
+  const {endpoint} = await fixture(t);
+  const hash = createHash('sha256').update(appHTML).digest('hex');
+  const expectedAppHashes = {open_report: hash};
+  await qa.assertServerContract(endpoint, {...options, expectedAppHashes});
+
+  const fallback = await fixture(t, 'fallback app');
+  await qa.assertServerContract(fallback.endpoint, options);
+  await assert.rejects(
+    qa.assertServerContract(fallback.endpoint, {...options, expectedAppHashes}),
+    /open_report serves the expected MCP app build/,
+  );
+  await assert.rejects(
+    qa.assertServerContract(endpoint, {...options, expectedAppHashes: {whoami: hash}}),
+    /whoami advertises an MCP app/,
+  );
+});
 
 test('reports JSON-RPC and tool-level errors and measures the serialized result', async t => {
   const {endpoint} = await fixture(t);
