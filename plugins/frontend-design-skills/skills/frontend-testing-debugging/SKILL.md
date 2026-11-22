@@ -26,6 +26,10 @@ Without that skill, inspect desktop/mobile screenshots after media loads, exerci
 
 When text changes unexpectedly between locales or screens, trace the source value through translation, formatting, Unicode normalization, JavaScript casing and CSS to the rendered result. Inspect inherited `lang`, text direction, font coverage and clipping where relevant. Distinguish translated interface copy from names, titles and identifiers whose spelling must survive presentation. Fix the owning transformation or layout rule instead of replacing individual characters, stripping accents, or forcing the whole page to one language. Use the actual content language for intentional transformations and locale formatting.
 
+When a utility class has no visible effect, check cascade layers before specificity. Tailwind v4 puts utilities in `@layer utilities`, so any unlayered rule such as `button { color: inherit }` beats them regardless of specificity. Put resets in `@layer base`. Keep a rule unlayered only when it must override utilities, such as a 44 px minimum target under `@media (any-pointer: coarse)`.
+
+Headless Chrome does not shrink its window below about 500 px. Check narrower layouts with viewport emulation or inside an iframe of the target width, and compare `scrollWidth` with `clientWidth` on the page and its scrolling containers.
+
 Make the smallest relevant edit, reload or rebuild as needed, and repeat the original failing interaction. Rerun affected project journeys. A passing build or root-page screenshot does not prove the interaction works.
 
 Move repeatable discoveries into the existing tracked QA or e2e suite, with assertions on user-visible outcomes. Reuse its helpers instead of adding a second browser/session runner. When the QA plugin is available but the project has no suite, use `qa:setup` if creating repeatable coverage is within the task. Keep one-off diagnostic scripts and generated evidence outside Git.
