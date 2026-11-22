@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 import {mkdtemp, mkdir, writeFile, readFile, rm} from 'node:fs/promises';
 import path from 'node:path';
 import {tmpdir} from 'node:os';
-import {setup} from '../scripts/setup.mjs';
-import {command} from '../scripts/runtime.mjs';
+import {setup, discover} from '../scripts/setup.mjs';
+import {command, resolveBrowserExecutable} from '../scripts/runtime.mjs';
 import {sqliteQuery} from '../scripts/native.mjs';
 
 test('setup detects components, keeps project edits and reports blocked coverage', async () => {
@@ -141,4 +141,74 @@ test('repeated filters select their cases and a filter that matches none stops t
     assert.equal(missing.code, 1);
     assert.match(missing.stderr, /No QA case matches --filter page\.home, checkout/);
   } finally { await rm(root, {recursive: true, force: true}); }
+});
+
+test('discover loads only trusted suites and reports declared labels as candidate gaps', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-discover-gap-'));
+  try {
+    await writeFile(path.join(root, 'server.js'), [
+      "app.get('/.well-known/oauth-protected-resource', handler);",
+      "app.get('/oauth/authorize', auth);",
+      "app.get('/gmail.readonly', mail);",
+      "app.get('/calendar.events', cal);",
+    ].join('\n'));
+    await mkdir(path.join(root, '.agents/qa'), {recursive: true});
+    const missing = await discover(root, {loadSuite: true});
+    assert.equal(missing.suite.status, 'missing');
+    assert.equal(missing.suite.candidateGaps, null);
+    await writeFile(path.join(root, '.agents/qa/imported.mjs'), "export const imported = ['calendar'].map(surface => ({id: surface + '.sync', surface}));\n");
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), [
+      "import {writeFileSync} from 'node:fs';",
+      "import {imported} from './imported.mjs';",
+      `writeFileSync(${JSON.stringify(path.join(root, 'loaded'))}, 'yes');`,
+      'export const cases = [',
+      `  {id: 'mcp.discovery', surface: 'backend/mcp', capabilities: ['oauth'], async run() { writeFileSync(${JSON.stringify(path.join(root, 'ran'))}, 'yes'); }},`,
+      "  {id: 'email.unconfigured', surface: 'email', async run(qa) { throw new qa.Blocked('pending'); }},",
+      '  ...imported,',
+      '];',
+    ].join('\n'));
+    const cli = new URL('../scripts/qa.mjs', import.meta.url).pathname;
+    const unloadedRun = await command(process.execPath, [cli, 'discover', '--root', root]);
+    assert.equal(unloadedRun.code, 0, unloadedRun.stderr);
+    const unloaded = JSON.parse(unloadedRun.stdout);
+    assert.equal(unloaded.suite.status, 'not-loaded');
+    assert.equal(unloaded.suite.candidateGaps, null);
+    await assert.rejects(readFile(path.join(root, 'loaded')), {code: 'ENOENT'});
+    const loadedRun = await command(process.execPath, [cli, 'discover', '--root', root, '--load-suite']);
+    assert.equal(loadedRun.code, 0, loadedRun.stderr);
+    const report = JSON.parse(loadedRun.stdout);
+    assert.equal(report.capabilities.mcp, 'server.js');
+    assert.equal(report.capabilities.oauth, 'server.js');
+    assert.equal(report.capabilities.email, 'server.js');
+    assert.equal(report.capabilities.calendar, 'server.js');
+    assert.equal(report.suite.status, 'loaded');
+    assert.deepEqual(report.suite.declaredSurfaces, ['backend', 'mcp', 'oauth', 'calendar']);
+    assert.deepEqual(report.suite.candidateGaps, ['email']);
+    assert.ok(report.suite.suggestedJourneys.some(item => item.surface === 'email'));
+    await assert.rejects(readFile(path.join(root, 'ran')), {code: 'ENOENT'});
+  } finally { await rm(root, {recursive: true, force: true}); }
+});
+
+test('discover reports suite import errors instead of treating them as missing suites', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-discover-error-'));
+  try {
+    await mkdir(path.join(root, '.agents/qa'), {recursive: true});
+    await writeFile(path.join(root, '.agents/qa/suite.mjs'), "import './missing.mjs'; export const cases = [];\n");
+    await assert.rejects(discover(root, {loadSuite: true}), {code: 'ERR_MODULE_NOT_FOUND'});
+  } finally { await rm(root, {recursive: true, force: true}); }
+});
+
+test('resolveBrowserExecutable prefers env/config overrides over automatic fallback', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'qa-browser-resolve-'));
+  const previous = process.env.QA_BROWSER_EXECUTABLE;
+  try {
+    process.env.QA_BROWSER_EXECUTABLE = '/custom/env/chrome';
+    assert.equal(await resolveBrowserExecutable({browser: {executablePath: '/custom/cfg/chrome'}}, root), '/custom/env/chrome');
+    delete process.env.QA_BROWSER_EXECUTABLE;
+    assert.equal(await resolveBrowserExecutable({browser: {executablePath: '/custom/cfg/chrome'}}, root), '/custom/cfg/chrome');
+  } finally {
+    if (previous === undefined) delete process.env.QA_BROWSER_EXECUTABLE;
+    else process.env.QA_BROWSER_EXECUTABLE = previous;
+    await rm(root, {recursive: true, force: true});
+  }
 });

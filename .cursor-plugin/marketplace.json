@@ -308,7 +308,7 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.10.1",
+      "version": "1.11.0",
       "license": "Apache-2.0"
     },
     {

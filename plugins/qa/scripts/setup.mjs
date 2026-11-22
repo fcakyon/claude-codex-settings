@@ -1,8 +1,28 @@
 import {readdir, readFile, mkdir, writeFile, stat} from 'node:fs/promises';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {command} from './process.mjs';
 
 const ignored = new Set(['.git', 'node_modules', '.next', 'dist', 'build', 'out', '.venv', 'venv', 'inspection', '.local', '.agents']);
+const suggestedJourneyBySurface = {
+  backend: 'API health, input validation, and persistence round-trip',
+  database: 'Disposable SQLite/DB read-after-write verification',
+  extension: 'Chrome for Testing extension build, popup, and host-page actions',
+  'extension-ui': 'Extension UI rendering and message bridge interaction',
+  macos: 'Sandboxed Swift owner test suite and app self-test on macOS CI',
+  android: 'ADB device instrumentation and app UI assertions',
+  authentication: 'Real login/logout, session persistence, and expired-session recovery',
+  oauth: 'OAuth 2.1 authorization, PKCE, negative redirect/grant checks, and token revocation',
+  mcp: 'OAuth discovery, stateless MCP contract, tool calls, and MCP App HTML checks',
+  email: 'Read-only mailbox sync, exact matching, and disconnect/cleanup flow',
+  calendar: 'Calendar sync, event deduplication, and meeting link creation',
+  credits: 'Account balance, first debit, repeat-free behavior, and limit denial',
+  payments: 'Test-mode checkout, entitlement update, and cancellation flow',
+  touch: 'Emulated touch hold, drag, swipe, and scroll separation',
+  voice: 'Scripted microphone speech input, output meter, and provider transcript reply',
+  analytics: 'Telemetry capture of funnel events and parameter names without polluting prod',
+};
+
 async function filesUnder(root, gitignored, depth = 0) {
   const result = [];
   for (const entry of await readdir(root, {withFileTypes: true})) {
@@ -14,7 +34,7 @@ async function filesUnder(root, gitignored, depth = 0) {
   return result;
 }
 
-export async function discover(root) {
+export async function discover(root, {loadSuite = false} = {}) {
   root = path.resolve(root);
   // Gitignored paths such as local analysis output are not project evidence, while submodules and nested repositories still count.
   // Git lists a wholly ignored folder as one entry ending in a separator, so the walk never opens it.
@@ -51,7 +71,20 @@ export async function discover(root) {
   }
   const sourceFiles = files.filter(filename => /\.(go|[cm]?[jt]sx?|ya?ml)$/.test(filename) && !/[/\\](?:\.agents|tests?)[/\\]|[._](?:test|spec)\./.test(filename));
   const capabilities = {};
-  const patterns = {authentication: /auth\/(?:login|logout)|signInWith|loginWith|authenticate\(/, credits: /creditAccess|insufficient.credit|credit_ledger/i, payments: /stripe|paypal|paddle/i, netflix: /netflix\.com/, prime: /primevideo\.com/, touch: /pointerType|touch(?:start|move|end|cancel)|TouchEvent|touchAction/i, voice: /getUserMedia\(\{\s*audio|@elevenlabs\/(?:client|react)|livekit-client|@livekit\/components|agents-realtime|\/v1\/realtime/, analytics: /sendToGA|GoogleTagManager|gtag\(/};
+  const patterns = {
+    authentication: /auth\/(?:login|logout)|signInWith|loginWith|authenticate\(/,
+    oauth: /oauth\/(?:authorize|token)|code_challenge_method|authorization_endpoint/i,
+    mcp: /\/\.well-known\/oauth-protected-resource|modelcontextprotocol|registerMcp|text\/html;profile=mcp-app/,
+    email: /gmail\.readonly|mail\.read|sendMail|nodemailer/i,
+    calendar: /calendar\.events|calendar\/v3|freeBusy|calendar_accounts/i,
+    credits: /creditAccess|insufficient.credit|credit_ledger/i,
+    payments: /stripe|paypal|paddle/i,
+    netflix: /netflix\.com/,
+    prime: /primevideo\.com/,
+    touch: /pointerType|touch(?:start|move|end|cancel)|TouchEvent|touchAction/i,
+    voice: /getUserMedia\(\{\s*audio|@elevenlabs\/(?:client|react)|livekit-client|@livekit\/components|agents-realtime|\/v1\/realtime/,
+    analytics: /sendToGA|GoogleTagManager|gtag\(/,
+  };
   for (const filename of sourceFiles) {
     if ((await stat(filename)).size > 300000) continue;
     const source = await readFile(filename, 'utf8');
@@ -59,7 +92,21 @@ export async function discover(root) {
       if (!capabilities[name] && pattern.test(source)) capabilities[name] = path.relative(root, filename);
     }
   }
-  return {root, components, capabilities, note: 'Source evidence identifies candidate coverage. It does not prove a working flow.'};
+
+  const suitePath = path.join(root, '.agents/qa/suite.mjs');
+  const suiteExists = await stat(suitePath).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; });
+  let suite = {status: suiteExists ? 'not-loaded' : 'missing', declaredCases: null, declaredSurfaces: null, candidateGaps: null, suggestedJourneys: null};
+  if (suiteExists && loadSuite) {
+    const {cases} = await import(pathToFileURL(suitePath));
+    if (!Array.isArray(cases)) throw new Error('QA suite must export a cases array');
+    const declaredCases = cases.map(({id, surface, capabilities}) => ({id, surface, ...(capabilities && {capabilities})}));
+    const declaredSurfaces = [...new Set(declaredCases.filter(item => typeof item.id === 'string' && !item.id.endsWith('.unconfigured'))
+      .flatMap(item => [item.surface, item.capabilities].flat(2).flatMap(value => typeof value === 'string' ? value.split('/').filter(Boolean) : [])))];
+    const candidateGaps = [...new Set([...components.map(item => item.kind), ...Object.keys(capabilities)])].filter(surface => !declaredSurfaces.includes(surface));
+    const suggestedJourneys = candidateGaps.map(surface => ({surface, recommendation: suggestedJourneyBySurface[surface] || `Add an observed-outcome journey for ${surface}`}));
+    suite = {status: 'loaded', declaredCases, declaredSurfaces, candidateGaps, suggestedJourneys};
+  }
+  return {root, components, capabilities, suite, note: 'Source evidence and declared case labels identify candidates, not verified coverage.'};
 }
 
 export async function setup(root, options = {}) {
