@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 
 const version = '2026-07-28';
 const resultLimit = 100_000;
@@ -135,6 +136,7 @@ export function createMcpChecks(check = assert) {
   async function assertServerContract(endpoint, {
     token, protocolVersion = version, requiredTools = [], requireProfileTool = false, requireIcons = false,
     requireWebsite = false, requireDescription = false, maxInstructionsParagraph = 512, maxResultChars = resultLimit,
+    expectedAppHashes = {},
   } = {}) {
     check.ok(nonempty(token), 'Provide a QA bearer token for the authenticated MCP contract');
     await assertTransport(endpoint, {token, protocolVersion});
@@ -177,19 +179,26 @@ export function createMcpChecks(check = assert) {
       check.ok(nonempty(result.structuredContent?.id), 'MCP profile returns a non-empty structured id');
     }
 
-    const views = new Set();
+    const expectedApps = Object.entries(expectedAppHashes);
+    const views = new Map();
     for (const tool of tools) {
       const uri = tool._meta?.ui?.resourceUri;
       const flat = tool._meta?.['ui/resourceUri'];
       if (uri === undefined && flat === undefined) continue;
       check.ok(typeof uri === 'string' && uri.startsWith('ui://') && uri === flat, 'Tool ' + tool.name + ' declares matching ui.resourceUri and ui/resourceUri');
-      views.add(uri);
+      views.set(uri, undefined);
     }
-    for (const uri of views) {
+    for (const uri of views.keys()) {
       const result = await rpc('resources/read', {uri}, Infinity);
       const view = result.contents?.find(item => item.uri === uri && item.mimeType === uiMime);
       check.ok(nonempty(view?.text), 'MCP app resource returns HTML with the MCP app MIME type');
       check.ok(object(view._meta?.ui?.csp), 'MCP app resource declares ui.csp');
+      if (expectedApps.length) views.set(uri, createHash('sha256').update(view.text).digest('hex'));
+    }
+    for (const [name, hash] of expectedApps) {
+      const uri = tools.find(tool => tool.name === name)?._meta?.ui?.resourceUri;
+      check.ok(views.has(uri), name + ' advertises an MCP app');
+      check.equal(views.get(uri), hash, name + ' serves the expected MCP app build');
     }
     return {serverInfo, instructions: discovery.instructions, tools};
   }
