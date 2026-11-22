@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import {parseArgs} from 'node:util';
 import {discover, setup} from './setup.mjs';
-import {command, runSuite, secret, privateDirectory} from './runtime.mjs';
+import {command, runSuite, resolveBrowserExecutable, privateDirectory} from './runtime.mjs';
 import {readFile} from 'node:fs/promises';
 import path from 'node:path';
 
@@ -22,6 +22,6 @@ else if (positionals[0] === 'run') {
     console.log(`${name}: ${result?.code === 0 ? result.stdout.trim().split('\n')[0] : 'unavailable'}`);
   }
   const config = JSON.parse(await readFile(path.join(values.root, '.agents/qa/config.json'), 'utf8').catch(() => '{}'));
-  const browser = process.env.QA_BROWSER_EXECUTABLE || config.browser?.executablePath || await secret('QA_BROWSER_EXECUTABLE', privateDirectory(values.root, config)).catch(() => null);
+  const browser = await resolveBrowserExecutable(config, privateDirectory(values.root, config));
   console.log(`QA_BROWSER_EXECUTABLE: ${browser ? 'configured' : 'missing'}`);
 } else throw new Error('Unknown command. Run project-qa --help.');

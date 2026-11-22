@@ -13,13 +13,13 @@ const qa = createMcpChecks();
 const prm = '/.well-known/oauth-protected-resource';
 const ui = 'ui://example/report-a1b2.html';
 const appHTML = '<!doctype html><title>Report</title>';
-const info = {
-  name: 'example', title: 'Example', version: '1.0.0', description: 'Find your reports.',
-  websiteUrl: 'https://example.test', icons: [{src: 'https://example.test/icon.png'}],
-};
+const png1x1 = Buffer.from(
+  '89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c63000100000500010d0a2db40000000049454e44ae426082',
+  'hex',
+);
 const options = {
   token: 'qa-fixture', requiredTools: ['open_report'], requireProfileTool: true,
-  requireIcons: true, requireWebsite: true, requireDescription: true,
+  requireIcons: true, requireToolAnnotations: true, requireWebsite: true, requireDescription: true,
 };
 
 async function fixture(t, fault) {
@@ -30,15 +30,39 @@ async function fixture(t, fault) {
       res.end(JSON.stringify(value));
     };
     const url = new URL(req.url, base);
+    if (req.method === 'OPTIONS' && url.pathname.startsWith('/.well-known/')) {
+      res.writeHead(fault === 'preflight' ? 405 : 204, {'access-control-allow-origin': '*'}).end();
+      return;
+    }
+    if (url.pathname === '/icon.png') {
+      if (fault === 'icon-html') {
+        res.writeHead(200, {'content-type': 'text/html; charset=utf-8'}).end('<!doctype html><html><body>SPA</body></html>');
+        return;
+      }
+      res.writeHead(200, {'content-type': 'image/png'}).end(png1x1);
+      return;
+    }
+    if (url.pathname === '/api/mcp') {
+      if (fault === 'removed-present') {
+        res.setHeader('WWW-Authenticate', `Bearer resource_metadata="${base}${prm}/api/mcp"`);
+        return json({error: 'unauthorized'}, 401);
+      }
+      return json({error: 'not found'}, 404);
+    }
     if ([prm, prm + '/', prm + '/mcp'].includes(url.pathname)) return json({
       resource: base + (fault === 'resource' && url.pathname === prm + '/mcp' ? '/wrong' : '/mcp'),
       authorization_servers: [base + '/oauth'],
     });
-    if (url.pathname === '/.well-known/oauth-authorization-server/oauth') return json({
-      issuer: base + (fault === 'issuer' ? '/other' : '/oauth'), authorization_endpoint: base + '/authorize',
-      token_endpoint: base + '/token', registration_endpoint: base + '/register',
-      code_challenge_methods_supported: [fault === 'pkce' ? 'plain' : 'S256'],
-    });
+    if (url.pathname === '/.well-known/oauth-authorization-server/oauth' || url.pathname === '/.well-known/openid-configuration/oauth') {
+      const mismatch = fault === 'oidc-mismatch' && url.pathname.startsWith('/.well-known/openid-configuration');
+      return json({
+        issuer: base + (fault === 'issuer' || mismatch ? '/other' : '/oauth'),
+        authorization_endpoint: base + '/authorize',
+        token_endpoint: base + '/token',
+        registration_endpoint: base + '/register',
+        code_challenge_methods_supported: [fault === 'pkce' ? 'plain' : 'S256'],
+      });
+    }
     let raw = '';
     for await (const chunk of req) raw += chunk;
     if (url.pathname === '/register') {
@@ -89,6 +113,10 @@ async function fixture(t, fault) {
       capabilities: {tools: {}, resources: {}},
       instructions: (fault === 'instructions' ? 'a'.repeat(513) : 'Find reports.') + '\r\n \r\n' + 'b'.repeat(600),
     };
+    const info = {
+      name: 'example', title: 'Example', version: '1.0.0', description: 'Find your reports.',
+      websiteUrl: 'https://example.test', icons: [{src: base + '/icon.png', mimeType: 'image/png'}],
+    };
     const serverInfo = {...info, ...(fault === 'icons' && {icons: []})};
     switch (method) {
       case 'server/discover':
@@ -97,7 +125,9 @@ async function fixture(t, fault) {
         return result({...discovery, protocolVersion: '2025-11-25', serverInfo});
       case 'tools/list':
         if (params.cursor === 'next') return result({tools: [{
-          name: 'open_report', _meta: {ui: {resourceUri: ui}, ...(fault !== 'flat resource URI' && {'ui/resourceUri': ui})},
+          name: 'open_report',
+          ...(fault !== 'missing-annotations' && {annotations: {readOnlyHint: true}}),
+          _meta: {ui: {resourceUri: ui}, ...(fault !== 'flat resource URI' && {'ui/resourceUri': ui})},
         }]});
         return result({tools: [{
           name: 'whoami', outputSchema: {type: 'object', properties: {id: {type: 'string'}}, required: ['id']},
@@ -111,7 +141,11 @@ async function fixture(t, fault) {
       case 'resources/read':
         return result({contents: [{
           uri: params.uri, mimeType: 'text/html;profile=mcp-app',
-          text: fault === 'fallback app' ? '<!doctype html><title>Fallback</title>' : appHTML,
+          text: fault === 'fallback app'
+            ? '<!doctype html><title>Fallback</title>'
+            : fault === 'external-bundle'
+              ? '<!doctype html><script src="/assets/bundle.js"></script><title>Report</title>'
+              : appHTML,
           _meta: {ui: fault === 'csp' ? {} : {csp: {}}},
         }]});
       default: return rpcError('Unexpected method');
@@ -130,10 +164,11 @@ const authorization = {
   registerEndpoint: '/register', authorizeEndpoint: '/authorize', tokenEndpoint: '/token', protectedResource: '/mcp',
 };
 
-test('discovers OAuth from the bearer challenge and checks each configured metadata route', async t => {
+test('discovers OAuth from the bearer challenge and checks metadata, preflights, OIDC parity, and retired routes', async t => {
   const {base, endpoint} = await fixture(t);
   const {protectedResource, authorizationServer} = await qa.discoverOAuth(endpoint, {
     expectedIssuer: base + '/oauth', expectedResource: endpoint, extraProtectedResourcePaths: [prm + '/', prm + '/mcp'],
+    removedPaths: ['/api/mcp'], checkPreflight: true, checkOpenIDConfig: true,
   });
   assert.equal(protectedResource.resource, endpoint);
   assert.equal(authorizationServer.token_endpoint, base + '/token');
@@ -145,10 +180,18 @@ for (const [fault, message] of [
   ['resource', /names the expected resource/],
   ['issuer', /names the expected issuer/],
   ['pkce', /advertises S256/],
+  ['oidc-mismatch', /OpenID configuration issuer matches authorization server/],
+  ['preflight', /OPTIONS preflight accepted/],
+  ['removed-present', /Removed endpoint GET \/api\/mcp returns 404/],
 ]) {
   test('fails OAuth discovery for ' + fault, async t => {
     const {endpoint} = await fixture(t, fault);
-    await assert.rejects(qa.discoverOAuth(endpoint, {extraProtectedResourcePaths: [prm + '/mcp']}), message);
+    await assert.rejects(qa.discoverOAuth(endpoint, {
+      extraProtectedResourcePaths: [prm + '/mcp'],
+      removedPaths: ['/api/mcp'],
+      checkPreflight: true,
+      checkOpenIDConfig: true,
+    }), message);
   });
 }
 
@@ -162,7 +205,7 @@ for (const [fault, message] of [
   });
 }
 
-test('accepts paginated tools and a readable widget over current and legacy stateless MCP', async t => {
+test('accepts paginated tools, verified PNG icons, tool annotations, and self-contained widgets over MCP', async t => {
   const {endpoint} = await fixture(t);
   for (const protocolVersion of ['2026-07-28', '2025-11-25']) {
     const contract = await qa.assertServerContract(endpoint, {...options, protocolVersion});
@@ -173,6 +216,9 @@ test('accepts paginated tools and a readable widget over current and legacy stat
 
 for (const [fault, message] of [
   ['icons', /serverInfo contains icons/],
+  ['icon-html', /serves an image content-type/],
+  ['missing-annotations', /declares safety annotations/],
+  ['external-bundle', /inlines scripts and stylesheets/],
   ['stateful', /Authenticated MCP GET is disabled/],
   ['instructions', /first paragraph exceeds 512/],
   ['origin', /rejects a foreign Origin/],

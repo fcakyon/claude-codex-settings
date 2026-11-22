@@ -6,6 +6,7 @@ import {macos, assertSwiftTests} from './macos.mjs';
 import {createMcpChecks} from './mcp.mjs';
 export {command, Blocked} from './process.mjs';
 import {mkdir, readFile, writeFile, realpath} from 'node:fs/promises';
+import {existsSync} from 'node:fs';
 import {homedir} from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -65,8 +66,21 @@ export function telemetryEvent(url, body) {
   return {transport: 'google', events: [{name: u.searchParams.get('en') || new URLSearchParams(body || '').get('en') || 'collect'}]};
 }
 
+export async function resolveBrowserExecutable(config, stateDir) {
+  const configured = process.env.QA_BROWSER_EXECUTABLE || config?.browser?.executablePath || await secret('QA_BROWSER_EXECUTABLE', stateDir).catch(() => null);
+  if (configured) return configured;
+  try {
+    const candidate = chromium.executablePath();
+    if (candidate && existsSync(candidate)) return candidate;
+  } catch {
+    // No downloaded Playwright browser available.
+  }
+  return null;
+}
+
 export async function openBrowser(config, stateDir, telemetry) {
-  const executablePath = process.env.QA_BROWSER_EXECUTABLE || config.browser?.executablePath || await secret('QA_BROWSER_EXECUTABLE', stateDir);
+  const executablePath = await resolveBrowserExecutable(config, stateDir);
+  if (!executablePath) throw new Blocked(`Missing credential QA_BROWSER_EXECUTABLE. Set it in the environment, install Playwright Chromium, or add it to ${path.join(stateDir, 'credentials.json')}.`);
   const extension = config.extension && await realpath(path.resolve(config.root, config.extension));
   const context = await chromium.launchPersistentContext('', {
     executablePath, headless: process.env.QA_HEADED !== '1', slowMo: config.browser?.actionDelayMs ?? 500,

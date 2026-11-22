@@ -6,6 +6,7 @@ const resultLimit = 100_000;
 const invalidOrigin = 'https://untrusted.example.invalid';
 const uiMime = 'text/html;profile=mcp-app';
 const jsonType = /^application\/json\s*(?:;|$)/i;
+const externalBundleRef = /<script\b[^>]*\bsrc\s*=|<link\b[^>]*\brel\s*=\s*(?:["']?stylesheet\b|["'][^"']*\bstylesheet\b)/i;
 const object = value => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 const nonempty = value => typeof value === 'string' && value.trim().length > 0;
 
@@ -66,7 +67,25 @@ export function createMcpChecks(check = assert) {
     return document;
   }
 
-  async function discoverOAuth(endpoint, {expectedIssuer, expectedResource = String(endpoint), extraProtectedResourcePaths = [], timeoutMs} = {}) {
+  async function verifyIcon(icon, endpoint, timeoutMs) {
+    const iconUrl = new URL(icon.src, endpoint);
+    if (iconUrl.protocol === 'data:') {
+      check.match(icon.src, /^data:image\/[^;,]+(?:;[^,]+)?,.+/i, 'Inline MCP server icon uses an image data URI');
+      return;
+    }
+    const response = await request(iconUrl, {}, timeoutMs);
+    const contentType = (response.headers.get('content-type') || '').toLowerCase().split(';', 1)[0].trim();
+    const bytes = await response.arrayBuffer();
+    check.equal(response.status, 200, `MCP icon ${iconUrl.pathname} returns HTTP 200`);
+    check.match(contentType, /^image\//, `MCP icon ${iconUrl.pathname} serves an image content-type`);
+    if (nonempty(icon.mimeType)) check.equal(contentType, icon.mimeType.toLowerCase(), `MCP icon ${iconUrl.pathname} matches declared mimeType`);
+    check.ok(bytes.byteLength > 0, `MCP icon ${iconUrl.pathname} is non-empty`);
+  }
+
+  async function discoverOAuth(endpoint, {
+    expectedIssuer, expectedResource = String(endpoint), extraProtectedResourcePaths = [],
+    removedPaths = [], checkPreflight = false, checkOpenIDConfig = false, timeoutMs,
+  } = {}) {
     const origin = new URL(endpoint).origin;
     const response = await request(endpoint, {}, timeoutMs);
     await response.body?.cancel();
@@ -87,13 +106,41 @@ export function createMcpChecks(check = assert) {
     }
     const issuerUrl = new URL(issuer);
     check.ok(expectedIssuer || issuerUrl.origin === origin, 'Set expectedIssuer to verify metadata on a different origin');
-    const authorizationServer = await metadataDocument(
-      new URL('/.well-known/oauth-authorization-server' + issuerUrl.pathname.replace(/\/$/, ''), issuerUrl),
-      'Authorization server metadata', timeoutMs,
-    );
+    const authorizationServerUrl = new URL('/.well-known/oauth-authorization-server' + issuerUrl.pathname.replace(/\/$/, ''), issuerUrl);
+    const authorizationServer = await metadataDocument(authorizationServerUrl, 'Authorization server metadata', timeoutMs);
     check.ok(authorizationServer.issuer === issuer, 'Authorization server metadata names the expected issuer');
     check.ok(nonempty(authorizationServer.authorization_endpoint) && nonempty(authorizationServer.token_endpoint), 'Authorization server metadata names authorization and token endpoints');
     check.ok(Array.isArray(authorizationServer.code_challenge_methods_supported) && authorizationServer.code_challenge_methods_supported.includes('S256'), 'Authorization server metadata advertises S256 PKCE');
+
+    if (checkOpenIDConfig) {
+      const oidcUrl = new URL('/.well-known/openid-configuration' + issuerUrl.pathname.replace(/\/$/, ''), issuerUrl);
+      const oidc = await metadataDocument(oidcUrl, 'OpenID configuration', timeoutMs);
+      check.equal(oidc.issuer, authorizationServer.issuer, 'OpenID configuration issuer matches authorization server');
+      check.equal(oidc.authorization_endpoint, authorizationServer.authorization_endpoint, 'OpenID authorization_endpoint matches authorization server');
+      check.equal(oidc.token_endpoint, authorizationServer.token_endpoint, 'OpenID token_endpoint matches authorization server');
+    }
+
+    if (checkPreflight) {
+      for (const target of [metadataUrl.href, authorizationServerUrl.href]) {
+        const preflight = await request(target, {
+          method: 'OPTIONS',
+          headers: {origin, 'access-control-request-method': 'GET'},
+        }, timeoutMs);
+        await preflight.body?.cancel();
+        check.ok([200, 204].includes(preflight.status), `OPTIONS preflight accepted for ${new URL(target).pathname}`);
+      }
+    }
+
+    for (const removed of removedPaths) {
+      const target = new URL(removed, origin);
+      for (const method of ['GET', 'POST']) {
+        const gone = await request(target, {method}, timeoutMs);
+        await gone.body?.cancel();
+        check.equal(gone.status, 404, `Removed endpoint ${method} ${target.pathname} returns 404`);
+        check.ok(!gone.headers.has('www-authenticate'), `Removed endpoint ${method} ${target.pathname} omits WWW-Authenticate`);
+      }
+    }
+
     return {protectedResource, authorizationServer};
   }
 
@@ -135,8 +182,9 @@ export function createMcpChecks(check = assert) {
 
   async function assertServerContract(endpoint, {
     token, protocolVersion = version, requiredTools = [], requireProfileTool = false, requireIcons = false,
+    verifyIconUrls = true, requireToolAnnotations = false, noExternalBundleRefs = true,
     requireWebsite = false, requireDescription = false, maxInstructionsParagraph = 512, maxResultChars = resultLimit,
-    expectedAppHashes = {},
+    expectedAppHashes = {}, timeoutMs,
   } = {}) {
     check.ok(nonempty(token), 'Provide a QA bearer token for the authenticated MCP contract');
     await assertTransport(endpoint, {token, protocolVersion});
@@ -151,7 +199,19 @@ export function createMcpChecks(check = assert) {
     else check.ok(discovery.supportedVersions?.includes(protocolVersion), 'MCP advertises the requested protocol version');
     const serverInfo = legacy ? discovery.serverInfo : discovery._meta?.['io.modelcontextprotocol/serverInfo'];
     check.ok(nonempty(serverInfo?.name) && nonempty(serverInfo.version), 'MCP discovery returns serverInfo name and version');
-    if (requireIcons) check.ok(Array.isArray(serverInfo.icons) && serverInfo.icons.some(icon => nonempty(icon?.src)), 'MCP serverInfo contains icons');
+    if (requireIcons) {
+      check.ok(Array.isArray(serverInfo.icons) && serverInfo.icons.some(icon => nonempty(icon?.src)), 'MCP serverInfo contains icons');
+      if (verifyIconUrls) {
+        const endpointOrigin = new URL(endpoint).origin;
+        for (const icon of serverInfo.icons) {
+          if (!nonempty(icon?.src)) continue;
+          const iconUrl = new URL(icon.src, endpoint);
+          if (verifyIconUrls === 'all' || iconUrl.protocol === 'data:' || iconUrl.origin === endpointOrigin) {
+            await verifyIcon(icon, endpoint, timeoutMs);
+          }
+        }
+      }
+    }
     if (requireWebsite) check.ok(nonempty(serverInfo.websiteUrl), 'MCP serverInfo contains websiteUrl');
     if (requireDescription) check.ok(nonempty(serverInfo.description), 'MCP serverInfo contains a description');
     const paragraph = (discovery.instructions ?? '').trim().split(/\r?\n[ \t]*\r?\n/, 1)[0];
@@ -169,6 +229,14 @@ export function createMcpChecks(check = assert) {
       cursors.add(cursor);
     } while (cursor);
     for (const name of requiredTools) check.ok(tools.some(tool => tool.name === name), 'MCP tools/list includes ' + name);
+    if (requireToolAnnotations) {
+      for (const tool of tools) {
+        check.ok(
+          object(tool.annotations) && ['readOnlyHint', 'destructiveHint', 'openWorldHint'].some(key => typeof tool.annotations[key] === 'boolean'),
+          `Tool ${tool.name} declares safety annotations`,
+        );
+      }
+    }
 
     if (requireProfileTool) {
       const profiles = tools.filter(tool => tool._meta?.['openai/profile'] === true);
@@ -193,6 +261,10 @@ export function createMcpChecks(check = assert) {
       const view = result.contents?.find(item => item.uri === uri && item.mimeType === uiMime);
       check.ok(nonempty(view?.text), 'MCP app resource returns HTML with the MCP app MIME type');
       check.ok(object(view._meta?.ui?.csp), 'MCP app resource declares ui.csp');
+      if (noExternalBundleRefs) {
+        const strippedHtml = view.text.replace(/<script\b(?![^>]*\bsrc\s*=)[^>]*>[\s\S]*?<\/script>|<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
+        check.ok(!externalBundleRef.test(strippedHtml), `MCP app resource ${uri} inlines scripts and stylesheets without external bundle tags`);
+      }
       if (expectedApps.length) views.set(uri, createHash('sha256').update(view.text).digest('hex'));
     }
     for (const [name, hash] of expectedApps) {
