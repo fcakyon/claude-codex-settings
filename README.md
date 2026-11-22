@@ -1340,6 +1340,7 @@ The test review playbook from [openclaw/openclaw](https://github.com/openclaw/op
 - Before a new test lands, it must name the bug it catches and why existing tests miss it.
 - Finds tests that copy source, mock the behavior they assert, or repeat a stronger test.
 - Deletes test-only exports and dead code once their last test is gone.
+- A bundled script lists candidates first: test-only seams, single-script test files, source greps under build guards, assertion-free or gated tests, and unit mocks that overlap QA journeys.
 - A campaign mode prunes a whole subsystem's tests with a per-test ledger and a final review for lost coverage.
 
 **Skills** (ZIP for claude.ai, Claude Code, Cursor, Codex, VS Code):

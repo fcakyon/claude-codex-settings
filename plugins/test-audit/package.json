@@ -1,0 +1,15 @@
+{
+  "name": "@fcakyon/test-audit",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "test-audit-surface": "skills/test-audit/scripts/surface-candidates.mjs"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

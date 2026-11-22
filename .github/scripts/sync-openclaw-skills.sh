@@ -13,12 +13,13 @@ trap 'rm -rf "$STAGING"' EXIT
 
 fetch() { gh api "repos/$UPSTREAM/contents/$1?ref=$SHA" --jq .content | base64 -d > "$STAGING/$2"; }
 mkdir "$STAGING/references"
+cp -R "$REPO_ROOT/$TARGET/scripts" "$STAGING/scripts"
 fetch .agents/skills/test-audit/SKILL.md SKILL.md
 fetch .agents/skills/test-audit/CAMPAIGN.md references/campaign.md
 fetch .agents/skills/test-audit/references/audit.md references/audit.md
 fetch LICENSE LICENSE
 
-python3 - "$STAGING" <<'PY'
+python3 - "$STAGING" "$REPO_ROOT/.github/scripts/test-audit/surfacing.md" <<'PY'
 import re
 import sys
 from pathlib import Path
@@ -67,8 +68,21 @@ text = text.replace(
 if leftover := re.findall(r"openclaw-testing|scripts/\S+\.mjs|Vitest|pnpm deadcode:", text):
     raise SystemExit(f"Unadapted OpenClaw audit references: {leftover}")
 path.write_text(text)
+
+# Local additions are applied after the upstream checks, so every sync keeps them.
+(staging / "references/surfacing.md").write_text(Path(sys.argv[2]).read_text())
+pointers = {
+    "SKILL.md": ("## Audit and validation", "- Start discovery with [candidate surfacing](references/surfacing.md), then apply its audit lessons."),
+    "references/audit.md": ("## Candidate evidence", "- First run [candidate surfacing](surfacing.md). It lists candidates, never verdicts."),
+}
+for name, (heading, pointer) in pointers.items():
+    path = staging / name
+    text, count = re.subn(rf"^{re.escape(heading)}\n\n", lambda m: m[0] + pointer + "\n", path.read_text(), flags=re.M)
+    if count != 1:
+        raise SystemExit(f"Upstream changed, heading not found once in {name}: {heading}")
+    path.write_text(text)
 PY
 
-sync_dir "$STAGING" "$TARGET" SKILL.md references/ LICENSE
+sync_dir "$STAGING" "$TARGET" SKILL.md references/ scripts/ LICENSE
 create_zip "$TARGET"
 echo "Done syncing test-audit from $UPSTREAM@$SHA."
