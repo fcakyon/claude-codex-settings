@@ -13,6 +13,7 @@ trap 'rm -rf "$STAGING"' EXIT
 
 fetch() { gh api "repos/$UPSTREAM/contents/$1?ref=$SHA" --jq .content | base64 -d > "$STAGING/$2"; }
 mkdir "$STAGING/references"
+cp -R "$REPO_ROOT/$TARGET/scripts" "$STAGING/scripts"
 fetch .agents/skills/test-audit/SKILL.md SKILL.md
 fetch .agents/skills/test-audit/CAMPAIGN.md references/campaign.md
 fetch .agents/skills/test-audit/references/audit.md references/audit.md
@@ -82,6 +83,6 @@ for name, (heading, pointer) in pointers.items():
     path.write_text(text)
 PY
 
-sync_dir "$STAGING" "$TARGET" SKILL.md references/ LICENSE
+sync_dir "$STAGING" "$TARGET" SKILL.md references/ scripts/ LICENSE
 create_zip "$TARGET"
 echo "Done syncing test-audit from $UPSTREAM@$SHA."

@@ -5,11 +5,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { surfaceCandidates } from "../scripts/surface-candidates.mjs";
+import { surfaceCandidates } from "../skills/test-audit/scripts/surface-candidates.mjs";
 
 const PLUGIN = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPO = path.resolve(PLUGIN, "../..");
-const CLI = path.join(PLUGIN, "scripts/surface-candidates.mjs");
+const CLI = path.join(PLUGIN, "skills/test-audit/scripts/surface-candidates.mjs");
 
 function fixture(t, files) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "test-audit-"));

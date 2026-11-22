@@ -6,11 +6,11 @@ needs the full record in [candidate evidence](audit.md#candidate-evidence)
 before any edit.
 
 ```bash
-node <plugin-root>/scripts/surface-candidates.mjs --root . [--qa-suite <path>] [--format json|markdown|text]
+node <skill-root>/scripts/surface-candidates.mjs --root . [--qa-suite <path>] [--format json|markdown|text]
 ```
 
-Run it from the repository root. `<plugin-root>` is the installed `test-audit`
-plugin directory, which holds `scripts/` next to `skills/`. The script needs
+Run it from the repository root. `<skill-root>` is the installed `test-audit`
+skill directory, which holds `SKILL.md` and `scripts/`. The script needs
 Node 22 or later and no dependencies. It reads the files `git ls-files` lists
 in a Git repository and walks the tree otherwise, skipping dependency, build,
 cache and artifact folders. Its `notAudited` key names the skipped folders,
