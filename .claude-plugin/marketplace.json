@@ -638,7 +638,7 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.9.1",
+      "version": "1.10.0",
       "license": "Apache-2.0",
       "keywords": [
         "qa",
@@ -651,6 +651,16 @@
         "testing",
         "quality"
       ]
+    },
+    {
+      "name": "remote-mcp-skills",
+      "source": "./plugins/remote-mcp-skills",
+      "description": "Build remote MCP servers with account sign-in and interactive views.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["mcp", "oauth2", "remote-mcp", "mcp-apps", "streamable-http", "pkce"],
+      "category": "development",
+      "tags": ["mcp", "oauth2", "remote-mcp", "mcp-apps", "streamable-http", "pkce"]
     },
     {
       "name": "reusable-app-components",

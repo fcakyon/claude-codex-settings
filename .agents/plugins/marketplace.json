@@ -515,6 +515,18 @@
       "category": "development"
     },
     {
+      "name": "remote-mcp-skills",
+      "source": {
+        "source": "local",
+        "path": "./plugins/remote-mcp-skills"
+      },
+      "policy": {
+        "installation": "INSTALLED_BY_DEFAULT",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "development"
+    },
+    {
       "name": "reusable-app-components",
       "source": {
         "source": "local",

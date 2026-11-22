@@ -23,3 +23,6 @@ name = "MiniMax"
 base_url = "http://localhost:4000/v1"   # local Responses API proxy, not api.minimax.io
 env_key = "MINIMAX_API_KEY"
 wire_api = "responses"
+
+[plugins."remote-mcp-skills@claude-settings"]
+enabled = true

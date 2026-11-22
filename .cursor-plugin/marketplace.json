@@ -308,7 +308,14 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.9.1",
+      "version": "1.10.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "remote-mcp-skills",
+      "source": "./plugins/remote-mcp-skills",
+      "description": "Build remote MCP servers with account sign-in and interactive views.",
+      "version": "1.0.0",
       "license": "Apache-2.0"
     },
     {

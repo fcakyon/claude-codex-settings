@@ -14,12 +14,15 @@
 | MCP App view | The `ui://` resource renders and acts under its declared CSP. Behavior only a real host provides stays blocked coverage | A small host page that loads the resource in a sandboxed iframe |
 | Realtime | Every device shows the same record after each action and after one device reconnects | One browser context per device on one shared record, expecting the stored record rather than the pushed event |
 | Database | Read-after-write and cleanup | Disposable DB, read-only assertions |
+| Remote MCP | OAuth metadata, stateless JSON, expected tool outcomes and widget resources | `qa.mcp` against the public proxy or a disposable server |
 | Auth/credits | Login/logout, protected denial, first debit, repeat-free, insufficient/unlimited | Normal account and disposable ledger |
 | Android | UI/action outcome on explicit device and assertion count | ADB and project Espresso/UI Automator |
 | macOS | Positive scratch test count, then real native actions and app-owned permission checks on one frozen installed build | Sandboxed `swift test`, nonmutating CI contract checks, separate [manual native acceptance](macos.md) |
 | AI output | Non-empty result for input that has one, and empty, refused and failed answers each in their own state, never complete with zero items | Real model call on fixed input |
 
 Visual evidence must show the changed element. Scroll its actual container into view or render tall enough to include it, then inspect the image. A fixed-size screenshot of the top of a settings form does not verify a changed row below the fold.
+
+For remote MCP, run OAuth discovery and negative checks, then use a disposable grant for the server contract and real tool calls. Assert structured results tied to a known fixture. Use a separate grant for rotation, replay and revocation cases. Open the connector in each supported host to verify consent, displayed account, view rendering and a real interactive action. The HTTP checks in the [runner](runner.md#remote-mcp) can identify failures before the host journey.
 
 For a repaired bug, reproduce its trigger against the old behavior before changing the expectation. Extend the existing owner at the boundary that failed, then prove the repaired outcome and a nearby case that must remain distinct. A runner change belongs in the shared plugin only when the mechanism is reusable. Project selectors, provider tab selection and extraction rules stay in the project suite. Add the case or its owner command to the project CI selection and confirm it appears in `report.selected`. Native owner regressions require a macOS CI job running the actual Swift suite. Linux adapter checks and browser journeys do not cover a Mac coordinator, even when they exercise a similar sign-in flow. Keep native scratch tests, protocol checks and installed acceptance as separate evidence.
 

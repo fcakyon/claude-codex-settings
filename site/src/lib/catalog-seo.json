@@ -187,6 +187,10 @@
       "title": "Run real app journeys with reusable QA tooling",
       "description": "Set up and run tracked QA journeys for websites, browser extensions, Android apps and backends. Verify user workflows with saved sessions and failure evidence."
     },
+    "remote-mcp-skills": {
+      "title": "Build remote MCP connectors and interactive apps",
+      "description": "Ship a remote MCP connector with account sign-in, reliable HTTP transport and interactive views. Check compatibility across chat hosts."
+    },
     "reusable-app-components": {
       "title": "Reusable app authentication, emails and support chat",
       "description": "Reuse app login, signup, transactional emails and Tawk support chat. Share tested components and account contracts while keeping each product's theme."
@@ -894,7 +898,8 @@
       "related": [
         "qa/setup",
         "agent-browser/ui-regression",
-        "frontend-design-skills/frontend-testing-debugging"
+        "frontend-design-skills/frontend-testing-debugging",
+        "remote-mcp-skills/remote-mcp"
       ]
     },
     "qa/setup": {
@@ -904,6 +909,11 @@
         "qa/run-qa",
         "test-audit/test-audit"
       ]
+    },
+    "remote-mcp-skills/remote-mcp": {
+      "title": "Serve remote MCP over HTTP with OAuth and MCP Apps",
+      "description": "Set up stateless MCP 2026-07-28, OAuth discovery and scoped tokens. Serve portable widget builds and verify tool metadata before testing in chat.",
+      "related": ["qa/run-qa", "qa/setup"]
     },
     "react-skills/composition-patterns": {
       "title": "React component composition patterns skill",

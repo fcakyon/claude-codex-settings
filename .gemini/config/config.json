@@ -39,6 +39,9 @@
     "qa": {
       "enabled": true
     },
+    "remote-mcp-skills": {
+      "enabled": true
+    },
     "reusable-app-components": {
       "enabled": true
     },

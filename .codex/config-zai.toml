@@ -53,3 +53,6 @@ name = "ZAI"
 base_url = "https://api.z.ai/api/v1"
 experimental_bearer_token = "your_zai_api_key"
 wire_api = "responses"
+
+[plugins."remote-mcp-skills@claude-settings"]
+enabled = true
