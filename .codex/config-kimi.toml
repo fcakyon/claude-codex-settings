@@ -13,3 +13,6 @@ name = "Kimi K3 via local proxy"
 base_url = "http://127.0.0.1:8787/v1"
 wire_api = "responses"
 stream_idle_timeout_ms = 600000
+
+[plugins."remote-mcp-skills@claude-settings"]
+enabled = true

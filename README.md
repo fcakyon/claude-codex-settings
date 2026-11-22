@@ -1425,7 +1425,7 @@ Configuration in [`.gemini/config/config.json`](./.gemini/config/config.json) an
 
 - **Mode & Sandbox**: `auto` mode with `proceed-in-sandbox`, terminal sandbox enabled, always-on alt-screen rendering, and desktop notifications
 - **Permissions**: allow rules for selected Git, GitHub CLI, search and developer commands and trusted URLs, plus `deny` rules blocking force pushes and `git rebase`
-- **Plugins**: curated Antigravity-compatible plugin set enabled in `.gemini/config/config.json` (`agent-browser`, `code-review`, `codex-advisor`, `fable-advisor`, `frontend-design-skills`, `github-dev`, `google-telemetry`, `heroui-skills`, `humanize`, `modern-web-guidance`, `openai-office-skills`, `python-skills`, `qa`, `reusable-app-components`, `seo-skills`, `simplify`, `swift-skills`, `typescript-skills`, `ultralytics-dev`)
+- **Plugins**: curated Antigravity-compatible plugin set enabled in `.gemini/config/config.json` (`agent-browser`, `code-review`, `codex-advisor`, `fable-advisor`, `frontend-design-skills`, `github-dev`, `google-telemetry`, `heroui-skills`, `humanize`, `modern-web-guidance`, `openai-office-skills`, `python-skills`, `qa`, `remote-mcp-skills`, `reusable-app-components`, `seo-skills`, `simplify`, `swift-skills`, `typescript-skills`, `ultralytics-dev`)
 - **Sync**: run `uv run .github/scripts/antigravity.py sync` to install the enabled plugins and merge settings into `~/.gemini` without removing existing local plugins or `trustedWorkspaces`
 
 </details>
