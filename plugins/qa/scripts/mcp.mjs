@@ -84,7 +84,7 @@ export function createMcpChecks(check = assert) {
 
   async function discoverOAuth(endpoint, {
     expectedIssuer, expectedResource = String(endpoint), extraProtectedResourcePaths = [],
-    removedPaths = [], checkPreflight = false, checkOpenIDConfig = false, timeoutMs,
+    removedPaths = [], checkPreflight = false, preflightOrigin = invalidOrigin, checkOpenIDConfig = false, timeoutMs,
   } = {}) {
     const origin = new URL(endpoint).origin;
     const response = await request(endpoint, {}, timeoutMs);
@@ -113,7 +113,7 @@ export function createMcpChecks(check = assert) {
     check.ok(Array.isArray(authorizationServer.code_challenge_methods_supported) && authorizationServer.code_challenge_methods_supported.includes('S256'), 'Authorization server metadata advertises S256 PKCE');
 
     if (checkOpenIDConfig) {
-      const oidcUrl = new URL('/.well-known/openid-configuration' + issuerUrl.pathname.replace(/\/$/, ''), issuerUrl);
+      const oidcUrl = new URL(issuerUrl.pathname.replace(/\/$/, '') + '/.well-known/openid-configuration', issuerUrl);
       const oidc = await metadataDocument(oidcUrl, 'OpenID configuration', timeoutMs);
       check.equal(oidc.issuer, authorizationServer.issuer, 'OpenID configuration issuer matches authorization server');
       check.equal(oidc.authorization_endpoint, authorizationServer.authorization_endpoint, 'OpenID authorization_endpoint matches authorization server');
@@ -124,10 +124,11 @@ export function createMcpChecks(check = assert) {
       for (const target of [metadataUrl.href, authorizationServerUrl.href]) {
         const preflight = await request(target, {
           method: 'OPTIONS',
-          headers: {origin, 'access-control-request-method': 'GET'},
+          headers: {origin: preflightOrigin, 'access-control-request-method': 'GET'},
         }, timeoutMs);
         await preflight.body?.cancel();
-        check.ok([200, 204].includes(preflight.status), `OPTIONS preflight accepted for ${new URL(target).pathname}`);
+        check.ok(preflight.ok, `OPTIONS preflight accepted for ${new URL(target).pathname}`);
+        check.ok(['*', preflightOrigin].includes(preflight.headers.get('access-control-allow-origin')), 'OPTIONS preflight allows origin');
       }
     }
 

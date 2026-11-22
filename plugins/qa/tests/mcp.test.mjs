@@ -31,7 +31,7 @@ async function fixture(t, fault) {
     };
     const url = new URL(req.url, base);
     if (req.method === 'OPTIONS' && url.pathname.startsWith('/.well-known/')) {
-      res.writeHead(fault === 'preflight' ? 405 : 204, {'access-control-allow-origin': '*'}).end();
+      res.writeHead(fault === 'preflight' ? 405 : 204, fault === 'preflight-headers' ? {} : {'access-control-allow-origin': 'https://client.example'}).end();
       return;
     }
     if (url.pathname === '/icon.png') {
@@ -53,8 +53,8 @@ async function fixture(t, fault) {
       resource: base + (fault === 'resource' && url.pathname === prm + '/mcp' ? '/wrong' : '/mcp'),
       authorization_servers: [base + '/oauth'],
     });
-    if (url.pathname === '/.well-known/oauth-authorization-server/oauth' || url.pathname === '/.well-known/openid-configuration/oauth') {
-      const mismatch = fault === 'oidc-mismatch' && url.pathname.startsWith('/.well-known/openid-configuration');
+    if (url.pathname === '/.well-known/oauth-authorization-server/oauth' || url.pathname === '/oauth/.well-known/openid-configuration') {
+      const mismatch = fault === 'oidc-mismatch' && url.pathname.includes('/.well-known/openid-configuration');
       return json({
         issuer: base + (fault === 'issuer' || mismatch ? '/other' : '/oauth'),
         authorization_endpoint: base + '/authorize',
@@ -168,7 +168,7 @@ test('discovers OAuth from the bearer challenge and checks metadata, preflights,
   const {base, endpoint} = await fixture(t);
   const {protectedResource, authorizationServer} = await qa.discoverOAuth(endpoint, {
     expectedIssuer: base + '/oauth', expectedResource: endpoint, extraProtectedResourcePaths: [prm + '/', prm + '/mcp'],
-    removedPaths: ['/api/mcp'], checkPreflight: true, checkOpenIDConfig: true,
+    removedPaths: ['/api/mcp'], checkPreflight: true, preflightOrigin: 'https://client.example', checkOpenIDConfig: true,
   });
   assert.equal(protectedResource.resource, endpoint);
   assert.equal(authorizationServer.token_endpoint, base + '/token');
@@ -182,6 +182,7 @@ for (const [fault, message] of [
   ['pkce', /advertises S256/],
   ['oidc-mismatch', /OpenID configuration issuer matches authorization server/],
   ['preflight', /OPTIONS preflight accepted/],
+  ['preflight-headers', /preflight allows origin/],
   ['removed-present', /Removed endpoint GET \/api\/mcp returns 404/],
 ]) {
   test('fails OAuth discovery for ' + fault, async t => {
@@ -190,6 +191,7 @@ for (const [fault, message] of [
       extraProtectedResourcePaths: [prm + '/mcp'],
       removedPaths: ['/api/mcp'],
       checkPreflight: true,
+      preflightOrigin: 'https://client.example',
       checkOpenIDConfig: true,
     }), message);
   });

@@ -1,5 +1,6 @@
 import {readdir, readFile, mkdir, writeFile, stat} from 'node:fs/promises';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 import {command} from './process.mjs';
 
 const ignored = new Set(['.git', 'node_modules', '.next', 'dist', 'build', 'out', '.venv', 'venv', 'inspection', '.local', '.agents']);
@@ -33,26 +34,7 @@ async function filesUnder(root, gitignored, depth = 0) {
   return result;
 }
 
-function extractExistingCases(suiteText) {
-  const cases = [];
-  const seen = new Set();
-  // Strip block and line comments without disturbing strings/URLs? Keep line comments starting at whitespace/start.
-  const idSurface = /\bid\s*:\s*(['"`])([^'"`\n]+)\1[\s\S]{0,240}?\bsurface\s*:\s*(['"`])([^'"`\n]+)\3/g;
-  const surfaceId = /\bsurface\s*:\s*(['"`])([^'"`\n]+)\1[\s\S]{0,240}?\bid\s*:\s*(['"`])([^'"`\n]+)\3/g;
-  for (const [pattern, idGroup, surfaceGroup] of [[idSurface, 2, 4], [surfaceId, 4, 2]]) {
-    for (const match of suiteText.matchAll(pattern)) {
-      const id = match[idGroup];
-      const surface = match[surfaceGroup];
-      if (!seen.has(id)) {
-        seen.add(id);
-        cases.push({id, surface});
-      }
-    }
-  }
-  return cases;
-}
-
-export async function discover(root) {
+export async function discover(root, {loadSuite = false} = {}) {
   root = path.resolve(root);
   // Gitignored paths such as local analysis output are not project evidence, while submodules and nested repositories still count.
   // Git lists a wholly ignored folder as one entry ending in a separator, so the walk never opens it.
@@ -111,17 +93,20 @@ export async function discover(root) {
     }
   }
 
-  const suiteText = await readFile(path.join(root, '.agents/qa/suite.mjs'), 'utf8').catch(() => '');
-  const existingCases = suiteText ? extractExistingCases(suiteText) : [];
-  const coveredSurfaces = [...new Set(existingCases.filter(item => !item.id.endsWith('.unconfigured')).map(item => item.surface))];
-  const expectedSurfaces = [...new Set([...components.map(item => item.kind), ...Object.keys(capabilities)])];
-  const missingSurfaces = expectedSurfaces.filter(surface => !coveredSurfaces.includes(surface));
-  const suggestedJourneys = missingSurfaces.map(surface => ({
-    surface,
-    recommendation: suggestedJourneyBySurface[surface] || `Add an observed-outcome journey for ${surface}`,
-  }));
-
-  return {root, components, capabilities, existingCases, coveredSurfaces, missingSurfaces, suggestedJourneys, note: 'Source evidence identifies candidate coverage. It does not prove a working flow.'};
+  const suitePath = path.join(root, '.agents/qa/suite.mjs');
+  const suiteExists = await stat(suitePath).then(() => true, error => { if (error.code === 'ENOENT') return false; throw error; });
+  let suite = {status: suiteExists ? 'not-loaded' : 'missing', declaredCases: null, declaredSurfaces: null, candidateGaps: null, suggestedJourneys: null};
+  if (suiteExists && loadSuite) {
+    const {cases} = await import(pathToFileURL(suitePath));
+    if (!Array.isArray(cases)) throw new Error('QA suite must export a cases array');
+    const declaredCases = cases.map(({id, surface, capabilities}) => ({id, surface, ...(capabilities && {capabilities})}));
+    const declaredSurfaces = [...new Set(declaredCases.filter(item => typeof item.id === 'string' && !item.id.endsWith('.unconfigured'))
+      .flatMap(item => [item.surface, item.capabilities].flat(2).flatMap(value => typeof value === 'string' ? value.split('/').filter(Boolean) : [])))];
+    const candidateGaps = [...new Set([...components.map(item => item.kind), ...Object.keys(capabilities)])].filter(surface => !declaredSurfaces.includes(surface));
+    const suggestedJourneys = candidateGaps.map(surface => ({surface, recommendation: suggestedJourneyBySurface[surface] || `Add an observed-outcome journey for ${surface}`}));
+    suite = {status: 'loaded', declaredCases, declaredSurfaces, candidateGaps, suggestedJourneys};
+  }
+  return {root, components, capabilities, suite, note: 'Source evidence and declared case labels identify candidates, not verified coverage.'};
 }
 
 export async function setup(root, options = {}) {
