@@ -663,6 +663,16 @@
       "tags": ["mcp", "oauth2", "remote-mcp", "mcp-apps", "streamable-http", "pkce"]
     },
     {
+      "name": "compliance",
+      "source": "./plugins/compliance",
+      "description": "Audit web and OAuth apps for Google CASA Tier 2, OWASP headers, leaks, and privacy.",
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "keywords": ["compliance", "casa", "casa-tier-2", "oauth2", "security", "owasp", "privacy"],
+      "category": "development",
+      "tags": ["compliance", "casa", "security", "oauth2", "privacy"]
+    },
+    {
       "name": "reusable-app-components",
       "source": "./plugins/reusable-app-components",
       "description": "Reuse tested app journeys with code, design and integration checks.",

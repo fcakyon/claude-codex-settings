@@ -9,6 +9,9 @@
     "codex-advisor": {
       "enabled": true
     },
+    "compliance": {
+      "enabled": true
+    },
     "fable-advisor": {
       "enabled": true
     },

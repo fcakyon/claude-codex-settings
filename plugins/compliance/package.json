@@ -1,0 +1,15 @@
+{
+  "name": "@fcakyon/compliance",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "casa-audit": "scripts/casa-audit.mjs"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
