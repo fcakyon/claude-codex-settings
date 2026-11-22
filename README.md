@@ -1296,6 +1296,33 @@ Pairs naturally with `qa`.
 </details>
 
 <details>
+<summary><strong>compliance</strong> - Audit web and OAuth apps for Google CASA Tier 2, OWASP headers, leaks, and privacy</summary>
+
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
+| --- | --- | --- | --- |
+| `claude plugin install compliance@claude-settings` | `codex plugin add compliance@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install compliance` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/compliance --skill '*'
+```
+
+Run repeatable security, dependency, privacy, and compliance audits before shipping or submitting for third-party assessments.
+
+- Inspect live HTTPS endpoints for HSTS, CSP, framing headers, cookie flags, wildcard CORS, and exposed dotfiles.
+- Run `govulncheck`, `npm audit --omit=dev`, secret scans, encryption/revocation checks, and `Dockerfile` user validation.
+- Reuse weekly OpenShip Actions and GitHub Actions workflows with OWASP ZAP baseline scans.
+
+| Skill | Purpose | ZIP |
+| --- | --- | --- |
+| [`casa-audit`](./plugins/compliance/skills/casa-audit/SKILL.md) | Google CASA Tier 2, OWASP headers, and Limited Use audit | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/casa-audit.zip) |
+
+Pairs naturally with `qa` and `remote-mcp-skills`.
+
+</details>
+
+<details>
 <summary><strong>test-audit</strong> - Keep only tests that catch real bugs, and prune ones that just restate the code</summary>
 
 | Claude Code | Codex CLI | Cursor | Antigravity CLI |
@@ -1425,7 +1452,7 @@ Configuration in [`.gemini/config/config.json`](./.gemini/config/config.json) an
 
 - **Mode & Sandbox**: `auto` mode with `proceed-in-sandbox`, terminal sandbox enabled, always-on alt-screen rendering, and desktop notifications
 - **Permissions**: allow rules for selected Git, GitHub CLI, search and developer commands and trusted URLs, plus `deny` rules blocking force pushes and `git rebase`
-- **Plugins**: curated Antigravity-compatible plugin set enabled in `.gemini/config/config.json` (`agent-browser`, `code-review`, `codex-advisor`, `fable-advisor`, `frontend-design-skills`, `github-dev`, `google-telemetry`, `heroui-skills`, `humanize`, `modern-web-guidance`, `openai-office-skills`, `python-skills`, `qa`, `remote-mcp-skills`, `reusable-app-components`, `seo-skills`, `simplify`, `swift-skills`, `typescript-skills`, `ultralytics-dev`)
+- **Plugins**: curated Antigravity-compatible plugin set enabled in `.gemini/config/config.json` (`agent-browser`, `code-review`, `codex-advisor`, `compliance`, `fable-advisor`, `frontend-design-skills`, `github-dev`, `google-telemetry`, `heroui-skills`, `humanize`, `modern-web-guidance`, `openai-office-skills`, `python-skills`, `qa`, `remote-mcp-skills`, `reusable-app-components`, `seo-skills`, `simplify`, `swift-skills`, `typescript-skills`, `ultralytics-dev`)
 - **Sync**: run `uv run .github/scripts/antigravity.py sync` to install the enabled plugins and merge settings into `~/.gemini` without removing existing local plugins or `trustedWorkspaces`
 
 </details>

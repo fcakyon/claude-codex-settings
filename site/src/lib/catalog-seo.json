@@ -191,6 +191,10 @@
       "title": "Build remote MCP connectors and interactive apps",
       "description": "Ship a remote MCP connector with account sign-in, reliable HTTP transport and interactive views. Check compatibility across chat hosts."
     },
+    "compliance": {
+      "title": "Security, privacy, and Google CASA Tier 2 compliance audits",
+      "description": "Audit web and OAuth apps for CASA Tier 2 controls, OWASP response headers, secret leaks, vulnerabilities, containers, and privacy policy disclosures."
+    },
     "reusable-app-components": {
       "title": "Reusable app authentication, emails and support chat",
       "description": "Reuse app login, signup, transactional emails and Tawk support chat. Share tested components and account contracts while keeping each product's theme."
@@ -333,6 +337,15 @@
       "description": "Set up Azure MCP integration and diagnose authentication failures. Check Azure CLI availability, sign in state and the configuration needed by the tools.",
       "related": [
         "azure-tools/azure-usage"
+      ]
+    },
+    "compliance/casa-audit": {
+      "title": "Audit OAuth web apps for Google CASA Tier 2",
+      "description": "Run deterministic HTTP header, secret hygiene, dependency vulnerability, container, and Google Limited Use checks before CASA Tier 2 review.",
+      "related": [
+        "qa/run-qa",
+        "remote-mcp-skills/remote-mcp",
+        "modern-web-guidance/modern-web-guidance"
       ]
     },
     "cloudflare-skills/agents-sdk": {

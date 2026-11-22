@@ -319,6 +319,13 @@
       "license": "Apache-2.0"
     },
     {
+      "name": "compliance",
+      "source": "./plugins/compliance",
+      "description": "Audit web and OAuth apps for Google CASA Tier 2, OWASP headers, leaks, and privacy.",
+      "version": "1.0.0",
+      "license": "Apache-2.0"
+    },
+    {
       "name": "reusable-app-components",
       "source": "./plugins/reusable-app-components",
       "description": "Reuse tested app journeys with code, design and integration checks.",
