@@ -85,6 +85,9 @@ jobs:
           npm ci --prefix plugins/seo-skills/skills/seo-audit/scripts --ignore-scripts
           node --test .github/scripts/test_seo_audit.mjs
 
+      - name: Test test-audit surfacing and compliance audits
+        run: node --test plugins/test-audit/tests/*.test.mjs plugins/compliance/tests/*.test.mjs
+
       - name: Install SQLite for QA contracts
         run: |
           sudo apt-get update

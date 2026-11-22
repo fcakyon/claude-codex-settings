@@ -33,6 +33,7 @@ contract. Audit existing matches:
 
 ## Candidate evidence
 
+- First run [candidate surfacing](surfacing.md). It lists candidates, never verdicts.
 - Before editing: read full test, production owner, entry point, callers,
   callees, siblings, overlapping proof, CI routing, history. Dependency-backed
   claims: inspect dependency source/types. Read root/scoped instructions.

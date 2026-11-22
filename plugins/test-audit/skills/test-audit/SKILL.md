@@ -48,6 +48,7 @@ Before adding test, answer:
 
 ## Audit and validation
 
+- Start discovery with [candidate surfacing](references/surfacing.md), then apply its audit lessons.
 - Before audit edit: read [candidate evidence and workflow](references/audit.md#candidate-evidence);
   inspect full owners/callers/history; record remaining proof before deletion.
 - Delete obsolete production seams with tests; never optimize for deletion counts.
