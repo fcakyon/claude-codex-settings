@@ -3,6 +3,7 @@ import {tabTo} from './keyboard.mjs';
 import {command, Blocked} from './process.mjs';
 import {androidInstrumentation, sqliteQuery} from './native.mjs';
 import {macos, assertSwiftTests} from './macos.mjs';
+import {createMcpChecks} from './mcp.mjs';
 export {command, Blocked} from './process.mjs';
 import {mkdir, readFile, writeFile, realpath} from 'node:fs/promises';
 import {homedir} from 'node:os';
@@ -177,6 +178,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
       return response;
     },
   };
+  qa.mcp = createMcpChecks(qa.assert);
   try {
     for (const item of selected) {
       const start = Date.now();

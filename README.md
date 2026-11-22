@@ -1260,7 +1260,38 @@ Install this plugin from the marketplace after publication. For a local checkout
 | [setup](./plugins/qa/skills/setup/SKILL.md) | Discover components and build project-specific real journeys |
 | [run-qa](./plugins/qa/skills/run-qa/SKILL.md) | Run tracked journeys and inspect evidence |
 
+Use `qa.mcp` to check connector sign-in metadata, tool calls and interactive view resources over HTTP.
+
 Pairs naturally with `reusable-app-components`.
+
+Pairs naturally with `remote-mcp-skills`.
+
+</details>
+
+<details>
+<summary><strong>remote-mcp-skills</strong> - Build remote MCP servers with account sign-in and interactive views</summary>
+
+| Claude Code | Codex CLI | Cursor | Antigravity CLI |
+| --- | --- | --- | --- |
+| `claude plugin install remote-mcp-skills@claude-settings` | `codex plugin add remote-mcp-skills@claude-settings` | Run `agent`, enter `/plugin`, and install by name | `uv run .github/scripts/antigravity.py install remote-mcp-skills` |
+
+**Skills CLI**
+
+```bash
+npx skills add https://github.com/fcakyon/claude-codex-settings/tree/main/plugins/remote-mcp-skills --skill '*'
+```
+
+Build a connector that works across chat hosts and keeps users connected through deploys.
+
+- Serve MCP tools over stateless HTTP and keep older connector URLs working.
+- Add account sign-in with OAuth and show which account is connected.
+- Package interactive views and diagnose when a host falls back to text.
+
+| Skill | Purpose | ZIP |
+| --- | --- | --- |
+| [`remote-mcp`](./plugins/remote-mcp-skills/skills/remote-mcp/SKILL.md) | Remote transport, OAuth, connector branding and MCP Apps | [![ZIP](https://img.shields.io/badge/⬇%20ZIP-2ea44f?style=flat-square)](https://github.com/fcakyon/claude-codex-settings/releases/latest/download/remote-mcp.zip) |
+
+Pairs naturally with `qa`.
 
 </details>
 

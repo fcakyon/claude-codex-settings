@@ -22,6 +22,7 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.secret(name)` | Environment/private credential lookup |
 | `qa.reuseCookies(origins)` | Approved provider cookies from local browser |
 | `qa.http(url, options)` | Real fetch, 30-second deadline, no browser cookies |
+| `qa.mcp` | Remote MCP and OAuth checks using Node fetch, see below |
 | `qa.network(startArgs, run)` | Scoped CLI capture with private export and cleanup |
 | `qa.command(file, args, options)` | Spawn argv without a shell, return code/stdout/stderr |
 | `qa.sqliteQuery(db, sql)` | Read-only SQLite JSON rows |
@@ -37,6 +38,26 @@ Export `cases` from `.agents/qa/suite.mjs`. Each has `id`, `surface`, optional `
 | `qa.captureAudio(page)` | Scripted microphone and played-audio meter for voice pages, see [voice](voice.md). Call before navigation |
 | `qa.tabTo(locator, {timeout} = {})` | Reach a Playwright locator by pressing Tab from the current focus, with a 30-second default budget. Use before keyboard activation. Assert the resulting focus, navigation or saved state in the journey. |
 | `qa.overflow(page)` | Up to five `tag#id.class right=<px>` elements past the viewport's right edge, `[]` when the page has no horizontal scroll. Assert with `deepEqual(…, [])` |
+
+## Remote MCP
+
+The helpers default to MCP `2026-07-28`. Pass `protocolVersion: '2025-11-25'` to check the legacy stateless path. Each request has a 30-second deadline and stops at redirects. Use a configured connector URL and retrieve your disposable account's bearer token with `qa.secret`. Return only non-sensitive summaries as evidence.
+
+| API | Purpose |
+| --- | --- |
+| `qa.mcp.discoverOAuth(endpoint, {expectedIssuer, expectedResource, extraProtectedResourcePaths, timeoutMs})` | Follow the anonymous GET bearer challenge to same-origin protected resource metadata and check RFC 8414 metadata and S256. Defaults the resource to the endpoint. Set the issuer explicitly for a separate auth origin. Pass extra PRM paths to check aliases. Returns `{protectedResource, authorizationServer}` |
+| `qa.mcp.call(endpoint, {token, method, params, protocolVersion, headers})` | Send one JSON-RPC POST with protocol headers and metadata. Returns `{status, headers, body, result, error, chars}`. Body is JSON or text, with `null` for an SSE response closed on receipt. Supply your own `qa.assert` on the outcome of this raw call |
+| `qa.mcp.assertServerContract(endpoint, {token, protocolVersion, requiredTools, requireProfileTool, requireIcons, requireWebsite, requireDescription, maxInstructionsParagraph, maxResultChars})` | Check anonymous challenges, authenticated GET and DELETE, foreign Origin rejection, discovery, paginated tool lists and referenced view metadata. Opt into branding and profile checks. The default limits are 512 characters in the first instructions paragraph and 100,000 per discovery and tool payload. Returns `{serverInfo, instructions, tools}` |
+| `qa.mcp.assertToolCall(endpoint, {token, name, arguments, expectError, maxChars, protocolVersion})` | Check a JSON tool result or expected tool or JSON-RPC error. Returns the raw call shape. The default budget is 100,000 characters measured on the serialized result or error |
+| `qa.mcp.assertOAuthNegativeBoundaries(baseUrl, {registerEndpoint, authorizeEndpoint, tokenEndpoint, protectedResource})` | Check invalid registration if a DCR URL is provided, unsafe authorization redirects, and rejection of unsupported grants or fake credentials. Endpoint options accept absolute URLs or paths relative to the base URL. Uses synthetic values, with no valid registration or token exchange |
+
+```js
+const endpoint = new URL('/mcp', qa.config.baseUrl)
+const token = await qa.secret('QA_MCP_BEARER')
+await qa.mcp.assertServerContract(endpoint, {token, requiredTools: ['list_reports'], requireProfileTool: true})
+const {result} = await qa.mcp.assertToolCall(endpoint, {token, name: 'list_reports', arguments: {limit: 5}})
+qa.assert.ok(result.structuredContent.reports.some(report => report.id === 'qa-fixture-report'))
+```
 | `qa.evidence(name, value)` | Non-sensitive structured evidence |
 | `qa.screenshot(page, name)` | Private screenshot |
 

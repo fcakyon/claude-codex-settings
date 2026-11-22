@@ -1,0 +1,8 @@
+{
+  "name": "remote-mcp-skills",
+  "version": "1.0.0",
+  "description": "Build remote MCP servers with account sign-in and interactive views.",
+  "homepage": "https://github.com/fcakyon/claude-codex-settings#plugins",
+  "repository": "https://github.com/fcakyon/claude-codex-settings",
+  "license": "Apache-2.0"
+}
