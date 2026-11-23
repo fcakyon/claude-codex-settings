@@ -61,10 +61,17 @@ async function waitForVideos(page, selector, expectedCount, timeout) {
   }, {selector, expectedCount}, {timeout});
 }
 
-async function sampleVideos(page, selector, token, resetBaseline = false) {
-  return page.evaluate(({selector, token, resetBaseline}) => {
+async function collectVideoDOM(page, selector, {
+  lastOnly = false,
+  includeLayout = false,
+  token = null,
+  resetBaseline = false,
+} = {}) {
+  return page.evaluate(({selector, lastOnly, includeLayout, token, resetBaseline}) => {
     const store = token ? window.__qaMediaMonitors?.[token] : null;
-    return [...document.querySelectorAll(selector)].map((video, index) => {
+    const all = [...document.querySelectorAll(selector)];
+    const list = lastOnly ? (all.length ? [all[all.length - 1]] : []) : all;
+    return list.map((video, index) => {
       const entry = store?.entries.get(video) || null;
       if (entry) {
         const nowTime = video.currentTime;
@@ -81,6 +88,8 @@ async function sampleVideos(page, selector, token, resetBaseline = false) {
           entry.lastTime = nowTime;
         }
       }
+      const style = includeLayout ? getComputedStyle(video) : null;
+      const rect = includeLayout ? video.getBoundingClientRect() : null;
       return {
         index,
         isVideo: video.tagName === 'VIDEO',
@@ -90,37 +99,43 @@ async function sampleVideos(page, selector, token, resetBaseline = false) {
         paused: video.paused,
         ended: video.ended,
         muted: video.muted,
+        defaultMuted: Boolean(video.defaultMuted),
+        hasMutedAttr: video.hasAttribute('muted'),
+        hasAutoplayAttr: video.hasAttribute('autoplay'),
+        autoplay: Boolean(video.autoplay),
+        hasPlaysInlineAttr: video.hasAttribute('playsinline') || Boolean(video.playsInline),
         playbackRate: video.playbackRate,
         seeking: video.seeking,
         width: video.videoWidth,
         height: video.videoHeight,
         readyState: video.readyState,
         frames: video.getVideoPlaybackQuality?.()?.totalVideoFrames ?? 0,
+        protected: Boolean(video.mediaKeys),
         error: video.error ? {code: video.error.code, message: video.error.message || ''} : null,
         counts: entry ? {...entry.counts} : null,
         forwardSec: entry ? entry.forwardSec : 0,
+        ...(includeLayout ? {
+          display: style.display,
+          visibility: style.visibility,
+          opacity: Number.parseFloat(style.opacity),
+          boxWidth: rect.width,
+          boxHeight: rect.height,
+        } : {}),
       };
     });
-  }, {selector, token, resetBaseline});
+  }, {selector, lastOnly, includeLayout, token, resetBaseline});
+}
+
+function sampleVideos(page, selector, token, resetBaseline = false) {
+  return collectVideoDOM(page, selector, {token, resetBaseline});
 }
 
 export function createMediaChecks(check = assert) {
   async function videoState(page, selector = 'video') {
-    return page.locator(selector).last().evaluate(video => ({
-      time: video.currentTime,
-      duration: Number.isFinite(video.duration) ? video.duration : null,
-      paused: video.paused,
-      ended: video.ended,
-      muted: video.muted,
-      playbackRate: video.playbackRate,
-      seeking: video.seeking,
-      width: video.videoWidth,
-      height: video.videoHeight,
-      readyState: video.readyState,
-      frames: video.getVideoPlaybackQuality?.()?.totalVideoFrames ?? 0,
-      protected: Boolean(video.mediaKeys),
-      error: video.error ? {code: video.error.code, message: video.error.message || ''} : null,
-    }));
+    await page.locator(selector).last().waitFor({state: 'attached'});
+    const [state] = await collectVideoDOM(page, selector, {lastOnly: true});
+    check.ok(state, `No media element matching ${selector}`);
+    return state;
   }
 
   async function advancingVideo(page, {selector = 'video', timeout = 20000} = {}) {
@@ -158,11 +173,75 @@ export function createMediaChecks(check = assert) {
     return jump;
   }
 
+  async function assertAutoplayReady(page, {
+    selector = 'video', expectedCount = null,
+    requireMutedAttr = true, requirePlaysInline = true, requireAutoplay = true, requireVisibleBox = true,
+  } = {}) {
+    const videos = await collectVideoDOM(page, selector, {includeLayout: true});
+
+    if (expectedCount !== null) check.equal(videos.length, expectedCount, `Expected ${expectedCount} videos matching ${selector}`);
+    else check.ok(videos.length > 0, `Expected at least one video matching ${selector}`);
+
+    for (const video of videos) {
+      const label = `Video[${video.index}]`;
+      check.equal(video.isVideo, true, `${label} is not a <video> element`);
+      if (requireMutedAttr) {
+        check.ok(
+          video.hasMutedAttr || video.defaultMuted,
+          `${label} missing muted HTML content attribute or defaultMuted for iOS WebKit autoplay`,
+        );
+      }
+      if (requirePlaysInline) {
+        check.ok(video.hasPlaysInlineAttr, `${label} missing playsinline attribute for inline mobile playback`);
+      }
+      if (requireAutoplay) {
+        check.ok(video.hasAutoplayAttr || video.autoplay, `${label} missing autoplay attribute`);
+      }
+      if (requireVisibleBox) {
+        check.ok(
+          video.display !== 'none' && video.visibility !== 'hidden' && video.opacity > 0 && video.boxWidth > 0 && video.boxHeight > 0,
+          `${label} must remain rendered with non-zero opacity and box so mobile browsers decode frames`,
+        );
+      }
+    }
+    return videos;
+  }
+
+  async function withNetworkThrottle(page, optionsOrRun, maybeRun) {
+    const options = typeof optionsOrRun === 'function' ? {} : (optionsOrRun ?? {});
+    const run = typeof optionsOrRun === 'function' ? optionsOrRun : maybeRun;
+    check.equal(typeof run, 'function', 'withNetworkThrottle requires a callback function');
+    const {downloadKbps = 3000, uploadKbps = 1500, latencyMs = 40, disableCache = true} = options;
+    check.ok(Number.isFinite(latencyMs) && latencyMs >= 0, 'withNetworkThrottle latencyMs must be non-negative');
+    const toBytesPerSec = kbps => (kbps > 0 ? Math.round((kbps * 1024) / 8) : -1);
+    const cdp = await page.context().newCDPSession(page);
+    try {
+      await cdp.send('Network.enable');
+      if (disableCache) await cdp.send('Network.setCacheDisabled', {cacheDisabled: true});
+      await cdp.send('Network.emulateNetworkConditions', {
+        offline: false,
+        latency: latencyMs,
+        downloadThroughput: toBytesPerSec(downloadKbps),
+        uploadThroughput: toBytesPerSec(uploadKbps),
+      });
+      return await run();
+    } finally {
+      await cdp.send('Network.emulateNetworkConditions', {
+        offline: false,
+        latency: 0,
+        downloadThroughput: -1,
+        uploadThroughput: -1,
+      }).catch(() => {});
+      if (disableCache) await cdp.send('Network.setCacheDisabled', {cacheDisabled: false}).catch(() => {});
+      await cdp.detach().catch(() => {});
+    }
+  }
+
   async function assertPlaybackStability(page, {
     selector = 'video', expectedCount = null, durationMs = 1800, action = null, timeout = 20000,
     maxSeeking = 1, maxWaiting = 1, maxStalled = 0, minAdvanceSec = 0.4, minFrames = 1,
     minReadyState = 3, sync = expectedCount !== null && expectedCount > 1, maxSyncDriftSec = 0.25,
-    expectedPlaybackRate = 1,
+    expectedPlaybackRate = 1, requireAutoplayAttrs = false,
   } = {}) {
     if (!action) await waitForVideos(page, selector, expectedCount, timeout);
 
@@ -209,6 +288,13 @@ export function createMediaChecks(check = assert) {
       if (action) {
         await action();
         await waitForVideos(page, selector, expectedCount, timeout);
+      }
+      if (requireAutoplayAttrs) {
+        await assertAutoplayReady(page, {
+          selector,
+          expectedCount,
+          ...(typeof requireAutoplayAttrs === 'object' ? requireAutoplayAttrs : {}),
+        });
       }
       start = await sampleVideos(page, selector, token, true);
       await page.waitForTimeout(durationMs);
@@ -386,8 +472,26 @@ export function createMediaChecks(check = assert) {
     }
   }
 
-  return {videoState, advancingVideo, observeSkip, assertPlaybackStability, probeMediaAsset, assertRangeSupport};
+  return {
+    videoState,
+    advancingVideo,
+    observeSkip,
+    assertPlaybackStability,
+    assertAutoplayReady,
+    withNetworkThrottle,
+    probeMediaAsset,
+    assertRangeSupport,
+  };
 }
 
 const defaults = createMediaChecks();
-export const {videoState, advancingVideo, observeSkip, assertPlaybackStability, probeMediaAsset, assertRangeSupport} = defaults;
+export const {
+  videoState,
+  advancingVideo,
+  observeSkip,
+  assertPlaybackStability,
+  assertAutoplayReady,
+  withNetworkThrottle,
+  probeMediaAsset,
+  assertRangeSupport,
+} = defaults;

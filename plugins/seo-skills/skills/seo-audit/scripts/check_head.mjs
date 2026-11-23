@@ -286,10 +286,16 @@ const inspect = async ([agent, userAgent], target) => {
   if (errors.length) return { ...base, errors, warnings };
 
   const jsonLd = [];
+  const scriptHrefs = [];
   // Keep an svg's accessible name as text, so a logo H1 is not read as empty.
   const doc = html.replace(RAW_TEXT, (match, element = "", attributes, body) => {
-    if (/application\/ld\+json/i.test(attributes)) jsonLd.push(body);
-    if (element.toLowerCase() !== "svg") return "";
+    const tagName = element.toLowerCase();
+    if (tagName === "script") {
+      if (/application\/ld\+json/i.test(attributes)) jsonLd.push(body);
+      const src = attributesOf(attributes).src?.trim();
+      if (src) scriptHrefs.push(src);
+    }
+    if (tagName !== "svg") return "";
     const label = attributesOf(attributes)["aria-label"];
     return ` ${label ?? clean(body.match(/<title\b[^>]*>([\s\S]*?)<\/title/i)?.[1] ?? "")} `;
   });
@@ -477,6 +483,31 @@ const inspect = async ([agent, userAgent], target) => {
   const icons = tags
     .filter((tag) => tag.name === "link" && tag.keys.some((key) => /^(icon|apple-touch-icon)/.test(key)))
     .map((tag) => ({ href: tag.attributes.href, rel: tag.keys.join(" ") }));
+  const manifestHref = find("link", "manifest")?.attributes.href?.trim() || null;
+  const stylesheetHrefs = [];
+  const preloadHrefs = [];
+  for (const tag of tags) {
+    if (tag.name !== "link" || !tag.attributes.href) continue;
+    if (tag.keys.includes("stylesheet")) stylesheetHrefs.push(tag.attributes.href);
+    else if (
+      (tag.keys.includes("preload") && tag.attributes.as?.toLowerCase() === "style") ||
+      tag.keys.includes("modulepreload")
+    ) {
+      preloadHrefs.push(tag.attributes.href);
+    }
+  }
+  const staticAssetCandidates = [...stylesheetHrefs, ...scriptHrefs, ...preloadHrefs];
+  const staticAssets = [];
+  const seenStaticAssets = new Set();
+  for (const rawHref of staticAssetCandidates) {
+    const resolved = URL.parse(rawHref, url);
+    if (!resolved || resolved.origin !== pageOrigin || !/^https?:$/i.test(resolved.protocol)) continue;
+    if (seenStaticAssets.has(resolved.href)) continue;
+    seenStaticAssets.add(resolved.href);
+    staticAssets.push(resolved.href);
+    if (staticAssets.length >= 6) break;
+  }
+  const htmlEncoding = (response.headers.get("content-encoding") ?? "").trim();
 
   return {
     ...base,
@@ -499,8 +530,11 @@ const inspect = async ([agent, userAgent], target) => {
         head: Buffer.byteLength(html.split(/<\/head\s*>|<body\b/i)[0]),
         html: Buffer.byteLength(html),
       },
+      htmlEncoding,
       emailObfuscated: html.includes("/cdn-cgi/l/email-protection"),
       icons,
+      manifestHref,
+      staticAssets,
       organization: organization && {
         logo: typeof logo === "string" ? logo : null,
         sameAs: [organization.sameAs ?? []].flat(),
@@ -524,6 +558,7 @@ const inspect = async ([agent, userAgent], target) => {
 const KB = 1024;
 const SHARE_FORMATS = /^image\/(jpeg|png|gif)$/;
 const GOOGLE_IMAGE_FORMATS = /^image\/(bmp|gif|jpeg|png|webp|svg\+xml|avif)$/;
+const COMPRESSED_ENCODING = /\b(gzip|br|zstd|deflate)\b/i;
 const UNREACHABLE = /^(ENOTFOUND|ECONNREFUSED)$/;
 // Read pixel size from the file header of the formats share cards and icons use.
 const imageSize = (bytes) => {
@@ -605,6 +640,113 @@ const downloadAsset = async (url) => {
     return { bytes: bytes.length, size, svg, type, url: url.href, xRobotsTag };
   } catch (error) {
     return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message, url: url.href };
+  }
+};
+const readUpTo = async (response, maxBytes, collect = false) => {
+  if (!response.body) return { bytes: 0, chunks: [], exceeded: false };
+  const reader = response.body.getReader();
+  const chunks = collect ? [] : null;
+  let bytes = 0;
+  let exceeded = false;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > maxBytes) {
+        exceeded = true;
+        break;
+      }
+      if (chunks) chunks.push(value);
+    }
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+  return { bytes, chunks: chunks ?? [], exceeded };
+};
+const inspectTextAsset = async (url) => {
+  try {
+    const response = await fetch(url, {
+      headers: { "user-agent": AGENTS.browser },
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    const type = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase() ?? "";
+    const encoding = (response.headers.get("content-encoding") ?? "").trim();
+    const cacheControl = (response.headers.get("cache-control") ?? "").trim();
+    const headerLen = Number(response.headers.get("content-length"));
+    if (!response.ok) {
+      await response.body?.cancel();
+      return { url: url.href, status: response.status, problem: `returned ${response.status}` };
+    }
+    if (/html/i.test(type)) {
+      await response.body?.cancel();
+      return { url: url.href, status: response.status, type, problem: `returned ${type} instead of a script or stylesheet` };
+    }
+    let bytes = 0;
+    const headerKnown = Number.isFinite(headerLen) && headerLen > 0;
+    if (headerKnown && (COMPRESSED_ENCODING.test(encoding) || headerLen >= KB)) {
+      bytes = headerLen;
+      await response.body?.cancel();
+    } else {
+      ({ bytes } = await readUpTo(response, 512 * KB));
+    }
+    return { url: url.href, status: response.status, type, encoding, cacheControl, bytes };
+  } catch (error) {
+    return { url: url.href, unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
+  }
+};
+const inspectManifest = async (href, pageUrl, fetchAsset) => {
+  const resolved = URL.parse(href, pageUrl);
+  if (!resolved) return { url: href, problem: "is not a valid URL" };
+  try {
+    const response = await fetch(resolved, {
+      headers: { "user-agent": AGENTS.browser, accept: "application/manifest+json,application/json,*/*" },
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+    const type = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase() ?? "";
+    const headerLen = Number(response.headers.get("content-length"));
+    if (!response.ok) {
+      await response.body?.cancel();
+      return { url: resolved.href, status: response.status, type, problem: `returned ${response.status}` };
+    }
+    if (/html/i.test(type)) {
+      await response.body?.cancel();
+      return { url: resolved.href, status: response.status, type, problem: `is ${type}, not a JSON manifest` };
+    }
+    if (Number.isFinite(headerLen) && headerLen > 512 * KB) {
+      await response.body?.cancel();
+      return { url: resolved.href, status: response.status, type, problem: "exceeds 512 KB" };
+    }
+    const { chunks, bytes, exceeded } = await readUpTo(response, 512 * KB, true);
+    if (exceeded) {
+      return { url: resolved.href, status: response.status, type, problem: "exceeds 512 KB" };
+    }
+    const merged = new Uint8Array(bytes);
+    let offset = 0;
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+    const text = new TextDecoder().decode(merged);
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      return { url: resolved.href, status: response.status, type, problem: "is not valid JSON" };
+    }
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      return { url: resolved.href, status: response.status, type, problem: "is not a JSON object" };
+    }
+    const rawIcons = Array.isArray(parsed.icons) ? parsed.icons.slice(0, 4) : [];
+    const icons = await Promise.all(
+      rawIcons
+        .map((icon) => (typeof icon?.src === "string" ? icon.src : null))
+        .filter(Boolean)
+        .map((src) => fetchAsset(src, resolved)),
+    );
+    return { url: resolved.href, status: response.status, type, icons };
+  } catch (error) {
+    return { url: resolved.href, unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
   }
 };
 const probe = async (url, redirect = "manual") => {
@@ -730,7 +872,7 @@ const checkSite = async ({ site, url }) => {
     return probes.get(key);
   };
   const touchLinked = site.icons.some((icon) => icon.rel.includes("apple-touch-icon"));
-  const [shares, logo, icons, rootTouchIcon, unknown, twinHop, httpHop] = await Promise.all([
+  const [shares, logo, icons, rootTouchIcon, unknown, twinHop, httpHop, manifest, staticAssets] = await Promise.all([
     Promise.all(site.shareImages.map(async ([label, href]) => ({ ...(await fetchAsset(href, page)), label }))),
     site.organization?.logo ? fetchAsset(site.organization.logo, page) : null,
     Promise.all(site.icons.map(async (icon) => ({ ...(await fetchAsset(icon.href, page)), rel: icon.rel }))),
@@ -738,6 +880,8 @@ const checkSite = async ({ site, url }) => {
     probeUnknown(new URL(`/check-head-${crypto.randomUUID().slice(0, 8)}`, page)),
     twinUrl ? probeChain(twinUrl, probeMemo) : null,
     httpUrl ? probeChain(httpUrl, probeMemo) : null,
+    site.manifestHref ? inspectManifest(site.manifestHref, page, fetchAsset) : null,
+    Promise.all((site.staticAssets ?? []).map((href) => inspectTextAsset(new URL(href)))),
   ]);
   const side = ({ size }) => Math.min(size.width, size.height);
   // A declared asset that answers with an error is broken metadata. A failed connection is only unchecked.
@@ -851,6 +995,29 @@ const checkSite = async ({ site, url }) => {
   }
   checkRedirectChain(twin, twinHop, page, warnings);
   checkRedirectChain(httpUrl?.href, httpHop, page, warnings);
+  if (site.bytes.html >= KB && !COMPRESSED_ENCODING.test(site.htmlEncoding)) {
+    warnings.push(
+      "The HTML response was served uncompressed (no Content-Encoding). Enable gzip or Brotli compression."
+    );
+  }
+  for (const asset of staticAssets) {
+    if (asset.problem) warnings.push(`Linked asset ${asset.url} ${asset.problem}.`);
+    else if (asset.unchecked) warnings.push(`Linked asset ${asset.url} could not be checked (${asset.unchecked}).`);
+    else {
+      if (asset.bytes >= KB && !COMPRESSED_ENCODING.test(asset.encoding)) {
+        warnings.push(`Linked asset ${asset.url} was served uncompressed (${Math.round(asset.bytes / KB)} KB, no Content-Encoding).`);
+      }
+      if (!asset.cacheControl) {
+        warnings.push(`Linked asset ${asset.url} has no Cache-Control header.`);
+      }
+    }
+  }
+  if (manifest && !broken("The web app manifest", manifest)) {
+    if (manifest.type && manifest.type !== "application/manifest+json" && manifest.type !== "application/json") {
+      warnings.push(`The web app manifest ${manifest.url} has Content-Type ${manifest.type} instead of application/manifest+json.`);
+    }
+    for (const icon of manifest.icons) broken("Manifest icon", icon);
+  }
   if (site.emailObfuscated)
     warnings.push('Cloudflare Email Obfuscation rewrote email addresses, so crawlers that skip JavaScript see "[email protected]".');
 
@@ -859,6 +1026,14 @@ const checkSite = async ({ site, url }) => {
     agent: "site",
     errors,
     warnings,
+    htmlEncoding: site.htmlEncoding || null,
+    manifest: manifest && { url: manifest.url, type: manifest.type ?? null, icons: manifest.icons?.length ?? 0 },
+    staticAssets: staticAssets.map((asset) => ({
+      url: asset.url,
+      bytes: asset.bytes ?? null,
+      encoding: asset.encoding || null,
+      cacheControl: asset.cacheControl || null,
+    })),
     shareImages: shares.map((image) => ({ bytes: image.bytes ?? null, label: image.label, xRobotsTag: image.xRobotsTag ?? "", ...summary(image) })),
     logo: logo && summary(logo),
     icons: [...icons, ...(rootTouchIcon ? [{ ...rootTouchIcon, rel: "apple-touch-icon (root)" }] : [])].map(
@@ -941,6 +1116,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === resolvePath(process.ar
         ...site.shareImages.map((image) => [image.label, `${size(image)}, ${Math.round(image.bytes / KB)} KB`]),
         ["logo", site.logo ? `${size(site.logo)}, ${site.logo.url}` : "none"],
         ["icons", site.icons.map((icon) => `${icon.rel} ${size(icon)}`).join(", ") || "none"],
+        ...(site.manifest ? [["manifest", `${site.manifest.type || "untyped"}, ${site.manifest.icons} icons`]] : []),
+        ["html encoding", site.htmlEncoding || "none"],
         ["unknown url", site.unknownUrlStatus ?? "no response"],
         ["twin host", twin ? `${twin}${site.twin.location ? ` -> ${site.twin.location}` : ""}` : "n/a"],
       ])

@@ -584,7 +584,7 @@
       "name": "seo-skills",
       "source": "./plugins/seo-skills",
       "description": "Audit SEO, plan scalable pages, validate schema, and improve site architecture.",
-      "version": "1.4.0",
+      "version": "1.5.0",
       "license": "MIT",
       "keywords": ["seo", "audit", "structured-data", "schema", "site-architecture", "organic-search"],
       "category": "search",
@@ -638,7 +638,7 @@
       "name": "qa",
       "source": "./plugins/qa",
       "description": "Test real app journeys with saved sessions and clear failure evidence.",
-      "version": "1.12.0",
+      "version": "1.13.0",
       "license": "Apache-2.0",
       "keywords": [
         "qa",

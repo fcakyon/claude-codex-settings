@@ -4,51 +4,52 @@ Run `scripts/audit.mjs` from the skill first. Its HTTP checks cover the crawl, m
 
 ## 1. Crawl and index
 
-| Check | Evidence |
-| --- | --- |
-| `robots.txt` exists and doesn't block anything important | fetch |
-| `robots.txt` references the sitemap | fetch |
-| `sitemap.xml` exists, parses, and lists canonical indexable URLs only | fetch |
-| Sitemap has no redirected, 404, or noindexed URLs in it | fetch |
-| Page has a canonical tag, self-referencing when the page is the original | fetch |
-| No `noindex` on a page that should rank | fetch |
-| One canonical host (www or not, http or https) with the others redirecting | fetch |
-| Trailing-slash handling is consistent | fetch |
-| No redirect chains or loops on key paths | fetch |
-| The URL is actually indexed | tool: Search Console |
-| Indexed count matches expected count | tool: Search Console |
-| Crawl budget, faceted-navigation explosion, parameter duplication | tool: crawler |
-| Orphan pages across the site | tool: crawler |
+| Check                                                                      | Evidence             |
+| -------------------------------------------------------------------------- | -------------------- |
+| `robots.txt` exists and doesn't block anything important                   | fetch                |
+| `robots.txt` references the sitemap                                        | fetch                |
+| `sitemap.xml` exists, parses, and lists canonical indexable URLs only      | fetch                |
+| Sitemap has no redirected, 404, or noindexed URLs in it                    | fetch                |
+| Page has a canonical tag, self-referencing when the page is the original   | fetch                |
+| No `noindex` on a page that should rank                                    | fetch                |
+| One canonical host (www or not, http or https) with the others redirecting | fetch                |
+| Trailing-slash handling is consistent                                      | fetch                |
+| No redirect chains or loops on key paths                                   | fetch                |
+| The URL is actually indexed                                                | tool: Search Console |
+| Indexed count matches expected count                                       | tool: Search Console |
+| Crawl budget, faceted-navigation explosion, parameter duplication          | tool: crawler        |
+| Orphan pages across the site                                               | tool: crawler        |
 
 The unknown-path probe reports a 200 fallback as a soft-404 candidate. Search Console is needed to confirm Google’s classification. Near-duplicate clusters need content review and a broader crawl.
 
 ## 2. Foundations
 
-| Check | Evidence |
-| --- | --- |
-| HTTPS everywhere, valid certificate, no mixed content | fetch |
-| Viewport meta present, layout not fixed-width | fetch |
-| URLs readable, lowercase, hyphenated, no session IDs or content in query strings | fetch |
-| Largest Contentful Paint under 2.5s | tool: PageSpeed Insights |
-| Interaction to Next Paint under 200ms | tool: PageSpeed Insights |
-| Cumulative Layout Shift under 0.1 | tool: PageSpeed Insights |
-| Server response time, caching headers, CDN, font loading | tool: PageSpeed Insights or WebPageTest |
+| Check                                                                                                   | Evidence                                     |
+| ------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| HTTPS everywhere, valid certificate, no mixed content                                                   | fetch                                        |
+| Viewport meta present, layout not fixed-width                                                           | fetch                                        |
+| URLs readable, lowercase, hyphenated, no session IDs or content in query strings                        | fetch                                        |
+| Largest Contentful Paint under 2.5s                                                                     | tool: PageSpeed Insights or local Lighthouse |
+| Interaction to Next Paint under 200ms                                                                   | tool: PageSpeed Insights                     |
+| Cumulative Layout Shift under 0.1                                                                       | tool: PageSpeed Insights or local Lighthouse |
+| HTML and CSS/JS compression (`Content-Encoding`), static asset `Cache-Control`, manifest JSON and icons | fetch                                        |
+| Server response time, CDN, font loading                                                                 | tool: PageSpeed Insights or local Lighthouse |
 
 Page weight and blocking scripts are partly visible in fetched HTML: a head full of synchronous third-party scripts is worth flagging as a likely speed problem, framed as a hypothesis for them to confirm.
 
 ## 3. On-page
 
-| Check | Target |
-| --- | --- |
-| Title tag | Unique per page, primary keyword near the front, descriptive and concise. Google sets no length limit and truncates the title link to fit the device width, so there is no fixed character cutoff. Brand with just the site name at the start or end after a hyphen, colon, or pipe, which Google may leave out when the result already shows it |
-| Meta description | Unique, states the value and earns the click. Google sets no length limit and truncates the snippet to fit the device width. Not a ranking factor |
-| H1 | Describes the page, contains the target query or its clear paraphrase |
-| Heading order | Subheads read as a map of the page. Google says heading order and count do not matter for Search, so report skipped levels as an accessibility fix |
-| Target query | Appears in the first 100 words, naturally, along with the phrasings a reader would actually use |
-| Keyword alignment | Title, H1, URL, and opening all point at the same query |
-| Cannibalization | No other page on the site targets the same query |
-| Internal links | Descriptive anchor text, no "click here", important pages linked more often, no broken links |
-| Images | Descriptive filenames, alt text that describes the image, compressed, modern format, lazy loaded below the fold |
+| Check             | Target                                                                                                                                                                                                                                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Title tag         | Unique per page, primary keyword near the front, descriptive and concise. Google sets no length limit and truncates the title link to fit the device width, so there is no fixed character cutoff. Brand with just the site name at the start or end after a hyphen, colon, or pipe, which Google may leave out when the result already shows it |
+| Meta description  | Unique, states the value and earns the click. Google sets no length limit and truncates the snippet to fit the device width. Not a ranking factor                                                                                                                                                                                                |
+| H1                | Describes the page, contains the target query or its clear paraphrase                                                                                                                                                                                                                                                                            |
+| Heading order     | Subheads read as a map of the page. Google says heading order and count do not matter for Search, so report skipped levels as an accessibility fix                                                                                                                                                                                               |
+| Target query      | Appears in the first 100 words, naturally, along with the phrasings a reader would actually use                                                                                                                                                                                                                                                  |
+| Keyword alignment | Title, H1, URL, and opening all point at the same query                                                                                                                                                                                                                                                                                          |
+| Cannibalization   | No other page on the site targets the same query                                                                                                                                                                                                                                                                                                 |
+| Internal links    | Descriptive anchor text, no "click here", important pages linked more often, no broken links                                                                                                                                                                                                                                                     |
+| Images            | Descriptive filenames, alt text that describes the image, compressed, modern format, lazy loaded below the fold                                                                                                                                                                                                                                  |
 
 Presence, syntax, targets, and exact duplicates are measurable. Relevance, alt-text quality, keyword intent, and cannibalization require interpretation. Do not turn a word count, title-length budget, or a missing raw-HTML heading into a ranking failure.
 

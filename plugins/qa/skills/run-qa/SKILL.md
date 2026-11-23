@@ -19,7 +19,7 @@ Reports distinguish pass, fail and blocked, record Git revision, and keep screen
 
 If a CI failure appears timing-sensitive and unrelated to the change, rerun only the failed job once and record the test name and both outcomes. Never merge on a red check. A second failure needs investigation.
 
-Media and video journeys must verify playback stability across unmute, track or split switches, and loop wraps with bounded seek/stall counts (`qa.media.assertPlaybackStability`) alongside Range delivery and keyframe spacing, not only initial frame advance.
+Media and video journeys must verify playback stability across unmute, track or split switches, and loop wraps with bounded seek/stall counts (`qa.media.assertPlaybackStability`) alongside Range delivery, keyframe spacing, and iOS WebKit autoplay DOM attributes (`qa.media.assertAutoplayReady` and `qa.media.withNetworkThrottle`), not only initial frame advance.
 
 Read [sessions](../../references/sessions.md) before recovering login, [telemetry](../../references/telemetry.md) before production traffic, [voice](../../references/voice.md) before microphone or speech journeys, and [surface requirements](../../references/surfaces.md) for relevant components. [Runner API](../../references/runner.md) defines executable cases and optional browser-network-cli diagnostics, including installation when needed.
 
