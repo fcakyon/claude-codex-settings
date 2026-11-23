@@ -442,3 +442,70 @@ test('packaged seo-audit.zip runs standalone without cross-skill imports', async
   const { stdout } = await exec(process.execPath, [join(zipScripts, 'audit.mjs'), origin, '--json'])
   assert.equal(JSON.parse(stdout).valid, true)
 })
+
+test('checkHead surfaces uncompressed HTML/CSS/JS, missing static Cache-Control, and broken manifests', async (t) => {
+  const bigHtml = `${html('http://127.0.0.1', '/', '<link rel="stylesheet" href="/app.css"><script src="/app.js"></script><link rel="manifest" href="/site.webmanifest">', 'x'.repeat(1200))}`
+  const bigAsset = '/* pad */'.repeat(180)
+
+  const unoptimized = await serve(t, (u) => {
+    if (u.pathname === '/app.css') return { type: 'text/css', body: bigAsset }
+    if (u.pathname === '/app.js') return { type: 'application/javascript', body: bigAsset }
+    if (u.pathname === '/site.webmanifest') return { type: 'text/html', body: '<!doctype html><p>SPA</p>' }
+    if (u.pathname === '/') return { body: bigHtml.replaceAll('http://127.0.0.1', u.origin) }
+  })
+  const bad = await checkHead(unoptimized.origin)
+  assert.equal(bad.valid, false)
+  assert(bad.site.warnings.some((w) => /HTML response was served uncompressed/.test(w)))
+  assert(bad.site.warnings.some((w) => /app\.css was served uncompressed/.test(w)))
+  assert(bad.site.warnings.some((w) => /app\.js has no Cache-Control header/.test(w)))
+  assert(bad.site.errors.some((e) => /web app manifest.*not a JSON manifest/.test(e)))
+
+  const optimized = await serve(t, (u) => {
+    const gzHeaders = { 'content-encoding': 'gzip', 'cache-control': 'public, max-age=31536000, immutable' }
+    if (u.pathname === '/app.css') return { type: 'text/css', headers: gzHeaders, body: gzipSync(bigAsset) }
+    if (u.pathname === '/app.js') return { type: 'application/javascript', headers: gzHeaders, body: gzipSync(bigAsset) }
+    if (u.pathname === '/icon-192.png') return { type: 'image/png', body: fakePng(192, 192) }
+    if (u.pathname === '/site.webmanifest') {
+      return {
+        type: 'application/manifest+json',
+        headers: { 'cache-control': 'public, max-age=86400' },
+        body: JSON.stringify({ name: 'App', icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }] }),
+      }
+    }
+    if (u.pathname === '/') {
+      const originHtml = html(
+        u.origin,
+        '/',
+        `<link rel="stylesheet" href="/app.css"><script src="/app.js"></script><link rel="manifest" href="/site.webmanifest"><link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">`,
+        'x'.repeat(1200),
+      )
+      return { headers: { 'content-encoding': 'gzip' }, body: gzipSync(originHtml) }
+    }
+  })
+  const good = await checkHead(optimized.origin)
+  assert.equal(good.valid, true, JSON.stringify(good.site.errors))
+  assert(!good.site.warnings.some((w) => /uncompressed|Cache-Control|manifest/i.test(w)), JSON.stringify(good.site.warnings))
+
+  const preloads = Array.from({ length: 5 }, (_, i) => `<link rel="modulepreload" href="/chunk-${i}.js">`).join('')
+  const priorityServer = await serve(t, (u) => {
+    const gz = { 'content-encoding': 'gzip', 'cache-control': 'public, max-age=31536000' }
+    if (/^\/chunk-\d\.js$/.test(u.pathname)) return { type: 'application/javascript', headers: gz, body: gzipSync('export default 1;') }
+    if (u.pathname === '/main.css') return { type: 'text/css', body: bigAsset }
+    if (u.pathname === '/main.js') return { type: 'application/javascript', body: bigAsset }
+    if (u.pathname === '/big.webmanifest') return { type: 'application/manifest+json', body: 'x'.repeat(520 * 1024) }
+    if (u.pathname === '/') {
+      const page = html(
+        u.origin,
+        '/',
+        `${preloads}<link rel="stylesheet" href="/main.css"><script src="/main.js"></script><link rel="manifest" href="/big.webmanifest">`,
+        'x'.repeat(1200),
+      )
+      return { headers: { 'content-encoding': 'gzip' }, body: gzipSync(page) }
+    }
+  })
+  const prioritized = await checkHead(priorityServer.origin)
+  assert.equal(prioritized.valid, false)
+  assert(prioritized.site.warnings.some((w) => /main\.css was served uncompressed/.test(w)))
+  assert(prioritized.site.warnings.some((w) => /main\.js has no Cache-Control header/.test(w)))
+  assert(prioritized.site.errors.some((e) => /web app manifest.*exceeds 512 KB/.test(e)))
+})

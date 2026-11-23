@@ -232,3 +232,47 @@ test('counts media checks as explicit outcomes in an actual project QA run', {sk
   assert.equal(report.results[0].status, 'pass');
   assert.ok(report.results[0].assertions >= 15);
 });
+
+test('assertAutoplayReady and withNetworkThrottle catch iOS attribute traps and test throttled playback cleanly', {skip: !process.env.QA_BROWSER_EXECUTABLE || !hasMediaTools}, async t => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'qa-media-autoplay-'));
+  t.after(() => rm(dir, {recursive: true, force: true}));
+  const base = await startMediaServer(t, {
+    '/ok': `<!doctype html><video src="/good.mp4" autoplay muted playsinline loop style="opacity:0.001;width:320px;height:180px"></video>`,
+    '/muted-prop-only': `<!doctype html><video id="v" src="/good.mp4" autoplay playsinline></video><script>document.getElementById('v').muted = true;</script>`,
+    '/missing-playsinline': `<!doctype html><video src="/good.mp4" autoplay muted></video>`,
+    '/zero-opacity': `<!doctype html><video src="/good.mp4" autoplay muted playsinline style="opacity:0"></video>`,
+  });
+  const context = await openBrowser({root: dir, browser: {actionDelayMs: 0}}, dir, []);
+  t.after(() => context.close());
+  const page = await context.newPage();
+  const media = createMediaChecks();
+
+  await page.goto(`${base}/ok`);
+  const okVideos = await media.assertAutoplayReady(page, {expectedCount: 1});
+  assert.equal(okVideos.length, 1);
+  assert.equal(okVideos[0].hasMutedAttr, true);
+
+  await media.withNetworkThrottle(page, {downloadKbps: 3000, latencyMs: 20}, async () => {
+    await page.goto(`${base}/ok`);
+    const throttled = await media.assertPlaybackStability(page, {
+      expectedCount: 1, durationMs: 900, minAdvanceSec: 0.4, requireAutoplayAttrs: true,
+    });
+    assert.equal(throttled.count, 1);
+  });
+
+  await assert.rejects(
+    media.withNetworkThrottle(page, {downloadKbps: 1500}, async () => {
+      throw new Error('boom');
+    }),
+    /boom/,
+  );
+
+  await page.goto(`${base}/muted-prop-only`);
+  await assert.rejects(media.assertAutoplayReady(page, {expectedCount: 1}), /muted HTML content attribute/);
+
+  await page.goto(`${base}/missing-playsinline`);
+  await assert.rejects(media.assertAutoplayReady(page, {expectedCount: 1}), /playsinline/);
+
+  await page.goto(`${base}/zero-opacity`);
+  await assert.rejects(media.assertAutoplayReady(page, {expectedCount: 1}), /non-zero opacity/);
+});
