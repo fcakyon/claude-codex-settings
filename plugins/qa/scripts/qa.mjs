@@ -17,7 +17,7 @@ else if (positionals[0] === 'run') {
   if (values.verification) console.log('verification: ' + report.results.map(item => item.id + ' ' + item.status).join(', '));
   process.exitCode = report.counts.fail ? 1 : report.counts.blocked ? 2 : 0;
 } else if (positionals[0] === 'doctor') {
-  for (const [name, args] of [['node', ['--version']], ['sqlite3', ['--version']], ['adb', ['version']]]) {
+  for (const [name, args] of [['node', ['--version']], ['sqlite3', ['--version']], ['adb', ['version']], ['ffprobe', ['-version']]]) {
     const result = await command(name, args).catch(() => null);
     console.log(`${name}: ${result?.code === 0 ? result.stdout.trim().split('\n')[0] : 'unavailable'}`);
   }

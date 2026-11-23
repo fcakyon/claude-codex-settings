@@ -20,6 +20,7 @@ const suggestedJourneyBySurface = {
   payments: 'Test-mode checkout, entitlement update, and cancellation flow',
   touch: 'Emulated touch hold, drag, swipe, and scroll separation',
   voice: 'Scripted microphone speech input, output meter, and provider transcript reply',
+  video: 'Decoded frames, playback stability across audio or track changes, and progressive Range or keyframe checks where applicable',
   analytics: 'Telemetry capture of funnel events and parameter names without polluting prod',
 };
 
@@ -83,6 +84,7 @@ export async function discover(root, {loadSuite = false} = {}) {
     prime: /primevideo\.com/,
     touch: /pointerType|touch(?:start|move|end|cancel)|TouchEvent|touchAction/i,
     voice: /getUserMedia\(\{\s*audio|@elevenlabs\/(?:client|react)|livekit-client|@livekit\/components|agents-realtime|\/v1\/realtime/,
+    video: /<(?:video|audio)\b|createElement\(['"](?:video|audio)['"]\)|HTMLMediaElement|getVideoPlaybackQuality|shaka-player|hls\.js/,
     analytics: /sendToGA|GoogleTagManager|gtag\(/,
   };
   for (const filename of sourceFiles) {

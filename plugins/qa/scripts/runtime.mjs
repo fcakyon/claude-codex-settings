@@ -16,7 +16,7 @@ import {chromium} from 'playwright-core';
 import {importCookies} from './session.mjs';
 import {signIn} from './auth.mjs';
 import {withNetwork} from './network.mjs';
-import {advancingVideo, observeSkip, videoState} from './media.mjs';
+import {createMediaChecks} from './media.mjs';
 import {emulateTouch, gestures, touchGesture} from './touch.mjs';
 import {captureAudio} from './audio.mjs';
 
@@ -147,7 +147,7 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     swiftTests: (result, options) => assertSwiftTests(qa.assert, result, options),
     signIn: page => signIn(qa, page),
     network: (args, run) => withNetwork(qa, args, run),
-    advancingVideo, observeSkip, videoState, emulateTouch, touchGesture, gestures, captureAudio, tabTo,
+    emulateTouch, touchGesture, gestures, captureAudio, tabTo,
     telemetry: report.telemetry.events,
     secret: async name => {
       const value = await secret(name, stateDir);
@@ -193,6 +193,10 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     },
   };
   qa.mcp = createMcpChecks(qa.assert);
+  qa.media = createMediaChecks(qa.assert);
+  qa.videoState = qa.media.videoState;
+  qa.advancingVideo = qa.media.advancingVideo;
+  qa.observeSkip = qa.media.observeSkip;
   try {
     for (const item of selected) {
       const start = Date.now();

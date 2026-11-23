@@ -19,6 +19,8 @@ Reports distinguish pass, fail and blocked, record Git revision, and keep screen
 
 If a CI failure appears timing-sensitive and unrelated to the change, rerun only the failed job once and record the test name and both outcomes. Never merge on a red check. A second failure needs investigation.
 
+Media and video journeys must verify playback stability across unmute, track or split switches, and loop wraps with bounded seek/stall counts (`qa.media.assertPlaybackStability`) alongside Range delivery and keyframe spacing, not only initial frame advance.
+
 Read [sessions](../../references/sessions.md) before recovering login, [telemetry](../../references/telemetry.md) before production traffic, [voice](../../references/voice.md) before microphone or speech journeys, and [surface requirements](../../references/surfaces.md) for relevant components. [Runner API](../../references/runner.md) defines executable cases and optional browser-network-cli diagnostics, including installation when needed.
 
 Verify cleanup of created data and tabs. Keep saved sessions for the next run. Do not close personal browser tabs, log out providers after each test, or run suites sharing a `stateGroup` concurrently. Use one run per working directory, including scratch checkouts and render commands. Wait for the current run to finish or use a separate checkout. Separate output directories alone do not isolate build artifacts. Parallel runs each need their own checkout, server port and `QA_STATE_DIR`.
