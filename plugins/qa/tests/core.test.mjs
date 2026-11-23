@@ -20,6 +20,7 @@ test('setup detects components, keeps project edits and reports blocked coverage
     await writeFile(path.join(root, 'extension/manifest.json'), JSON.stringify({manifest_version: 3, version: '1', content_scripts: [{matches: ['https://example.test/*']}]}));
     await writeFile(path.join(root, 'photo.js'), "box.addEventListener('touchmove', event => event.preventDefault(), {passive: false});\n");
     await writeFile(path.join(root, 'call.js'), "await navigator.mediaDevices.getUserMedia({audio: true});\n");
+    await writeFile(path.join(root, 'player.jsx'), "export function Stage() { return <video src='/demo.mp4' />; }\n");
     await command('git', ['init', '-q'], {cwd: root});
     await writeFile(path.join(root, '.gitignore'), 'analysis/\n');
     await mkdir(path.join(root, 'analysis'));
@@ -31,6 +32,7 @@ test('setup detects components, keeps project edits and reports blocked coverage
     assert.ok(nativeGap.some(gap => gap.includes('native owner tests on macOS CI')), 'Native setup keeps the owner-test CI gap explicit');
     assert.equal(first.inventory.capabilities.touch, 'photo.js', 'Touch handlers need a gesture journey');
     assert.equal(first.inventory.capabilities.voice, 'call.js', 'Microphone use needs a voice journey');
+    assert.equal(first.inventory.capabilities.video, 'player.jsx', 'Video elements need a playback stability journey');
     assert.equal(first.inventory.capabilities.payments, undefined, 'Gitignored folders are not project evidence');
     const suite = path.join(root, '.agents/qa/suite.mjs');
     assert.equal((await command(process.execPath, ['--check', suite])).code, 0, 'Generated suite is not executable JavaScript');
