@@ -167,6 +167,11 @@ const breadcrumbSchema = {
   })),
 }
 const graph: Record<string, unknown>[] = [breadcrumbSchema]
+const licenseUrls: Record<string, string> = {
+  "Apache-2.0": "https://www.apache.org/licenses/LICENSE-2.0",
+  MIT: "https://opensource.org/licenses/MIT",
+}
+
 if (plugin) {
   graph.push({
     "@type": "SoftwareSourceCode",
@@ -174,7 +179,7 @@ if (plugin) {
     description: plugin.description,
     url: canonical,
     codeRepository: plugin.href,
-    license: plugin.license,
+    license: (plugin.license && licenseUrls[plugin.license]) || plugin.license,
     version: plugin.version,
   })
 }

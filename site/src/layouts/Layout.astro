@@ -76,6 +76,7 @@ const structuredData = pageGraph.length
     {alternateEntries.map(([language, href]) => <link rel="alternate" hreflang={language} href={href} />)}
     {alternateEntries.length > 1 && <link rel="alternate" hreflang="x-default" href={alternates?.en || `${site.url}${locales.en.path}`} />}
     <link rel="icon" href={`/favicon-${variant}.svg`} type="image/svg+xml" />
+    <link rel="icon" href={`/favicon-${variant}-96.png`} type="image/png" sizes="96x96" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
