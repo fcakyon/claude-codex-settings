@@ -55,7 +55,7 @@ export const isLoopbackHost = (hostname) =>
   LOOPBACK_HOST.test(hostname) || /\.local$/i.test(hostname);
 export const isGeneratedImageRoute = (value) => {
   const pathname = typeof value === "string" ? URL.parse(value)?.pathname : value?.pathname;
-  return /\/(?:opengraph|twitter)-image(?:-[a-f0-9]{6,})?$/i.test(pathname ?? "");
+  return /\/(?:opengraph|twitter)-image(?:-[a-f0-9]{6,})?(?:\.png)?$/i.test(pathname ?? "");
 };
 const CACHE_QUERY = new RegExp(`([?&])${CACHE_PARAM}=[^&]*(&|$)`);
 const CHARSET = /charset\s*=\s*["']?([\w:.-]+)/i;
@@ -239,50 +239,132 @@ const readHtml = async (response) => {
   return new TextDecoder(charset).decode(bytes);
 };
 
+const MAX_ORIGIN_CONCURRENCY = 4;
+const RETRY_BACKOFF_MS = 200;
+const TRANSIENT_ERROR_CODES = new Set([
+  "UND_ERR_CONNECT_TIMEOUT",
+  "UND_ERR_SOCKET",
+  "ECONNRESET",
+  "ETIMEDOUT",
+]);
+const originQueues = new Map();
+
+const isTransientFetchError = (error) => {
+  let current = error;
+  for (let depth = 0; depth < 4 && current && typeof current === "object"; depth++) {
+    if (typeof current.code === "string" && TRANSIENT_ERROR_CODES.has(current.code)) return true;
+    current = current.cause;
+  }
+  return false;
+};
+
+export const runWithOriginLimit = async (url, fn, maxConcurrent = MAX_ORIGIN_CONCURRENCY) => {
+  const origin = (typeof url === "string" ? URL.parse(url)?.origin : url?.origin) ?? "*";
+  let state = originQueues.get(origin);
+  if (!state) {
+    state = { active: 0, waiting: [] };
+    originQueues.set(origin, state);
+  }
+  if (state.active >= maxConcurrent) {
+    await new Promise((resolve) => state.waiting.push(resolve));
+  } else {
+    state.active++;
+  }
+  try {
+    return await fn();
+  } finally {
+    const next = state.waiting.shift();
+    if (next) {
+      next();
+    } else {
+      state.active--;
+      if (state.active === 0) originQueues.delete(origin);
+    }
+  }
+};
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+export const fetchWithRetry = async (
+  url,
+  init = {},
+  { retries = 1, backoffMs = RETRY_BACKOFF_MS, timeoutMs = TIMEOUT_MS, consume } = {}
+) => {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await runWithOriginLimit(url, async () => {
+        const signal = init.signal ?? AbortSignal.timeout(timeoutMs);
+        const response = await fetch(url, { ...init, signal });
+        return consume ? await consume(response) : response;
+      });
+    } catch (error) {
+      if (attempt >= retries || init.signal?.aborted || !isTransientFetchError(error)) throw error;
+      if (backoffMs > 0) await sleep(backoffMs);
+    }
+  }
+};
+
 const fetchPage = async (userAgent, target) => {
   let url = new URL(target);
   const redirects = [];
-  const signal = AbortSignal.timeout(TIMEOUT_MS);
   while (true) {
     const search = withoutCache(url.search);
     url.search = `${search}${search ? "&" : ""}${CACHE_PARAM}=${crypto.randomUUID().slice(0, 8)}`;
-    const response = await fetch(url, {
-      // An empty Accept-Language replaces fetch's default "*", which some sites answer with a random locale.
-      headers: {
-        accept: "text/html,application/xhtml+xml",
-        "accept-language": "",
-        "user-agent": userAgent,
+    const result = await fetchWithRetry(
+      url,
+      {
+        // An empty Accept-Language replaces fetch's default "*", which some sites answer with a random locale.
+        headers: {
+          accept: "text/html,application/xhtml+xml",
+          "accept-language": "",
+          "user-agent": userAgent,
+        },
+        redirect: "manual",
       },
-      redirect: "manual",
-      signal,
-    });
-    const location = response.headers.get("location");
-    if (response.status < 300 || response.status > 399 || !location)
-      return { redirects, response, url };
+      {
+        consume: async (response) => {
+          const location = response.headers.get("location");
+          if (response.status >= 300 && response.status <= 399 && location) {
+            await response.body?.cancel();
+            return { redirect: true, status: response.status, location };
+          }
+          const isHtml = response.ok && /html/i.test(response.headers.get("content-type") ?? "");
+          let html = null;
+          if (isHtml) html = await readHtml(response);
+          else await response.body?.cancel();
+          return {
+            redirect: false,
+            ok: response.ok,
+            status: response.status,
+            headers: response.headers,
+            html,
+          };
+        },
+      }
+    );
+    if (!result.redirect) return { redirects, ...result, url };
     if (redirects.length === MAX_REDIRECTS) throw new Error(`more than ${MAX_REDIRECTS} redirects`);
-    redirects.push({ status: response.status, url: pageUrl(url) });
-    url = new URL(location, url);
+    redirects.push({ status: result.status, url: pageUrl(url) });
+    url = new URL(result.location, url);
   }
 };
 
 const inspect = async ([agent, userAgent], target) => {
   const errors = [];
   const warnings = [];
-  let redirects, response, url, html;
+  let redirects, ok, status, headers, url, html;
   try {
-    ({ redirects, response, url } = await fetchPage(userAgent, target));
-    if (!response.ok) errors.push(`The page returned ${response.status}.`);
-    else if (!/html/i.test(response.headers.get("content-type") ?? "")) {
+    ({ redirects, ok, status, headers, url, html } = await fetchPage(userAgent, target));
+    if (!ok) errors.push(`The page returned ${status}.`);
+    else if (!/html/i.test(headers.get("content-type") ?? "")) {
       errors.push("The response is not HTML.");
     }
-    if (errors.length) await response.body?.cancel();
-    else html = await readHtml(response);
   } catch (error) {
     return { agent, errors: [`Fetch failed: ${error.cause?.message ?? error.message}.`], warnings };
   }
   const page = pageUrl(url);
-  const xRobotsTag = response.headers.get("x-robots-tag");
-  const base = { agent, status: response.status, url: page, redirects, xRobotsTag };
+  const xRobotsTag = headers.get("x-robots-tag");
+  const base = { agent, status, url: page, redirects, xRobotsTag };
   if (errors.length) return { ...base, errors, warnings };
 
   const jsonLd = [];
@@ -414,9 +496,15 @@ const inspect = async ([agent, userAgent], target) => {
     image: content("twitter:image", "twitter:image:src"),
   };
   if (twitter.image) flagLocalhost("twitter:image", twitter.image);
+  const isSameShareImage =
+    openGraph.image &&
+    twitter.image &&
+    (twitter.image === openGraph.image ||
+      (URL.parse(twitter.image, url)?.href &&
+        URL.parse(twitter.image, url)?.href === URL.parse(openGraph.image, url)?.href));
   const shareImages = [
     ["og:image", openGraph.image],
-    ["twitter:image", twitter.image !== openGraph.image && twitter.image],
+    ["twitter:image", !isSameShareImage && twitter.image],
   ].filter(([, value]) => value);
   for (const [label, value] of shareImages) {
     const imageUrl = URL.parse(value, url);
@@ -507,7 +595,7 @@ const inspect = async ([agent, userAgent], target) => {
     staticAssets.push(resolved.href);
     if (staticAssets.length >= 6) break;
   }
-  const htmlEncoding = (response.headers.get("content-encoding") ?? "").trim();
+  const htmlEncoding = (headers.get("content-encoding") ?? "").trim();
 
   return {
     ...base,
@@ -616,28 +704,32 @@ const lightOnly = (svg) => {
 };
 const downloadAsset = async (url) => {
   try {
-    const response = await fetch(url, {
-      headers: { "user-agent": AGENTS.browser },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    const type = response.headers.get("content-type")?.split(";")[0].trim() ?? "";
-    const xRobotsTag = response.headers.get("x-robots-tag") ?? "";
-    const length = Number(response.headers.get("content-length"));
-    // Browsers sniff favicons, so a generic binary type still counts when the header is an image.
-    const problem = !response.ok
-      ? `returned ${response.status}`
-      : !type.startsWith("image/") && type !== "application/octet-stream"
-        ? `is ${type || "untyped"}, not an image`
-        : null;
-    if (problem || length >= 5 * KB * KB) {
-      await response.body?.cancel();
-      return problem ? { problem, url: url.href } : { bytes: length, size: null, type, url: url.href, xRobotsTag };
-    }
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    const svg = type === "image/svg+xml" ? new TextDecoder().decode(bytes) : null;
-    const size = svg ? null : imageSize(bytes);
-    if (type === "application/octet-stream" && !size) return { problem: "is not an image", url: url.href };
-    return { bytes: bytes.length, size, svg, type, url: url.href, xRobotsTag };
+    return await fetchWithRetry(
+      url,
+      { headers: { "user-agent": AGENTS.browser } },
+      {
+        consume: async (response) => {
+          const type = response.headers.get("content-type")?.split(";")[0].trim() ?? "";
+          const xRobotsTag = response.headers.get("x-robots-tag") ?? "";
+          const length = Number(response.headers.get("content-length"));
+          // Browsers sniff favicons, so a generic binary type still counts when the header is an image.
+          const problem = !response.ok
+            ? `returned ${response.status}`
+            : !type.startsWith("image/") && type !== "application/octet-stream"
+              ? `is ${type || "untyped"}, not an image`
+              : null;
+          if (problem || length >= 5 * KB * KB) {
+            await response.body?.cancel();
+            return problem ? { problem, url: url.href } : { bytes: length, size: null, type, url: url.href, xRobotsTag };
+          }
+          const bytes = new Uint8Array(await response.arrayBuffer());
+          const svg = type === "image/svg+xml" ? new TextDecoder().decode(bytes) : null;
+          const size = svg ? null : imageSize(bytes);
+          if (type === "application/octet-stream" && !size) return { problem: "is not an image", url: url.href };
+          return { bytes: bytes.length, size, svg, type, url: url.href, xRobotsTag };
+        },
+      }
+    );
   } catch (error) {
     return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message, url: url.href };
   }
@@ -666,31 +758,35 @@ const readUpTo = async (response, maxBytes, collect = false) => {
 };
 const inspectTextAsset = async (url) => {
   try {
-    const response = await fetch(url, {
-      headers: { "user-agent": AGENTS.browser },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    const type = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase() ?? "";
-    const encoding = (response.headers.get("content-encoding") ?? "").trim();
-    const cacheControl = (response.headers.get("cache-control") ?? "").trim();
-    const headerLen = Number(response.headers.get("content-length"));
-    if (!response.ok) {
-      await response.body?.cancel();
-      return { url: url.href, status: response.status, problem: `returned ${response.status}` };
-    }
-    if (/html/i.test(type)) {
-      await response.body?.cancel();
-      return { url: url.href, status: response.status, type, problem: `returned ${type} instead of a script or stylesheet` };
-    }
-    let bytes = 0;
-    const headerKnown = Number.isFinite(headerLen) && headerLen > 0;
-    if (headerKnown && (COMPRESSED_ENCODING.test(encoding) || headerLen >= KB)) {
-      bytes = headerLen;
-      await response.body?.cancel();
-    } else {
-      ({ bytes } = await readUpTo(response, 512 * KB));
-    }
-    return { url: url.href, status: response.status, type, encoding, cacheControl, bytes };
+    return await fetchWithRetry(
+      url,
+      { headers: { "user-agent": AGENTS.browser } },
+      {
+        consume: async (response) => {
+          const type = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase() ?? "";
+          const encoding = (response.headers.get("content-encoding") ?? "").trim();
+          const cacheControl = (response.headers.get("cache-control") ?? "").trim();
+          const headerLen = Number(response.headers.get("content-length"));
+          if (!response.ok) {
+            await response.body?.cancel();
+            return { url: url.href, status: response.status, problem: `returned ${response.status}` };
+          }
+          if (/html/i.test(type)) {
+            await response.body?.cancel();
+            return { url: url.href, status: response.status, type, problem: `returned ${type} instead of a script or stylesheet` };
+          }
+          let bytes = 0;
+          const headerKnown = Number.isFinite(headerLen) && headerLen > 0;
+          if (headerKnown && (COMPRESSED_ENCODING.test(encoding) || headerLen >= KB)) {
+            bytes = headerLen;
+            await response.body?.cancel();
+          } else {
+            ({ bytes } = await readUpTo(response, 512 * KB));
+          }
+          return { url: url.href, status: response.status, type, encoding, cacheControl, bytes };
+        },
+      }
+    );
   } catch (error) {
     return { url: url.href, unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
   }
@@ -699,43 +795,51 @@ const inspectManifest = async (href, pageUrl, fetchAsset) => {
   const resolved = URL.parse(href, pageUrl);
   if (!resolved) return { url: href, problem: "is not a valid URL" };
   try {
-    const response = await fetch(resolved, {
-      headers: { "user-agent": AGENTS.browser, accept: "application/manifest+json,application/json,*/*" },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    const type = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase() ?? "";
-    const headerLen = Number(response.headers.get("content-length"));
-    if (!response.ok) {
-      await response.body?.cancel();
-      return { url: resolved.href, status: response.status, type, problem: `returned ${response.status}` };
-    }
-    if (/html/i.test(type)) {
-      await response.body?.cancel();
-      return { url: resolved.href, status: response.status, type, problem: `is ${type}, not a JSON manifest` };
-    }
-    if (Number.isFinite(headerLen) && headerLen > 512 * KB) {
-      await response.body?.cancel();
-      return { url: resolved.href, status: response.status, type, problem: "exceeds 512 KB" };
-    }
-    const { chunks, bytes, exceeded } = await readUpTo(response, 512 * KB, true);
-    if (exceeded) {
-      return { url: resolved.href, status: response.status, type, problem: "exceeds 512 KB" };
-    }
-    const merged = new Uint8Array(bytes);
-    let offset = 0;
-    for (const chunk of chunks) {
-      merged.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    const text = new TextDecoder().decode(merged);
+    const result = await fetchWithRetry(
+      resolved,
+      {
+        headers: { "user-agent": AGENTS.browser, accept: "application/manifest+json,application/json,*/*" },
+      },
+      {
+        consume: async (response) => {
+          const type = response.headers.get("content-type")?.split(";")[0].trim().toLowerCase() ?? "";
+          const headerLen = Number(response.headers.get("content-length"));
+          if (!response.ok) {
+            await response.body?.cancel();
+            return { early: { url: resolved.href, status: response.status, type, problem: `returned ${response.status}` } };
+          }
+          if (/html/i.test(type)) {
+            await response.body?.cancel();
+            return { early: { url: resolved.href, status: response.status, type, problem: `is ${type}, not a JSON manifest` } };
+          }
+          if (Number.isFinite(headerLen) && headerLen > 512 * KB) {
+            await response.body?.cancel();
+            return { early: { url: resolved.href, status: response.status, type, problem: "exceeds 512 KB" } };
+          }
+          const { chunks, bytes, exceeded } = await readUpTo(response, 512 * KB, true);
+          if (exceeded) {
+            return { early: { url: resolved.href, status: response.status, type, problem: "exceeds 512 KB" } };
+          }
+          const merged = new Uint8Array(bytes);
+          let offset = 0;
+          for (const chunk of chunks) {
+            merged.set(chunk, offset);
+            offset += chunk.byteLength;
+          }
+          return { status: response.status, type, text: new TextDecoder().decode(merged) };
+        },
+      }
+    );
+    if (result.early) return result.early;
+    const { status, type, text } = result;
     let parsed;
     try {
       parsed = JSON.parse(text);
     } catch {
-      return { url: resolved.href, status: response.status, type, problem: "is not valid JSON" };
+      return { url: resolved.href, status, type, problem: "is not valid JSON" };
     }
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      return { url: resolved.href, status: response.status, type, problem: "is not a JSON object" };
+      return { url: resolved.href, status, type, problem: "is not a JSON object" };
     }
     const rawIcons = Array.isArray(parsed.icons) ? parsed.icons.slice(0, 4) : [];
     const icons = await Promise.all(
@@ -744,20 +848,23 @@ const inspectManifest = async (href, pageUrl, fetchAsset) => {
         .filter(Boolean)
         .map((src) => fetchAsset(src, resolved)),
     );
-    return { url: resolved.href, status: response.status, type, icons };
+    return { url: resolved.href, status, type, icons };
   } catch (error) {
     return { url: resolved.href, unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
   }
 };
 const probe = async (url, redirect = "manual") => {
   try {
-    const response = await fetch(url, {
-      headers: { "user-agent": AGENTS.browser },
-      redirect,
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    await response.body?.cancel();
-    return { location: response.headers.get("location"), status: response.status };
+    return await fetchWithRetry(
+      url,
+      { headers: { "user-agent": AGENTS.browser }, redirect },
+      {
+        consume: async (response) => {
+          await response.body?.cancel();
+          return { location: response.headers.get("location"), status: response.status };
+        },
+      }
+    );
   } catch (error) {
     return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
   }
@@ -782,36 +889,68 @@ const probeChain = async (startUrl, probeMemo, maxHops = 5) => {
 };
 const probeUnknown = async (url) => {
   try {
-    const response = await fetch(url, {
-      headers: { "user-agent": AGENTS.browser },
-      redirect: "follow",
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
-    const ct = response.headers.get("content-type") ?? "";
-    let canonical = null;
-    if (/html/i.test(ct) && response.body) {
-      const reader = response.body.getReader();
-      const chunks = [];
-      let total = 0;
-      while (total < 64 * KB) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        total += value.byteLength;
+    return await fetchWithRetry(
+      url,
+      { headers: { "user-agent": AGENTS.browser }, redirect: "follow" },
+      {
+        consume: async (response) => {
+          const ct = response.headers.get("content-type") ?? "";
+          let canonical = null;
+          let hasJsonLd = false;
+          let indexRobots = false;
+          if (/html/i.test(ct) && response.body) {
+            const reader = response.body.getReader();
+            const chunks = [];
+            let total = 0;
+            try {
+              while (total < 64 * KB) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                chunks.push(value);
+                total += value.byteLength;
+              }
+            } finally {
+              await reader.cancel().catch(() => {});
+            }
+            const text = Buffer.concat(chunks).toString("utf8").slice(0, 64 * KB);
+            const isJsonLdAttr = (attributes) =>
+              /^application\/ld\+json(?:\s*;|$)/i.test((attributesOf(attributes).type ?? "").trim());
+            const stripped = text.replace(RAW_TEXT, (match, element = "", attributes = "") => {
+              if (element.toLowerCase() === "script" && isJsonLdAttr(attributes)) hasJsonLd = true;
+              return "";
+            });
+            if (!hasJsonLd) {
+              for (const match of stripped.matchAll(/<script\b([^>]*)>/gi)) {
+                if (isJsonLdAttr(match[1])) {
+                  hasJsonLd = true;
+                  break;
+                }
+              }
+            }
+            const robotsMetas = [];
+            for (const match of stripped.matchAll(/<(link|meta)\b([^>]*)>/gi)) {
+              const tagName = match[1].toLowerCase();
+              const attrs = attributesOf(match[2]);
+              if (tagName === "link") {
+                if (!canonical && (attrs.rel ?? "").toLowerCase().split(/\s+/).includes("canonical") && attrs.href) {
+                  canonical = attrs.href;
+                }
+              } else {
+                const metaName = (attrs.name ?? "").toLowerCase();
+                if ((metaName === "robots" || metaName === "googlebot") && attrs.content) {
+                  robotsMetas.push(attrs.content);
+                }
+              }
+            }
+            const robotsRules = googleRules(robotsMetas, "");
+            indexRobots = robotsRules.some((rule) => /^index$/i.test(rule)) && !hasNoindexRules(robotsRules);
+          } else {
+            await response.body?.cancel();
+          }
+          return { status: response.status, url: response.url, canonical, hasJsonLd, indexRobots };
+        },
       }
-      await reader.cancel().catch(() => {});
-      const text = Buffer.concat(chunks).toString("utf8").slice(0, 64 * KB);
-      for (const match of text.matchAll(/<link\b([^>]*)>/gi)) {
-        const attrs = attributesOf(match[1]);
-        if ((attrs.rel ?? "").toLowerCase().split(/\s+/).includes("canonical") && attrs.href) {
-          canonical = attrs.href;
-          break;
-        }
-      }
-    } else {
-      await response.body?.cancel();
-    }
-    return { status: response.status, url: response.url, canonical };
+    );
   } catch (error) {
     return { unchecked: error.cause?.code ?? error.cause?.message ?? error.message };
   }
@@ -992,6 +1131,16 @@ const checkSite = async ({ site, url }) => {
     if (unknownCanonical && unknownCanonical.origin === page.origin && (unknownCanonical.pathname === page.pathname || unknownCanonical.pathname === "/")) {
       warnings.push(`An unknown URL declares canonical ${unknownCanonical.href}, which can confuse crawlers on error pages.`);
     }
+  }
+  if (unknown.hasJsonLd) {
+    warnings.push(
+      `An unknown URL (HTTP ${unknown.status}) includes JSON-LD structured data, which leaks page schema onto error or fallback pages.`
+    );
+  }
+  if (unknown.indexRobots) {
+    warnings.push(
+      `An unknown URL (HTTP ${unknown.status}) declares robots "index" without "noindex", which leaks indexable metadata onto error or fallback pages.`
+    );
   }
   checkRedirectChain(twin, twinHop, page, warnings);
   checkRedirectChain(httpUrl?.href, httpHop, page, warnings);
