@@ -26,12 +26,14 @@ const fakePng = (width, height) => {
 
 async function serve(t, route) {
   const hits = []
-  const server = createServer((req, res) => {
+  const server = createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host}`)
     hits.push(url.pathname)
-    const reply = route(url, req) ?? { status: 404, body: 'Not found' }
-    res.writeHead(reply.status ?? 200, { 'content-type': reply.type ?? 'text/html', ...reply.headers })
-    res.end(reply.body ?? '')
+    const reply = await route(url, req, res)
+    if (res.writableEnded || req.socket.destroyed) return
+    const payload = reply ?? { status: 404, body: 'Not found' }
+    res.writeHead(payload.status ?? 200, { 'content-type': payload.type ?? 'text/html', ...payload.headers })
+    res.end(payload.body ?? '')
   })
   server.listen(0, '127.0.0.1')
   await once(server, 'listening')
@@ -508,4 +510,183 @@ test('checkHead surfaces uncompressed HTML/CSS/JS, missing static Cache-Control,
   assert(prioritized.site.warnings.some((w) => /main\.css was served uncompressed/.test(w)))
   assert(prioritized.site.warnings.some((w) => /main\.js has no Cache-Control header/.test(w)))
   assert(prioritized.site.errors.some((e) => /web app manifest.*exceeds 512 KB/.test(e)))
+})
+
+test('surfaces missing noindex on static .png social image routes and distinct twitter:image', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/opengraph-image.png') return { type: 'image/png', body: fakePng(1200, 630) }
+    if (u.pathname === '/twitter-image.png') return { type: 'image/png', body: fakePng(1200, 630) }
+    if (u.pathname === '/sub/twitter-image.png') return { type: 'image/png', headers: { 'X-Robots-Tag': 'noindex' }, body: fakePng(1200, 630) }
+    if (u.pathname === '/') {
+      return {
+        body: html(
+          u.origin,
+          '/',
+          `<meta property="og:image" content="${u.origin}/opengraph-image.png"><meta name="twitter:image" content="${u.origin}/twitter-image.png">`,
+          '<a href="/sub">Sub</a>'
+        ),
+      }
+    }
+    if (u.pathname === '/sub') {
+      return {
+        body: html(
+          u.origin,
+          '/sub',
+          `<meta property="og:image" content="${u.origin}/opengraph-image.png"><meta name="twitter:image" content="${u.origin}/sub/twitter-image.png">`
+        ),
+      }
+    }
+  })
+  const result = await auditSite(origin)
+  assert.deepEqual(failures(result), [])
+  assert(result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/opengraph-image.png`))
+  assert(result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/twitter-image.png`))
+  assert(!result.findings.some((f) => f.rule === 'page.non-html-indexable' && f.url === `${origin}/sub/twitter-image.png`))
+
+  const head = await checkHead(origin)
+  assert(head.site.warnings.some((w) => w.includes(`${origin}/opengraph-image.png`) && /no X-Robots-Tag: noindex/.test(w)))
+  assert(head.site.warnings.some((w) => w.includes(`${origin}/twitter-image.png`) && /no X-Robots-Tag: noindex/.test(w)))
+})
+
+test('flags self-canonical and hreflang emitted on noindex pages', async (t) => {
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') return { body: html(u.origin, '/', '', '<a href="/private-html">A</a><a href="/private-header">B</a><a href="/clean-noindex">C</a>') }
+    if (u.pathname === '/private-html') {
+      return {
+        headers: { 'X-Robots-Tag': 'noindex' },
+        body: html(u.origin, '/private-html', `<link rel="alternate" hreflang="en" href="${u.origin}/private-html">`),
+      }
+    }
+    if (u.pathname === '/private-header') {
+      return {
+        headers: { Link: `<${u.origin}/private-header>; rel="alternate"; hreflang="en"` },
+        body: '<!doctype html><html><head><title>Header Noindex</title><meta name="robots" content="noindex"></head><body><h1>Header Noindex</h1></body></html>',
+      }
+    }
+    if (u.pathname === '/clean-noindex') {
+      return {
+        headers: { 'X-Robots-Tag': 'noindex' },
+        body: '<!doctype html><html><head><title>Clean Noindex</title></head><body><h1>Clean Noindex</h1></body></html>',
+      }
+    }
+  })
+  const result = await auditSite(origin)
+  assert(result.findings.some((f) => f.rule === 'canonical.noindex-conflict' && f.url === `${origin}/private-html` && f.status === 'review'))
+  assert(result.findings.some((f) => f.rule === 'hreflang.noindex-conflict' && f.url === `${origin}/private-html` && f.status === 'review'))
+  assert(result.findings.some((f) => f.rule === 'hreflang.noindex-conflict' && f.url === `${origin}/private-header` && f.status === 'review'))
+  assert(!result.findings.some((f) => f.rule === 'canonical.noindex-conflict' && f.url === `${origin}/private-header`))
+  assert(!result.findings.some((f) => ['canonical.noindex-conflict', 'hreflang.noindex-conflict'].includes(f.rule) && f.url === `${origin}/clean-noindex`))
+})
+
+test('checkHead warns on leaked JSON-LD and index meta robots on 404 HTML shells', async (t) => {
+  const leaky = await serve(t, (u) => {
+    if (u.pathname === '/') return { body: html(u.origin, '/') }
+    return {
+      status: 404,
+      body: `<!doctype html><html><head><title>Not Found</title><meta name="robots" content="index, follow"><script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', url: u.origin })}</script></head><body><h1>404</h1></body></html>`,
+    }
+  })
+  const leakyHead = await checkHead(leaky.origin)
+  assert(leakyHead.site.warnings.some((w) => /unknown URL.*JSON-LD/i.test(w)))
+  assert(leakyHead.site.warnings.some((w) => /unknown URL.*robots "index" without "noindex"/i.test(w)))
+
+  const clean = await serve(t, (u) => {
+    if (u.pathname === '/') return { body: html(u.origin, '/') }
+    return {
+      status: 404,
+      body: '<!doctype html><html><head><title>Not Found</title><meta name="robots" content="noindex, follow"><!-- <script type="application/ld+json">{}</script> --></head><body><h1>404</h1></body></html>',
+    }
+  })
+  const cleanHead = await checkHead(clean.origin)
+  assert(!cleanHead.site.warnings.some((w) => /JSON-LD|robots "index"/i.test(w)), JSON.stringify(cleanHead.site.warnings))
+})
+
+test('distinguishes temporary 302 and 307 entry redirects from permanent 301 redirects', async (t) => {
+  for (const status of [302, 307, 301]) {
+    const { origin } = await serve(t, (u) => {
+      if (u.pathname === '/') return { status, headers: { location: '/en' } }
+      if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+      if (u.pathname === '/sitemap.xml') return { type: 'application/xml', body: `<urlset><url><loc>${u.origin}/en</loc></url></urlset>` }
+      if (u.pathname === '/en') return { body: html(u.origin, '/en') }
+    })
+    const result = await auditSite(origin)
+    assert.deepEqual(failures(result), [])
+    assert(result.findings.some((f) => f.rule === 'page.redirect' && f.url === `${origin}/`))
+    const temp = result.findings.find((f) => f.rule === 'page.temporary-redirect' && f.url === `${origin}/`)
+    if (status === 301) assert.equal(temp, undefined)
+    else assert(temp && temp.status === 'review' && temp.evidence.includes(String(status)))
+  }
+})
+
+test('retries transient socket resets, caps per-origin concurrency, and warns on dead literal robots.txt Allow paths', async (t) => {
+  let flakyHits = 0
+  let inFlight = 0
+  let maxInFlight = 0
+  const { origin, hits } = await serve(t, async (u, req) => {
+    inFlight++
+    maxInFlight = Math.max(maxInFlight, inFlight)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 15))
+      if (u.pathname === '/robots.txt') {
+        return {
+          type: 'text/plain',
+          body: [
+            'User-agent: *',
+            'Allow: /',
+            'Allow: /landing/',
+            'Allow: /ok/',
+            'Allow: /wild/*',
+            'Allow: /exact$',
+            'Allow: /dead-2',
+            'Allow: /dead-3',
+            'Allow: /dead-4',
+            'Allow: /beyond-cap',
+            'Disallow: /blocked/',
+          ].join('\n'),
+        }
+      }
+      if (u.pathname === '/flaky') {
+        flakyHits++
+        if (flakyHits === 1) {
+          req.socket.resetAndDestroy()
+          return null
+        }
+        return { body: html(u.origin, '/flaky') }
+      }
+      if (u.pathname === '/always-reset') {
+        req.socket.resetAndDestroy()
+        return null
+      }
+      if (u.pathname === '/ok/') return { body: html(u.origin, '/ok/') }
+      if (['/landing/', '/dead-2', '/dead-3', '/dead-4', '/beyond-cap'].includes(u.pathname)) {
+        return { status: u.pathname === '/dead-2' ? 410 : 404, body: 'Missing' }
+      }
+      if (/^\/p\d$/.test(u.pathname)) return { body: html(u.origin, u.pathname) }
+      if (u.pathname === '/') {
+        const links = ['<a href="/flaky">Flaky</a>', '<a href="/always-reset">Bad</a>', ...Array.from({ length: 6 }, (_, i) => `<a href="/p${i}">P${i}</a>`)].join('')
+        const assets = Array.from({ length: 4 }, (_, i) => `<link rel="stylesheet" href="/a${i}.css">`).join('')
+        return { body: html(u.origin, '/', assets, links) }
+      }
+      if (/^\/a\d\.css$/.test(u.pathname)) return { type: 'text/css', headers: { 'cache-control': 'public, max-age=3600' }, body: 'body{}' }
+    } finally {
+      inFlight--
+    }
+  })
+
+  const result = await auditSite(origin, { maxPages: 12 })
+  assert(maxInFlight <= 4, `expected maxInFlight <= 4, got ${maxInFlight}`)
+  assert(result.pages.some((p) => p.url === `${origin}/flaky`), 'flaky page should succeed after retry')
+  assert.equal(hits.filter((p) => p === '/always-reset').length, 2)
+  assert(result.findings.some((f) => f.rule === 'page.fetch' && f.url === `${origin}/always-reset` && f.status === 'unchecked'))
+  for (const dead of ['/landing/', '/dead-2', '/dead-3', '/dead-4']) {
+    assert(result.findings.some((f) => f.rule === 'robots.dead-allow' && f.url === `${origin}${dead}` && f.status === 'review'), dead)
+  }
+  for (const skipped of ['/ok/', '/', '/wild/*', '/exact$', '/beyond-cap']) {
+    assert(!result.findings.some((f) => f.rule === 'robots.dead-allow' && f.url === `${origin}${skipped}`), skipped)
+  }
+  assert.equal(hits.includes('/beyond-cap'), false)
+  assert.equal(hits.includes('/wild/*'), false)
+  assert.equal(hits.includes('/exact$'), false)
 })

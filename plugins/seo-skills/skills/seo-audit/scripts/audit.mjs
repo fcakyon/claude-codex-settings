@@ -7,12 +7,13 @@ import { fileURLToPath } from 'node:url'
 import { parse } from 'parse5'
 import { XMLParser, XMLValidator } from 'fast-xml-parser'
 import robotsParser from 'robots-parser'
-import { allowsLargeImagePreview, checkHead, findMetaAttributeMismatches, googleRules, hasNoindexHeader, hasNoindexRules, inspectJsonLd, isGeneratedImageRoute, isLoopbackHost } from './check_head.mjs'
+import { allowsLargeImagePreview, checkHead, fetchWithRetry, findMetaAttributeMismatches, googleRules, hasNoindexHeader, hasNoindexRules, inspectJsonLd, isGeneratedImageRoute, isLoopbackHost } from './check_head.mjs'
 
 setDefaultResultOrder('ipv4first')
 
 const MAX_BYTES = 5 * 1024 * 1024
 const MAX_SITEMAPS = 10
+const MAX_ROBOTS_ALLOW_PROBES = 5
 const TIMEOUT = 10000
 const SOURCES = {
   robots: 'https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec',
@@ -82,63 +83,116 @@ function pageOf(html, url, headers) {
     missingAlt: nodes.filter((n) => n.tag === 'img' && !('alt' in n.attrs)).length, jsonLd }
 }
 
+function extractRobotsAllowPaths(text, origin, robots) {
+  const seen = new Set()
+  const paths = []
+  let currentAgents = []
+  let resetAgents = true
+  for (const rawLine of text.split(/\r\n|\r|\n/)) {
+    const cleanLine = rawLine.replace(/#.*$/, '')
+    const colon = cleanLine.indexOf(':')
+    if (colon < 0) continue
+    const field = cleanLine.slice(0, colon).trim().toLowerCase()
+    const value = cleanLine.slice(colon + 1).trim()
+    if (!field) continue
+    if (field === 'user-agent') {
+      if (resetAgents) currentAgents = []
+      if (value) {
+        const idx = value.indexOf('/')
+        currentAgents.push((idx > -1 ? value.slice(0, idx) : value).trim().toLowerCase())
+      }
+      resetAgents = false
+      continue
+    }
+    resetAgents = true
+    if (field !== 'allow') continue
+    if (!currentAgents.some((agent) => agent === '*' || agent === 'googlebot')) continue
+    if (!value.startsWith('/') || value === '/' || value.includes('*') || value.includes('$')) continue
+    const resolved = urlOf(value, origin)
+    if (!resolved || new URL(resolved).origin !== origin || seen.has(resolved)) continue
+    if (robots.isAllowed(resolved, 'Googlebot') === false) continue
+    seen.add(resolved)
+    paths.push({ raw: value, url: resolved })
+    if (paths.length >= MAX_ROBOTS_ALLOW_PROBES) break
+  }
+  return paths
+}
+
 async function probeHeaders(url, origin, isAllowed) {
-  const signal = AbortSignal.timeout(TIMEOUT)
+  const send = (targetUrl, method) => fetchWithRetry(
+    targetUrl,
+    { method, redirect: 'manual', headers: { 'user-agent': 'SEOAudit/1.0' } },
+    {
+      timeoutMs: TIMEOUT,
+      consume: async (response) => {
+        await response.body?.cancel()
+        return { status: response.status, headers: response.headers }
+      },
+    }
+  )
   try {
     for (let hop = 0; hop <= 10; hop++) {
-      let response = await fetch(url, { method: 'HEAD', redirect: 'manual', signal, headers: { 'user-agent': 'SEOAudit/1.0' } })
-      await response.body?.cancel()
-      if (response.status === 405 || response.status === 501) {
-        response = await fetch(url, { method: 'GET', redirect: 'manual', signal, headers: { 'user-agent': 'SEOAudit/1.0' } })
-        await response.body?.cancel()
-      }
-      const location = response.headers.get('location')
-      if (response.status >= 300 && response.status < 400 && location) {
+      let res = await send(url, 'HEAD')
+      if (res.status === 405 || res.status === 501) res = await send(url, 'GET')
+      const location = res.headers.get('location')
+      if (res.status >= 300 && res.status < 400 && location) {
         const next = urlOf(location, url)
-        if (!next || (origin && new URL(next).origin !== origin)) return { url, status: response.status, unchecked: 'Redirect leaves origin.' }
-        if (isAllowed && !isAllowed(next)) return { url, status: response.status, unchecked: 'Redirect target is disallowed by robots.txt.' }
+        if (!next || (origin && new URL(next).origin !== origin)) return { url, status: res.status, unchecked: 'Redirect leaves origin.' }
+        if (isAllowed && !isAllowed(next)) return { url, status: res.status, unchecked: 'Redirect target is disallowed by robots.txt.' }
         url = next
         continue
       }
-      return { url, status: response.status, headers: response.headers }
+      return { url, status: res.status, headers: res.headers }
     }
     return { url, unchecked: 'Redirect limit reached.' }
   } catch (error) {
-    return { url, unchecked: error.cause?.code ?? error.message }
+    return { url, unchecked: error.cause?.code ?? error.cause?.message ?? error.message }
   }
 }
 
 async function readUrl(url, origin, isAllowed) {
   const redirects = []
-  const signal = AbortSignal.timeout(TIMEOUT)
   try {
     for (let hop = 0; hop <= 10; hop++) {
-      const response = await fetch(url, { redirect: 'manual', signal, headers: { 'user-agent': 'SEOAudit/1.0', accept: 'text/html,application/xml,text/plain,*/*' } })
-      const location = response.headers.get('location')
-      if (response.status >= 300 && response.status < 400 && location) {
-        await response.body?.cancel()
-        const next = urlOf(location, url)
-        redirects.push({ url, status: response.status, target: next })
-        if (!next || (origin && new URL(next).origin !== origin)) return { url, status: response.status, redirects, unchecked: 'Redirect leaves the crawl origin or HTTP(S).' }
-        if (isAllowed && !isAllowed(next)) return { url, status: response.status, redirects, unchecked: 'Redirect target is disallowed by robots.txt.' }
+      const res = await fetchWithRetry(
+        url,
+        { redirect: 'manual', headers: { 'user-agent': 'SEOAudit/1.0', accept: 'text/html,application/xml,text/plain,*/*' } },
+        {
+          timeoutMs: TIMEOUT,
+          consume: async (response) => {
+            const location = response.headers.get('location')
+            if (response.status >= 300 && response.status < 400 && location) {
+              await response.body?.cancel()
+              return { redirect: true, status: response.status, location }
+            }
+            const parts = []
+            let bytes = 0
+            for await (const part of response.body ?? []) {
+              bytes += part.length
+              if (bytes > MAX_BYTES) return { redirect: false, status: response.status, exceeded: true }
+              parts.push(part)
+            }
+            const charset = response.headers.get('content-type')?.match(/charset\s*=\s*["']?([\w-]+)/i)?.[1] ?? 'utf-8'
+            let body = Buffer.concat(parts)
+            if (body[0] === 0x1f && body[1] === 0x8b) body = gunzipSync(body, { maxOutputLength: MAX_BYTES })
+            return { redirect: false, status: response.status, headers: response.headers, text: new TextDecoder(charset).decode(body) }
+          },
+        }
+      )
+      if (res.redirect) {
+        const next = urlOf(res.location, url)
+        redirects.push({ url, status: res.status, target: next })
+        if (!next || (origin && new URL(next).origin !== origin)) return { url, status: res.status, redirects, unchecked: 'Redirect leaves the crawl origin or HTTP(S).' }
+        if (isAllowed && !isAllowed(next)) return { url, status: res.status, redirects, unchecked: 'Redirect target is disallowed by robots.txt.' }
         url = next
         continue
       }
-      const parts = []
-      let bytes = 0
-      for await (const part of response.body ?? []) {
-        bytes += part.length
-        if (bytes > MAX_BYTES) return { url, status: response.status, redirects, unchecked: `Response exceeds the ${MAX_BYTES}-byte audit budget.` }
-        parts.push(part)
-      }
-      const charset = response.headers.get('content-type')?.match(/charset\s*=\s*["']?([\w-]+)/i)?.[1] ?? 'utf-8'
-      let body = Buffer.concat(parts)
-      if (body[0] === 0x1f && body[1] === 0x8b) body = gunzipSync(body, { maxOutputLength: MAX_BYTES })
-      return { url, status: response.status, headers: response.headers, text: new TextDecoder(charset).decode(body), redirects }
+      if (res.exceeded) return { url, status: res.status, redirects, unchecked: `Response exceeds the ${MAX_BYTES}-byte audit budget.` }
+      return { url, status: res.status, headers: res.headers, text: res.text, redirects }
     }
     return { url, redirects, unchecked: 'Redirect limit reached.' }
   } catch (error) {
-    return { url, redirects, unchecked: error.cause?.code ?? error.message }
+    return { url, redirects, unchecked: error.cause?.code ?? error.cause?.message ?? error.message }
   }
 }
 
@@ -148,10 +202,19 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   const findings = []
   const add = (rule, status, url, evidence, source) => findings.push({ rule, status, url, evidence, ...(source ? { source: SOURCES[source] } : {}) })
   const root = await readUrl(target)
-  if (root.redirects.length) add(root.redirects.length > 1 ? 'page.redirect-chain' : 'page.redirect', root.redirects.length > 1 ? 'fail' : 'review', target, root.redirects, 'canonical')
+  if (root.redirects.length) {
+    add(root.redirects.length > 1 ? 'page.redirect-chain' : 'page.redirect', root.redirects.length > 1 ? 'fail' : 'review', target, root.redirects, 'canonical')
+    const tempRootRedirects = root.redirects.filter((hop) => hop.status === 302 || hop.status === 307)
+    if (tempRootRedirects.length) {
+      const statuses = [...new Set(tempRootRedirects.map((hop) => hop.status))].join('/')
+      const hops = tempRootRedirects.map((hop) => `${hop.status} ${hop.url} -> ${hop.target ?? 'unknown'}`).join(', ')
+      add('page.temporary-redirect', 'review', target, `Entry URL uses temporary HTTP ${statuses} redirect (${hops}) instead of permanent 301/308.`, 'canonical')
+    }
+  }
   const origin = new URL(root.url).origin
   const requests = new Map([[target, Promise.resolve(root)]])
   let robots = null
+  let robotsAllowPaths = []
   const read = (url, respectRobots = false) => {
     if (!requests.has(url)) requests.set(url, readUrl(url, origin, respectRobots ? (next) => robots.isAllowed(next, 'Googlebot') !== false : undefined))
     return requests.get(url)
@@ -168,7 +231,9 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   } else if (/html/i.test(robotsResponse.headers?.get('content-type') ?? '')) {
     add('robots.format', 'unchecked', robotsUrl, 'The robots URL returned HTML. Crawl policy could not be established.', 'robots')
   } else {
-    robots = robotsParser(robotsUrl, Buffer.from(robotsResponse.text).subarray(0, 500 * 1024).toString('utf8'))
+    const robotsText = Buffer.from(robotsResponse.text).subarray(0, 500 * 1024).toString('utf8')
+    robots = robotsParser(robotsUrl, robotsText)
+    robotsAllowPaths = extractRobotsAllowPaths(robotsText, origin, robots)
     add('robots.fetch', 'pass', robotsUrl, `HTTP ${robotsResponse.status}.`, 'robots')
     if (Buffer.byteLength(robotsResponse.text) > 500 * 1024) add('robots.size', 'review', robotsUrl, 'Google ignores robots.txt content after 500 KiB.', 'robots')
   }
@@ -307,6 +372,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         continue
       }
       const page = pageOf(res.text, res.url, res.headers)
+      const pageAlternatesCount = page.alternates.length
       page.alternates.push(...(sitemapAlternates.get(requested) ?? []))
       pages.set(requested, page)
       const flagLocalhost = (label, raw) => {
@@ -328,8 +394,11 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         if (canonical.raw) flagLocalhost('canonical', canonical.raw)
         if (!/^https?:\/\//i.test(canonical.raw ?? '')) add('canonical.relative', 'review', requested, canonical.raw ?? 'Empty canonical.', 'canonical')
         enqueue(canonical.url, 'canonical', true)
-        if (page.noindex && canonical.url && canonical.url !== res.url) add('canonical.noindex-conflict', 'review', requested, `Noindex page declares canonical ${canonical.url}, sending conflicting signals.`, 'canonical')
+        if (page.noindex && canonical.url) add('canonical.noindex-conflict', 'review', requested, `Noindex page declares canonical ${canonical.url}, sending conflicting signals.`, 'canonical')
         if (sources.has('sitemap') && canonical.url !== res.url) add('sitemap.canonical', 'fail', requested, `Sitemap URL canonicalizes to ${canonical.url}.`, 'sitemap')
+      }
+      if (page.noindex && pageAlternatesCount) {
+        add('hreflang.noindex-conflict', 'review', requested, `Noindex page emits ${pageAlternatesCount} hreflang alternate ${pageAlternatesCount === 1 ? 'link' : 'links'}, sending conflicting indexing signals.`, 'hreflang')
       }
       for (const [label, val] of [['og:url', page.ogUrl], ['og:image', page.ogImage], ['twitter:image', page.twitterImage]]) {
         if (val) flagLocalhost(label, val)
@@ -345,7 +414,9 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         }
         for (const imgVal of [page.ogImage, page.twitterImage].filter(Boolean)) {
           const parsedImg = URL.parse(imgVal, res.url)
-          if (!parsedImg || parsedImg.origin !== origin || !isGeneratedImageRoute(parsedImg) || checkedGeneratedImages.has(parsedImg.href)) continue
+          if (!parsedImg) continue
+          parsedImg.hash = ''
+          if (parsedImg.origin !== origin || !isGeneratedImageRoute(parsedImg) || checkedGeneratedImages.has(parsedImg.href)) continue
           if (robots && robots.isAllowed(parsedImg.href, 'Googlebot') === false) continue
           checkedGeneratedImages.add(parsedImg.href)
           generatedImageProbes.push(probeHeaders(parsedImg.href, origin, (next) => !robots || robots.isAllowed(next, 'Googlebot') !== false))
@@ -373,6 +444,14 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   for (const imgRes of await Promise.all(generatedImageProbes)) {
     if (imgRes.status === 200 && !hasNoindexHeader(imgRes.headers?.get('x-robots-tag'))) {
       add('page.non-html-indexable', 'review', imgRes.url, 'Generated social image route has no X-Robots-Tag: noindex header.', 'indexing')
+    }
+  }
+  const robotsAllowProbes = robotsAllowPaths
+    .filter(({ url }) => !pages.has(url))
+    .map(async (entry) => ({ entry, res: await probeHeaders(entry.url, origin, (next) => !robots || robots.isAllowed(next, 'Googlebot') !== false) }))
+  for (const { entry, res } of await Promise.all(robotsAllowProbes)) {
+    if (res.status === 404 || res.status === 410) {
+      add('robots.dead-allow', 'review', entry.url, `Explicit robots.txt Allow path "${entry.raw}" returned HTTP ${res.status}.`, 'robots')
     }
   }
   if (llmsTask && !visited.has(llmsUrl)) {
