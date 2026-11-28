@@ -16,17 +16,41 @@ let pendingStarted, pendingClosed;
 
 before(async () => {
   temporary = await mkdtemp(path.join(root, '.test-'));
-  await build({loader: {".svg": "dataurl", ".woff2": "dataurl"},entryPoints: [path.join(root, 'tests/fixture.tsx')], bundle: true, outfile: path.join(temporary, 'fixture.js'), jsx: 'automatic'});
-  await build({loader: {".svg": "dataurl", ".woff2": "dataurl"},
-    stdin: {contents: `import {renderToString} from 'react-dom/server';
-      import {GoogleSignIn} from './skills/app-auth/assets/GoogleSignIn';
-      export const html = renderToString(<GoogleSignIn mode="popup" identity={null} clientId="fixture-client" locale="en"
-        redirectEndpoint="/auth/google/login" returnTo="/en?filter=active#details"
-        copy={{fallback:'Continue in this tab',pending:'Signing in'}}
-        onCredential={async()=>null} onAuthenticated={()=>{}} onFailure={()=>'Failed'} />);`,
-      resolveDir: root, loader: 'tsx'},
-    bundle: true, platform: 'node', format: 'cjs', packages: 'external', jsx: 'automatic', outfile: path.join(temporary, 'ssr.cjs'),
-  });
+  await Promise.all([
+    build({loader: {".svg": "dataurl", ".woff2": "dataurl"}, entryPoints: [path.join(root, 'tests/fixture.tsx')], bundle: true, outfile: path.join(temporary, 'fixture.js'), jsx: 'automatic'}),
+    build({loader: {".svg": "dataurl", ".woff2": "dataurl"},
+      entryPoints: [path.join(root, 'skills/app-auth/assets/login.ts')],
+      bundle: true, platform: 'node', format: 'cjs', outfile: path.join(temporary, 'login.cjs'),
+    }),
+    build({loader: {".svg": "dataurl", ".woff2": "dataurl"},
+      stdin: {contents: `import {createRoot} from 'react-dom/client';
+        import {SocialSignIn} from './skills/app-auth/assets/SocialSignIn';
+        import {pendingReturnTo} from './skills/app-auth/assets/login';
+        const pending = pendingReturnTo(sessionStorage, 'auth.pending', location.origin);
+        createRoot(document.getElementById('root')).render(
+          <SocialSignIn
+            providers={[{id: 'google', label: 'Google', endpoint: '/auth/google/login'}]}
+            returnTo="/en/titles?view=grid"
+            onSelect={(provider) => {
+              sessionStorage.setItem('auth.selected', provider.id);
+              pending.save('/en/titles?view=grid');
+            }}
+          />
+        );`,
+        resolveDir: root, loader: 'tsx'},
+      bundle: true, outfile: path.join(temporary, 'social.js'), jsx: 'automatic',
+    }),
+    build({loader: {".svg": "dataurl", ".woff2": "dataurl"},
+      stdin: {contents: `import {renderToString} from 'react-dom/server';
+        import {GoogleSignIn} from './skills/app-auth/assets/GoogleSignIn';
+        export const html = renderToString(<GoogleSignIn mode="popup" identity={null} clientId="fixture-client" locale="en"
+          redirectEndpoint="/auth/google/login" returnTo="/en?filter=active#details"
+          copy={{fallback:'Continue in this tab',pending:'Signing in'}}
+          onCredential={async()=>null} onAuthenticated={()=>{}} onFailure={()=>'Failed'} />);`,
+        resolveDir: root, loader: 'tsx'},
+      bundle: true, platform: 'node', format: 'cjs', packages: 'external', jsx: 'automatic', outfile: path.join(temporary, 'ssr.cjs'),
+    }),
+  ]);
   ssr = createRequire(import.meta.url)(path.join(temporary, 'ssr.cjs')).html;
   server = createServer(async (request, response) => {
     const url = new URL(request.url, 'http://localhost');
@@ -69,9 +93,12 @@ before(async () => {
     } else if (url.pathname === '/example-logo.svg') {
       response.setHeader('Content-Type', 'image/svg+xml');
       response.end(await readFile(path.join(root, 'tests/example-logo.svg')));
-    } else if (url.pathname === '/fixture.js' || url.pathname === '/fixture.css') {
+    } else if (url.pathname === '/fixture.js' || url.pathname === '/fixture.css' || url.pathname === '/social.js') {
       response.setHeader('Content-Type', url.pathname.endsWith('.js') ? 'text/javascript' : 'text/css');
       response.end(await readFile(path.join(temporary, url.pathname.slice(1))));
+    } else if (url.pathname === '/social-select') {
+      response.setHeader('Content-Type', 'text/html');
+      response.end('<!doctype html><div id="root"></div><script src="/social.js"></script>');
     } else {
       response.setHeader('Content-Type', 'text/html');
       response.end(`<!doctype html><html lang="en"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -277,4 +304,66 @@ test('closing a pending email request cancels it without a stale completion',asy
     assert.equal(await page.getByText('Signed out',{exact:true}).isVisible(),true);
     assert.deepEqual(errors,[]);
   }finally{await page.close()}
+});
+
+test('pendingReturnTo rejects unsafe redirects, oauthErrorReason classifies callback errors, and SocialSignIn fires onSelect', async () => {
+  const { pendingReturnTo, oauthErrorReason } = createRequire(import.meta.url)(path.join(temporary, 'login.cjs'));
+  const backing = new Map();
+  const storage = {
+    getItem: (k) => backing.get(k) ?? null,
+    setItem: (k, v) => { backing.set(k, String(v)); },
+    removeItem: (k) => { backing.delete(k); },
+  };
+  const pending = pendingReturnTo(storage, 'auth.pending', 'https://app.example');
+  pending.save('/en/titles?filter=active#details');
+  assert.equal(pending.read(), '/en/titles?filter=active#details');
+  assert.equal(pending.consume(), '/en/titles?filter=active#details');
+  assert.equal(pending.read(), null);
+
+  pending.save('https://app.example/tr/plan?step=2#pay');
+  assert.equal(pending.read(), '/tr/plan?step=2#pay');
+
+  for (const unsafe of [
+    'https://evil.example/phish',
+    'https://app.example//evil.example/phish',
+    'https://app.example/.//evil.example/phish',
+    'https://app.example/%5cevil.example',
+    '//evil.example/phish',
+    '///evil.example/phish',
+    '/\\evil.example/phish',
+    '\\evil.example/phish',
+    '/%2f/evil.example',
+    '/%5cevil.example',
+    'javascript:alert(1)',
+    ' //evil.example/phish',
+    'https://user:pass@app.example/en',
+  ]) {
+    pending.save(unsafe);
+    assert.equal(pending.read(), null, `must reject unsafe target: ${unsafe}`);
+    backing.set('auth.pending', unsafe);
+    assert.equal(pending.read(), null, `must reject tampered stored target: ${unsafe}`);
+  }
+  assert.equal(pendingReturnTo({ ...storage, getItem: () => 'https://app.example/en' }, 'auth.pending').read(), null);
+
+  assert.equal(oauthErrorReason(''), null);
+  assert.equal(oauthErrorReason('?error='), null);
+  assert.equal(oauthErrorReason('?foo=bar'), null);
+  assert.equal(oauthErrorReason('?error=access_denied'), 'cancelled');
+  assert.equal(oauthErrorReason('?error=cancel'), 'cancelled');
+  assert.equal(oauthErrorReason('?google_error=access_denied'), 'cancelled');
+  assert.equal(oauthErrorReason(new URLSearchParams('oauth_error=user_canceled')), 'cancelled');
+  assert.equal(oauthErrorReason('?error=expired'), 'expired');
+  assert.equal(oauthErrorReason('?error=state_expired'), 'expired');
+  assert.equal(oauthErrorReason('?error=missing_state'), 'expired');
+  assert.equal(oauthErrorReason('?error=server_error'), 'failed');
+  assert.equal(oauthErrorReason('?error=state_mismatch'), 'failed');
+
+  const page = await browser.newPage();
+  try {
+    await page.goto(origin + '/social-select');
+    await page.getByRole('link', { name: 'Google', exact: true }).click();
+    await page.waitForURL('**/provider?**');
+    assert.equal(await page.evaluate(() => sessionStorage.getItem('auth.selected')), 'google');
+    assert.equal(await page.evaluate(() => sessionStorage.getItem('auth.pending')), '/en/titles?view=grid');
+  } finally { await page.close(); }
 });

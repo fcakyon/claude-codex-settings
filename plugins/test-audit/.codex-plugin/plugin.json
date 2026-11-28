@@ -1,6 +1,6 @@
 {
   "name": "test-audit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Keep only tests that catch real bugs, and prune ones that just restate the code.",
   "license": "MIT"
 }

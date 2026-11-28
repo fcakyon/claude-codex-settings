@@ -5,7 +5,12 @@
 Create a same-origin endpoint such as `/api/support/identity`. Authenticate it with the app's existing server session. Guests return `204`. Signed-in users return only:
 
 ```json
-{"user_id":"verified-account-id","user_hash":"hex-hmac-sha256","name":"Display name","email":"verified@example.com"}
+{
+  "user_id": "verified-account-id",
+  "user_hash": "hex-hmac-sha256",
+  "name": "Display name",
+  "email": "verified@example.com"
+}
 ```
 
 Compute `createHmac('sha256', widgetSecret).update(user.id).digest('hex')` on the server. The secret belongs to that widget. Never sign a caller-supplied user ID, trust an email from the browser, or expose the secret. Return `Cache-Control: private, no-store`. Authentication outages must not silently become a different signed-in identity.
@@ -29,7 +34,7 @@ Copy both assets together. Mount one owner in the app shell:
 
 Derive `accountKey`, `language` and `hidden` from the app's actual auth and router state. An app with locale-prefixed API routes must provide its current identity URL. Adapt the framework-neutral `supportWidget` function for non-React apps.
 
-The adapter loads `${url}/widget/v1.js` with `data-key` and `data-lang`, refreshes identity on focus and opening, and serializes SDK replacement. The SDK's `identify` merges fields and does not clear an existing conversation. Account changes and logout must call `shutdown` and recreate the SDK before identifying the next account. `shutdown` revokes the visitor token. Do not replace this sequence with `identify({})`.
+The adapter loads `${url}/widget/v1.js` with `data-key` and `data-lang` and serializes SDK replacement. `OpenDeskSupport` passes `accountKey` inside `context` and skips duplicate initial syncs across mount effects. Guest sessions (`!accountKey`) skip `/api/support/identity` on initial mount and `window.focus`, mounting `{}` directly to avoid guest identity polling on public pages. Signed-in sessions fetch identity once on mount and throttle `window.focus` refreshes to at least 30 seconds (`>= 30_000` ms). Opening the chat panel (`on('open')`) forces an identity check even for guests (`forceIdentity: true`) so cross-tab login, logout, and account switches still isolate conversations. The SDK's `identify` merges fields and does not clear an existing conversation. Account changes and logout must call `shutdown` and recreate the SDK before identifying the next account. `shutdown` revokes the visitor token. Do not replace this sequence with `identify({})`.
 
 The current SDK has `open`, `close`, `toggle`, `locale`, `identify`, `shutdown` and `on`. It has no public hide/show API. The adapter closes the panel and hides `[data-opendesk-widget]` for private routes. Review that selector when upgrading the SDK. Language updates use the native `locale` command, including RTL languages.
 

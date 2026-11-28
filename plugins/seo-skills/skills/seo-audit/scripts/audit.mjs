@@ -7,7 +7,23 @@ import { fileURLToPath } from 'node:url'
 import { parse } from 'parse5'
 import { XMLParser, XMLValidator } from 'fast-xml-parser'
 import robotsParser from 'robots-parser'
-import { allowsLargeImagePreview, checkHead, fetchWithRetry, findMetaAttributeMismatches, googleRules, hasNoindexHeader, hasNoindexRules, inspectJsonLd, isGeneratedImageRoute, isLoopbackHost } from './check_head.mjs'
+import {
+  SLOW_TTFB_MS,
+  allowsLargeImagePreview,
+  checkHead,
+  describeSetCookies,
+  describeSlowTtfb,
+  fetchWithRetry,
+  findMetaAttributeMismatches,
+  formatRateLimitMessage,
+  getSetCookieNames,
+  googleRules,
+  hasNoindexHeader,
+  hasNoindexRules,
+  inspectJsonLd,
+  isGeneratedImageRoute,
+  isLoopbackHost,
+} from './check_head.mjs'
 
 setDefaultResultOrder('ipv4first')
 
@@ -159,7 +175,7 @@ async function readUrl(url, origin, isAllowed) {
         { redirect: 'manual', headers: { 'user-agent': 'SEOAudit/1.0', accept: 'text/html,application/xml,text/plain,*/*' } },
         {
           timeoutMs: TIMEOUT,
-          consume: async (response) => {
+          consume: async (response, { ttfbMs }) => {
             const location = response.headers.get('location')
             if (response.status >= 300 && response.status < 400 && location) {
               await response.body?.cancel()
@@ -169,13 +185,20 @@ async function readUrl(url, origin, isAllowed) {
             let bytes = 0
             for await (const part of response.body ?? []) {
               bytes += part.length
-              if (bytes > MAX_BYTES) return { redirect: false, status: response.status, exceeded: true }
+              if (bytes > MAX_BYTES) return { redirect: false, status: response.status, exceeded: true, ttfbMs }
               parts.push(part)
             }
             const charset = response.headers.get('content-type')?.match(/charset\s*=\s*["']?([\w-]+)/i)?.[1] ?? 'utf-8'
             let body = Buffer.concat(parts)
             if (body[0] === 0x1f && body[1] === 0x8b) body = gunzipSync(body, { maxOutputLength: MAX_BYTES })
-            return { redirect: false, status: response.status, headers: response.headers, text: new TextDecoder(charset).decode(body) }
+            return {
+              redirect: false,
+              status: response.status,
+              headers: response.headers,
+              text: new TextDecoder(charset).decode(body),
+              ttfbMs,
+              setCookieNames: getSetCookieNames(response.headers),
+            }
           },
         }
       )
@@ -187,8 +210,8 @@ async function readUrl(url, origin, isAllowed) {
         url = next
         continue
       }
-      if (res.exceeded) return { url, status: res.status, redirects, unchecked: `Response exceeds the ${MAX_BYTES}-byte audit budget.` }
-      return { url, status: res.status, headers: res.headers, text: res.text, redirects }
+      if (res.exceeded) return { url, status: res.status, redirects, unchecked: `Response exceeds the ${MAX_BYTES}-byte audit budget.`, ttfbMs: res.ttfbMs }
+      return { url, status: res.status, headers: res.headers, text: res.text, redirects, ttfbMs: res.ttfbMs, setCookieNames: res.setCookieNames ?? [] }
     }
     return { url, redirects, unchecked: 'Redirect limit reached.' }
   } catch (error) {
@@ -224,7 +247,10 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
   const robotsUrl = `${origin}/robots.txt`
   const robotsResponse = await read(robotsUrl)
   if (robotsResponse.unchecked || robotsResponse.status === 429 || robotsResponse.status >= 500) {
-    add('robots.fetch', 'unchecked', robotsUrl, robotsResponse.unchecked ?? `HTTP ${robotsResponse.status}. Crawl policy could not be established.`, 'robots')
+    const robotsDetail = robotsResponse.status === 429
+      ? formatRateLimitMessage('HTTP 429')
+      : (robotsResponse.unchecked ?? `HTTP ${robotsResponse.status}. Crawl policy could not be established.`)
+    add('robots.fetch', 'unchecked', robotsUrl, robotsDetail, 'robots')
   } else if (robotsResponse.status >= 400) {
     robots = robotsParser(robotsUrl, '')
     add('robots.fetch', 'pass', robotsUrl, `HTTP ${robotsResponse.status}. Google treats this as no robots restrictions.`, 'robots')
@@ -278,7 +304,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
     }
     const res = await read(url)
     if (res.unchecked || [401, 403, 429].includes(res.status)) {
-      add('sitemap.fetch', 'unchecked', url, res.unchecked ?? `HTTP ${res.status}.`, 'sitemap')
+      add('sitemap.fetch', 'unchecked', url, res.unchecked ?? (res.status === 429 ? formatRateLimitMessage('HTTP 429') : `HTTP ${res.status}.`), 'sitemap')
       continue
     }
     if (res.status !== 200) {
@@ -361,7 +387,7 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
       const sources = queue.get(requested)
       if (sources.has('sitemap') && robots?.isAllowed(requested, 'Googlebot') === false) add('sitemap.blocked', 'fail', requested, 'Sitemap URL is disallowed for Googlebot.', 'sitemap')
       if (res.unchecked || [401, 403, 429].includes(res.status)) {
-        add('page.fetch', 'unchecked', requested, res.unchecked ?? `HTTP ${res.status}.`, 'indexing')
+        add('page.fetch', 'unchecked', requested, res.unchecked ?? (res.status === 429 ? formatRateLimitMessage('HTTP 429') : `HTTP ${res.status}.`), 'indexing')
         continue
       }
       if (res.status >= 400) { add('page.status', 'fail', requested, `HTTP ${res.status}. Referenced by ${[...sources].join(', ')}.`, 'indexing'); continue }
@@ -372,9 +398,13 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
         continue
       }
       const page = pageOf(res.text, res.url, res.headers)
+      page.ttfbMs = res.ttfbMs ?? null
+      page.setCookieNames = res.setCookieNames ?? []
       const pageAlternatesCount = page.alternates.length
       page.alternates.push(...(sitemapAlternates.get(requested) ?? []))
       pages.set(requested, page)
+      if (!page.noindex && page.setCookieNames.length) add('page.set-cookie', 'review', requested, describeSetCookies(page.setCookieNames))
+      if (page.ttfbMs !== null && page.ttfbMs > SLOW_TTFB_MS) add('page.slow-ttfb', 'review', requested, describeSlowTtfb(page.ttfbMs))
       const flagLocalhost = (label, raw) => {
         const parsed = raw ? URL.parse(raw, res.url) : null
         if (parsed && isLoopbackHost(parsed.hostname) && parsed.origin !== origin) {
@@ -442,6 +472,14 @@ export async function auditSite(target, { maxPages = 20, expectNoindex = false }
     }
   }
   for (const imgRes of await Promise.all(generatedImageProbes)) {
+    if (imgRes.unchecked || [401, 403, 429].includes(imgRes.status)) {
+      add('page.fetch', 'unchecked', imgRes.url, imgRes.unchecked ?? (imgRes.status === 429 ? formatRateLimitMessage('HTTP 429') : `HTTP ${imgRes.status}.`), 'indexing')
+      continue
+    }
+    if (imgRes.status >= 400) {
+      add('page.status', 'fail', imgRes.url, `HTTP ${imgRes.status} for generated social image route.`, 'indexing')
+      continue
+    }
     if (imgRes.status === 200 && !hasNoindexHeader(imgRes.headers?.get('x-robots-tag'))) {
       add('page.non-html-indexable', 'review', imgRes.url, 'Generated social image route has no X-Robots-Tag: noindex header.', 'indexing')
     }

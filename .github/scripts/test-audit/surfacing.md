@@ -16,14 +16,15 @@ in a Git repository and walks the tree otherwise, skipping dependency, build,
 cache and artifact folders. Its `notAudited` key names the skipped folders,
 unsupported languages and unreadable files.
 
-| Report key | What it lists | Check before acting |
-| --- | --- | --- |
-| `testOnlySeams` | Top-level production symbols that only tests reference | Read every caller, including other packages |
-| `undercountedScripts` | Test files with five or more assertions and no runner declarations | Count assertions, not runner tests |
-| `bundleGrepsWithBuildGuards` | Tests that read source or bundle text under a bundler config | Check whether the build guard already owns it |
-| `assertionFreeTests` | Test blocks with no assertion and no skip or environment guard | Confirm the test can fail at all |
-| `envGatedOrSkippedTests` | Test blocks that skip or read the environment | Find the job that runs them before calling them dead |
-| `qaSuiteOverlap` | Unit tests that mock a route a QA journey exercises | Compare with the journey before keeping the mock |
+| Report key                    | What it lists                                                                                                                                               | Check before acting                                                              |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `testOnlySeams`               | Top-level production symbols that only tests reference                                                                                                      | Read every caller, including other packages                                      |
+| `undercountedScripts`         | Test files with five or more assertions and no runner declarations                                                                                          | Count assertions, not runner tests                                               |
+| `bundleGrepsWithBuildGuards`  | Tests that read source or bundle text under a bundler config                                                                                                | Check whether the build guard already owns it                                    |
+| `assertionFreeTests`          | Test blocks with no assertion and no skip or environment guard                                                                                              | Confirm the test can fail at all                                                 |
+| `envGatedOrSkippedTests`      | Test blocks that skip or read the environment                                                                                                               | Find the job that runs them before calling them dead                             |
+| `qaSuiteOverlap`              | Unit tests that mock a route a QA journey exercises                                                                                                         | Compare with the journey before keeping the mock                                 |
+| `unauthenticatedAuthFixtures` | Local test servers returning static 200 user payloads on `/profile`, `/session`, `/identity`, or `/me` without checking `cookie` or `authorization` headers | Require session cookies or bearer headers so cookie-free regressions do not pass |
 
 The detectors match words and simple patterns, not syntax trees. Dynamic
 dispatch, reflection, re-exports and generated code cause false positives and
