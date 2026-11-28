@@ -19,7 +19,7 @@ fetch .agents/skills/test-audit/CAMPAIGN.md references/campaign.md
 fetch .agents/skills/test-audit/references/audit.md references/audit.md
 fetch LICENSE LICENSE
 
-python3 - "$STAGING" "$REPO_ROOT/.github/scripts/test-audit/surfacing.md" <<'PY'
+python3 - "$STAGING" "$REPO_ROOT/.github/scripts/test-audit/surfacing.md" "$REPO_ROOT/.github/scripts/test-audit/audit-junk.md" <<'PY'
 import re
 import sys
 from pathlib import Path
@@ -71,6 +71,17 @@ path.write_text(text)
 
 # Local additions are applied after the upstream checks, so every sync keeps them.
 (staging / "references/surfacing.md").write_text(Path(sys.argv[2]).read_text())
+junk_bullets = Path(sys.argv[3]).read_text().strip()
+audit_path = staging / "references/audit.md"
+junk_intro = (
+    "## Junk patterns\n\n"
+    "Reject new matches unless [retention bar](#retention-bar) identifies independent\n"
+    "contract. Audit existing matches:\n\n"
+)
+audit_text = audit_path.read_text()
+if audit_text.count(junk_intro) != 1:
+    raise SystemExit("Upstream changed, Junk patterns intro not found once in references/audit.md")
+audit_path.write_text(audit_text.replace(junk_intro, junk_intro + junk_bullets + "\n", 1))
 pointers = {
     "SKILL.md": ("## Audit and validation", "- Start discovery with [candidate surfacing](references/surfacing.md), then apply its audit lessons."),
     "references/audit.md": ("## Candidate evidence", "- First run [candidate surfacing](surfacing.md). It lists candidates, never verdicts."),

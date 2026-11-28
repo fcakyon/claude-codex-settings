@@ -194,6 +194,44 @@ export const allowsLargeImagePreview = (rules) =>
   rules.some((rule) => /^max-image-preview\s*:\s*large$/i.test(rule)) &&
   !rules.some((rule) => /^(noimageindex|max-image-preview\s*:\s*(none|standard))$/i.test(rule));
 
+export const SLOW_TTFB_MS = 1500;
+const AUTH_COOKIE_NAME = /(?:session|sess|sid|auth|token|jwt|pb_auth|csrf|xsrf|user|account)/i;
+const LOCALE_COOKIE_NAME = /^(?:lang|locale|hl|i18n|next_locale|country|region)$/i;
+
+export const getSetCookieNames = (headers) => [
+  ...new Set(
+    (headers?.getSetCookie?.() ?? [])
+      .map((line) => line.split(/[=;]/, 1)[0].trim())
+      .filter(Boolean)
+  ),
+];
+
+export const describeSetCookies = (cookieNames) => {
+  const authCookies = [];
+  const localeCookies = [];
+  const otherCookies = [];
+  for (const name of cookieNames) {
+    if (AUTH_COOKIE_NAME.test(name)) authCookies.push(name);
+    else if (LOCALE_COOKIE_NAME.test(name)) localeCookies.push(name);
+    else otherCookies.push(name);
+  }
+  const parts = [
+    authCookies.length && `auth/session cookies (${authCookies.join(", ")})`,
+    localeCookies.length && `locale cookies (${localeCookies.join(", ")})`,
+    otherCookies.length && `other cookies (${otherCookies.join(", ")})`,
+  ].filter(Boolean);
+  const guidance = authCookies.length
+    ? "Gate SSR auth/session lookups on an existing session cookie and avoid setting auth or session cookies on unauthenticated public HTML."
+    : "Confirm only intentional non-session locale cookies are emitted so CDN caching and unauthenticated crawls stay clean.";
+  return `Unauthenticated public HTML emitted Set-Cookie for ${cookieNames.join(", ")} (${parts.join("; ")}). ${guidance}`;
+};
+
+export const describeSlowTtfb = (ttfbMs) =>
+  `Unauthenticated HTML response took ${ttfbMs} ms to first byte (> ${SLOW_TTFB_MS} ms). Un-gated SSR auth or profile fetches on public routes often inflate TTFB and turn backend/DNS blips into public 500s.`;
+
+export const formatRateLimitMessage = (prefix = "HTTP 429") =>
+  `${prefix} (rate-limited). Check for shared SSR IP rate limits caused by un-gated auth or profile lookups on public routes.`;
+
 export const findMetaAttributeMismatches = (tags) => {
   const messages = new Set();
   for (const tag of tags) {
@@ -294,8 +332,10 @@ export const fetchWithRetry = async (
     try {
       return await runWithOriginLimit(url, async () => {
         const signal = init.signal ?? AbortSignal.timeout(timeoutMs);
+        const startedAt = performance.now();
         const response = await fetch(url, { ...init, signal });
-        return consume ? await consume(response) : response;
+        const ttfbMs = Math.round(performance.now() - startedAt);
+        return consume ? await consume(response, { ttfbMs }) : response;
       });
     } catch (error) {
       if (attempt >= retries || init.signal?.aborted || !isTransientFetchError(error)) throw error;
@@ -322,7 +362,7 @@ const fetchPage = async (userAgent, target) => {
         redirect: "manual",
       },
       {
-        consume: async (response) => {
+        consume: async (response, { ttfbMs }) => {
           const location = response.headers.get("location");
           if (response.status >= 300 && response.status <= 399 && location) {
             await response.body?.cancel();
@@ -338,6 +378,8 @@ const fetchPage = async (userAgent, target) => {
             status: response.status,
             headers: response.headers,
             html,
+            ttfbMs,
+            setCookieNames: getSetCookieNames(response.headers),
           };
         },
       }
@@ -352,11 +394,16 @@ const fetchPage = async (userAgent, target) => {
 const inspect = async ([agent, userAgent], target) => {
   const errors = [];
   const warnings = [];
-  let redirects, ok, status, headers, url, html;
+  let redirects, ok, status, headers, url, html, ttfbMs, setCookieNames;
   try {
-    ({ redirects, ok, status, headers, url, html } = await fetchPage(userAgent, target));
-    if (!ok) errors.push(`The page returned ${status}.`);
-    else if (!/html/i.test(headers.get("content-type") ?? "")) {
+    ({ redirects, ok, status, headers, url, html, ttfbMs, setCookieNames } = await fetchPage(userAgent, target));
+    if (!ok) {
+      errors.push(
+        status === 429
+          ? formatRateLimitMessage("The page returned 429")
+          : `The page returned ${status}.`
+      );
+    } else if (!/html/i.test(headers.get("content-type") ?? "")) {
       errors.push("The response is not HTML.");
     }
   } catch (error) {
@@ -364,7 +411,7 @@ const inspect = async ([agent, userAgent], target) => {
   }
   const page = pageUrl(url);
   const xRobotsTag = headers.get("x-robots-tag");
-  const base = { agent, status, url: page, redirects, xRobotsTag };
+  const base = { agent, status, url: page, redirects, xRobotsTag, ttfbMs, setCookieNames };
   if (errors.length) return { ...base, errors, warnings };
 
   const jsonLd = [];
@@ -481,6 +528,8 @@ const inspect = async ([agent, userAgent], target) => {
     );
   }
   if (isNoindex) warnings.push("A robots rule says noindex.");
+  if (!isNoindex && setCookieNames.length) warnings.push(describeSetCookies(setCookieNames));
+  if (ttfbMs > SLOW_TTFB_MS) warnings.push(describeSlowTtfb(ttfbMs));
 
   const openGraph = { image: content("og:image", "og:image:url"), url: content("og:url") };
   for (const [label, value] of Object.entries(openGraph)) {
@@ -1213,6 +1262,8 @@ const rows = (r) => [
     "json-ld",
     r.jsonLd.blocks ? `${r.jsonLd.blocks}: ${r.jsonLd.types.join(", ") || "no @type"}` : "none",
   ],
+  ["ttfb", r.ttfbMs != null ? `${r.ttfbMs} ms` : "n/a"],
+  ["set-cookie", r.setCookieNames?.length ? r.setCookieNames.join(", ") : "none"],
 ];
 
 export async function checkHead(target) {

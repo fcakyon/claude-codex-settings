@@ -1,0 +1,2 @@
+- Unauthenticated auth fixtures (`createServer` or `httptest.NewServer`) serving static 200 user payloads on `/profile`, `/session`, `/identity`, or `/me` without validating `Cookie` or `Authorization` headers (so cookie-free regressions pass in tests while failing in production).
+- Unbounded retry-storm fault tests that only assert an initial failure or mocked success without proving bounded retry attempts, backoff, and single user-facing error output on sustained 404, 429, or 5xx responses.

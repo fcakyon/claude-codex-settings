@@ -200,8 +200,120 @@ test("the CLI renders every format and rejects an unknown one", (t) => {
 test("the synced skill keeps the local surfacing reference and its pointers", () => {
   const skill = path.join(PLUGIN, "skills/test-audit");
   const source = fs.readFileSync(path.join(REPO, ".github/scripts/test-audit/surfacing.md"), "utf8");
+  const junk = fs.readFileSync(path.join(REPO, ".github/scripts/test-audit/audit-junk.md"), "utf8");
+  const auditMd = fs.readFileSync(path.join(skill, "references/audit.md"), "utf8");
+  const syncScript = fs.readFileSync(path.join(REPO, ".github/scripts/sync-openclaw-skills.sh"), "utf8");
   assert.equal(fs.readFileSync(path.join(skill, "references/surfacing.md"), "utf8"), source);
   assert.match(fs.readFileSync(path.join(skill, "SKILL.md"), "utf8"), /^## Audit and validation\n\n- .*\]\(references\/surfacing\.md\)/m);
-  assert.match(fs.readFileSync(path.join(skill, "references/audit.md"), "utf8"), /^## Candidate evidence\n\n- .*\]\(surfacing\.md\)/m);
+  assert.match(auditMd, /^## Candidate evidence\n\n- .*\]\(surfacing\.md\)/m);
+  const junkSection = auditMd.slice(auditMd.indexOf("## Junk patterns"), auditMd.indexOf("## Retention bar"));
+  for (const bullet of junk.trim().split("\n")) {
+    assert.ok(junkSection.includes(bullet), `references/audit.md under ## Junk patterns is missing bullet: ${bullet}`);
+  }
+  assert.match(syncScript, /audit-junk\.md/);
+  assert.match(syncScript, /## Junk patterns/);
   assert.ok(!source.includes(";"), "surfacing.md prose has no semicolons");
+  assert.ok(!junk.includes(";"), "audit-junk.md prose has no semicolons");
+});
+
+test("recognizes test-*.mjs and package.json scripts.test* files and flags unauthenticated auth fixtures", (t) => {
+  const root = fixture(t, {
+    "package.json": JSON.stringify({
+      scripts: {
+        test: "node scripts/run-smoke.mjs",
+        "test:flow": "node --test qa/verify-flow.ts",
+        build: "node scripts/build.mjs",
+      },
+    }),
+    "apps/web/package.json": JSON.stringify({
+      scripts: {
+        "test:e2e": "node verify-ui.mjs",
+      },
+    }),
+    "scripts/run-smoke.mjs": "test('smoke', () => {})\n",
+    "scripts/build.mjs": "export const built = true\n",
+    "qa/verify-flow.ts": "test('flow', () => {})\n",
+    "apps/web/verify-ui.mjs": "test('ui', () => {})\n",
+    "tests/test-playback.mjs": "test('playback', () => {})\n",
+    "tests/bad-auth-fixture.test.mjs": [
+      "import { createServer } from 'node:http';",
+      "const server = createServer((req, res) => {",
+      "  if (req.url === '/user/profile' || req.url === '/api/support/identity' || req.url === '/me') {",
+      "    res.end(JSON.stringify({ id: 'u1', email: 'guest@example.test' }));",
+      "  }",
+      "});",
+      "await fetch('http://127.0.0.1/user/profile', { headers: { authorization: 'Bearer test-only' } });",
+    ].join("\n"),
+    "tests/bad-go-fixture_test.go": [
+      "package auth",
+      "import (\"net/http\"; \"net/http/httptest\")",
+      "func makeServer() *httptest.Server {",
+      "  return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {",
+      "    if r.URL.Path == \"/me\" { w.Write([]byte(`{\"email\":\"u@example.test\"}`)) }",
+      "  }))",
+      "}",
+    ].join("\n"),
+    "tests/good-auth-fixture.test.mjs": [
+      "import { createServer } from 'node:http';",
+      "const server = createServer((req, res) => {",
+      "  if (req.url === '/session' && !req.headers.cookie) { res.writeHead(401).end(); return; }",
+      "  if (req.url === '/profile') { res.end(JSON.stringify({ email: 'auth@example.test' })); }",
+      "});",
+    ].join("\n"),
+    "tests/good-go-fixture_test.go": [
+      "package auth",
+      "import (\"net/http\"; \"net/http/httptest\")",
+      "func makeAuthServer() *httptest.Server {",
+      "  return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {",
+      "    if r.Header.Get(\"Authorization\") == \"\" { w.WriteHeader(401); return }",
+      "    w.Write([]byte(`{\"email\":\"u@example.test\"}`))",
+      "  }))",
+      "}",
+    ].join("\n"),
+    "tests/good-go-bracket-values_test.go": [
+      "package auth",
+      "import (\"net/http\"; \"net/http/httptest\")",
+      "func makeBracketServer() *httptest.Server {",
+      "  return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {",
+      "    if r.URL.Path == \"/session\" && len(r.Header[\"Authorization\"]) == 0 { w.WriteHeader(401); return }",
+      "    if r.URL.Path == \"/profile\" && len(r.Header.Values(\"Cookie\")) == 0 { w.WriteHeader(401); return }",
+      "    w.Write([]byte(`{\"email\":\"u@example.test\"}`))",
+      "  }))",
+      "}",
+    ].join("\n"),
+    "tests/multi-server-fixture.test.mjs": [
+      "import { createServer } from 'node:http';",
+      "const authed = createServer((req, res) => {",
+      "  if (!req.headers.cookie) { res.writeHead(401).end(); return; }",
+      "  if (req.url === '/session') { res.end(JSON.stringify({ email: 'auth@example.test' })); }",
+      "});",
+      "const unauthed = createServer((req, res) => {",
+      "  if (req.url === '/profile') { res.end(JSON.stringify({ email: 'guest@example.test' })); }",
+      "});",
+    ].join("\n"),
+    "tests/theme-fixture.test.mjs": [
+      "import { createServer } from 'node:http';",
+      "const server = createServer((req, res) => {",
+      "  if (req.url === '/theme') { res.end(JSON.stringify({ email: 'not-auth' })); }",
+      "});",
+    ].join("\n"),
+  });
+
+  const report = surfaceCandidates(root);
+  const emptyFiles = report.assertionFreeTests.map((item) => item.testFile);
+  for (const file of [
+    "apps/web/verify-ui.mjs",
+    "qa/verify-flow.ts",
+    "scripts/run-smoke.mjs",
+    "tests/test-playback.mjs",
+  ]) {
+    assert.ok(emptyFiles.includes(file), `expected ${file} to be recognized as a test file`);
+  }
+  assert.equal(emptyFiles.includes("scripts/build.mjs"), false);
+
+  assert.deepEqual(report.unauthenticatedAuthFixtures, [
+    { testFile: "tests/bad-auth-fixture.test.mjs", routes: ["/api/support/identity", "/me", "/user/profile"], serverKind: "createServer" },
+    { testFile: "tests/bad-go-fixture_test.go", routes: ["/me"], serverKind: "httptest.NewServer" },
+    { testFile: "tests/multi-server-fixture.test.mjs", routes: ["/profile"], serverKind: "createServer" },
+  ]);
 });

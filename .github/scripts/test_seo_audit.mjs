@@ -690,3 +690,129 @@ test('retries transient socket resets, caps per-origin concurrency, and warns on
   assert.equal(hits.includes('/wild/*'), false)
   assert.equal(hits.includes('/exact$'), false)
 })
+
+test('flags unauthenticated public Set-Cookie headers by name only without leaking cookie values', async (t) => {
+  const secretSession = 'secret-session-value-do-not-leak'
+  const { origin } = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') {
+      return {
+        headers: {
+          'set-cookie': [
+            `pb_auth=${secretSession}; Path=/; HttpOnly`,
+            'lang=en; Path=/',
+          ],
+        },
+        body: html(u.origin, '/', '', '<a href="/locale-only">Locale</a><a href="/private">Private</a>'),
+      }
+    }
+    if (u.pathname === '/locale-only') {
+      return {
+        headers: { 'set-cookie': 'lang=tr; Path=/' },
+        body: html(u.origin, '/locale-only'),
+      }
+    }
+    if (u.pathname === '/private') {
+      return {
+        headers: { 'x-robots-tag': 'noindex', 'set-cookie': 'csrf=private-csrf-value; Path=/' },
+        body: html(u.origin, '/private'),
+      }
+    }
+  })
+
+  const result = await auditSite(origin)
+  const serialized = JSON.stringify(result)
+  assert.equal(serialized.includes(secretSession), false, 'Cookie values must never appear in audit output')
+  assert.equal(serialized.includes('private-csrf-value'), false, 'Cookie values on private pages must not leak')
+
+  const rootCookie = result.findings.find((f) => f.rule === 'page.set-cookie' && f.url === `${origin}/`)
+  assert(rootCookie && rootCookie.status === 'review')
+  assert.match(rootCookie.evidence, /pb_auth/)
+  assert.match(rootCookie.evidence, /lang/)
+  assert.match(rootCookie.evidence, /auth\/session cookies/i)
+  assert.match(rootCookie.evidence, /locale cookies/i)
+
+  const localeCookie = result.findings.find((f) => f.rule === 'page.set-cookie' && f.url === `${origin}/locale-only`)
+  assert(localeCookie && localeCookie.status === 'review')
+  assert.match(localeCookie.evidence, /locale cookies \(lang\)/i)
+  assert.doesNotMatch(localeCookie.evidence, /auth\/session cookies/i)
+
+  assert(!result.findings.some((f) => f.rule === 'page.set-cookie' && f.url === `${origin}/private`))
+  assert.deepEqual(result.pages.find((p) => p.url === `${origin}/`).setCookieNames, ['pb_auth', 'lang'])
+  assert.equal(result.head.agents[0].setCookieNames.includes('pb_auth'), true)
+  assert.equal(result.head.agents[0].warnings.some((w) => /pb_auth/.test(w) && !w.includes(secretSession)), true)
+})
+
+test('flags slow unauthenticated HTML TTFB (> 1500 ms) and surfaces shared SSR IP 429 guidance', async (t) => {
+  const slow = await serve(t, async (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') {
+      await new Promise((resolve) => setTimeout(resolve, 1550))
+      return { body: html(u.origin, '/') }
+    }
+  })
+  const slowResult = await auditSite(slow.origin, { maxPages: 1 })
+  const ttfbFinding = slowResult.findings.find((f) => f.rule === 'page.slow-ttfb' && f.url === `${slow.origin}/`)
+  assert(ttfbFinding && ttfbFinding.status === 'review')
+  assert.match(ttfbFinding.evidence, /un-gated SSR auth or profile fetches/i)
+  assert(slowResult.pages[0].ttfbMs > 1500)
+  assert(slowResult.head.agents[0].ttfbMs > 1500)
+  assert(slowResult.head.agents[0].warnings.some((w) => /un-gated SSR auth or profile fetches/i.test(w)))
+
+  const rateLimited = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') return { body: html(u.origin, '/', '', '<a href="/limited">Limited</a>') }
+    if (u.pathname === '/limited') return { status: 429, body: 'Too Many Requests' }
+  })
+  const limitedAudit = await auditSite(rateLimited.origin)
+  const limitedFinding = limitedAudit.findings.find((f) => f.rule === 'page.fetch' && f.url === `${rateLimited.origin}/limited`)
+  assert(limitedFinding && limitedFinding.status === 'unchecked')
+  assert.match(limitedFinding.evidence, /shared SSR IP rate limits.*un-gated auth/i)
+
+  const entry429 = await serve(t, () => ({ status: 429, body: 'Too Many Requests' }))
+  const head429 = await checkHead(entry429.origin)
+  assert(head429.agents[0].errors.some((e) => /shared SSR IP rate limits.*un-gated auth/i.test(e)))
+})
+
+test('reports generated social image probe HTTP errors and rate-limit blocks', async (t) => {
+  const broken = await serve(t, (u) => {
+    if (u.pathname === '/robots.txt') return { type: 'text/plain', body: 'User-agent: *\nAllow: /' }
+    if (u.pathname === '/') {
+      return { body: html(u.origin, '/', '', '<a href="/guide">Guide</a><a href="/throttled">Throttled</a>') }
+    }
+    if (u.pathname === '/guide') {
+      return {
+        body: html(
+          u.origin,
+          '/guide',
+          `<meta property="og:image" content="${u.origin}/guide/opengraph-image" />`,
+          '<p>Guide</p>',
+        ),
+      }
+    }
+    if (u.pathname === '/guide/opengraph-image') return { status: 500, body: 'Error' }
+    if (u.pathname === '/throttled') {
+      return {
+        body: html(
+          u.origin,
+          '/throttled',
+          `<meta name="twitter:image" content="${u.origin}/throttled/twitter-image" />`,
+          '<p>Throttled</p>',
+        ),
+      }
+    }
+    if (u.pathname === '/throttled/twitter-image') return { status: 429, body: 'Too Many Requests' }
+  })
+  const result = await auditSite(broken.origin)
+  const failImg = result.findings.find(
+    (f) => f.rule === 'page.status' && f.url === `${broken.origin}/guide/opengraph-image`,
+  )
+  assert(failImg && failImg.status === 'fail')
+  assert.match(failImg.evidence, /500/)
+
+  const rateImg = result.findings.find(
+    (f) => f.rule === 'page.fetch' && f.url === `${broken.origin}/throttled/twitter-image`,
+  )
+  assert(rateImg && rateImg.status === 'unchecked')
+  assert.match(rateImg.evidence, /shared SSR IP rate limits/i)
+})

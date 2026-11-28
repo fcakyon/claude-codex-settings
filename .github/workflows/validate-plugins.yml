@@ -88,6 +88,9 @@ jobs:
       - name: Test test-audit surfacing and compliance audits
         run: node --test plugins/test-audit/tests/*.test.mjs plugins/compliance/tests/*.test.mjs
 
+      - name: Test OAuth parity across app-auth and qa
+        run: node --test .github/scripts/test_oauth_parity.mjs
+
       - name: Install SQLite for QA contracts
         run: |
           sudo apt-get update

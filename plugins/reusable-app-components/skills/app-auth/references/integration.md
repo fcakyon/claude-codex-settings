@@ -2,11 +2,10 @@
 
 ## Default full-page login and remembered profiles
 
-The plain TypeScript helpers in login.ts have no React or Vite dependency. Use socialLoginUrl with the app's existing redirect-start endpoint and selected destination. A normal anchor navigates in the same tab and works without JavaScript. Vite runs the local demo only. The supplied UI adapters use React.
+The plain TypeScript helpers in login.ts have no React or Vite dependency. Use socialLoginUrl with the app's existing redirect-start endpoint and selected destination. Use `pendingReturnTo(storage, key, allowedOrigin)` to save, read, and consume pending destinations while rejecting external origins, `//`, `\`, and non-HTTP schemes, and `oauthErrorReason(search)` to map callback query params to `"expired"`, `"cancelled"`, `"failed"`, or `null`. Pass optional `onSelect` to `SocialSignIn` when a host needs to save pending context immediately before same-tab navigation. A normal anchor navigates in the same tab and works without JavaScript. Vite runs the local demo only. The supplied UI adapters use React.
 
 ```tsx
-<GoogleSignIn redirectEndpoint="/auth/google/login"
-  returnTo={selectedAction.returnTo} label="Continue with Google" />
+<GoogleSignIn redirectEndpoint="/auth/google/login" returnTo={selectedAction.returnTo} label="Continue with Google" />
 ```
 
 RememberedLogin renders a host-supplied last successful profile first. A host may skip the row for a saved password account and open the form with the email filled in, which saves a click. Its continueWith(profile, badge) callback renders the provider link with the supplied badge passed as SocialSignIn trailing, and its children callback renders the full form with an email prefill for saved password accounts. Choosing another profile opens the full form with no saved email. Keep current input in the auth owner so switching views does not lose it. Supply localized lastUsed, anotherProfile, savedProfile and or labels. Password profiles still require their password.
@@ -28,8 +27,8 @@ The UI remains backend-neutral. Import EmailAuthAdapter and OAuthProvider from a
 Use assets/pocketbase.ts with the SDK's listAuthMethods result. It maps only enabled OAuth providers into id, label and app-owned redirect endpoint. It enables the email/password form only when password auth is enabled and email is an allowed identity field. Custom provider names remain intact. Provide a custom icon for a configured OIDC provider if needed.
 
 ```tsx
-const methods = await pb.collection("users").listAuthMethods()
-const auth = pocketBaseAuthMethods(methods, name => `/auth/${name}/login`)
+const methods = await pb.collection("users").listAuthMethods();
+const auth = pocketBaseAuthMethods(methods, (name) => `/auth/${name}/login`);
 // Pass auth.providers to SocialSignIn and mount EmailAuth when auth.emailPassword is true.
 ```
 
@@ -53,14 +52,14 @@ The component needs React and React DOM 19.2+ for `useEffectEvent`. It has no Ne
 
 Load `https://accounts.google.com/gsi/client` once in the auth shell. Pass `google.accounts.id` as `identity` when ready, or null while unavailable. Supply the public client ID from existing public configuration or server rendering, outside credential-attempt rate limits. Mount only the active login/signup surface because GIS initialization is global to the page. Render the button once per active configuration and let Google choose its intrinsic width. Do not observe the rendered widget to clear and rebuild it: its iframe height changes can retrigger the observer indefinitely, replacing an active button. Keep the button mounted through provider layout and viewport changes; remove it only when the auth surface closes or its identity configuration changes.
 
-| Input | App responsibility |
-| --- | --- |
-| `clientId`, `nonce`, `locale`, `theme` | Public client, optional server-issued challenge, language and official Google button theme |
-| `redirectEndpoint`, `returnTo` | Existing start endpoint without a query string and an app-relative destination |
-| `onCredential(credential, signal)` | Submit to the backend with the supplied cancellation signal, return its authenticated user |
-| `onAuthenticated(user)` | Update/reload the verified session and resume the action |
-| `onFailure(error)` | Report redacted diagnostics and return a localized safe message, including rate-limit guidance |
-| `initialError`, `copy` | Retry feedback and localized control labels |
+| Input                                  | App responsibility                                                                             |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `clientId`, `nonce`, `locale`, `theme` | Public client, optional server-issued challenge, language and official Google button theme     |
+| `redirectEndpoint`, `returnTo`         | Existing start endpoint without a query string and an app-relative destination                 |
+| `onCredential(credential, signal)`     | Submit to the backend with the supplied cancellation signal, return its authenticated user     |
+| `onAuthenticated(user)`                | Update/reload the verified session and resume the action                                       |
+| `onFailure(error)`                     | Report redacted diagnostics and return a localized safe message, including rate-limit guidance |
+| `initialError`, `copy`                 | Retry feedback and localized control labels                                                    |
 
 Never display arbitrary provider payloads or `error.message`. Bound credential requests at the transport owner. Closing the surface aborts its operation and ignores that cancelled callback. It cannot undo a session already created by the server, so the next visit must resolve the actual session.
 
@@ -91,14 +90,14 @@ Copy EmailAuth.tsx and email-auth.css together, and pass localized copy and an a
 
 The app owns identity, code expiry, attempts, single use, sessions, account eligibility and return navigation. A single header entry such as “Get started” can open signup while the form offers “Log in”. Keep public browsing public. Ask for streaming connections, extensions or other setup at the action that needs them. Preserve invitations, terms, consent and private-app registration rules.
 
-| Adapter | Result |
-| --- | --- |
-| login | Authenticated user |
-| register | Account saved and verification email sent |
-| sendCode | New signup or reset code issued |
-| verifyEmail | Verified user with a persisted session |
-| verifyResetCode | A server-authorized recovery capability |
-| resetPassword | Password saved and authenticated user |
+| Adapter         | Result                                    |
+| --------------- | ----------------------------------------- |
+| login           | Authenticated user                        |
+| register        | Account saved and verification email sent |
+| sendCode        | New signup or reset code issued           |
+| verifyEmail     | Verified user with a persisted session    |
+| verifyResetCode | A server-authorized recovery capability   |
+| resetPassword   | Password saved and authenticated user     |
 
 A recovery capability can be an opaque single-use reset ticket, or the already established session if that is the app’s existing recovery contract. Never create a client-side ticket or accept email alone as reset authorization. Do not put recovery capabilities in localStorage or expose them in a URL. This component does not implement a recovery backend.
 
@@ -114,22 +113,28 @@ Free access should activate through the app’s account lifecycle without a conf
 
 Map these roles to existing routes rather than adding parallel endpoints.
 
-| Route role | Behavior |
-| --- | --- |
-| Public configuration | Expose the client ID without consuming credential-attempt limits |
-| POST credential | Verify ID token, apply account policy, set the app session, return user |
-| GET redirect start | Validate return destination, bind it to fresh short-lived state, redirect to Google |
-| GET code callback | Validate/consume state, handle cancellation, exchange code, verify identity, apply the same account/session policy |
-| Session/profile | Resolve the actual session on reload and server rendering |
-| Logout | Invalidate according to the app's revocation model, clear cookie, then leave the protected document |
+| Route role           | Behavior                                                                                                                                                                                                                                              |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Public configuration | Expose the client ID without consuming credential-attempt limits                                                                                                                                                                                      |
+| POST credential      | Verify ID token, apply account policy, set the app session, return user                                                                                                                                                                               |
+| GET redirect start   | Validate return destination across all locale prefixes, bind it to fresh `600–900s` state/PKCE (`S256`) with `Cache-Control: no-store`, and redirect to Google                                                                                        |
+| GET code callback    | Validate and consume state once on all outcomes, handle cancellation (`error=access_denied`) and missing or mismatched state with `3xx` recovery instead of raw `401` JSON, exchange code, verify identity, and apply the same account/session policy |
+| Session/profile      | Gate SSR and endpoint session lookups on the presence of the session cookie before calling the backend, and resolve the actual session on reload                                                                                                      |
+| Logout               | Invalidate according to the app's revocation model, clear cookie, then leave the protected document                                                                                                                                                   |
 
 Use an existing provider library for code exchange and signature verification. Google recommends a production token-verification library with signing-key caching rather than the `tokeninfo` debugging endpoint. Validate issuer, audience, expiry, subject and the relevant verified-email/domain policy. Identify Google accounts by `sub`. Do not auto-link an existing account solely from an untrusted email match or weaken an allowlist.
 
 For GIS credentials submitted through app fetch, require JSON and the app's cookie-auth CSRF protection, including an exact trusted Origin check. Do not allow arbitrary credentialed origins or a missing Origin as a web-client bypass. Optional GIS nonces need server-issued challenges and server verification. Google's direct credential POST instead uses its documented double-submit `g_csrf_token` contract.
 
-Preserve the framework's state, PKCE and nonce checks. Bind return context to verified state with a server-side store or integrity-protected transient cookie. Consume the pending operation once on success, rejection or cancellation. An integrity-protected cookie alone does not enforce server-side replay prevention. Keep it separate from GIS `g_state`. Use HttpOnly, Secure production cookies and a SameSite policy appropriate to the callback method. A GET code callback differs from GIS `ux_mode: "redirect"`, which POSTs a credential and has another CSRF/cookie contract.
+Preserve the framework's state, PKCE (`S256`) and nonce checks. Bind return context to verified state with a server-side store or integrity-protected transient cookie (`600–900s` lifetime, `Max-Age >= 600`, `HttpOnly`, `SameSite=Lax`, `Secure` in production, and `Cache-Control: no-store` on start). Consume and clear the pending state cookie once on all outcomes (success, rejection, mismatch, expiry, or `error=access_denied`), and return a `3xx` redirect back to the localized login UI or preserved `returnTo` instead of raw `401` JSON. An integrity-protected cookie alone does not enforce server-side replay prevention. Keep it separate from GIS `g_state`. A GET code callback differs from GIS `ux_mode: "redirect"`, which POSTs a credential and has another CSRF/cookie contract.
 
-Validate the destination against the allowed app origin and routes. Cover roots, language roots, queries, fragments, encoded separators, protocol-relative paths and backslashes. Keep sensitive draft state server-side behind an opaque reference. Preserve registered callbacks and scopes. Register new callbacks under the OAuth client's Authorized redirect URIs and every origin serving the button, local ports included, under its Authorized JavaScript origins before rollout. Redirect URIs cover only the same-tab path, so a missing origin fails the button with `no registered origin` (`invalid_client`). Confirm each origin with `curl -H 'X-Requested-With: XmlHttpRequest' "https://accounts.google.com/o/oauth2/iframerpc?action=checkOrigin&origin=<origin>&client_id=<client id>"`, an undocumented endpoint that returns `"valid":true` once Google accepts it.
+Validate the destination against the allowed app origin and routes. Cover roots, all supported locale prefixes (such as `/en`, `/tr`, `/ar`), queries, fragments, while rejecting external origins, encoded separators, protocol-relative `//`, and backslashes `\`. Verify the deployed OAuth contract without credentials using:
+
+```sh
+node scripts/check-oauth.mjs --start https://example.com/auth/google/login --callback https://example.com/auth/google/callback --origin https://example.com --locales en,tr,ar
+```
+
+Keep sensitive draft state server-side behind an opaque reference. Preserve registered callbacks and scopes. Register new callbacks under the OAuth client's Authorized redirect URIs and every origin serving the button, local ports included, under its Authorized JavaScript origins before rollout. Redirect URIs cover only the same-tab path, so a missing origin fails the button with `no registered origin` (`invalid_client`). Confirm each origin with `curl -H 'X-Requested-With: XmlHttpRequest' "https://accounts.google.com/o/oauth2/iframerpc?action=checkOrigin&origin=<origin>&client_id=<client id>"`, an undocumented endpoint that returns `"valid":true` once Google accepts it.
 
 Request account selection in Google for both paths. Return failures to localized login with the original context and a safe retry message. Success normally uses an HTTP redirect without tokens in the URL. Muvisafe's HTTP 200 callback exists for extension account events and is not a universal requirement.
 

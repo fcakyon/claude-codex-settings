@@ -33,6 +33,7 @@ The unknown-path probe reports a 200 fallback as a soft-404 candidate. Search Co
 | Interaction to Next Paint under 200ms                                                                   | tool: PageSpeed Insights                     |
 | Cumulative Layout Shift under 0.1                                                                       | tool: PageSpeed Insights or local Lighthouse |
 | HTML and CSS/JS compression (`Content-Encoding`), static asset `Cache-Control`, manifest JSON and icons | fetch                                        |
+| Unauthenticated public HTML emits no unexpected `Set-Cookie` headers and stays fast (`ttfbMs <= 1500`)  | fetch                                        |
 | Server response time, CDN, font loading                                                                 | tool: PageSpeed Insights or local Lighthouse |
 
 Page weight and blocking scripts are partly visible in fetched HTML: a head full of synchronous third-party scripts is worth flagging as a likely speed problem, framed as a hypothesis for them to confirm.
@@ -82,6 +83,7 @@ Off-page work needs a backlink tool, so treat this as scoping rather than measur
 - For missing or stale Next.js share images, inspect [metadata merging](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging). A child Open Graph object can replace inherited image metadata. Preserve the page URL, image URL, dimensions, type, and alt text together.
 - Test an unknown content slug on generated image routes. It should return 404 rather than 500. Use the route controls supported by the deployed framework and bundler version.
 - Collapse redirect chains across `http` to `https`, `www` to apex, locale prefixes, and legacy path rewrites into a single permanent hop (`301` or `308`).
+- Gate SSR session and profile lookups on public routes: check whether the session cookie (name configured via environment) is present before calling the backend, and stop client background polling on public pages. Skipping un-gated backend lookups has zero downside for cookie-only auth, while un-gated calls inflate public TTFB, flood shared SSR IP `401`/`429` rate limits, and turn backend or DNS blips into public SSR `500` errors.
 - Put `noindex` and omit canonical and `hreflang` tags on utility, auth, setup, or login routes (such as `/login?returnTo=/`) so indexing signals do not conflict, and add `X-Robots-Tag: noindex` (plus `rel="nofollow"` on internal links) to linked non-HTML utility files like `/llms.txt`, `/docs/*.md`, `/sitemap.xml`, and generated social image routes (`/opengraph-image`, `/twitter-image`, including static `.png` endpoints).
 - Ensure build-time `metadataBase` and JSON-LD generators resolve the production origin rather than a `localhost` fallback, and audit full sitemaps for duplicate `<loc>` entries or leading-hyphen slugs from empty non-Latin transliteration prefixes.
 - Keep `name="..."` for `description`, `robots`, and `twitter:*` meta tags, `property="..."` for `og:*` tags, and ensure Google favicons have raster icons larger than `48x48` separate from `apple-touch-icon`.

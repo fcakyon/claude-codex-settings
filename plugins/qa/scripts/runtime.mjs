@@ -14,7 +14,7 @@ import {fileURLToPath, pathToFileURL} from 'node:url';
 import {inspect, stripVTControlCharacters} from 'node:util';
 import {chromium} from 'playwright-core';
 import {importCookies} from './session.mjs';
-import {signIn} from './auth.mjs';
+import {signIn, checkOAuthRedirect} from './auth.mjs';
 import {withNetwork} from './network.mjs';
 import {createMediaChecks} from './media.mjs';
 import {emulateTouch, gestures, touchGesture} from './touch.mjs';
@@ -115,6 +115,62 @@ export async function openBrowser(config, stateDir, telemetry) {
   return context;
 }
 
+function matchesRequestPattern(entry, pattern) {
+  if (pattern instanceof RegExp) return pattern.test(entry.raw);
+  if (/^https?:\/\//i.test(pattern)) return entry.raw.startsWith(pattern);
+  if (!entry.pathname) return false;
+  if (pattern.startsWith('/')) {
+    return entry.pathname.endsWith(pattern) || entry.pathname.includes(pattern + '/');
+  }
+  return entry.raw.includes(pattern);
+}
+
+/**
+ * Observe requests emitted during `run` (or `durationMs`) and enforce `forbidden` and `max` budgets.
+ */
+export async function assertRequestBudget(page, optionsOrRun = {}, maybeRun, check = assert) {
+  const options = typeof optionsOrRun === 'function' ? {} : (optionsOrRun ?? {});
+  const action = typeof optionsOrRun === 'function' ? optionsOrRun : (maybeRun ?? options.run);
+  const {forbidden = [], max = {}, durationMs = 1500} = options;
+  const maxEntries = Object.entries(max);
+  check.ok(forbidden.length + maxEntries.length > 0, 'assertRequestBudget requires at least one forbidden or max rule');
+  const captured = [];
+  const onRequest = request => {
+    const raw = request.url();
+    captured.push({raw, pathname: URL.parse(raw)?.pathname ?? null});
+  };
+  page.on('request', onRequest);
+  try {
+    if (typeof action === 'function') await action();
+    else await page.waitForTimeout(durationMs);
+  } finally {
+    page.off('request', onRequest);
+  }
+  const counts = {};
+  const match = pattern => captured.filter(entry => matchesRequestPattern(entry, pattern));
+  for (const pattern of forbidden) {
+    const matched = match(pattern);
+    const key = String(pattern);
+    counts[key] = matched.length;
+    check.equal(
+      matched.length,
+      0,
+      matched.length ? `Forbidden request matched ${key}: ${matched.slice(0, 5).map(entry => scrub(entry.raw)).join(', ')}` : '',
+    );
+  }
+  for (const [pattern, limit] of maxEntries) {
+    const matched = match(pattern);
+    counts[pattern] = matched.length;
+    check.ok(
+      matched.length <= limit,
+      matched.length > limit
+        ? `Request budget exceeded for ${pattern}: observed ${matched.length}, limit ${limit} (${matched.slice(0, 5).map(entry => scrub(entry.raw)).join(', ')})`
+        : '',
+    );
+  }
+  return {totalRequests: captured.length, counts};
+}
+
 export async function runSuite(root, {filter, output, baseUrl} = {}) {
   root = await realpath(root);
   const config = JSON.parse(await readFile(path.join(root, '.agents/qa/config.json'), 'utf8'));
@@ -146,6 +202,8 @@ export async function runSuite(root, {filter, output, baseUrl} = {}) {
     assert: new Proxy(assert, {apply: (target, self, args) => { qa.current.assertions++; return Reflect.apply(target, self, args); }, get: (target, key) => typeof target[key] === 'function' ? (...args) => { qa.current.assertions++; return target[key](...args); } : target[key]}),
     swiftTests: (result, options) => assertSwiftTests(qa.assert, result, options),
     signIn: page => signIn(qa, page),
+    checkOAuthRedirect: opts => checkOAuthRedirect(qa, opts),
+    assertRequestBudget: (page, opts, run) => assertRequestBudget(page, opts, run, qa.assert),
     network: (args, run) => withNetwork(qa, args, run),
     emulateTouch, touchGesture, gestures, captureAudio, tabTo,
     telemetry: report.telemetry.events,

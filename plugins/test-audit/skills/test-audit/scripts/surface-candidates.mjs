@@ -48,13 +48,45 @@ const GO_GROUP = /^(?:const|var|type)\s*\(\n([\s\S]*?)^\)/gm;
 const CALL_CHAIN = /\s*\(/y;
 const TEST_NAME = new RegExp(`\\s*${STRING_LITERAL.source}`, "y");
 
-const isTestFile = (rel) => /\.(?:test|spec)\.\w+$|_test\.\w+$|^test_\w*\.py$/.test(path.posix.basename(rel));
-const isTestSupport = (rel, qaPrefix) =>
-  isTestFile(rel) ||
+const isTestFile = (rel, packageTests) =>
+  /\.(?:test|spec)\.\w+$|_test\.\w+$|^test_\w*\.py$|^test-[\w-]+\.[cm]?[jt]sx?$/.test(path.posix.basename(rel)) ||
+  Boolean(packageTests?.has(rel));
+const isTestSupport = (rel, qaPrefix, packageTests) =>
+  isTestFile(rel, packageTests) ||
   path.posix.basename(rel) === "conftest.py" ||
   (qaPrefix !== undefined && rel.startsWith(qaPrefix)) ||
   rel.split("/").slice(0, -1).some((part) => TEST_DIRS.has(part.toLowerCase()));
 const unique = (values) => [...new Set(values)].sort();
+
+const CODE_EXT = /\.(?:[cm]?[jt]sx?|py|go)$/;
+const LOCAL_HTTP_SERVER = /\b(?:createServer\s*\(|httptest\.New(?:TLS|Unstarted)?Server\s*\()/g;
+const AUTH_FIXTURE_ROUTE = /\/(?:profile|session|identity|me)$/;
+const SERVER_AUTH_HEADER_READ = /(?:\.headers\s*(?:\[\s*['"](?:cookie|authorization)['"]\s*\]|\.(?:cookie|authorization)\b|\.get\s*\(\s*['"](?:cookie|authorization)['"]\s*\))|\b(?:cookie|authorization)\b[^;\n=]*=\s*[\w$.]+\.headers\b|\.(?:Cookie|Cookies)\s*\(|\bHeader\.(?:Get|Values)\s*\(\s*['"](?:Cookie|Authorization)['"]\s*\)|\bHeader\s*\[\s*['"](?:Cookie|Authorization)['"]\s*\])/i;
+const STATIC_USER_PAYLOAD = /["']?(?:user(?:_id|Id|name)?|email|account|authenticated|sub)["']?\s*:/;
+
+function findPackageScriptTestFiles(root, files) {
+  const fileSet = new Set(files);
+  const referenced = new Set();
+  for (const pkgRel of files) {
+    if (path.posix.basename(pkgRel) !== "package.json") continue;
+    const raw = readText(path.join(root, pkgRel));
+    if (!raw) continue;
+    let pkg;
+    try { pkg = JSON.parse(raw); } catch { continue; }
+    if (!pkg?.scripts || typeof pkg.scripts !== "object") continue;
+    const pkgDir = path.posix.dirname(pkgRel);
+    for (const [name, cmd] of Object.entries(pkg.scripts)) {
+      if (!/^test(?:$|[:_-])/.test(name) || typeof cmd !== "string") continue;
+      for (const token of cmd.split(/\s+/)) {
+        const cleaned = token.replace(/^['"]|['";,]+$/g, "");
+        if (!CODE_EXT.test(cleaned)) continue;
+        const normalized = path.posix.normalize(pkgDir === "." ? cleaned : `${pkgDir}/${cleaned}`);
+        if (fileSet.has(normalized)) referenced.add(normalized);
+      }
+    }
+  }
+  return referenced;
+}
 
 function listFiles(root) {
   const skipped = new Set();
@@ -275,6 +307,7 @@ export function surfaceCandidates(root, opts = {}) {
   root = path.resolve(root);
   const { discovery, files, skipped } = listFiles(root);
   const manifestDirs = new Set(files.filter((rel) => MANIFESTS.has(path.posix.basename(rel))).map((rel) => path.posix.dirname(rel)));
+  const packageTests = findPackageScriptTestFiles(root, files);
   const buildConfigs = files.filter((rel) => BUILD_CONFIG.test(path.posix.basename(rel)));
   const qaSuite = readQaSuite(root, opts.qaSuite);
   const qaPrefix = qaSuite ? `${path.posix.dirname(qaSuite.path)}/` : undefined;
@@ -287,7 +320,7 @@ export function surfaceCandidates(root, opts = {}) {
     if (!FAMILY[ext] || /\.d\.[cm]?ts$/.test(rel)) continue;
     const text = readText(path.join(root, rel));
     if (text === null) unreadable.push(rel);
-    else sources.push({ rel, text, family: FAMILY[ext], test: isTestFile(rel), support: isTestSupport(rel, qaPrefix) });
+    else sources.push({ rel, text, family: FAMILY[ext], test: isTestFile(rel, packageTests), support: isTestSupport(rel, qaPrefix, packageTests) });
   }
 
   const packageOf = (file) => {
@@ -337,6 +370,25 @@ export function surfaceCandidates(root, opts = {}) {
   const assertionFreeTests = [];
   const envGatedOrSkippedTests = [];
   const qaSuiteOverlap = [];
+  const unauthenticatedAuthFixtures = [];
+  for (const file of support) {
+    const routes = [];
+    let serverKind = null;
+    for (const serverMatch of file.code.matchAll(LOCAL_HTTP_SERVER)) {
+      const open = serverMatch.index + serverMatch[0].length - 1;
+      const end = closingIndex(file.code, open);
+      const span = file.code.slice(serverMatch.index, end === -1 ? file.code.length : end + 1);
+      if (SERVER_AUTH_HEADER_READ.test(span) || !STATIC_USER_PAYLOAD.test(span)) continue;
+      const matchedRoutes = [...routesIn(span)].filter((route) => AUTH_FIXTURE_ROUTE.test(route));
+      if (matchedRoutes.length) {
+        routes.push(...matchedRoutes);
+        serverKind ??= serverMatch[0].startsWith("createServer") ? "createServer" : serverMatch[0].replace(/\s*\($/, "");
+      }
+    }
+    if (routes.length) {
+      unauthenticatedAuthFixtures.push({ testFile: file.rel, routes: unique(routes), serverKind });
+    }
+  }
   for (const file of tests) {
     const assertions = assertionCount(file.text, helpers[file.family]);
     const declarationCount = file.text.match(DECLARATION[file.family])?.length ?? 0;
@@ -377,6 +429,7 @@ export function surfaceCandidates(root, opts = {}) {
     assertionFreeTests,
     envGatedOrSkippedTests,
     qaSuiteOverlap,
+    unauthenticatedAuthFixtures,
     qaSuite,
     notAudited: { skippedDirectories: unique(skipped), unsupportedLanguages: unsupported, unreadableFiles: unreadable },
   };
@@ -389,6 +442,7 @@ const SECTIONS = [
   ["assertionFreeTests", "Assertion-free tests", (s) => `${s.testFile}:${s.line} ${s.name}`],
   ["envGatedOrSkippedTests", "Skipped or environment-gated tests", (s) => `${s.testFile}:${s.line} ${s.name} (${s.guards.join(", ")})`],
   ["qaSuiteOverlap", "Unit mocks overlapping QA routes", (s) => `${s.testFile}: ${s.routes.join(", ")} (${s.mocks.join(", ")})`],
+  ["unauthenticatedAuthFixtures", "Unauthenticated auth fixtures", (s) => `${s.testFile}: ${s.routes.join(", ")} (${s.serverKind})`],
 ];
 
 /**
