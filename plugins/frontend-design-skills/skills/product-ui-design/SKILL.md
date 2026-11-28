@@ -51,11 +51,13 @@ Use the product's font and control hierarchy deliberately rather than accepting 
 
 Choose fills, borders and corner radii by role. Pills and accent-colored labels can be appropriate, but should not become the default for every action. Check the actual foreground against its surface, especially pale fills in light mode. Use a restrained secondary treatment and a clear committing action consistent with the product's own hierarchy. Do not add a generic AI sparkle to an otherwise clear action label as decoration.
 
+Unless the product already settles where page actions live, keep them in one row level with the page title: text actions in order of use, then icon-only buttons, with settings last and one click away, never inside an info or details panel. Panel-opening actions such as details and settings can be icon-only squares. Show only the controls the viewer can use. On phones let text actions fill rows and keep the icon buttons together at the end.
+
 Text and fields must be readable in every supported theme. Check text contrast, field boundaries, placeholders, focus and disabled states against their actual backgrounds. Target WCAG AA contrast, including 4.5:1 for ordinary text and 3:1 for large text and essential control boundaries. Do not use color as the only signal. Keep visible labels, keyboard access and touch targets usable. Use at least 16px editable input text on phones to avoid automatic zoom where applicable.
 
 ## Use accurate icons and integration assets
 
-Prefer a recognizable icon or real integration logo when it reduces reading or helps recognition. Keep concise visible text when a symbol would be ambiguous. Icon-only actions need an accessible name and an understandable discovery path.
+Prefer a recognizable icon or real integration logo when it reduces reading or helps recognition. Keep concise visible text when a symbol would be ambiguous. Icon-only actions need an accessible name and an understandable discovery path. Check a new or changed glyph at its rendered size beside its neighbors, so a settings cog never reads as a sun or brightness control.
 
 Search existing assets and components first. Use verified brand assets or a maintained brand asset library. Never replace a real logo with a typed initial, emoji or approximate drawing. Preserve its proportions and recognizable colors, using official theme variants where needed. Decorative logos should not duplicate accessible labels. Keep the product icon family consistent in size, stroke weight and optical alignment. An action rarely needs both an action icon and a provider mark unless each adds useful meaning.
 
